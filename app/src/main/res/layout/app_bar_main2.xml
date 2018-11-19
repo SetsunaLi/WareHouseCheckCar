@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.mumu.warehousecheckcar.activity.Main2Activity">
-
+<!--小红书AppBarLayout实例https://www.jianshu.com/p/bbc703a0015e，目前先不开发-->
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

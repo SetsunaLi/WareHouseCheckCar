@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">WareHouseCheckCar</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -14,14 +15,28 @@
         completions."
     </string>
 
+    <!--登录页面-->
     <string name="login_username">用户名</string>
     <string name="login_prassword">密码</string>
     <string name="login">登录</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <!--主页-->
+    <string name="options_username">李先生</string>
+    <string name="options_welcome">亿锋公司欢迎您！</string>
+    <!--导航栏的选项名称-->
+    <string-array name="options_array">
+        <item>主页</item>
+        <item>个人信息</item>
+        <item>盘点作业</item>
+        <item>设备管理</item>
+        <item>待开发1</item>
+        <item>待开发2</item>
+        <item>待开发3</item>
+        <item>关于</item>
+    </string-array>
 
+<!--抽屉状态形容文字-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+<!--右上角item文字-->
     <string name="action_settings">Settings</string>
 </resources>
