@@ -22,6 +22,20 @@
     <!--主页-->
     <string name="options_username">李先生</string>
     <string name="options_welcome">亿锋公司欢迎您！</string>
+    <string name="options_id">YF-95270806&#8195;</string>
+    <string name="options_login_time">2018/11/20&#8196;12:02&#8195;</string>
+    <string name="options_online_time">96:02&#8195;</string>
+    <string name="options_work">仓库管理员&#8195;</string>
+    <string name="options_status">在线&#8195;</string>
+    <string name="btn_message">个人信息</string>
+    <string name="btn_check">盘点作业</string>
+    <string name="btn_setting">系统设置</string>
+    <string name="btn_individuality1">个性化一</string>
+    <string name="btn_individuality2">个性化二</string>
+    <string name="btn_individuality3">个性化三</string>
+
+
+
     <!--导航栏的选项名称-->
     <string-array name="options_array">
         <item>主页</item>
@@ -34,6 +48,18 @@
         <item>关于</item>
     </string-array>
 
+    <!--about-->
+    <string name="RFID_demo_app">WareHouseCheckCAR Application</string>
+    <string name="moto_solutions">RIDKO Technologies</string>
+    <string name="app_version_title">Application Version</string>
+    <string name="colon">:</string>
+    <string name="app_version">18.0.1</string>
+    <string name="system_version_title">System Version</string>
+    <string name="system_version">18.0.1</string>
+    <string name="device_number_title">Device Number</string>
+    <string name="device_number">JiaQian_01</string>
+    <string name="system_sled">System Sled</string>
+    <string name="copyright_info">Copyright © 2018</string>
 <!--抽屉状态形容文字-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

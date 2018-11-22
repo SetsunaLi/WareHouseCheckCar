@@ -1,4 +1,4 @@
-package com.example.mumu.warehousecheckcar.fragment;
+package com.example.mumu.warehousecheckcar.entity;
 
 import com.example.mumu.warehousecheckcar.R;
 

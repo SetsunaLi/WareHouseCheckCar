@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2">
+    <TextView
+        android:id="@+id/appTitle"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:gravity="center"
+        style="@style/style_medium_font"
+        android:text="@string/RFID_demo_app"
+        android:textColor="@color/colorAboutText"/>
+
+    <TextView
+        android:id="@+id/companyTitle"
+        android:layout_height="0dp"
+        android:layout_weight="7"
+        android:gravity="top|center_horizontal"
+        style="@style/style_medium_font"
+        android:text="@string/moto_solutions"
+        android:textColor="@color/colorAboutText"
+        />
+
+    <include layout="@layout/title_divider" />
+
+    <TableRow
+        android:id="@+id/appVersionRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:gravity="left|center_vertical">
+
+        <TextView
+            android:id="@+id/appVersionTitle"
+            android:layout_width="0dp"
+            android:gravity="left"
+            android:layout_weight="50"
+            style="@style/style_normal_font"
+            android:text="@string/app_version_title"
+            android:textColor="@color/colorAboutText"/>
+        <TextView
+            style="@style/style_normal_font"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:text="@string/colon"
+            android:textColor="@color/colorAboutText"/>
+
+        <TextView
+            android:id="@+id/periodicReport"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_weight="40"
+            style="@style/style_normal_font"
+            android:text="@string/app_version"
+            android:textColor="@color/colorAboutText"/>
+    </TableRow>
+
+    <include layout="@layout/title_divider" />
+
+    <TextView
+        android:id="@+id/sledTitle"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="5"
+        android:gravity="left"
+        style="@style/style_normal_font"
+        android:text="@string/system_sled"
+        android:textColor="@color/colorAboutText"/>
+
+    <TableRow
+        android:id="@+id/moduleVersionRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/moduleVersionTitle"
+            android:layout_width="0dp"
+            android:gravity="left"
+            android:layout_weight="50"
+            style="@style/style_normal_font"
+            android:text="@string/system_version_title"
+            android:textColor="@color/colorAboutText"/>
+        <TextView
+            style="@style/style_normal_font"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:text="@string/colon"
+            android:textColor="@color/colorAboutText"/>
+
+        <TextView
+            android:id="@+id/moduleVersion"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_weight="40"
+            style="@style/style_normal_font"
+            android:text="@string/system_version"
+            android:textColor="@color/colorAboutText"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/radioVersionRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="5"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/radioVersionTitle"
+            android:layout_width="0dp"
+            android:gravity="left"
+            android:layout_weight="50"
+            style="@style/style_normal_font"
+            android:text="@string/device_number_title"
+            android:textColor="@color/colorAboutText"/>
+        <TextView
+            style="@style/style_normal_font"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:text="@string/colon"
+            android:textColor="@color/colorAboutText"/>
+        <TextView
+            android:id="@+id/radioVersion"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_weight="40"
+            style="@style/style_normal_font"
+            android:text="@string/device_number"
+            android:textColor="@color/colorAboutText"/>
+    </TableRow>
+
+    <include layout="@layout/title_divider" />
+
+    <TextView
+        android:id="@+id/copyRight"
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        android:gravity="center"
+        style="@style/style_large_font"
+        android:text="@string/copyright_info"
+        android:textColor="@color/colorAboutText"/>
+</LinearLayout>

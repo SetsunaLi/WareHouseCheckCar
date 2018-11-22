@@ -14,7 +14,54 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@drawable/button_login_selector</item>
     </style>
+    <!-- Button for Home Screen -->
+    <style name="DashboardButton">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/button_home_text_style</item>
+        <item name="android:textSize">40px</item>
+        <item name="android:background">@drawable/button_home_style</item>
+        <item name="android:paddingTop">@dimen/home_button_paddingTop</item>
+    </style>
 
+    <!--适用于整个应用程序的普通字体的样式 -->
+    <style name="style_normal_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+    </style>
+    <style name="style_medium_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+    <!--Style for the large font to be used in titles -->
+    <style name="style_large_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+    <style name="text_style1">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!--首页信息-->
+    <style name="text_style2">
+        <item name="android:textColor">@color/colorHomeButton2</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="layout_style1">
+        <!-- <item name="android:layout_marginLeft">18dp</item>-->
+        <item name="android:layout_marginTop">@dimen/home_margin</item>
+        <item name="android:background">@drawable/text_style_bg</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
