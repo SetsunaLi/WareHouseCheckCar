@@ -12,4 +12,10 @@
     <color name="colorAboutText">#adb9e5</color>
     <color name="colorHomeButton2">#adb9e5</color>
     <color name="colorDialogContent">#3a4e7b</color>
+    <color name="colorDialogContent2">#314672</color>
+    <color name="colorTableLine">#0a132c</color>
+    <color name="colerUserText">#555555</color>
+    <color name="colorEditText">#04a0ff</color>
+    <color name="colorDialogTitleBG">#0078ff</color>
+    <color name="colorDialogButtonYes1">#489eff</color>
 </resources>

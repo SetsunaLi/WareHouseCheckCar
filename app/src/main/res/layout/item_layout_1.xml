@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="51dp">
+<LinearLayout
+    android:id="@+id/layout1"
+    android:layout_width="match_parent"
+    android:layout_height="50dip"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants">
+    <TextView
+        android:id="@+id/item1"
+        android:layout_width="50dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="序号"
+        />
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item2"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="单号"/>
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item3"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="布号"/>
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item4"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="数量"/>
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item5"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="色号"/>
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item6"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="缸号"
+        />
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item7"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="扫码数量"/>
+    <View
+        style="@style/view_item_mid"/>
+    <TextView
+        android:id="@+id/item8"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        style="@style/text_item"
+        android:text="状态"/>
+    <View
+        style="@style/view_item_mid"/>
+
+</LinearLayout>
+    <View
+        style="@style/view_item_bottom"/>
+
+</LinearLayout>

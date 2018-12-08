@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/user_layout">
+    <ImageView
+        android:id="@+id/headImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@mipmap/user_head"
+        android:layout_alignParentTop="true"
+        style="@style/head_margin"/>
+
+
+    <TextView
+        android:id="@+id/user_id_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/headImage"
+        android:layout_toRightOf="@+id/headImage"
+        android:textColor="@color/colerUserText"
+        android:text="用户ID:"
+        style="@style/head_margin"/>
+    <TextView
+        android:id="@+id/user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/user_id_title"
+        android:layout_toRightOf="@+id/user_id_title"
+        android:textColor="@color/colerUserText"
+        android:text="YF-95270806"/>
+
+    <TextView
+        android:id="@+id/user_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="用户名称:"
+        android:textColor="@color/colerUserText"
+        android:layout_toRightOf="@+id/headImage"
+        android:layout_alignTop="@+id/headImage"
+        style="@style/head_margin"
+        />
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="李先生"
+        android:textColor="@color/colerUserText"
+        android:layout_toRightOf="@id/user_name_title"
+        android:layout_alignBottom="@+id/user_name_title"
+        />
+</RelativeLayout>

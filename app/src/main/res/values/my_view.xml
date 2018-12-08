@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--自定义控件布局属性-->
+<resources>
+    <attr name="myvalue" format="integer"/>
+    <attr name="myimg" format="reference"/>
+</resources>

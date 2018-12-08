@@ -1,28 +1,37 @@
 package com.example.mumu.warehousecheckcar.activity;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutInspectionFragment;
+import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
+import com.rfid.RFIDReaderHelper;
+import com.xdl2d.scanner.TDScannerHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,7 +45,7 @@ public class Main2Activity extends AppCompatActivity
     NavigationView navView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-
+private final String TAG="Main2Activity";
     private CharSequence mTitle;
 
     @Override
@@ -46,14 +55,14 @@ public class Main2Activity extends AppCompatActivity
         ButterKnife.bind(this);
 
         //右下角按钮监听
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+     /*   FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "欢迎使用亿锋公司配套软件", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 //       左上角按钮
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,6 +73,8 @@ public class Main2Activity extends AppCompatActivity
         mTitle = getTitle();
         initDate();
         initView();
+        initRFID();
+        init2D();
 //      首页
         selectItem(0);
     }
@@ -94,6 +105,29 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
+    private RFIDReaderHelper rfidHander;
+//    private TDScannerHelper scannerHander;
+    private void initRFID(){
+        try {
+            RFID_2DHander.getInstance().connectReader();
+            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
+            rfidHander.registerObserver(UHFResult.getInstance());
+        }catch (Exception e){
+            Log.w(TAG,"RFID读写器异常");
+            Toast.makeText(this,getResources().getString(R.string.hint_rfid_mistake),Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void init2D(){
+        try {
+            RFID_2DHander.getInstance().connect2D();
+//            scannerHander = RFID_2DHander.getInstance().getTDScanner();
+        }catch (Exception e){
+            Log.w(TAG,"2D模块异常");
+            Toast.makeText(this,getResources().getString(R.string.hint_rfid_mistake),Toast.LENGTH_LONG).show();
+        }
+    }
+
     //Tag to identify the currently displayed fragment
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     protected static final String TAG_RETURN_FRAGMENT = "TitleFragment";
@@ -107,10 +141,13 @@ public class Main2Activity extends AppCompatActivity
             case 1:
                 break;
             case 2:
+                fragment = CheckFragment.newInstance();
                 break;
             case 3:
+                fragment= SettingFragment.newInstance();
                 break;
             case 4:
+                fragment= OutInspectionFragment.newInstance();
                 break;
             case 5:
                 break;
@@ -123,11 +160,11 @@ public class Main2Activity extends AppCompatActivity
                 fragment = HomeFragment.newInstance();
                 break;
         }
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         if (fragment instanceof HomeFragment) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
-        } else if (fragment instanceof AboutFragment) {
+        } else if (fragment!=null) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(TAG_RETURN_FRAGMENT).commit();
         }
@@ -236,5 +273,16 @@ public class Main2Activity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+
+    }
+    private void disConnectRFID(){
+        RFID_2DHander.getInstance().off_RFID();
+        if(rfidHander!=null)
+        rfidHander.unRegisterObserver(UHFResult.getInstance());
+        RFID_2DHander.getInstance().disConnectReader();
+        RFID_2DHander.getInstance().releaseRFID();
+    }
+    private void disConnect2D(){
+
     }
 }

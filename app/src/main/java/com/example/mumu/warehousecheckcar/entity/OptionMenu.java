@@ -4,6 +4,7 @@ import com.example.mumu.warehousecheckcar.R;
 
 /**
  * Created by mumu on 2018/11/19.
+ * 左边导航栏item
  */
 
 public enum  OptionMenu {

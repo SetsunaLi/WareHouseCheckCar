@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity  {
             }
         }
 
-        //run()运行状态时UI操作,类似于等待界面之类
+        //run()运行前UI操作,类似于等待界面之类
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

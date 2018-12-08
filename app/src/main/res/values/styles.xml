@@ -9,7 +9,7 @@
     </style>
 
     <style name="button_login_style1">
-        <item name="android:layout_height">60dip</item>
+        <item name="android:layout_height">50dip</item>
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@drawable/button_login_selector</item>
@@ -23,9 +23,25 @@
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@drawable/button_home_text_style</item>
-        <item name="android:textSize">40px</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/button_home_style</item>
         <item name="android:paddingTop">@dimen/home_button_paddingTop</item>
+    </style>
+    <!--左边按钮-->
+    <style name="button_style1">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_style_select</item>
+        <item name="android:layout_marginTop">@dimen/home_margin</item>
+        <item name="android:layout_marginBottom">@dimen/home_margin</item>
+    </style>
+
+    <!--右边按钮-->
+    <style name="button_style2">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/dialog_button_yes</item>
     </style>
 
     <!--适用于整个应用程序的普通字体的样式 -->
@@ -47,21 +63,55 @@
     </style>
     <style name="text_style1">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">26sp</item>
         <item name="android:gravity">center</item>
     </style>
     <!--首页信息-->
     <style name="text_style2">
         <item name="android:textColor">@color/colorHomeButton2</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:gravity">center</item>
     </style>
+    <!--设置界面文字-->
+    <style name="texte_setting_style">
+        <item name="android:textColor">@color/colerUserText</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!--item-文字-->
+    <style name="text_item">
+        <item name="android:textColor">@color/colorHomeButton2</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+
 
     <style name="layout_style1">
         <!-- <item name="android:layout_marginLeft">18dp</item>-->
         <item name="android:layout_marginTop">@dimen/home_margin</item>
         <item name="android:background">@drawable/text_style_bg</item>
     </style>
+    <style name="head_margin">
+        <item name="android:layout_marginLeft">@dimen/home_margin</item>
+    </style>
+<!--分割线-->
+    <style name="view_item_mid">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:background">@color/colorTableLine</item>
+    </style>
+    <style name="view_item_bottom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:background">@color/colorTableLine</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
