@@ -22,18 +22,20 @@
     <string name="options_online_time">00:00&#8195;</string>
     <string name="options_work">仓库管理员&#8195;</string>
     <string name="options_status">在线&#8195;</string>
-    <string name="btn_message">个人信息</string>
-    <string name="btn_check">盘点作业</string>
+    <string name="btn_message">入库检验</string>
+    <string name="btn_check">出库校验</string>
     <string name="btn_setting">系统设置</string>
-    <string name="btn_individuality1">出库校验</string>
-    <string name="btn_individuality2">个性化二</string>
-    <string name="btn_individuality3">个性化三</string>
+    <string name="btn_individuality1">待开发一</string>
+    <string name="btn_individuality2">待开发二</string>
+    <string name="btn_individuality3">待开发三</string>
 
 <!--出库校验-->
     <string name="edittext_title">请输入申请单号</string>
     <string name="button_find">搜索</string>
     <string name="button_scnner">扫描条形码</string>
-
+<!--入库校验-->
+    <string name="dialog_text">提醒</string>
+    <string name="dialog_in_check">是否确认入库？</string>
 
 
     <!--hint-->
@@ -42,12 +44,12 @@
     <!--导航栏的选项名称-->
     <string-array name="options_array">
         <item>主页</item>
-        <item>个人信息</item>
-        <item>盘点作业</item>
-        <item>设备管理</item>
+        <item>入库检验</item>
         <item>出库校验</item>
-        <item>待开发2</item>
-        <item>待开发3</item>
+        <item>设备管理</item>
+        <item>待开发一</item>
+        <item>待开发二</item>
+        <item>待开发三</item>
         <item>关于</item>
     </string-array>
 

@@ -2,9 +2,7 @@ package com.example.mumu.warehousecheckcar.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,13 +23,12 @@ import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
-import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
-import com.example.mumu.warehousecheckcar.fragment.OutInspectionFragment;
+import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.rfid.RFIDReaderHelper;
-import com.xdl2d.scanner.TDScannerHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -139,15 +136,17 @@ private final String TAG="Main2Activity";
                 fragment = HomeFragment.newInstance();
                 break;
             case 1:
+                fragment= InCheckFragment.newInstance();
                 break;
             case 2:
-                fragment = CheckFragment.newInstance();
+                fragment= OutCheckCarFragment.newInstance();
+//                fragment = CheckFragment.newInstance();
                 break;
             case 3:
                 fragment= SettingFragment.newInstance();
                 break;
             case 4:
-                fragment= OutInspectionFragment.newInstance();
+//                fragment= OutInspectionFragment.newInstance();
                 break;
             case 5:
                 break;
@@ -166,7 +165,7 @@ private final String TAG="Main2Activity";
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
         } else if (fragment!=null) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(TAG_RETURN_FRAGMENT).commit();
+            fragmentManager.beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(TAG_RETURN_FRAGMENT).commit();
         }
         setTitle(mOptionTitle[position]);
 //        设置列表点击状态

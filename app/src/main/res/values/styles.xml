@@ -43,6 +43,22 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@drawable/dialog_button_yes</item>
     </style>
+    <!--提示框左边按钮-->
+    <style name="dialog_button_no">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorDialogContent</item>
+        <item name="android:background">@drawable/dialog_button_no</item>
+    </style>
+    <!--提示框右边按钮-->
+    <style name="dialog_button_yes">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/dialog_button_yes</item>
+    </style>
 
     <!--适用于整个应用程序的普通字体的样式 -->
     <style name="style_normal_font">
@@ -69,8 +85,13 @@
     <!--首页信息-->
     <style name="text_style2">
         <item name="android:textColor">@color/colorHomeButton2</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:gravity">center</item>
+    </style>
+    <style name="dialog_title">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/colorAboutText</item>
+        <item name="android:text">@string/dialog_text</item>
     </style>
     <!--设置界面文字-->
     <style name="texte_setting_style">
@@ -87,7 +108,10 @@
         <item name="android:ellipsize">marquee</item>
     </style>
 
-
+    <style name="dialog_content_text">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorDialogContent</item>
+    </style>
     <style name="layout_style1">
         <!-- <item name="android:layout_marginLeft">18dp</item>-->
         <item name="android:layout_marginTop">@dimen/home_margin</item>

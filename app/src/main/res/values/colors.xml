@@ -8,6 +8,7 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorLoginLeft">#57EAAB</color>
     <color name="colorLoginCentet">#4EE1C5</color>
+    <color name="colorDataYesText">#00fffc</color>
     <color name="colorLoginRight">#45D7DF</color>
     <color name="colorAboutText">#adb9e5</color>
     <color name="colorHomeButton2">#adb9e5</color>

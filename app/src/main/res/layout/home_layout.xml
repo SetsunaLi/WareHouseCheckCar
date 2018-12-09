@@ -171,7 +171,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/message_l"
+                android:drawableTop="@mipmap/individuality1_l"
                 android:onClick="mesClick"
                 android:text="@string/btn_message" />
 
@@ -210,7 +210,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/individuality1_l"
+                android:drawableTop="@mipmap/message_l"
                 android:onClick="inClick1"
                 android:text="@string/btn_individuality1" />
 
