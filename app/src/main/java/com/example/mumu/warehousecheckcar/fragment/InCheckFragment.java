@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,30 +19,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.entity.ApplicaFormEntity;
+import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.ItemMenu;
-import com.example.mumu.warehousecheckcar.entity.MyTestEnt;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
-import com.squareup.okhttp.Response;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,7 +65,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
     }
 
     private RecycleAdapter mAdapter;
-    private List<ApplicaFormEntity> myList;
+    private List<InCheckDetail> myList;
     private List<String> epcList;
     @Nullable
     @Override
@@ -90,7 +85,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
-        initRFID();
+//        initRFID();
         return view;
     }
     private void initRFID(){
@@ -103,7 +98,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
     private void clearData(){
         if (myList!=null){
             myList.clear();
-            myList.add(new ApplicaFormEntity());
+            myList.add(new InCheckDetail());
         }
         if (epcList!=null){
             epcList.clear();
@@ -141,12 +136,26 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        disRFID();
+//        disRFID();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     protected static final String TAG_RETURN_FRAGMENT = "TitleFragment";
-
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                case 0x00:
+                    String EPC= (String) msg.obj;
+                    if (!epcList.contains(EPC)){
+                        epcList.add(EPC);
+                        text1.setText(""+(myList.size()-1));
+                    }
+                    break;
+            }
+        }
+    };
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -182,6 +191,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                上传数据
                 dialog.dismiss();
             }
         });
@@ -194,7 +204,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
         if (!epcList.contains(tag.strEPC)) {
-            epcList.add(tag.strEPC);
+            Message msg=handler.obtainMessage();
+            msg.arg1=0x00;
+            msg.obj=tag.strEPC;
+
         }
         Log.i(TAG,tag.strEPC);
     }
@@ -209,7 +222,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
 
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<ApplicaFormEntity> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
         private Context context;
 
         public void setContext(Context context) {
@@ -220,21 +233,20 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener{
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<ApplicaFormEntity> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
 
         @Override
-        public void convert(RecyclerHolder holder, ApplicaFormEntity item, int position) {
+        public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
-                    for (ItemMenu im : ItemMenu.values()) {
-                        if (im.getIndex() == 0)
-                            holder.setText(im.getId(), "" + position);
-                        else
-                            holder.setText(im.getId(), "");
-                    }
+                    holder.setText(R.id.item1,item.getProduct_no()+"");
+                    holder.setText(R.id.item2,item.getVatNo()+"");
+                    holder.setText(R.id.item3,item.getColor()+"");
+                    holder.setText(R.id.item4,item.getSelNo()+"");
+                    holder.setText(R.id.item5,item.getCount()+"");
                 }
             }
         }

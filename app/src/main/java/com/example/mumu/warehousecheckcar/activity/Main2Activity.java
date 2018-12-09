@@ -70,8 +70,8 @@ private final String TAG="Main2Activity";
         mTitle = getTitle();
         initDate();
         initView();
-        initRFID();
-        init2D();
+       /* initRFID();
+        init2D();*/
 //      首页
         selectItem(0);
     }
@@ -165,9 +165,9 @@ private final String TAG="Main2Activity";
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
         } else if (fragment!=null) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(TAG_RETURN_FRAGMENT).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         }
-        setTitle(mOptionTitle[position]);
+
 //        设置列表点击状态
         navigationView.getMenu().findItem(OptionMenu.values()[position].getId()).setChecked(true);
 //        关闭抽屉
@@ -215,10 +215,31 @@ private final String TAG="Main2Activity";
     //返回键监听
     @Override
     public void onBackPressed() {
+        Log.i("MainActivity","onBackPressed");
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
+            if (fragment != null && (fragment instanceof AboutFragment ||  fragment instanceof
+                    OutCheckCarFragment || fragment instanceof InCheckFragment || fragment instanceof SettingFragment
+            )) {
+
+                //update the selected item in the drawer and the title
+//            mDrawerList.setItemChecked(0, true);
+                selectItem(0);
+                setTitle(mOptionTitle[0]);
+                //We are handling back pressed for saving pre-filters settings. Notify the appropriate fragment.
+                //{@link BaseReceiverActivity # onBackPressed should be called by the fragment when the processing is done}
+                //super.onBackPressed();
+
+                if (fragment instanceof HomeFragment) {
+                    ((HomeFragment) fragment).onBackPressed();
+                } else {
+
+                }
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
         }
     }
 

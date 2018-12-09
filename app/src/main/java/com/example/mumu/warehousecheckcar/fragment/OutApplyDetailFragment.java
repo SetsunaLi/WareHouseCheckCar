@@ -16,10 +16,8 @@ import android.widget.Button;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.entity.ApplicaFormEntity;
-import com.example.mumu.warehousecheckcar.entity.ApplyNo;
+import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.ItemMenu;
-import com.example.mumu.warehousecheckcar.entity.MyTestEnt;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class OutApplyDetailFragment extends Fragment implements BasePullUpRecycl
 
     private CharSequence mTitle;
     private RecycleAdapter mAdapter;
-    private List<ApplicaFormEntity> myList;
+    private List<InCheckDetail> myList;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,7 +75,7 @@ public class OutApplyDetailFragment extends Fragment implements BasePullUpRecycl
     }
     private void clearData(){
         myList.clear();
-        myList.add(new ApplicaFormEntity());
+        myList.add(new InCheckDetail());
     }
     //右上角列表R.menu.main2
     @Override
@@ -123,7 +121,7 @@ public class OutApplyDetailFragment extends Fragment implements BasePullUpRecycl
         mAdapter.select(position);
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<ApplicaFormEntity> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
         private Context context;
         public void setContext(Context context){
             this.context=context;
@@ -139,13 +137,13 @@ public class OutApplyDetailFragment extends Fragment implements BasePullUpRecycl
             else
                 this.position=-255;
         }
-        public RecycleAdapter(RecyclerView v, Collection<ApplicaFormEntity> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
 
         @Override
-        public void convert(RecyclerHolder holder, ApplicaFormEntity item, int position) {
+        public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
                     for (ItemMenu im : ItemMenu.values()) {

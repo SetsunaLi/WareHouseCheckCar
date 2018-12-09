@@ -26,7 +26,7 @@ import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.entity.ApplicaFormEntity;
+import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.ItemMenu;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
@@ -71,7 +71,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     }
 
     private RecycleAdapter mAdapter;
-    private List<ApplicaFormEntity> myList;
+    private List<InCheckDetail> myList;
     private List<String> epcList;
 
     @Nullable
@@ -93,7 +93,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         recyle.setAdapter(mAdapter);
 
         initView();
-        initRFID();
+//        initRFID();
         return view;
     }
 
@@ -117,7 +117,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     private void clearData() {
         if (myList != null) {
             myList.clear();
-            myList.add(new ApplicaFormEntity());
+            myList.add(new InCheckDetail());
         }
         if (epcList != null) {
             epcList.clear();
@@ -157,7 +157,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        disRFID();
+//        disRFID();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -250,7 +250,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     }
 
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<ApplicaFormEntity> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
         private Context context;
 
         public void setContext(Context context) {
@@ -261,13 +261,13 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<ApplicaFormEntity> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
 
         @Override
-        public void convert(RecyclerHolder holder, ApplicaFormEntity item, int position) {
+        public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
                     for (ItemMenu im : ItemMenu.values()) {
