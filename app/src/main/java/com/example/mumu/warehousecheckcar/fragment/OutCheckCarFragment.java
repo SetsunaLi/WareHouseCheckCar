@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
@@ -91,7 +93,11 @@ public class OutCheckCarFragment extends Fragment {
     @OnClick(R.id.button2)
     public void onViewClicked() {
         carNo=editNO.getText().toString()+"";
+        if (carNo!=null&&carNo.length()!=0){
         blinkDialog(carNo);
+        }else {
+            Toast.makeText(getActivity(),"车牌号不能为空",Toast.LENGTH_SHORT).show();
+        }
     }
     private void blinkDialog(String carStr) {
         final Dialog dialog;
@@ -100,7 +106,7 @@ public class OutCheckCarFragment extends Fragment {
         Button no = (Button) blinkView.findViewById(R.id.dialog_no);
         Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("出库车牌号为"+carStr);
+        text.setText("出库车牌号为:"+carStr);
         dialog = new AlertDialog.Builder(getActivity()).create();
         dialog.show();
         dialog.getWindow().setContentView(blinkView);
@@ -117,9 +123,13 @@ public class OutCheckCarFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = OutCheckFragment.newInstance();
-                FragmentManager fm = getActivity().getFragmentManager();
+                FragmentTransaction transaction=getActivity().getFragmentManager().beginTransaction();
+                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                transaction.show(fragment);
+                transaction.commit();
+                /*FragmentManager fm = getActivity().getFragmentManager();
                 fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fm.beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                fm.beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).show;*/
                 dialog.dismiss();
             }
         });

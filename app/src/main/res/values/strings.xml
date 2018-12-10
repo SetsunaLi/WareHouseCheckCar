@@ -28,8 +28,11 @@
     <string name="btn_individuality1">待开发一</string>
     <string name="btn_individuality2">待开发二</string>
     <string name="btn_individuality3">待开发三</string>
+    <string name="btn_yes">确认</string>
+    <string name="btn_no">取消</string>
 
-<!--出库校验-->
+
+    <!--出库校验-->
     <string name="edittext_title">请输入申请单号</string>
     <string name="button_find">搜索</string>
     <string name="button_scnner">扫描条形码</string>
@@ -89,13 +92,13 @@
     <string name="system_port_key">port_key</string>
     <string name="system_port_summary">System Port</string>
     <string name="system_port_title">系统端口</string>
-    <string name="system_device_number_key">number_key</string>
+    <string name="system_device_number_key">device_number_key</string>
     <string name="system_device_number_summary">System Device Number</string>
     <string name="system_device_number_title">设备号</string>
-    <string name="system_push_key">push_key</string>
-    <string name="system_push_summaryON">接受系统推送</string>
-    <string name="system_push_summaryOFF">拒绝系统推送</string>
-    <string name="system_push_title">System Push</string>
+    <string name="system_music_key">music_key</string>
+    <string name="system_music_summaryON">打开扫码声音</string>
+    <string name="system_music_summaryOFF">关闭扫码声音</string>
+    <string name="system_music_title">系统声音</string>
     <string name="device_managment_title">设备</string>
     <string name="device_prower_key">prower_key</string>
     <string name="device_prower_title">功率</string>

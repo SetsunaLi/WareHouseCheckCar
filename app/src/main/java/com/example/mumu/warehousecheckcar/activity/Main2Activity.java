@@ -1,7 +1,15 @@
 package com.example.mumu.warehousecheckcar.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -21,13 +29,16 @@ import android.widget.Toast;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
+import com.nativec.tools.ModuleManager;
 import com.rfid.RFIDReaderHelper;
 
 import butterknife.Bind;
@@ -42,7 +53,7 @@ public class Main2Activity extends AppCompatActivity
     NavigationView navView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-private final String TAG="Main2Activity";
+    private final String TAG = "Main2Activity";
     private CharSequence mTitle;
 
     @Override
@@ -70,17 +81,24 @@ private final String TAG="Main2Activity";
         mTitle = getTitle();
         initDate();
         initView();
-       /* initRFID();
-        init2D();*/
+        initRFID();
+        init2D();
 //      首页
         selectItem(0);
     }
 
     //    导航数组
     private String[] mOptionTitle;
-
+    private EditTextPreference systemVersion,systemIP,systemPort, deviceNumber;
     private void initDate() {
         mOptionTitle = getResources().getStringArray(R.array.options_array);
+
+        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
+        App.SYSTEM_VERSION=sp.getString(getResources().getString(R.string.system_version_key),"0");
+        App.IP=sp.getString(getResources().getString(R.string.system_ip_key),"192.168.0.120");
+        App.PORT=sp.getString(getResources().getString(R.string.system_port_key),"9090");
+        App.DEVICE_NO=sp.getString(getResources().getString(R.string.system_device_number_key),"TFca50-01");
+        App.MUSIC_SWITCH=sp.getBoolean(getResources().getString(R.string.system_music_key),false);
     }
 
     NavigationView navigationView;
@@ -103,25 +121,26 @@ private final String TAG="Main2Activity";
     }
 
     private RFIDReaderHelper rfidHander;
-//    private TDScannerHelper scannerHander;
-    private void initRFID(){
+
+    //    private TDScannerHelper scannerHander;
+    private void initRFID() {
         try {
             RFID_2DHander.getInstance().connectReader();
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             rfidHander.registerObserver(UHFResult.getInstance());
-        }catch (Exception e){
-            Log.w(TAG,"RFID读写器异常");
-            Toast.makeText(this,getResources().getString(R.string.hint_rfid_mistake),Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "RFID读写器异常");
+            Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void init2D(){
+    private void init2D() {
         try {
             RFID_2DHander.getInstance().connect2D();
 //            scannerHander = RFID_2DHander.getInstance().getTDScanner();
-        }catch (Exception e){
-            Log.w(TAG,"2D模块异常");
-            Toast.makeText(this,getResources().getString(R.string.hint_rfid_mistake),Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -136,14 +155,14 @@ private final String TAG="Main2Activity";
                 fragment = HomeFragment.newInstance();
                 break;
             case 1:
-                fragment= InCheckFragment.newInstance();
+                fragment = InCheckFragment.newInstance();
                 break;
             case 2:
-                fragment= OutCheckCarFragment.newInstance();
+                fragment = OutCheckCarFragment.newInstance();
 //                fragment = CheckFragment.newInstance();
                 break;
             case 3:
-                fragment= SettingFragment.newInstance();
+                fragment = SettingFragment.newInstance();
                 break;
             case 4:
 //                fragment= OutInspectionFragment.newInstance();
@@ -163,7 +182,7 @@ private final String TAG="Main2Activity";
         if (fragment instanceof HomeFragment) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
-        } else if (fragment!=null) {
+        } else if (fragment != null) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         }
@@ -181,30 +200,35 @@ private final String TAG="Main2Activity";
     public void mesClick(View view) {
         selectItem(1);
     }
+
     /*
    * 盘点作业点击监听
    * */
     public void cheClick(View view) {
         selectItem(2);
     }
+
     /*
    * 设备设置点击监听
    * */
     public void setClick(View view) {
         selectItem(3);
     }
+
     /*
    * 个性化一点击监听
    * */
     public void inClick1(View view) {
         selectItem(4);
     }
+
     /*
    * 个性化二点击监听
    * */
     public void inClick2(View view) {
         selectItem(5);
     }
+
     /*
    * 个性化三点击监听
    * */
@@ -215,13 +239,14 @@ private final String TAG="Main2Activity";
     //返回键监听
     @Override
     public void onBackPressed() {
-        Log.i("MainActivity","onBackPressed");
+        Log.i("MainActivity", "onBackPressed");
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-            if (fragment != null && (fragment instanceof AboutFragment ||  fragment instanceof
+            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof
                     OutCheckCarFragment || fragment instanceof InCheckFragment || fragment instanceof SettingFragment
+                    || fragment instanceof HomeFragment
             )) {
 
                 //update the selected item in the drawer and the title
@@ -233,14 +258,82 @@ private final String TAG="Main2Activity";
                 //super.onBackPressed();
 
                 if (fragment instanceof HomeFragment) {
-                    ((HomeFragment) fragment).onBackPressed();
+
+                    askForOut();
                 } else {
 
                 }
             } else {
-                getSupportFragmentManager().popBackStack();
+                if (fragment != null && (fragment instanceof OutCheckFragment)){
+                    askForBack();
+                }else {
+                getFragmentManager().popBackStack();
+                }
             }
         }
+    }
+
+    public void showProgress(final boolean show){
+/*
+        loginButton.setEnabled(show?false:true);
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.///////////////////////
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            loginProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+            loginProgress.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+        }*/
+    }
+    private void askForBack() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("提示" + "").
+                setMessage("确认返回吗？" + "").
+                setPositiveButton(getString(R.string.btn_yes),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getFragmentManager().popBackStack();
+                            }
+                        }).setNegativeButton(getString(R.string.btn_no),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setCancelable(false).show();
+    }
+    private void askForOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("提示" + "").
+                setMessage("确认要退出吗？" + "").
+                setPositiveButton(getString(R.string.btn_yes),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //close the module
+                                finish();
+                            }
+                        }).setNegativeButton(getString(R.string.btn_no),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setCancelable(false).show();
     }
 
     //右上角列表R.menu.main2
@@ -293,16 +386,32 @@ private final String TAG="Main2Activity";
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        disConnect2D();
+        disConnectRFID();
 
     }
-    private void disConnectRFID(){
+
+    private void disConnectRFID() {
+        try {
+
         RFID_2DHander.getInstance().off_RFID();
-        if(rfidHander!=null)
-        rfidHander.unRegisterObserver(UHFResult.getInstance());
+        if (rfidHander != null)
+            rfidHander.unRegisterObserver(UHFResult.getInstance());
         RFID_2DHander.getInstance().disConnectReader();
         RFID_2DHander.getInstance().releaseRFID();
-    }
-    private void disConnect2D(){
+        }catch (Exception e){
 
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+        RFID_2DHander.getInstance().off_2D();
+        RFID_2DHander.getInstance().disConnect2D();
+        RFID_2DHander.getInstance().releaseRFID();
+
+        }catch (Exception e){
+
+        }
     }
 }

@@ -4,7 +4,8 @@
     <!--用户-->
     <PreferenceCategory android:title="@string/user_managment_group">
         <PreferenceScreen android:title="@string/user_managment_title">
-            <PreferenceCategory>
+            <PreferenceCategory
+                android:title="用户信息">
                 <!--<com.example.mumu.warehousecheckcar.view.UserHeadPreference
                     android:key="@string/user_message_key"
                     android:layout="@layout/user_item1"/>-->
@@ -24,7 +25,7 @@
                         android:entryValues="@array/status"/>
             </PreferenceCategory>
             <PreferenceCategory
-                android:summary="@string/user_jurisdiction_summary">
+                android:title="用户权限">
                 <SwitchPreference
                     android:key="@string/user_in_storage_key"
                     android:summary="@string/user_in_storage_key"
@@ -48,7 +49,8 @@
     <PreferenceCategory android:title="@string/system_managment_group">
        <!--系统-->
         <PreferenceScreen android:title="@string/system_managment_title">
-            <PreferenceCategory>
+            <PreferenceCategory
+                android:title="系统设置">
                 <EditTextPreference android:key="@string/system_version_key"
                     android:summary="@string/system_version_summary"
                     android:title="@string/system_version_title"
@@ -62,10 +64,10 @@
                 <EditTextPreference android:key="@string/system_device_number_key"
                     android:summary="@string/system_device_number_summary"
                     android:title="@string/system_device_number_title"/>
-                <SwitchPreference android:title="@string/system_push_title"
-                    android:key="@string/system_push_key"
-                    android:summaryOn="@string/system_push_summaryON"
-                    android:summaryOff="@string/system_push_summaryOFF"
+                <SwitchPreference android:title="@string/system_music_title"
+                    android:key="@string/system_music_key"
+                    android:summaryOn="@string/system_music_summaryON"
+                    android:summaryOff="@string/system_music_summaryOFF"
                     android:defaultValue="true" />
             </PreferenceCategory>
         </PreferenceScreen>

@@ -22,9 +22,7 @@ public class UHFResult extends RXObserver {
             result=new UHFResult();
         return result;
     }
-
     private UHFCallbackLiatener callbackLiatener;
-
     public void setCallbackLiatener(UHFCallbackLiatener callbackLiatener) {
         this.callbackLiatener = callbackLiatener;
     }

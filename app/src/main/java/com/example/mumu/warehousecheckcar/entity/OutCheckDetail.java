@@ -3,11 +3,11 @@ package com.example.mumu.warehousecheckcar.entity;
 import java.util.Date;
 
 /**
- * Created by mumu on 2018/12/08.
- * 申请单详细列表
+ * Created by mumu on 2018/12/10.
+ * 出库申请单详细列表
  */
 
-public class InCheckDetail {
+public class OutCheckDetail {
     /**车牌号*/
     private String carNo;
     /**

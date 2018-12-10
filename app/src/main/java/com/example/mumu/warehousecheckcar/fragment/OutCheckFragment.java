@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,28 +20,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.UHF.Sound;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.activity.Main2Activity;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.ItemMenu;
+import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.content.Context.TELEPHONY_SERVICE;
 import static com.example.mumu.warehousecheckcar.application.App.carNo;
 
 /**
@@ -60,6 +73,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     TextView text2;
     @Bind(R.id.button3)
     Button button3;
+  /*  @Bind(R.id.text3)
+    TextView text3;*/
 
     private OutCheckFragment() {
     }
@@ -71,17 +86,29 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     }
 
     private RecycleAdapter mAdapter;
-    private List<InCheckDetail> myList;
+    private List<OutCheckDetail> myList;
+    /**
+     * 匹配逻辑
+     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * value：index
+     */
+    private Map<String, Integer> strIndex;
+    private List<OutCheckDetail> dataList;
     private List<String> epcList;
+    private List<String> dataEPC;
+    private Sound sound;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_check_layout, container, false);
         ButterKnife.bind(this, view);
-
+        sound = new Sound(getActivity());
         myList = new ArrayList<>();
+        strIndex = new HashMap<>();
         epcList = new ArrayList<>();
+        dataEPC = new ArrayList<>();
+        dataList = new ArrayList<>();
         clearData();
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_item_layout);
         mAdapter.setContext(getActivity());
@@ -93,36 +120,51 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         recyle.setAdapter(mAdapter);
 
         initView();
-//        initRFID();
+        initRFID();
         return view;
     }
 
     public void initView() {
-        text1.setText(myList.size()-1+"");
-        if (carNo!=null)
-        text2.setText(carNo+"");
+        text1.setText("0");
+        if (carNo != null)
+            text2.setText(carNo + "");
         else
             text2.setText("");
     }
 
     private void initRFID() {
-        RFID_2DHander.getInstance().on_RFID();
-        UHFResult.getInstance().setCallbackLiatener(this);
+        try {
+            RFID_2DHander.getInstance().on_RFID();
+            UHFResult.getInstance().setCallbackLiatener(this);
+        } catch (Exception e) {
+
+        }
     }
 
     private void disRFID() {
-        RFID_2DHander.getInstance().off_RFID();
+        try {
+            RFID_2DHander.getInstance().off_RFID();
+        } catch (Exception e) {
+
+        }
     }
 
     private void clearData() {
         if (myList != null) {
             myList.clear();
-            myList.add(new InCheckDetail());
+            myList.add(new OutCheckDetail());
         }
-        if (epcList != null) {
+        if (dataList!=null)
+            dataList.clear();
+        if (epcList != null)
             epcList.clear();
-        }
+        if (dataEPC!=null)
+            dataEPC.clear();
+        if (strIndex!=null)
+            strIndex.clear();
+
         text1.setText("0");
+//        text3.setText("0");
     }
 
     private void setAdaperHeader() {
@@ -157,29 +199,109 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-//        disRFID();
+        disRFID();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     protected static final String TAG_RETURN_FRAGMENT = "TitleFragment";
-    Handler handler=new Handler(){
+    long currenttime = 0;
+//    int error = 0;
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.arg1){
+            switch (msg.arg1) {
                 case 0x00:
-                    String EPC= (String) msg.obj;
-                    if (!epcList.contains(EPC)){
-                        epcList.add(EPC);
-                        text1.setText(""+(epcList.size()-1));
-//                        查询
+                    if (App.MUSIC_SWITCH) {
+                        if (System.currentTimeMillis() - currenttime > 150) {
+                            sound.callAlarm();
+                            currenttime = System.currentTimeMillis();
+                        }
                     }
+                    String EPC = (String) msg.obj;
+                    EPC.replace(" ", "");
+                    EPC.replace("\"", "");
+                    if (!epcList.contains(EPC)) {
+                        epcList.add(EPC);
+//                        查询
+                        String decice=App.DEVICE_NO;
+                        final String json = JSON.toJSONString(EPC);
+//                        https://192.168.43.193/shYf/sh/rfid/index.sh?shmodule_id=56
+//                        http://192.168.43.193:8080/shYf/sh/rfid/outEpc.sh?shmodule_id=56
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                try {
+                                   /* Response response=OkHttpClientManager.postJsonAsyn(App.IP+":"+App.PORT+"/shYf/sh/rfid/outEpc.sh",json);
+                                    boolean send=response.isSuccessful();*/
+//                                    OkHttpClientManager.postJsonAsyn("https://"+App.IP, new OkHttpClientManager.ResultCallback<OutCheckDetail>() {
+                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
+                                        //                                        outDetail.sh
+                                        @Override
+                                        public void onError(Request request, Exception e) {
+                                            Log.i("EPC", "onError");
+                                        }
+
+                                        @Override
+                                        public void onResponse(ArrayList<OutCheckDetail> response) {
+                                            Log.i("EPC", "onResponse");
+                                            if (response != null && response.size() != 0) {
+                                                OutCheckDetail ocd = response.get(0);
+                                                if (ocd != null) {
+                                                    ocd.setCarNo(App.carNo);
+                                                    if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
+                                                        dataEPC.add(ocd.getEpc());
+                                                        dataList.add(ocd);
+                                                        String key = ocd.getVatNo() + ocd.getProduct_no()
+                                                                + ocd.getSelNo() + ocd.getColor();
+                                                        if (!strIndex.containsKey(key)) {//当前没有
+                                                            ocd.setCount(1);
+                                                            myList.add(ocd);
+                                                            strIndex.put(key, myList.size() - 1);
+                                                        } else {
+                                                            int index = strIndex.get(key);
+                                                            myList.get(index).addCount();
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+//                                                error++;
+                                               /* OutCheckDetail ocd=new OutCheckDetail();
+                                                ocd.setCount();
+                                                    myList.add(new OutCheckDetail);*/
+//                                                显示错误
+                                            }
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    text1.setText("" + (dataList.size()));
+                                                    mAdapter.notifyDataSetChanged();
+                                                }
+                                            });
+                                        }
+                                    }, json);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }).start();
+                    }
+                    break;
+                case 0x02:
+                    Toast.makeText(getActivity(),"上传成功",Toast.LENGTH_LONG).show();
+                    clearData();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                case 0x03:
+                    Toast.makeText(getActivity(),"上传失败",Toast.LENGTH_LONG).show();
                     break;
             }
         }
     };
 
-    @OnClick({R.id.button1, R.id.button2,R.id.button3})
+    @OnClick({R.id.button1, R.id.button2, R.id.button3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
@@ -191,6 +313,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
                 break;
             case R.id.button3:
 //                完成一车
+                ((Main2Activity) getActivity()).showProgress(true);
+                getFragmentManager().popBackStack();
                 break;
         }
     }
@@ -202,7 +326,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         Button no = (Button) blinkView.findViewById(R.id.dialog_no);
         Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText(R.string.dialog_in_check);
+        text.setText("是否确认出库？");
         dialog = new AlertDialog.Builder(getActivity()).create();
         dialog.show();
         dialog.getWindow().setContentView(blinkView);
@@ -219,6 +343,48 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
             @Override
             public void onClick(View view) {
 //                上传一次
+                List<OutCheckDetail> list = new ArrayList<OutCheckDetail>();
+                for (OutCheckDetail acd : dataList) {
+                    acd.setDevice(App.DEVICE_NO+"");
+                    list.add(acd);
+                }
+                final String json = JSON.toJSONString(list);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Response response = null;
+                        try {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/outDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
+
+                                }
+
+                                @Override
+                                public void onResponse(String response) {
+                                    if (response.equals("1")){
+                                        Message msg=handler.obtainMessage();
+                                        msg.arg1=0x02;
+                                        handler.sendMessage(msg);
+                                    }else {
+                                        Message msg=handler.obtainMessage();
+                                        msg.arg1=0x03;
+                                        handler.sendMessage(msg);
+                                    }
+
+                                }
+                            },json);
+                           /* if (response.isSuccessful()) {
+//                                上传成功
+                                String result = JSON.toJSONString(response);
+                            } else {
+//                                上传失败
+                            }*/
+                        } catch (IOException e) {
+
+                        }
+                    }
+                }).start();
                 dialog.dismiss();
             }
         });
@@ -231,11 +397,13 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        if (!epcList.contains(tag.strEPC)) {
-            Message msg=handler.obtainMessage();
-            msg.arg1=0x00;
-            msg.obj=tag.strEPC;
-        }
+//        if (!epcList.contains(tag.strEPC)) {
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x00;
+        msg.obj = tag.strEPC;
+        handler.sendMessage(msg);
+
+//        }
         Log.i(TAG, tag.strEPC);
     }
 
@@ -250,7 +418,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     }
 
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<OutCheckDetail> {
         private Context context;
 
         public void setContext(Context context) {
@@ -261,21 +429,25 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<OutCheckDetail> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
 
         @Override
-        public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
+        public void convert(RecyclerHolder holder, OutCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
-                    for (ItemMenu im : ItemMenu.values()) {
-                        if (im.getIndex() == 0)
-                            holder.setText(im.getId(), "" + position);
-                        else
-                            holder.setText(im.getId(), "");
+                    if (item.getVatNo()==null) {
+                        LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                     }
+//                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
+                    holder.setText(R.id.item1, item.getProduct_no() + "");
+                    holder.setText(R.id.item2, item.getVatNo() + "");
+                    holder.setText(R.id.item3, item.getColor() + "");
+                    holder.setText(R.id.item4, item.getSelNo() + "");
+                    holder.setText(R.id.item5, item.getCount() + "");
                 }
             }
         }

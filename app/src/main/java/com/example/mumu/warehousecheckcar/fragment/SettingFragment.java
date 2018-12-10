@@ -2,31 +2,25 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.util.Log;
-import android.view.View;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.config.Config;
 import com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume;
 import com.rfid.RFIDReaderHelper;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
-
-import butterknife.ButterKnife;
 
 
 /**
@@ -37,8 +31,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     public static SettingFragment newInstance() {
         return new SettingFragment();
     }
-    private EditTextPreference userName,userId,systemVersion,systemIP,systemPort,systemNumber;
-    private SwitchPreference push;
+    private EditTextPreference userName,userId,systemVersion,systemIP,systemPort, deviceNumber;
+    private SwitchPreference music;
     private SeekBarPreferenceVolume prower,workTime,intervalTime;
     private ListPreference statuslist;
     @Override
@@ -52,13 +46,13 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         systemVersion=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_version_key));
         systemIP=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_ip_key));
         systemPort=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_port_key));
-        systemNumber=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_device_number_key));
-        push=(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.system_push_key));
+        deviceNumber =(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_device_number_key));
+        music =(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.system_music_key));
         prower=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_prower_key));
      /*   workTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_work_time_key));
         intervalTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_interval_time_key));*/
         statuslist=(ListPreference)getPreferenceScreen().findPreference(getString(R.string.user_status_key));
-
+        initView();
         getRFID();
         UHFResult.getInstance().setCallbackLiatener(this);
     }
@@ -71,7 +65,12 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             e.printStackTrace();
         }
     }
-
+    public void initView(){
+        setEditTextPre(systemVersion);
+        setEditTextPre(systemIP);
+        setEditTextPre(systemPort);
+        setEditTextPre(deviceNumber);
+    }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key){
@@ -93,8 +92,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             case Config.PORT_KEY:
                 setEditTextPre(systemPort);
                 break;
-            case Config.NUMBER_KEY:
-                setEditTextPre(systemNumber);
+            case Config.DEVICE_NUMBER_KEY:
+                setEditTextPre(deviceNumber);
                 break;
             case Config.USER_PROWER_KEY:
                 byte prower=(byte)getPrower(getActivity());
@@ -102,6 +101,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                     rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId,prower);
                 }
                 break;
+            case Config.MUSIC:
+                App.MUSIC_SWITCH=music.isChecked();
         }
     }
 //    设置EditTextPreference样式
@@ -125,7 +126,14 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
     }
-/**
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RFID_2DHander.getInstance().off_RFID();
+    }
+
+    /**
  * 获取用户名*/
     public static String getUsername(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context).getString(Config.USER_NAME_KEY,"");
