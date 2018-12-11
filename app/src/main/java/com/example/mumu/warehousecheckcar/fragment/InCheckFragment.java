@@ -79,15 +79,16 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
     }
 
     private RecycleAdapter mAdapter;
-    private List<OutCheckDetail> myList;
+
+    private List<InCheckDetail> myList;
     /**
      * 匹配逻辑
      * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
      * value：index
      */
     private Map<String, Integer> strIndex;
-    private List<OutCheckDetail> dataList;
-    private List<String> epcList;
+    private List<InCheckDetail> dataList;
+//    private List<String> epcList;
     private List<String> dataEPC;
     private Sound sound;
     @Nullable
@@ -99,7 +100,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
         getActivity().setTitle("入库校验");
         myList = new ArrayList<>();
         strIndex = new HashMap<>();
-        epcList = new ArrayList<>();
+//        epcList = new ArrayList<>();
         dataEPC = new ArrayList<>();
         dataList = new ArrayList<>();
         clearData();
@@ -140,12 +141,12 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
     private void clearData() {
         if (myList != null) {
             myList.clear();
-            myList.add(new OutCheckDetail());
+            myList.add(new InCheckDetail());
         }
         if (dataList!=null)
             dataList.clear();
-        if (epcList != null)
-            epcList.clear();
+       /* if (epcList != null)
+            epcList.clear();*/
         if (dataEPC!=null)
             dataEPC.clear();
         if (strIndex!=null)
@@ -207,10 +208,8 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
                     String EPC = (String) msg.obj;
                     EPC.replace(" ", "");
                     EPC.replace("\"", "");
-                    if (!epcList.contains(EPC)) {
-                        epcList.add(EPC);
+                    if (!dataEPC.contains(EPC)) {
 //                        查询
-                        String decice=App.DEVICE_NO;
                         final String json = JSON.toJSONString(EPC);
 //                        https://192.168.43.193/shYf/sh/rfid/index.sh?shmodule_id=56
 //                        http://192.168.43.193:8080/shYf/sh/rfid/outEpc.sh?shmodule_id=56
@@ -222,7 +221,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
                                    /* Response response=OkHttpClientManager.postJsonAsyn(App.IP+":"+App.PORT+"/shYf/sh/rfid/outEpc.sh",json);
                                     boolean send=response.isSuccessful();*/
 //                                    OkHttpClientManager.postJsonAsyn("https://"+App.IP, new OkHttpClientManager.ResultCallback<OutCheckDetail>() {
-                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
+                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
                                         //                                        outDetail.sh
                                         @Override
                                         public void onError(Request request, Exception e) {
@@ -230,17 +229,17 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
                                         }
 
                                         @Override
-                                        public void onResponse(ArrayList<OutCheckDetail> response) {
+                                        public void onResponse(ArrayList<InCheckDetail> response) {
                                             Log.i("EPC", "onResponse");
                                             if (response != null && response.size() != 0) {
-                                                OutCheckDetail ocd = response.get(0);
+                                                InCheckDetail ocd = response.get(0);
                                                 if (ocd != null) {
                                                     ocd.setCarNo(App.carNo);
                                                     if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
                                                         dataEPC.add(ocd.getEpc());
                                                         dataList.add(ocd);
                                                         String key = ocd.getVatNo() + ocd.getProduct_no()
-                                                                + ocd.getSelNo() + ocd.getColor();
+                                                                + ocd.getSelNo() + ocd.getColor()+"";
                                                         if (!strIndex.containsKey(key)) {//当前没有
                                                             ocd.setCount(1);
                                                             myList.add(ocd);
@@ -324,8 +323,8 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
             @Override
             public void onClick(View view) {
 //                上传数据
-                List<OutCheckDetail> list = new ArrayList<OutCheckDetail>();
-                for (OutCheckDetail acd : dataList) {
+                List<InCheckDetail> list = new ArrayList<InCheckDetail>();
+                for (InCheckDetail acd : dataList) {
                     acd.setDevice(App.DEVICE_NO+"");
                     list.add(acd);
                 }
@@ -399,7 +398,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
 
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<OutCheckDetail> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
         private Context context;
 
         public void setContext(Context context) {
@@ -410,13 +409,13 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<OutCheckDetail> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
 
         @Override
-        public void convert(RecyclerHolder holder, OutCheckDetail item, int position) {
+        public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
                     if (item.getVatNo()==null) {

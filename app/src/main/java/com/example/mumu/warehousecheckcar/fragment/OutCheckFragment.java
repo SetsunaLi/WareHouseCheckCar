@@ -94,7 +94,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
      */
     private Map<String, Integer> strIndex;
     private List<OutCheckDetail> dataList;
-    private List<String> epcList;
+//    private List<String> epcList;
     private List<String> dataEPC;
     private Sound sound;
 
@@ -106,7 +106,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         sound = new Sound(getActivity());
         myList = new ArrayList<>();
         strIndex = new HashMap<>();
-        epcList = new ArrayList<>();
+//        epcList = new ArrayList<>();
         dataEPC = new ArrayList<>();
         dataList = new ArrayList<>();
         clearData();
@@ -156,8 +156,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         }
         if (dataList!=null)
             dataList.clear();
-        if (epcList != null)
-            epcList.clear();
+        /*if (epcList != null)
+            epcList.clear();*/
         if (dataEPC!=null)
             dataEPC.clear();
         if (strIndex!=null)
@@ -221,8 +221,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
                     String EPC = (String) msg.obj;
                     EPC.replace(" ", "");
                     EPC.replace("\"", "");
-                    if (!epcList.contains(EPC)) {
-                        epcList.add(EPC);
+                    if (!dataEPC.contains(EPC)) {
+//                        epcList.add(EPC);
 //                        查询
                         String decice=App.DEVICE_NO;
                         final String json = JSON.toJSONString(EPC);
@@ -246,31 +246,35 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
                                         @Override
                                         public void onResponse(ArrayList<OutCheckDetail> response) {
                                             Log.i("EPC", "onResponse");
-                                            if (response != null && response.size() != 0) {
-                                                OutCheckDetail ocd = response.get(0);
-                                                if (ocd != null) {
-                                                    ocd.setCarNo(App.carNo);
-                                                    if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
-                                                        dataEPC.add(ocd.getEpc());
-                                                        dataList.add(ocd);
-                                                        String key = ocd.getVatNo() + ocd.getProduct_no()
-                                                                + ocd.getSelNo() + ocd.getColor();
-                                                        if (!strIndex.containsKey(key)) {//当前没有
-                                                            ocd.setCount(1);
-                                                            myList.add(ocd);
-                                                            strIndex.put(key, myList.size() - 1);
-                                                        } else {
-                                                            int index = strIndex.get(key);
-                                                            myList.get(index).addCount();
+                                            try {
+                                                if (response != null && response.size() != 0) {
+                                                    OutCheckDetail ocd = response.get(0);
+                                                    if (ocd != null) {
+                                                        ocd.setCarNo(App.carNo);
+                                                        if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
+                                                            dataEPC.add(ocd.getEpc());
+                                                            dataList.add(ocd);
+                                                            String key = ocd.getVatNo() + ocd.getProduct_no()
+                                                                    + ocd.getSelNo() + ocd.getColor() + "";
+                                                            if (!strIndex.containsKey(key)) {//当前没有
+                                                                ocd.setCount(1);
+                                                                myList.add(ocd);
+                                                                strIndex.put(key, myList.size() - 1);
+                                                            } else {
+                                                                int index = strIndex.get(key);
+                                                                myList.get(index).addCount();
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            } else {
+                                                } else {
 //                                                error++;
                                                /* OutCheckDetail ocd=new OutCheckDetail();
                                                 ocd.setCount();
                                                     myList.add(new OutCheckDetail);*/
 //                                                显示错误
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
                                             }
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
