@@ -92,15 +92,15 @@
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/button_margin"
             android:layout_marginRight="@dimen/button_margin"
-            android:text="上传" />
-        <Button
+            android:text="确定" />
+       <!-- <Button
             android:id="@+id/button3"
             style="@style/button_style1"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/button_margin"
             android:layout_marginRight="@dimen/button_margin"
-            android:text="完成" />
+            android:text="完成" />-->
 
     </LinearLayout>
 </LinearLayout>

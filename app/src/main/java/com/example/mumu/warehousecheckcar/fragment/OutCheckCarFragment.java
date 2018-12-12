@@ -38,16 +38,16 @@ public class OutCheckCarFragment extends Fragment {
     @Bind(R.id.button2)
     Button button2;
 
-    public static OutCheckCarFragment newInstance() {
-        return new OutCheckCarFragment();
-    }
-
     private final String TAG = "OutCheckCarFragment";
 
-    private OutCheckCarFragment() {
+
+    private static OutCheckCarFragment fragment;
+    private OutCheckCarFragment(){    }
+    public static OutCheckCarFragment newInstance(){
+        if (fragment==null);
+        fragment=new OutCheckCarFragment();
+        return fragment;
     }
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

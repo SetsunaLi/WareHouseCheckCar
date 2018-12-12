@@ -41,15 +41,17 @@ public class OutInspectionFragment extends Fragment implements RXCallback {
     @Bind(R.id.button2)
     Button button2;
 
-    public static OutInspectionFragment newInstance() {
-        return new OutInspectionFragment();
-    }
 
     private final String TAG = "OutInspectionFragment";
 
     private OutInspectionFragment() {
     }
-
+    private static OutInspectionFragment fragment;
+    public static OutInspectionFragment newInstance(){
+        if (fragment==null);
+        fragment=new OutInspectionFragment();
+        return fragment;
+    }
     private TDScannerHelper scannerHander;
 
     @Nullable

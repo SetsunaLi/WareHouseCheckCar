@@ -30,14 +30,39 @@ public class InCheckDetail {
      * 重量
      */
     private float weight;
+    /**
+     * 总重量
+     */
+    private float weightall;
+/**
+ * 入库总量*/
+    private float weight_in;
     /**操作人*/
     private String operator;
     /**操作时间*/
     private Date operatingTime;
     /***数量*/
     private int count;
-
+/**设备号*/
     private String device;
+
+    private int type=1;
+
+    public float getWeight_in() {
+        return weight_in;
+    }
+
+    public void setWeight_in(float weight_in) {
+        this.weight_in = weight_in;
+    }
+
+    public float getWeightall() {
+        return weightall;
+    }
+
+    public void setWeightall(float weightall) {
+        this.weightall = weightall;
+    }
 
     public String getDevice() {
         return device;

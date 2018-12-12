@@ -51,15 +51,14 @@ public class AboutFragment extends Fragment {
     TableRow radioVersionRow;
     @Bind(R.id.copyRight)
     TextView copyRight;
-
-    public AboutFragment() {
-
+    
+    private static AboutFragment fragment;
+    private AboutFragment(){    }
+    public static AboutFragment newInstance(){
+        if (fragment==null);
+        fragment=new AboutFragment();
+        return fragment;
     }
-
-    public static AboutFragment newInstance() {
-        return new AboutFragment();
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

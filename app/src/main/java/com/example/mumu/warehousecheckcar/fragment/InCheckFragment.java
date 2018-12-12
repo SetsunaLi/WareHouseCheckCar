@@ -71,11 +71,12 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
     Button button2;
 
 
-    private InCheckFragment() {
-    }
-
-    public static InCheckFragment newInstance() {
-        return new InCheckFragment();
+    private static InCheckFragment fragment;
+    private InCheckFragment(){    }
+    public static InCheckFragment newInstance(){
+        if (fragment==null);
+        fragment=new InCheckFragment();
+        return fragment;
     }
 
     private RecycleAdapter mAdapter;
@@ -242,11 +243,14 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
                                                                 + ocd.getSelNo() + ocd.getColor()+"";
                                                         if (!strIndex.containsKey(key)) {//当前没有
                                                             ocd.setCount(1);
+                                                            ocd.setWeightall(ocd.getWeight());
                                                             myList.add(ocd);
                                                             strIndex.put(key, myList.size() - 1);
+
                                                         } else {
                                                             int index = strIndex.get(key);
                                                             myList.get(index).addCount();
+                                                            myList.get(index).setWeightall(myList.get(index).getWeightall()+ocd.getWeight());
                                                         }
                                                     }
                                                 }
@@ -428,6 +432,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener {
                     holder.setText(R.id.item3, item.getColor() + "");
                     holder.setText(R.id.item4, item.getSelNo() + "");
                     holder.setText(R.id.item5, item.getCount() + "");
+                    holder.setText(R.id.item6, ""+item.getWeightall() + "KG");
                 }
             }
         }

@@ -40,11 +40,12 @@ public class OutApplyDetailFragment extends Fragment implements BasePullUpRecycl
     @Bind(R.id.button2)
     Button button2;
 
-    public static OutApplyDetailFragment newInstance() {
-        return new OutApplyDetailFragment();
-    }
-
-    private OutApplyDetailFragment() {
+    private static OutApplyDetailFragment fragment;
+    private OutApplyDetailFragment(){    }
+    public static OutApplyDetailFragment newInstance(){
+        if (fragment==null);
+        fragment=new OutApplyDetailFragment();
+        return fragment;
     }
 
     private CharSequence mTitle;

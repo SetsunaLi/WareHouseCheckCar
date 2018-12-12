@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.UHF.Sound;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
+import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
@@ -60,7 +61,7 @@ import static com.example.mumu.warehousecheckcar.application.App.carNo;
  * Created by mumu on 2018/12/9.
  */
 
-public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
+public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BRecyclerAdapter.OnItemClickListener {
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.text1)
@@ -71,9 +72,9 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     Button button2;
     @Bind(R.id.text2)
     TextView text2;
-    @Bind(R.id.button3)
+   /* @Bind(R.id.button3)
     Button button3;
-  /*  @Bind(R.id.text3)
+    @Bind(R.id.text3)
     TextView text3;*/
 
     private OutCheckFragment() {
@@ -114,6 +115,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
+        mAdapter.setOnItemClickListener(this);
         LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
@@ -211,7 +213,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.arg1) {
-                case 0x00:
+                case 0x10:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
                             sound.callAlarm();
@@ -293,12 +295,12 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
                         }).start();
                     }
                     break;
-                case 0x02:
+                case 0x12:
                     Toast.makeText(getActivity(),"上传成功",Toast.LENGTH_LONG).show();
                     clearData();
                     mAdapter.notifyDataSetChanged();
                     break;
-                case 0x03:
+                case 0x13:
                     Toast.makeText(getActivity(),"上传失败",Toast.LENGTH_LONG).show();
                     break;
             }
@@ -317,8 +319,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
                 break;
             case R.id.button3:
 //                完成一车
-                ((Main2Activity) getActivity()).showProgress(true);
-                getFragmentManager().popBackStack();
+               /* ((Main2Activity) getActivity()).showProgress(true);
+                getFragmentManager().popBackStack();*/
                 break;
         }
     }
@@ -368,11 +370,11 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
                                 public void onResponse(String response) {
                                     if (response.equals("1")){
                                         Message msg=handler.obtainMessage();
-                                        msg.arg1=0x02;
+                                        msg.arg1=0x12;
                                         handler.sendMessage(msg);
                                     }else {
                                         Message msg=handler.obtainMessage();
-                                        msg.arg1=0x03;
+                                        msg.arg1=0x13;
                                         handler.sendMessage(msg);
                                     }
 
@@ -403,7 +405,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     public void onInventoryTagCallBack(RXInventoryTag tag) {
 //        if (!epcList.contains(tag.strEPC)) {
         Message msg = handler.obtainMessage();
-        msg.arg1 = 0x00;
+        msg.arg1 = 0x10;
         msg.obj = tag.strEPC;
         handler.sendMessage(msg);
 
@@ -419,6 +421,11 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener {
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
 
+    }
+
+    @Override
+    public void onItemClick(View view, Object data, int position) {
+        Fragment fragment=InCheckDetialFragment.newInstance();
     }
 
 

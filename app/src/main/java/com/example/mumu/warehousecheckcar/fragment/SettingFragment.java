@@ -28,8 +28,13 @@ import com.rfid.rxobserver.bean.RXOperationTag;
  */
 
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener,UHFCallbackLiatener{
-    public static SettingFragment newInstance() {
-        return new SettingFragment();
+    private SettingFragment() {
+    }
+    private static SettingFragment fragment;
+    public static SettingFragment newInstance(){
+        if (fragment==null);
+        fragment=new SettingFragment();
+        return fragment;
     }
     private EditTextPreference userName,userId,systemVersion,systemIP,systemPort, deviceNumber;
     private SwitchPreference music;

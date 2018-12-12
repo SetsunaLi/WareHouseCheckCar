@@ -70,10 +70,13 @@ public class CheckFragment extends Fragment {
     @Bind(R.id.recyle)
     RecyclerView recyle;
 
-    public static CheckFragment newInstance() {
-        return new CheckFragment();
+    private static CheckFragment fragment;
+    private CheckFragment(){    }
+    public static CheckFragment newInstance(){
+        if (fragment==null);
+        fragment=new CheckFragment();
+        return fragment;
     }
-
     //    private MyAdapter myAdapter;
     private RecycleAdapter mAdapter;
     private List<MyTestEnt> myList;

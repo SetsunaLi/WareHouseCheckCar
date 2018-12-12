@@ -52,10 +52,14 @@ public class HomeFragment extends Fragment {
     @Bind(R.id.ll5)
     LinearLayout ll5;
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+
+    private static HomeFragment fragment;
+    private HomeFragment(){    }
+    public static HomeFragment newInstance(){
+        if (fragment==null);
+        fragment=new HomeFragment();
+        return fragment;
     }
-    private HomeFragment(){}
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
