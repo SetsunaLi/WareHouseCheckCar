@@ -93,12 +93,17 @@ public class Main2Activity extends AppCompatActivity
     private void initDate() {
         mOptionTitle = getResources().getStringArray(R.array.options_array);
 
-        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
-        App.SYSTEM_VERSION=sp.getString(getResources().getString(R.string.system_version_key),"0");
-        App.IP=sp.getString(getResources().getString(R.string.system_ip_key),"192.168.0.120");
-        App.PORT=sp.getString(getResources().getString(R.string.system_port_key),"9090");
-        App.DEVICE_NO=sp.getString(getResources().getString(R.string.system_device_number_key),"TFca50-01");
-        App.MUSIC_SWITCH=sp.getBoolean(getResources().getString(R.string.system_music_key),false);
+      /*  SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
+        App.SYSTEM_VERSION=sp.getString(getResources().getString(R.string.system_version_key),"20181210");
+        App.IP=sp.getString(getResources().getString(R.string.system_ip_key),"http://47.107.112.133");
+        App.PORT=sp.getString(getResources().getString(R.string.system_port_key),"8088");
+        App.DEVICE_NO=sp.getString(getResources().getString(R.string.system_device_number_key),"YiFeng-001");
+        App.MUSIC_SWITCH=sp.getBoolean(getResources().getString(R.string.system_music_key),false);*/
+        App.SYSTEM_VERSION="20181210";
+        App.IP="http://47.107.112.133";
+        App.PORT="8088";
+        App.DEVICE_NO="YiFeng-001";
+        App.MUSIC_SWITCH=true;
     }
 
     NavigationView navigationView;
@@ -388,7 +393,6 @@ public class Main2Activity extends AppCompatActivity
         ButterKnife.unbind(this);
         disConnect2D();
         disConnectRFID();
-
     }
 
     private void disConnectRFID() {

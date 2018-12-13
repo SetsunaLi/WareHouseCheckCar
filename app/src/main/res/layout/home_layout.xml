@@ -27,7 +27,10 @@
                 android:layout_marginLeft="@dimen/home_margin"
                 android:background="@drawable/img_style_1"
                 android:padding="20dp"
-                android:src="@mipmap/user_head" />
+                android:src="@mipmap/user_head"
+                android:scaleType="center"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/tv1"

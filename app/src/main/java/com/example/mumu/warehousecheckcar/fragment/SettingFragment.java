@@ -49,9 +49,13 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         userName=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.user_name_key));
         userId=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.user_id_key));
         systemVersion=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_version_key));
+        setEditTextPre(systemVersion,App.SYSTEM_VERSION);
         systemIP=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_ip_key));
+        setEditTextPre(systemIP,App.IP);
         systemPort=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_port_key));
+        setEditTextPre(systemPort,App.PORT);
         deviceNumber =(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_device_number_key));
+        setEditTextPre(deviceNumber,App.DEVICE_NO);
         music =(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.system_music_key));
         prower=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_prower_key));
      /*   workTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_work_time_key));
@@ -114,6 +118,11 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     public void setEditTextPre(EditTextPreference editText){
         editText.setSummary(editText.getText());
         editText.setText(editText.getText());
+    }
+    //    动态设置
+    public void setEditTextPre(EditTextPreference editText,String str){
+        editText.setSummary(str);
+        editText.setText(str);
     }
     //    设置ListPreference样式
     public void setListPre(ListPreference list){

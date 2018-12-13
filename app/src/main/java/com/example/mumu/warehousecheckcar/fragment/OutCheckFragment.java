@@ -3,6 +3,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +38,10 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -55,6 +60,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.content.Context.TELEPHONY_SERVICE;
+import static com.example.mumu.warehousecheckcar.application.App.IN_DETAIL_LIST;
+import static com.example.mumu.warehousecheckcar.application.App.OUTDETAIL_LIST;
 import static com.example.mumu.warehousecheckcar.application.App.carNo;
 
 /**
@@ -97,7 +104,14 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
     private List<OutCheckDetail> dataList;
 //    private List<String> epcList;
     private List<String> dataEPC;
+    /**
+     * 匹配逻辑
+     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * value：index
+     */
+    private List<String> dataKEY;
     private Sound sound;
+    private LinearLayoutManager ms;
 
     @Nullable
     @Override
@@ -110,13 +124,15 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
 //        epcList = new ArrayList<>();
         dataEPC = new ArrayList<>();
         dataList = new ArrayList<>();
+        dataKEY=new ArrayList<>();
+
         clearData();
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_item_layout);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
         mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
+        ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
@@ -125,7 +141,18 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
         initRFID();
         return view;
     }
+   /* public void textData(){
+        {OutCheckDetail in1=new OutCheckDetail("123","123","123","123","123",10,10,"123",10);
+            myList.add(in1);
+            dataList.add(in1);}
+        { OutCheckDetail in1=new OutCheckDetail("456","456","456","456","456",20,20,"456",20);
+            myList.add(in1);
+            dataList.add(in1);}
 
+        {OutCheckDetail in1=new OutCheckDetail("789","789","789","789","789",30,30,"789",30);
+            myList.add(in1);
+            dataList.add(in1);}
+    }*/
     public void initView() {
         text1.setText("0");
         if (carNo != null)
@@ -164,13 +191,15 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
             dataEPC.clear();
         if (strIndex!=null)
             strIndex.clear();
-
+        if (dataKEY!=null)
+            dataKEY.clear();
         text1.setText("0");
 //        text3.setText("0");
     }
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_item_layout, null);
+        ((CheckBox)view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 
@@ -260,20 +289,17 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
                                                                     + ocd.getSelNo() + ocd.getColor() + "";
                                                             if (!strIndex.containsKey(key)) {//当前没有
                                                                 ocd.setCount(1);
+                                                                ocd.setWeightall(ocd.getWeight());
                                                                 myList.add(ocd);
                                                                 strIndex.put(key, myList.size() - 1);
                                                             } else {
                                                                 int index = strIndex.get(key);
                                                                 myList.get(index).addCount();
+                                                                myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(),ocd.getWeight()));
+
                                                             }
                                                         }
                                                     }
-                                                } else {
-//                                                error++;
-                                               /* OutCheckDetail ocd=new OutCheckDetail();
-                                                ocd.setCount();
-                                                    myList.add(new OutCheckDetail);*/
-//                                                显示错误
                                                 }
                                             }catch (Exception e){
                                                 e.printStackTrace();
@@ -307,7 +333,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
         }
     };
 
-    @OnClick({R.id.button1, R.id.button2, R.id.button3})
+    @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
@@ -317,11 +343,11 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
             case R.id.button2:
                 blinkDialog();
                 break;
-            case R.id.button3:
+          /*  case R.id.button3:
 //                完成一车
-               /* ((Main2Activity) getActivity()).showProgress(true);
-                getFragmentManager().popBackStack();*/
-                break;
+               *//* ((Main2Activity) getActivity()).showProgress(true);
+                getFragmentManager().popBackStack();*//*
+                break;*/
         }
     }
 
@@ -351,8 +377,10 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
 //                上传一次
                 List<OutCheckDetail> list = new ArrayList<OutCheckDetail>();
                 for (OutCheckDetail acd : dataList) {
-                    acd.setDevice(App.DEVICE_NO+"");
-                    list.add(acd);
+                    if (dataKEY.contains(acd.getVatNo())) {
+                        acd.setDevice(App.DEVICE_NO + "");
+                        list.add(acd);
+                    }
                 }
                 final String json = JSON.toJSONString(list);
                 new Thread(new Runnable() {
@@ -422,10 +450,27 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
     public void onOperationTagCallBack(RXOperationTag tag) {
 
     }
-
+//详细
     @Override
     public void onItemClick(View view, Object data, int position) {
-        Fragment fragment=InCheckDetialFragment.newInstance();
+        if (position!=0) {
+            mAdapter.select(position);
+            mAdapter.notifyDataSetChanged();
+            OutCheckDetail icd = myList.get(position);
+            String key = icd.getVatNo();
+            OUTDETAIL_LIST.clear();
+            OUTDETAIL_LIST.add(new OutCheckDetail());//增加一个为头部
+            for (OutCheckDetail obj : dataList) {
+                if (obj.getVatNo().equals(key)) {
+                    OUTDETAIL_LIST.add(obj);
+                }
+            }
+            Fragment fragment = OutCheckDetialFragment.newInstance();
+            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+            transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+            transaction.show(fragment);
+            transaction.commit();
+        }
     }
 
 
@@ -444,21 +489,58 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
             super(v, datas, itemLayoutId);
 
         }
-
+        private int index=-255;
+        public void select(int index){
+            if (this.index==index)
+                this.index=-255;
+            else
+                this.index=index;
+        }
         @Override
-        public void convert(RecyclerHolder holder, OutCheckDetail item, int position) {
-            if (position != 0) {
-                if (item != null) {
-                    if (item.getVatNo()==null) {
-                        LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        public void convert(RecyclerHolder holder,final OutCheckDetail item,final int position) {
+            if (item != null) {
+                CheckBox cb=(CheckBox)holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position==0){
+                            for (int i=1;i<myList.size();i++){
+                                View view=ms.findViewByPosition(i);
+                                CheckBox c=(CheckBox)view.findViewById(R.id.checkbox1);
+                                c.setChecked(isChecked);
+                            }
+                        }else {
+                            if (isChecked){
+                                if(!dataKEY.contains(item.getVatNo()))
+                                    dataKEY.add(item.getVatNo());
+                            }else {
+                                if(dataKEY.contains(item.getVatNo()))
+                                    dataKEY.remove(item.getVatNo());
+                            }
+                        }
+                        notifyDataSetChanged();
                     }
+                });
+                if (position != 0) {
+                    if (cb.isChecked()){
+                        if(!dataKEY.contains(item.getVatNo()))
+                            dataKEY.add(item.getVatNo());
+                    }else {
+                        if(dataKEY.contains(item.getVatNo()))
+                            dataKEY.remove(item.getVatNo());
+                    }
+                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    if (index==position) {
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                    }else
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getProduct_no() + "");
                     holder.setText(R.id.item2, item.getVatNo() + "");
                     holder.setText(R.id.item3, item.getColor() + "");
                     holder.setText(R.id.item4, item.getSelNo() + "");
                     holder.setText(R.id.item5, item.getCount() + "");
+                    holder.setText(R.id.item6, ""+String.valueOf(item.getWeightall()) + "KG");
                 }
             }
         }

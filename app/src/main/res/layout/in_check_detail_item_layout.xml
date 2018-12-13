@@ -10,30 +10,13 @@
         android:layout_height="50dip"
         android:descendantFocusability="blocksDescendants"
         android:orientation="horizontal">
-        <CheckBox
-            android:id="@+id/checkbox1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:checked="true"
-            />
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            android:id="@+id/item5"
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="扫码数量"
-            android:textColor="@color/colorDataYesText" />
-        <View style="@style/view_item_mid" />
-
         <TextView
             android:id="@+id/item1"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="60dip"
             android:layout_height="match_parent"
-            android:text="布号" />
+            android:text="布票号"
+            android:textColor="@color/colorDataYesText"/>
 
         <View style="@style/view_item_mid" />
 
@@ -42,25 +25,33 @@
             style="@style/text_item"
             android:layout_width="120dip"
             android:layout_height="match_parent"
-            android:text="缸号" />
+            android:text="布号" />
 
         <View style="@style/view_item_mid" />
 
         <TextView
             android:id="@+id/item3"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="90dip"
             android:layout_height="match_parent"
-            android:text="颜色" />
+            android:text="入库重量" />
 
         <View style="@style/view_item_mid" />
 
         <TextView
             android:id="@+id/item4"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="90dip"
             android:layout_height="match_parent"
-            android:text="色号" />
+            android:text="库存重量" />
+
+        <View style="@style/view_item_mid" />
+        <TextView
+            android:id="@+id/item5"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="颜色" />
         <View style="@style/view_item_mid" />
 
         <TextView
@@ -68,8 +59,7 @@
             style="@style/text_item"
             android:layout_width="120dip"
             android:layout_height="match_parent"
-            android:text="总重量" />
-
+            android:text="色号" />
 
     </LinearLayout>
 

@@ -29,15 +29,40 @@ public class OutCheckDetail {
     /**
      * 重量
      */
-    private float weight;
+    private double weight;
+    /**
+     * 总重量
+     */
+    private double weightall;
+    /**
+     * 入库总量*/
+    private double weight_in;
     /**操作人*/
     private String operator;
     /**操作时间*/
     private Date operatingTime;
     /***数量*/
     private int count;
-
+    /**设备号*/
     private String device;
+
+    private int type=1;
+
+    public double getWeight_in() {
+        return weight_in;
+    }
+
+    public void setWeight_in(double weight_in) {
+        this.weight_in = weight_in;
+    }
+
+    public double getWeightall() {
+        return weightall;
+    }
+
+    public void setWeightall(double weightall) {
+        this.weightall = weightall;
+    }
 
     public String getDevice() {
         return device;
@@ -110,11 +135,11 @@ public class OutCheckDetail {
         this.fabRool = fabRool;
     }
 
-    public float getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
@@ -141,4 +166,16 @@ public class OutCheckDetail {
     public void setCount(int count) {
         this.count = count;
     }
+    public OutCheckDetail(String product_no, String vatNo, String selNo, String color, String fabRool, double weight, double weight_in, String operator, int count) {
+        this.product_no = product_no;
+        this.vatNo = vatNo;
+        this.selNo = selNo;
+        this.color = color;
+        this.fabRool = fabRool;
+        this.weight = weight;
+        this.weight_in = weight_in;
+        this.operator = operator;
+        this.count = count;
+    }
+    public OutCheckDetail(){    }
 }

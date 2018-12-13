@@ -2,6 +2,12 @@ package com.example.mumu.warehousecheckcar.application;
 
 import android.app.Application;
 
+import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mumu on 2018/12/8.
  */
@@ -21,4 +27,10 @@ public class App extends Application {
     public static String DEVICE_NO="";
 //    读写声音
     public static boolean MUSIC_SWITCH=false;
+
+//    入库缓存详细列表
+    public static List<InCheckDetail> IN_DETAIL_LIST=new ArrayList<>();
+
+    //    出库缓存详细列表
+    public static List<OutCheckDetail> OUTDETAIL_LIST=new ArrayList<>();
 }
