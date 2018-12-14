@@ -459,7 +459,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener,BR
             OutCheckDetail icd = myList.get(position);
             String key = icd.getVatNo();
             OUTDETAIL_LIST.clear();
-            OUTDETAIL_LIST.add(new OutCheckDetail());//增加一个为头部
+//            OUTDETAIL_LIST.add(new OutCheckDetail());//增加一个为头部
             for (OutCheckDetail obj : dataList) {
                 if (obj.getVatNo().equals(key)) {
                     OUTDETAIL_LIST.add(obj);

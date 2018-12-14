@@ -1,5 +1,7 @@
 package com.example.mumu.warehousecheckcar.entity;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 /**
@@ -46,7 +48,16 @@ public class OutCheckDetail {
     /**设备号*/
     private String device;
 
+    private boolean flag=false;
     private int type=1;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
 
     public double getWeight_in() {
         return weight_in;
@@ -178,4 +189,26 @@ public class OutCheckDetail {
         this.count = count;
     }
     public OutCheckDetail(){    }
+
+   /* @Override
+    public int compareTo(@NonNull OutCheckDetail outCheckDetail) {
+        String  aFab=this.getFabRool();
+        if (aFab==null)
+            return 1;
+        String bFab=outCheckDetail.getFabRool();
+        if (bFab==null)
+            return -1;
+        if (aFab!=null&&bFab!=null){
+            if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                return 1;
+            }
+            return -1;
+        }
+        return 0;
+        //自定义比较方法，如果认为此实体本身大则返回1，否则返回-1
+           *//*  if(this.Age >= s.getAge()){
+                       return 1;
+                 }
+               return -1;*//*
+    }*/
 }

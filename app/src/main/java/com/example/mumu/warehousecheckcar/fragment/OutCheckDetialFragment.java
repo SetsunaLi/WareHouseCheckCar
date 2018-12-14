@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,10 +30,15 @@ import com.squareup.okhttp.Request;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
 
 /**
  * Created by mumu on 2018/12/13.
@@ -49,7 +55,6 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
 
     private List<OutCheckDetail> myList;
     private List<OutCheckDetail> dataList;
-    private ArrayList<Integer> indexList;
     private RecycleAdapter mAdapter;
 
     private OutCheckDetialFragment() {
@@ -68,9 +73,10 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
     }
 
     public void initData() {
-        dataList = App.OUTDETAIL_LIST;
         myList=new ArrayList<>();
-        indexList=new ArrayList<>();
+        myList.add(new OutCheckDetail());//增加一个为头部
+        myList.addAll(App.OUTDETAIL_LIST);
+        dataList=new ArrayList<>();
     }
 
     //    这里加载视图
@@ -89,9 +95,9 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
-        if (myList.size() > 1) {
-            text1.setText(myList.size() - 1 + "");
-            text2.setText(myList.get(1).getVatNo() + "");
+        if (App.OUTDETAIL_LIST.size() > 1) {
+            text1.setText(App.OUTDETAIL_LIST.size()  + "");
+            text2.setText(App.OUTDETAIL_LIST.get(1).getVatNo() + "");
         }
         return view;
     }
@@ -100,56 +106,98 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_detail_item_layout, null);
         mAdapter.setHeader(view);
     }
-
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                case 0x09:
+                    Collections.sort(myList, new Comparator<OutCheckDetail>() {
+                        @Override
+                        public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
+                            String  aFab=outCheckDetail.getFabRool();
+                            if (aFab==null)
+                                return 1;
+                            String bFab=outCheckDetail.getFabRool();
+                            if (bFab==null)
+                                return -1;
+                            if (aFab!=null&&bFab!=null){
+                                if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                                    return 1;
+                                }
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    });
+                    mAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
     @Override
     public void onResume() {
         super.onResume();
         if (myList.size() >= 2)
             if (myList.get(1) != null && myList.get(1).getVatNo() != null) {
-                final String json =myList.get(1).getVatNo();
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                super.run();
-                                try {
-                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo.sh", new OkHttpClientManager.ResultCallback<List<OutCheckDetail>>() {
-                                        @Override
-                                        public void onError(Request request, Exception e) {
-
-                                        }
-
-                                        @Override
-                                        public void onResponse(List<OutCheckDetail> response) {
-                                            if (response!=null) {
-
-                                                myList = response;
-                                                for (OutCheckDetail yes:dataList){
-                                                    for(int i=0;i<myList.size();i++){
-                                                        if (yes!=null&&myList.get(i)!=null){
-                                                            if (yes.getVatNo()!=null&&myList.get(i).getVatNo()!=null){
-                                                                if (yes.getVatNo().equals(myList.get(i).getVatNo())){
-                                                                    indexList.add(i);
-                                                                }
-
-                                                            }
-                                                        }
-                                                    }
-
-                                                }
-                                            }
-                                            getActivity().runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                     mAdapter.notifyDataSetChanged();
-                                                }
-                                            });
-                                        }
-                                    }, json);
-                                } catch (Exception e) {
+                final String json = myList.get(1).getVatNo();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo.sh", new OkHttpClientManager.ResultCallback<List<OutCheckDetail>>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
 
                                 }
-                            }
-                        }.start();
+
+                                @Override
+                                public void onResponse(List<OutCheckDetail> response) {
+                                    if (response != null) {
+                                        for (OutCheckDetail re:response){
+                                            if (re!=null&&re.getFabRool()!=null){
+                                                boolean isIn=false;
+                                                for (OutCheckDetail old:myList){
+                                                    if (old!=null&&old.getFabRool()!=null)
+                                                        if (old.getFabRool().equals(re.getFabRool())){
+                                                            isIn=true;
+                                                            old.setFlag(true);
+                                                        }
+                                                }
+                                                if (!isIn)
+                                                    myList.add(re);
+                                            }
+                                        }
+
+
+
+                                        /*myList.clear();
+                                        myList.add(new OutCheckDetail());
+                                        myList.addAll(response);
+                                        for (OutCheckDetail yes : dataList) {
+                                            for (int i = 0; i < myList.size(); i++) {
+                                                if (yes != null && myList.get(i) != null) {
+                                                    if (yes.getFabRool() != null && myList.get(i).getFabRool() != null) {
+                                                        if (yes.getFabRool().equals(myList.get(i).getFabRool())) {
+                                                            indexList.add(i);
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }*/
+                                    }
+                                    Message msg=handler.obtainMessage();
+                                    msg.arg1=0x09;
+                                    handler.sendMessage(msg);
+                                }
+                            }, json);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }.start();
             }
     }
 
@@ -192,8 +240,8 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        mAdapter.select(position);
-        mAdapter.notifyDataSetChanged();
+      /*  mAdapter.select(position);
+        mAdapter.notifyDataSetChanged();*/
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<OutCheckDetail> {
@@ -211,6 +259,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
             super(v, datas, itemLayoutId);
 
         }
+/*
 
         private int index = -255;
 
@@ -221,17 +270,17 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                 this.index = index;
 
         }
+*/
 
         @Override
         public void convert(RecyclerHolder holder, OutCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (indexList.contains(position)) {
+                    if (item.isFlag())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    } else{
+                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    }
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getFabRool() + "");
                     holder.setText(R.id.item2, item.getProduct_no() + "");

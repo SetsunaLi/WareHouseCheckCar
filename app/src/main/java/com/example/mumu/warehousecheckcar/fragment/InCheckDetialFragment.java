@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,10 +22,16 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.squareup.okhttp.Request;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -43,6 +51,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
     TextView text2;
 
     private List<InCheckDetail> myList;
+    private List<InCheckDetail> dataList;
     private RecycleAdapter mAdapter;
 
     private InCheckDetialFragment() {
@@ -60,7 +69,10 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         initData();
     }
     public void initData(){
-        myList= App.IN_DETAIL_LIST;
+        myList=new ArrayList<>();
+        myList.add(new InCheckDetail());//增加一个为头部
+        myList.addAll(App.IN_DETAIL_LIST);
+        dataList=new ArrayList<>();
     }
     //    这里加载视图
     @Nullable
@@ -77,9 +89,10 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
-        if (myList.size()>1) {
-            text1.setText(myList.size() - 1 + "");
-            text2.setText(myList.get(1).getVatNo() + "");
+
+        if (App.IN_DETAIL_LIST.size() > 1) {
+            text1.setText(App.IN_DETAIL_LIST.size() + "");
+            text2.setText(App.IN_DETAIL_LIST.get(1).getVatNo() + "");
         }
         return view;
     }
@@ -87,6 +100,123 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_detail_item_layout, null);
         mAdapter.setHeader(view);
     }
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                case 0x08:
+                    Collections.sort(myList, new Comparator<InCheckDetail>() {
+                        @Override
+                        public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
+                            String  aFab=inCheckDetail.getFabRool();
+                            if (aFab==null)
+                                return 1;
+                            String bFab=inCheckDetail.getFabRool();
+                            if (bFab==null)
+                                return -1;
+                            if (aFab!=null&&bFab!=null){
+                                if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                                    return 1;
+                                }
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    });
+                    mAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (myList.size() >= 2)
+            if (myList.get(1) != null && myList.get(1).getVatNo() != null) {
+                final String json = myList.get(1).getVatNo();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo.sh", new OkHttpClientManager.ResultCallback<List<InCheckDetail>>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
+
+                                }
+
+                                @Override
+                                public void onResponse(List<InCheckDetail> response) {
+                                    if (response != null) {
+                                        for (InCheckDetail re:response){
+                                            if (re!=null&&re.getFabRool()!=null){
+                                                boolean isIn=false;
+                                                for (InCheckDetail old:myList){
+                                                    if (old!=null&&old.getFabRool()!=null)
+                                                        if (old.getFabRool().equals(re.getFabRool())){
+                                                            isIn=true;
+                                                            old.setFlag(true);
+                                                        }
+                                                }
+                                                if (!isIn)
+                                                    myList.add(re);
+                                            }
+                                        }
+                                        /*myList.clear();
+                                        myList.add(new InCheckDetail());
+                                        myList.addAll(response);
+                                        for (InCheckDetail yes : dataList) {
+                                            for (int i = 0; i < myList.size(); i++) {
+                                                if (yes != null && myList.get(i) != null) {
+                                                    if (yes.getFabRool() != null && myList.get(i).getFabRool() != null) {
+                                                        if (yes.getFabRool().equals(myList.get(i).getFabRool())) {
+                                                            indexList.add(i);
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }*/
+                                    }
+                                    Message msg=handler.obtainMessage();
+                                    msg.arg1=0x08;
+                                    handler.sendMessage(msg);
+                                    /*getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+//                                            myList.sort(Comparator.naturalOrder());
+                                            Collections.sort(myList, new Comparator<InCheckDetail>() {
+                                                @Override
+                                                public int compare(InCheckDetail outCheckDetail, InCheckDetail t1) {
+                                                    String  aFab=outCheckDetail.getFabRool();
+                                                    if (aFab==null)
+                                                        return 1;
+                                                    String bFab=outCheckDetail.getFabRool();
+                                                    if (bFab==null)
+                                                        return -1;
+                                                    if (aFab!=null&&bFab!=null){
+                                                        if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                                                            return 1;
+                                                        }
+                                                        return -1;
+                                                    }
+                                                    return 0;
+                                                }
+                                            });
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    });*/
+                                }
+                            }, json);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }.start();
+            }
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -125,8 +255,8 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        mAdapter.select(position);
-        mAdapter.notifyDataSetChanged();
+        /*mAdapter.select(position);
+        mAdapter.notifyDataSetChanged();*/
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
@@ -144,22 +274,22 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
             super(v, datas, itemLayoutId);
 
         }
-        private int index=-255;
+       /* private int index=-255;
         public void select(int index){
             if (this.index==index)
                 this.index=-255;
             else
                 this.index=index;
 
-        }
+        }*/
         @Override
         public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
-                        LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (index==position) {
+                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    if (item.isFlag())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    }else
+                    else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getFabRool() + "");
@@ -167,7 +297,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                     holder.setText(R.id.item3, item.getWeight_in() + "");
                     holder.setText(R.id.item4, item.getWeight() + "");
                     holder.setText(R.id.item5, item.getColor() + "");
-                    holder.setText(R.id.item6, item.getSelNo()+"");
+                    holder.setText(R.id.item6, item.getSelNo() + "");
                 }
             }
         }

@@ -431,7 +431,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
             InCheckDetail icd = myList.get(position);
             String key = icd.getVatNo();
             IN_DETAIL_LIST.clear();
-            IN_DETAIL_LIST.add(new InCheckDetail());//增加一个为头部
+//            IN_DETAIL_LIST.add(new InCheckDetail());//增加一个为头部
             for (InCheckDetail obj : dataList) {
                 if (obj.getVatNo().equals(key)) {
                     IN_DETAIL_LIST.add(obj);

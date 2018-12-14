@@ -45,8 +45,16 @@ public class InCheckDetail {
     private int count;
 /**设备号*/
     private String device;
-
+    private boolean flag=false;
     private int type=1;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
 
     public double getWeight_in() {
         return weight_in;
