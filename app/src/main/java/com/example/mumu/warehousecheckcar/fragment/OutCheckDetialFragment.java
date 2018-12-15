@@ -76,6 +76,10 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         myList=new ArrayList<>();
         myList.add(new OutCheckDetail());//增加一个为头部
         myList.addAll(App.OUTDETAIL_LIST);
+        for(OutCheckDetail old:myList){
+            if (old.getFabRool()!=null)
+            old.setFlag(true);
+        }
         dataList=new ArrayList<>();
     }
 
@@ -117,10 +121,10 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                         public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
                             String  aFab=outCheckDetail.getFabRool();
                             if (aFab==null)
-                                return 1;
-                            String bFab=outCheckDetail.getFabRool();
-                            if (bFab==null)
                                 return -1;
+                            String bFab=t1.getFabRool();
+                            if (bFab==null)
+                                return 1;
                             if (aFab!=null&&bFab!=null){
                                 if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
                                     return 1;
@@ -146,7 +150,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                     public void run() {
                         super.run();
                         try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo.sh", new OkHttpClientManager.ResultCallback<List<OutCheckDetail>>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_out.sh", new OkHttpClientManager.ResultCallback<List<OutCheckDetail>>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
 
@@ -155,9 +159,11 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                                 @Override
                                 public void onResponse(List<OutCheckDetail> response) {
                                     if (response != null) {
+                                        List<OutCheckDetail> newList=new ArrayList<OutCheckDetail>();
                                         for (OutCheckDetail re:response){
                                             if (re!=null&&re.getFabRool()!=null){
                                                 boolean isIn=false;
+//                                                for(int i=0;i<myList.size();i++){
                                                 for (OutCheckDetail old:myList){
                                                     if (old!=null&&old.getFabRool()!=null)
                                                         if (old.getFabRool().equals(re.getFabRool())){
@@ -166,11 +172,11 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                                                         }
                                                 }
                                                 if (!isIn)
-                                                    myList.add(re);
+                                                    newList.add(re);
                                             }
                                         }
-
-
+                                            myList.addAll(newList);
+                                            newList.clear();
 
                                         /*myList.clear();
                                         myList.add(new OutCheckDetail());
@@ -194,7 +200,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                                 }
                             }, json);
                         } catch (Exception e) {
-
+                            e.printStackTrace();
                         }
                     }
                 }.start();
@@ -236,7 +242,8 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         super.onDestroyView();
         ButterKnife.unbind(this);
         myList.clear();
-    }
+        dataList.clear();
+     }
 
     @Override
     public void onItemClick(View view, Object data, int position) {

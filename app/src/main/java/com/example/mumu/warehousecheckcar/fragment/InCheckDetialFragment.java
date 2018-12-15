@@ -72,6 +72,10 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         myList=new ArrayList<>();
         myList.add(new InCheckDetail());//增加一个为头部
         myList.addAll(App.IN_DETAIL_LIST);
+        for(InCheckDetail old:myList){
+            if (old.getFabRool()!=null)
+                old.setFlag(true);
+        }
         dataList=new ArrayList<>();
     }
     //    这里加载视图
@@ -104,29 +108,29 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.arg1){
-                case 0x08:
-                    Collections.sort(myList, new Comparator<InCheckDetail>() {
-                        @Override
-                        public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
-                            String  aFab=inCheckDetail.getFabRool();
-                            if (aFab==null)
-                                return 1;
-                            String bFab=inCheckDetail.getFabRool();
-                            if (bFab==null)
-                                return -1;
-                            if (aFab!=null&&bFab!=null){
-                                if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                switch (msg.arg1) {
+                    case 0x08:
+                        Collections.sort(myList, new Comparator<InCheckDetail>() {
+                            @Override
+                            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
+                                String  aFab=inCheckDetail.getFabRool();
+                                if (aFab==null)
+                                    return -1;
+                                String bFab=t1.getFabRool();
+                                if (bFab==null)
                                     return 1;
+                                if (aFab!=null&&bFab!=null){
+                                    if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                                        return 1;
+                                    }
+                                    return -1;
                                 }
-                                return -1;
+                                return 0;
                             }
-                            return 0;
-                        }
-                    });
-                    mAdapter.notifyDataSetChanged();
-                    break;
-            }
+                        });
+                        mAdapter.notifyDataSetChanged();
+                        break;
+                }
         }
     };
     @Override
@@ -149,6 +153,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                 @Override
                                 public void onResponse(List<InCheckDetail> response) {
                                     if (response != null) {
+                                        List<InCheckDetail> newList=new ArrayList<InCheckDetail>();
                                         for (InCheckDetail re:response){
                                             if (re!=null&&re.getFabRool()!=null){
                                                 boolean isIn=false;
@@ -160,53 +165,15 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                                         }
                                                 }
                                                 if (!isIn)
-                                                    myList.add(re);
+                                                    newList.add(re);
                                             }
                                         }
-                                        /*myList.clear();
-                                        myList.add(new InCheckDetail());
-                                        myList.addAll(response);
-                                        for (InCheckDetail yes : dataList) {
-                                            for (int i = 0; i < myList.size(); i++) {
-                                                if (yes != null && myList.get(i) != null) {
-                                                    if (yes.getFabRool() != null && myList.get(i).getFabRool() != null) {
-                                                        if (yes.getFabRool().equals(myList.get(i).getFabRool())) {
-                                                            indexList.add(i);
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                        }*/
+                                        myList.addAll(newList);
+                                        newList.clear();
                                     }
                                     Message msg=handler.obtainMessage();
                                     msg.arg1=0x08;
                                     handler.sendMessage(msg);
-                                    /*getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-//                                            myList.sort(Comparator.naturalOrder());
-                                            Collections.sort(myList, new Comparator<InCheckDetail>() {
-                                                @Override
-                                                public int compare(InCheckDetail outCheckDetail, InCheckDetail t1) {
-                                                    String  aFab=outCheckDetail.getFabRool();
-                                                    if (aFab==null)
-                                                        return 1;
-                                                    String bFab=outCheckDetail.getFabRool();
-                                                    if (bFab==null)
-                                                        return -1;
-                                                    if (aFab!=null&&bFab!=null){
-                                                        if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
-                                                            return 1;
-                                                        }
-                                                        return -1;
-                                                    }
-                                                    return 0;
-                                                }
-                                            });
-                                            mAdapter.notifyDataSetChanged();
-                                        }
-                                    });*/
                                 }
                             }, json);
                         } catch (Exception e) {
@@ -251,6 +218,8 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         super.onDestroyView();
         ButterKnife.unbind(this);
         myList.clear();
+        dataList.clear();
+        App.OUTDETAIL_LIST.clear();
     }
 
     @Override

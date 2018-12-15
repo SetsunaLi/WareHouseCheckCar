@@ -65,7 +65,7 @@ import static com.example.mumu.warehousecheckcar.application.App.carNo;
  * Created by mumu on 2018/12/9.
  */
 
-public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRecyclerAdapter.OnItemClickListener {
+public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BRecyclerAdapter.OnItemClickListener {
     private final String TAG = "InCheckFragment";
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -78,10 +78,13 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
 
 
     private static InCheckFragment fragment;
-    private InCheckFragment(){    }
-    public static InCheckFragment newInstance(){
-        if (fragment==null);
-        fragment=new InCheckFragment();
+
+    private InCheckFragment() {
+    }
+
+    public static InCheckFragment newInstance() {
+        if (fragment == null) ;
+        fragment = new InCheckFragment();
         return fragment;
     }
 
@@ -95,7 +98,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
      */
     private Map<String, Integer> strIndex;
     private List<InCheckDetail> dataList;
-//    private List<String> epcList;
+    //    private List<String> epcList;
     private List<String> dataEPC;
     /**
      * 匹配逻辑
@@ -105,19 +108,20 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
     private List<String> dataKEY;
     private Sound sound;
     private LinearLayoutManager ms;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_layout, container, false);
         ButterKnife.bind(this, view);
-        sound=new Sound(getActivity());
+        sound = new Sound(getActivity());
         getActivity().setTitle("入库校验");
         myList = new ArrayList<>();
         strIndex = new HashMap<>();
 //        epcList = new ArrayList<>();
         dataEPC = new ArrayList<>();
         dataList = new ArrayList<>();
-        dataKEY=new ArrayList<>();
+        dataKEY = new ArrayList<>();
         clearData();
 //        测试数据
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_item_layout);
@@ -125,7 +129,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
         mAdapter.setOnItemClickListener(this);
-         ms = new LinearLayoutManager(getActivity());
+        ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
@@ -134,6 +138,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
         initRFID();
         return view;
     }
+
     public void initView() {
         text1.setText("0");
     }
@@ -160,15 +165,15 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
             myList.clear();
             myList.add(new InCheckDetail());
         }
-        if (dataList!=null)
+        if (dataList != null)
             dataList.clear();
        /* if (epcList != null)
             epcList.clear();*/
-        if (dataEPC!=null)
+        if (dataEPC != null)
             dataEPC.clear();
-        if (strIndex!=null)
+        if (strIndex != null)
             strIndex.clear();
-        if (dataKEY!=null)
+        if (dataKEY != null)
             dataKEY.clear();
 
         text1.setText("0");
@@ -176,7 +181,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_item_layout, null);
-        ((CheckBox)view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
+        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 
@@ -231,23 +236,15 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
                     if (!dataEPC.contains(EPC)) {
 //                        查询
                         final String json = JSON.toJSONString(EPC);
-//                        https://192.168.43.193/shYf/sh/rfid/index.sh?shmodule_id=56
-//                        http://192.168.43.193:8080/shYf/sh/rfid/outEpc.sh?shmodule_id=56
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-
                                 try {
-                                   /* Response response=OkHttpClientManager.postJsonAsyn(App.IP+":"+App.PORT+"/shYf/sh/rfid/outEpc.sh",json);
-                                    boolean send=response.isSuccessful();*/
-//                                    OkHttpClientManager.postJsonAsyn("https://"+App.IP, new OkHttpClientManager.ResultCallback<OutCheckDetail>() {
                                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
-                                        //                                        outDetail.sh
                                         @Override
                                         public void onError(Request request, Exception e) {
                                             Log.i("EPC", "onError");
                                         }
-
                                         @Override
                                         public void onResponse(ArrayList<InCheckDetail> response) {
                                             Log.i("EPC", "onResponse");
@@ -259,7 +256,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
                                                         dataEPC.add(ocd.getEpc());
                                                         dataList.add(ocd);
                                                         String key = ocd.getVatNo() + ocd.getProduct_no()
-                                                                + ocd.getSelNo() + ocd.getColor()+"";
+                                                                + ocd.getSelNo() + ocd.getColor() + "";
                                                         if (!strIndex.containsKey(key)) {//当前没有
                                                             ocd.setCount(1);
                                                             ocd.setWeightall(ocd.getWeight());
@@ -269,27 +266,19 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
                                                         } else {
                                                             int index = strIndex.get(key);
                                                             myList.get(index).addCount();
-                                                            myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(),ocd.getWeight()));
+                                                            myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), ocd.getWeight()));
                                                         }
                                                     }
                                                 }
-                                            } else {
-//                                                error++;
-                                               /* OutCheckDetail ocd=new OutCheckDetail();
-                                                ocd.setCount();
-                                                    myList.add(new OutCheckDetail);*/
-//                                                显示错误
                                             }
-                                            getActivity().runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    text1.setText("" + (dataList.size()));
-                                                    mAdapter.notifyDataSetChanged();
-                                                }
-                                            });
+                                            Message msg = handler.obtainMessage();
+                                            msg.arg1 = 0x04;
+                                            handler.sendMessage(msg);
                                         }
                                     }, json);
                                 } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -298,12 +287,16 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
                     }
                     break;
                 case 0x02:
-                    Toast.makeText(getActivity(),"上传成功",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                     clearData();
                     mAdapter.notifyDataSetChanged();
                     break;
                 case 0x03:
-                    Toast.makeText(getActivity(),"上传失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                    break;
+                case 0x04:
+                    text1.setText("" + (dataList.size()));
+                    mAdapter.notifyDataSetChanged();
                     break;
             }
         }
@@ -367,26 +360,23 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
 
                                 @Override
                                 public void onResponse(String response) {
-                                    if (response.equals("1")){
-                                        Message msg=handler.obtainMessage();
-                                        msg.arg1=0x02;
+                                    if (response.equals("1")) {
+                                        Message msg = handler.obtainMessage();
+                                        msg.arg1 = 0x02;
                                         handler.sendMessage(msg);
-                                    }else {
-                                        Message msg=handler.obtainMessage();
-                                        msg.arg1=0x03;
+                                    } else {
+                                        Message msg = handler.obtainMessage();
+                                        msg.arg1 = 0x03;
                                         handler.sendMessage(msg);
                                     }
 
                                 }
-                            },json);
-                           /* if (response.isSuccessful()) {
-//                                上传成功
-                                String result = JSON.toJSONString(response);
-                            } else {
-//                                上传失败
-                            }*/
-                        } catch (IOException e) {
+                            }, json);
 
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
                     }
                 }).start();
@@ -404,10 +394,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
     public void onInventoryTagCallBack(RXInventoryTag tag) {
 
 //        if (!epcList.contains(tag.strEPC)) {
-            Message msg = handler.obtainMessage();
-            msg.arg1 = 0x00;
-            msg.obj = tag.strEPC;
-            handler.sendMessage(msg);
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x00;
+        msg.obj = tag.strEPC;
+        handler.sendMessage(msg);
 
 //        }
         Log.i(TAG, tag.strEPC);
@@ -425,7 +415,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        if (position!=0) {
+        if (position != 0) {
             mAdapter.select(position);
             mAdapter.notifyDataSetChanged();
             InCheckDetail icd = myList.get(position);
@@ -464,32 +454,35 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
             super(v, datas, itemLayoutId);
 
         }
-        private int index=-255;
-        public void select(int index){
-            if (this.index==index)
-                this.index=-255;
+
+        private int index = -255;
+
+        public void select(int index) {
+            if (this.index == index)
+                this.index = -255;
             else
-                this.index=index;
+                this.index = index;
         }
+
         @Override
         public void convert(RecyclerHolder holder, final InCheckDetail item, final int position) {
             if (item != null) {
-                CheckBox cb=(CheckBox)holder.getView(R.id.checkbox1);
+                CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position==0){
-                                for (int i=1;i<myList.size();i++){
-                                    View view=ms.findViewByPosition(i);
-                                    CheckBox c=(CheckBox)view.findViewById(R.id.checkbox1);
-                                    c.setChecked(isChecked);
-                                }
-                        }else {
-                            if (isChecked){
-                                if(!dataKEY.contains(item.getVatNo()))
+                        if (position == 0) {
+                            for (int i = 1; i < myList.size(); i++) {
+                                View view = ms.findViewByPosition(i);
+                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
+                                c.setChecked(isChecked);
+                            }
+                        } else {
+                            if (isChecked) {
+                                if (!dataKEY.contains(item.getVatNo()))
                                     dataKEY.add(item.getVatNo());
-                            }else {
-                                if(dataKEY.contains(item.getVatNo()))
+                            } else {
+                                if (dataKEY.contains(item.getVatNo()))
                                     dataKEY.remove(item.getVatNo());
                             }
                         }
@@ -497,17 +490,17 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
                     }
                 });
                 if (position != 0) {
-                    if (cb.isChecked()){
-                        if(!dataKEY.contains(item.getVatNo()))
+                    if (cb.isChecked()) {
+                        if (!dataKEY.contains(item.getVatNo()))
                             dataKEY.add(item.getVatNo());
-                    }else {
-                        if(dataKEY.contains(item.getVatNo()))
+                    } else {
+                        if (dataKEY.contains(item.getVatNo()))
                             dataKEY.remove(item.getVatNo());
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (index==position) {
+                    if (index == position) {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    }else
+                    } else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getProduct_no() + "");
@@ -515,7 +508,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener,BRe
                     holder.setText(R.id.item3, item.getColor() + "");
                     holder.setText(R.id.item4, item.getSelNo() + "");
                     holder.setText(R.id.item5, item.getCount() + "");
-                    holder.setText(R.id.item6, ""+String.valueOf(item.getWeightall()) + "KG");
+                    holder.setText(R.id.item6, "" + String.valueOf(item.getWeightall()) + "KG");
                 }
             }
         }
