@@ -73,14 +73,32 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
     }
 
     public void initData() {
-        myList=new ArrayList<>();
+        myList = new ArrayList<>();
         myList.add(new OutCheckDetail());//增加一个为头部
         myList.addAll(App.OUTDETAIL_LIST);
-        for(OutCheckDetail old:myList){
-            if (old.getFabRool()!=null)
-            old.setFlag(true);
+        for (OutCheckDetail old : myList) {
+            if (old.getFabRool() != null)
+                old.setFlag(true);
         }
-        dataList=new ArrayList<>();
+        Collections.sort(myList, new Comparator<OutCheckDetail>() {
+            @Override
+            public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
+                String aFab = outCheckDetail.getFabRool();
+                if (aFab == null)
+                    return -1;
+                String bFab = t1.getFabRool();
+                if (bFab == null)
+                    return 1;
+                if (aFab != null && bFab != null) {
+                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
+                        return 1;
+                    }
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        dataList = new ArrayList<>();
     }
 
     //    这里加载视图
@@ -100,45 +118,54 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         recyle.setAdapter(mAdapter);
 
         if (App.OUTDETAIL_LIST.size() > 1) {
-            text1.setText(App.OUTDETAIL_LIST.size()  + "");
+            text1.setText(App.OUTDETAIL_LIST.size() + "");
             text2.setText(App.OUTDETAIL_LIST.get(1).getVatNo() + "");
         }
         return view;
     }
-//    private Handler handler=new Handler()
+
+    //    private Handler handler=new Handler()
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_detail_item_layout, null);
         mAdapter.setHeader(view);
     }
-    private Handler handler=new Handler(){
+
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.arg1){
-                case 0x09:
-                    Collections.sort(myList, new Comparator<OutCheckDetail>() {
-                        @Override
-                        public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
-                            String  aFab=outCheckDetail.getFabRool();
-                            if (aFab==null)
-                                return -1;
-                            String bFab=t1.getFabRool();
-                            if (bFab==null)
-                                return 1;
-                            if (aFab!=null&&bFab!=null){
-                                if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+            try {
+
+                switch (msg.arg1) {
+                    case 0x09:
+                        Collections.sort(myList, new Comparator<OutCheckDetail>() {
+                            @Override
+                            public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
+                                String aFab = outCheckDetail.getFabRool();
+                                if (aFab == null)
+                                    return -1;
+                                String bFab = t1.getFabRool();
+                                if (bFab == null)
                                     return 1;
+                                if (aFab != null && bFab != null) {
+                                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
+                                        return 1;
+                                    }
+                                    return -1;
                                 }
-                                return -1;
+                                return 0;
                             }
-                            return 0;
-                        }
-                    });
-                    mAdapter.notifyDataSetChanged();
-                    break;
+                        });
+                        mAdapter.notifyDataSetChanged();
+                        break;
+                }
+            } catch (Exception e) {
+
             }
+
         }
     };
+
     @Override
     public void onResume() {
         super.onResume();
@@ -159,15 +186,15 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                                 @Override
                                 public void onResponse(List<OutCheckDetail> response) {
                                     if (response != null) {
-                                        List<OutCheckDetail> newList=new ArrayList<OutCheckDetail>();
-                                        for (OutCheckDetail re:response){
-                                            if (re!=null&&re.getFabRool()!=null){
-                                                boolean isIn=false;
+                                        List<OutCheckDetail> newList = new ArrayList<OutCheckDetail>();
+                                        for (OutCheckDetail re : response) {
+                                            if (re != null && re.getFabRool() != null) {
+                                                boolean isIn = false;
 //                                                for(int i=0;i<myList.size();i++){
-                                                for (OutCheckDetail old:myList){
-                                                    if (old!=null&&old.getFabRool()!=null)
-                                                        if (old.getFabRool().equals(re.getFabRool())){
-                                                            isIn=true;
+                                                for (OutCheckDetail old : myList) {
+                                                    if (old != null && old.getFabRool() != null)
+                                                        if (old.getFabRool().equals(re.getFabRool())) {
+                                                            isIn = true;
                                                             old.setFlag(true);
                                                         }
                                                 }
@@ -175,8 +202,8 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                                                     newList.add(re);
                                             }
                                         }
-                                            myList.addAll(newList);
-                                            newList.clear();
+                                        myList.addAll(newList);
+                                        newList.clear();
 
                                         /*myList.clear();
                                         myList.add(new OutCheckDetail());
@@ -194,8 +221,8 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
 
                                         }*/
                                     }
-                                    Message msg=handler.obtainMessage();
-                                    msg.arg1=0x09;
+                                    Message msg = handler.obtainMessage();
+                                    msg.arg1 = 0x09;
                                     handler.sendMessage(msg);
                                 }
                             }, json);
@@ -243,7 +270,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         ButterKnife.unbind(this);
         myList.clear();
         dataList.clear();
-     }
+    }
 
     @Override
     public void onItemClick(View view, Object data, int position) {
@@ -286,7 +313,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.isFlag())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                     else
+                    else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getFabRool() + "");

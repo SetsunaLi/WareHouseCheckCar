@@ -25,6 +25,7 @@ public class App extends Application {
     public static String PORT="";
 //设备号
     public static String DEVICE_NO="";
+    public static String DEVICE_ID="";
 //    读写声音
     public static boolean MUSIC_SWITCH=false;
 

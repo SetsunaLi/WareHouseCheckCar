@@ -93,8 +93,9 @@ public class OutCheckCarFragment extends Fragment {
     @OnClick(R.id.button2)
     public void onViewClicked() {
         carNo=editNO.getText().toString()+"";
+//        blinkDialog(carNo);
         if (carNo!=null&&carNo.length()!=0){
-        blinkDialog(carNo);
+            blinkDialog(carNo);
         }else {
             Toast.makeText(getActivity(),"车牌号不能为空",Toast.LENGTH_SHORT).show();
         }

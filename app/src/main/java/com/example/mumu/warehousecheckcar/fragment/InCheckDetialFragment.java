@@ -76,6 +76,24 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
             if (old.getFabRool()!=null)
                 old.setFlag(true);
         }
+        Collections.sort(myList, new Comparator<InCheckDetail>() {
+            @Override
+            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
+                String  aFab=inCheckDetail.getFabRool();
+                if (aFab==null)
+                    return -1;
+                String bFab=t1.getFabRool();
+                if (bFab==null)
+                    return 1;
+                if (aFab!=null&&bFab!=null){
+                    if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                        return 1;
+                    }
+                    return -1;
+                }
+                return 0;
+            }
+        });
         dataList=new ArrayList<>();
     }
     //    这里加载视图
@@ -108,6 +126,9 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            try {
+
+
                 switch (msg.arg1) {
                     case 0x08:
                         Collections.sort(myList, new Comparator<InCheckDetail>() {
@@ -131,6 +152,9 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                         mAdapter.notifyDataSetChanged();
                         break;
                 }
+            }catch (Exception e){
+
+            }
         }
     };
     @Override
@@ -144,7 +168,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                     public void run() {
                         super.run();
                         try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo.sh", new OkHttpClientManager.ResultCallback<List<InCheckDetail>>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_in.sh", new OkHttpClientManager.ResultCallback<List<InCheckDetail>>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
 
