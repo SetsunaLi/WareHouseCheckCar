@@ -37,13 +37,14 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         return fragment;
     }
     private EditTextPreference userName,userId,systemVersion,systemIP,systemPort, deviceNumber;
-    private SwitchPreference music;
+    private SwitchPreference music,logcat;
     private SeekBarPreferenceVolume prower,workTime,intervalTime;
     private ListPreference statuslist;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("设置");
         //从xml文件加载选项
         addPreferencesFromResource(R.xml.setting_preference);
         userName=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.user_name_key));
@@ -57,7 +58,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         deviceNumber =(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.system_device_number_key));
 //        setEditTextPre(deviceNumber,App.DEVICE_NO);
         music =(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.system_music_key));
+        logcat =(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.logcat_ket));
         prower=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_prower_key));
+        prower.setProgress(App.PROWER);
      /*   workTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_work_time_key));
         intervalTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_interval_time_key));*/
         statuslist=(ListPreference)getPreferenceScreen().findPreference(getString(R.string.user_status_key));
@@ -112,6 +115,10 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 break;
             case Config.MUSIC:
                 App.MUSIC_SWITCH=music.isChecked();
+                break;
+            case Config.LOGCAT:
+                App.LOGCAT_SWITCH=logcat.isChecked();
+                break;
         }
     }
 //    设置EditTextPreference样式

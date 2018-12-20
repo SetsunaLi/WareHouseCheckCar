@@ -34,10 +34,12 @@ import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutInspectionFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.nativec.tools.ModuleManager;
@@ -101,9 +103,11 @@ public class Main2Activity extends AppCompatActivity
         App.PORT=sp.getString(getResources().getString(R.string.system_port_key),"8088");
         App.DEVICE_NO=sp.getString(getResources().getString(R.string.system_device_number_key),"YiFeng-001");
         App.MUSIC_SWITCH=sp.getBoolean(getResources().getString(R.string.system_music_key),false);
+        App.PROWER=sp.getInt(getResources().getString(R.string.device_prower_key),20);
+        App.LOGCAT_SWITCH=sp.getBoolean(getResources().getString(R.string.logcat_ket),false);
         TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 //        App.DEVICE_ID=tm.getImei();
-        App.DEVICE_ID=tm.getDeviceId();
+//        App.DEVICE_ID=tm.getDeviceId();
       /*  App.SYSTEM_VERSION="20181210";
         App.IP="http://47.107.112.133";
         App.PORT="8088";
@@ -136,8 +140,11 @@ public class Main2Activity extends AppCompatActivity
     private void initRFID() {
         try {
             RFID_2DHander.getInstance().connectReader();
+            RFID_2DHander.getInstance().on_RFID();
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             rfidHander.registerObserver(UHFResult.getInstance());
+            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId,(byte)App.PROWER);
+//            RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
             Log.w(TAG, "RFID读写器异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -169,15 +176,15 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 2:
                 fragment = OutCheckCarFragment.newInstance();
-//                fragment = CheckFragment.newInstance();
                 break;
             case 3:
                 fragment = SettingFragment.newInstance();
                 break;
             case 4:
-//                fragment= OutInspectionFragment.newInstance();
+                fragment= OutInspectionFragment.newInstance();
                 break;
             case 5:
+                fragment = CheckFragment.newInstance();
                 break;
             case 6:
                 break;

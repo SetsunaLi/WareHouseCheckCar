@@ -39,7 +39,7 @@ public class OutApplyDetailFragment extends Fragment implements BasePullUpRecycl
     Button button1;
     @Bind(R.id.button2)
     Button button2;
-
+    private final String TAG="OutApplyDetailFragment";
     private static OutApplyDetailFragment fragment;
     private OutApplyDetailFragment(){    }
     public static OutApplyDetailFragment newInstance(){

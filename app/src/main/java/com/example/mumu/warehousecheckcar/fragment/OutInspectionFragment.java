@@ -59,7 +59,7 @@ public class OutInspectionFragment extends Fragment implements RXCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
-
+        getActivity().setTitle("出库");
         try {
             RFID_2DHander.getInstance().on_2D();
             scannerHander = RFID_2DHander.getInstance().getTDScanner();
@@ -108,6 +108,7 @@ public class OutInspectionFragment extends Fragment implements RXCallback {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
+
                 break;
             case R.id.button2:
                 String applaNO = editNO.getText().toString();

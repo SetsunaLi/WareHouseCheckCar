@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
@@ -49,7 +51,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
     TextView text1;
     @Bind(R.id.text2)
     TextView text2;
-
+    private final String TAG="InCheckDetialFragment";
     private List<InCheckDetail> myList;
     private List<InCheckDetail> dataList;
     private RecycleAdapter mAdapter;
@@ -171,7 +173,10 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_in.sh", new OkHttpClientManager.ResultCallback<List<InCheckDetail>>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
-
+                                    if (App.LOGCAT_SWITCH) {
+                                        Log.i(TAG, "getVatNo_in;" + e.getMessage());
+                                        Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
 
                                 @Override

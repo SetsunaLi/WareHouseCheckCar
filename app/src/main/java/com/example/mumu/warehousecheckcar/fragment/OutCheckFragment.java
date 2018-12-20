@@ -141,8 +141,9 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
         initRFID();
         return view;
     }
+/*
 
-    /*public void textData() {
+    public void textData() {
         {
             OutCheckDetail in1 = new OutCheckDetail("123", "123", "123", "123", "123", 10, 10, "123", 10);
             myList.add(in1);
@@ -184,7 +185,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
             myList.add(in1);
             dataList.add(in1);
         }
-    }*/
+    }
+*/
 
     public void initView() {
         text1.setText("0");
@@ -297,9 +299,11 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
                                             @Override
                                             public void onError(Request request, Exception e) {
-                                                Log.i("EPC", "onError");
+                                                if (App.LOGCAT_SWITCH) {
+                                                    Log.i(TAG, "getEpc;" + e.getMessage());
+                                                    Toast.makeText(getActivity(), "获取epc信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                }
                                             }
-
                                             @Override
                                             public void onResponse(ArrayList<OutCheckDetail> response) {
                                                 Log.i("EPC", "onResponse");
@@ -421,7 +425,10 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/outDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
-
+                                    if (App.LOGCAT_SWITCH) {
+                                        Log.i(TAG, "outDetail;" + e.getMessage());
+                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
 
                                 @Override
@@ -463,7 +470,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
         handler.sendMessage(msg);
 
 //        }
-        Log.i(TAG, tag.strEPC);
     }
 
     @Override

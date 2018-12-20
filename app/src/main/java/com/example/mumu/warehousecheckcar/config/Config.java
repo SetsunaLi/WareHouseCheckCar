@@ -15,6 +15,7 @@ public class Config {
     public static final String PORT_KEY="port_key";
     public static final String DEVICE_NUMBER_KEY ="device_number_key";
     public static final String  MUSIC="music_key";
+    public static final String  LOGCAT="logcat_ket";
     public static final String WORK_TIME_KEY="work_time_key";
     public static final String INTERVAL_TIME_KEY="interval_time_key";
 }

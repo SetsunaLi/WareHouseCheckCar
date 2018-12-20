@@ -105,6 +105,10 @@
     <string name="device_work_time_key">work_time_key</string>
     <string name="device_interval_time_key">interval_time_key</string>
     <string name="all_volume_title">Title</string>
+    <string name="logcat_title">系统日志</string>
+    <string name="logcat_ket">logcat_ket</string>
+    <string name="logcat_title_on">显示日志</string>
+    <string name="logcat_title_off">隐藏日志</string>
 
     <!--about-->
     <string name="RFID_demo_app">WareHouseCheckCAR Application</string>

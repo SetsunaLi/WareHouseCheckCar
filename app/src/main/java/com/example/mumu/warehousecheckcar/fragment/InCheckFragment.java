@@ -244,7 +244,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
                                             @Override
                                             public void onError(Request request, Exception e) {
-                                                Log.i("EPC", "onError");
+                                                if (App.LOGCAT_SWITCH) {
+                                                    Log.i(TAG, "getEpc;" + e.getMessage());
+                                                    Toast.makeText(getActivity(), "获取epc信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                }
                                             }
 
                                             @Override
@@ -360,9 +363,11 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/inDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
-
+                                    if (App.LOGCAT_SWITCH) {
+                                        Log.i(TAG, "inDetail;" + e.getMessage());
+                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
-
                                 @Override
                                 public void onResponse(String response) {
                                     if (response.equals("1")) {

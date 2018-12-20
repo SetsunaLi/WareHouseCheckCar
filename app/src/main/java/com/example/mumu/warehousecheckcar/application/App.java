@@ -28,6 +28,10 @@ public class App extends Application {
     public static String DEVICE_ID="";
 //    读写声音
     public static boolean MUSIC_SWITCH=false;
+//    系统日志
+    public static boolean LOGCAT_SWITCH=false;
+//    功率
+    public static int PROWER=0;
 
 //    入库缓存详细列表
     public static List<InCheckDetail> IN_DETAIL_LIST=new ArrayList<>();
