@@ -104,32 +104,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null) {
-        final String json=JSON.toJSONString(App.CARRIER);
-            try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<List<Inventory>>() {
-                    @Override
-                    public void onError(Request request, Exception e) {
-                        if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
 
-                    @Override
-                    public void onResponse(List<Inventory> response) {
-                        Message msg = handler.obtainMessage();
-                        msg.arg1 = 0x01;
-                        msg.obj = response;
-                        handler.sendMessage(msg);
-
-
-                    }
-                }, json);
-            } catch (IOException e) {
-
-            }
-        }
         Fragment fragment = CheckFragment.newInstance();
         FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
         transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
