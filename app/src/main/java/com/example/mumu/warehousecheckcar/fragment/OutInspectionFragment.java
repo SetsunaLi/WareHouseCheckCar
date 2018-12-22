@@ -2,7 +2,6 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -113,8 +112,11 @@ public class OutInspectionFragment extends Fragment implements RXCallback {
             case R.id.button2:
                 String applaNO = editNO.getText().toString();
                 if (applaNO != null) {
+                    /*先访系统得到列表后再跳转
+                    尝试不异步情况下能否访问
+                    * */
                     applyNo = applaNO;
-                    Fragment fragment = OutApplyDetailFragment.newInstance();
+                    Fragment fragment = OutApplyFragment.newInstance();
                     FragmentManager fm = getActivity().getFragmentManager();
                     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     fm.beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(TAG_RETURN_FRAGMENT).commit();
