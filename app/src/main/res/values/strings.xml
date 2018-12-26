@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">仓库二期</string>
-    <string name="title_activity_main2">仓库二期</string>
+    <string name="app_name">仓库APP</string>
+    <string name="title_activity_main2">仓库APP</string>
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password (optional)</string>
@@ -25,9 +25,9 @@
     <string name="btn_message">入库检验</string>
     <string name="btn_check">出库校验</string>
     <string name="btn_setting">系统设置</string>
-    <string name="btn_individuality1">待开发一</string>
-    <string name="btn_individuality2">待开发二</string>
-    <string name="btn_individuality3">待开发三</string>
+    <string name="btn_individuality1">入库</string>
+    <string name="btn_individuality2">出库</string>
+    <string name="btn_individuality3">盘点</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
 
@@ -50,9 +50,9 @@
         <item>入库检验</item>
         <item>出库校验</item>
         <item>设备管理</item>
-        <item>待开发一</item>
-        <item>待开发二</item>
-        <item>待开发三</item>
+        <item>入库</item>
+        <item>出库</item>
+        <item>盘点</item>
         <item>关于</item>
     </string-array>
 

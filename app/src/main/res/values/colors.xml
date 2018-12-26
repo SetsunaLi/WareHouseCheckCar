@@ -20,4 +20,6 @@
     <color name="colorEditText">#04a0ff</color>
     <color name="colorDialogTitleBG">#0078ff</color>
     <color name="colorDialogButtonYes1">#489eff</color>
+    <color name="colorDataNoText">#ffff4c</color>
+
 </resources>

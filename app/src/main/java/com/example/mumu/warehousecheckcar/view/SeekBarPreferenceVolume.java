@@ -40,7 +40,7 @@ public class SeekBarPreferenceVolume extends Preference implements SeekBar.OnSee
         super(context,attrs);
         mContext = context;
         mDialogMessage = attrs.getAttributeValue(androidns,"dialogMessage");
-        mDefault = attrs.getAttributeIntValue(androidns,"defaultValue", 0);
+        mDefault = attrs.getAttributeIntValue(androidns,"defaultValue", 20);
 
         title=attrs.getAttributeValue(androidns,"title");
         mMax = attrs.getAttributeIntValue(androidns,"max", 100);
@@ -52,7 +52,7 @@ public class SeekBarPreferenceVolume extends Preference implements SeekBar.OnSee
                 int attrResId = attrs.getAttributeNameResource(i);
                 switch (attrResId){
                     case R.attr.myvalue:
-                        mValue = attrs.getAttributeIntValue(i,0);
+                        mValue = attrs.getAttributeIntValue(i,20);
                         break;
                     case R.attr.myimg:
                         imgSrc = attrs.getAttributeResourceValue(i, 0);
@@ -87,7 +87,7 @@ public class SeekBarPreferenceVolume extends Preference implements SeekBar.OnSee
         super.onBindView(v);
         mSeekBar.setMax(mMax);
             mSeekBar.setProgress(mValue);
-        if (mValue!=0)
+        if (mValue!=-1)
             mValueText.setText(String.valueOf(mValue));
         if (title!=null)
             titleText.setText(title+"");

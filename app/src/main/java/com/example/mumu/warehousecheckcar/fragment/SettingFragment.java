@@ -9,6 +9,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
@@ -110,7 +111,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             case Config.USER_PROWER_KEY:
                 byte prower=(byte)getPrower(getActivity());
                 if (rfidHander!=null){
-                    rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId,prower);
+                    int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId,prower);
+                    if (i==0)
+                        Toast.makeText(getActivity(),"设置功率成功",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case Config.MUSIC:

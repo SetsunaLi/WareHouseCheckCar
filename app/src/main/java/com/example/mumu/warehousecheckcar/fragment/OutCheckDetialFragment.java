@@ -121,7 +121,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
 
         if (App.OUTDETAIL_LIST.size() > 1) {
             text1.setText(App.OUTDETAIL_LIST.size() + "");
-            text2.setText(App.OUTDETAIL_LIST.get(1).getVatNo() + "");
+            text2.setText(App.OUTDETAIL_LIST.get(0).getVatNo() + "");
         }
         return view;
     }

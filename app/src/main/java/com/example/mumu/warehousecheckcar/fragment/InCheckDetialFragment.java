@@ -116,7 +116,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
 
         if (App.IN_DETAIL_LIST.size() > 1) {
             text1.setText(App.IN_DETAIL_LIST.size() + "");
-            text2.setText(App.IN_DETAIL_LIST.get(1).getVatNo() + "");
+            text2.setText(App.IN_DETAIL_LIST.get(0).getVatNo() + "");
         }
         return view;
     }
@@ -124,51 +124,12 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_detail_item_layout, null);
         mAdapter.setHeader(view);
     }
-    private Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            try {
-
-
-                switch (msg.arg1) {
-                    case 0x08:
-                        Collections.sort(myList, new Comparator<InCheckDetail>() {
-                            @Override
-                            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
-                                String  aFab=inCheckDetail.getFabRool();
-                                if (aFab==null)
-                                    return -1;
-                                String bFab=t1.getFabRool();
-                                if (bFab==null)
-                                    return 1;
-                                if (aFab!=null&&bFab!=null){
-                                    if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
-                                        return 1;
-                                    }
-                                    return -1;
-                                }
-                                return 0;
-                            }
-                        });
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                }
-            }catch (Exception e){
-
-            }
-        }
-    };
     @Override
     public void onResume() {
         super.onResume();
         if (myList.size() >= 2)
             if (myList.get(1) != null && myList.get(1).getVatNo() != null) {
                 final String json = myList.get(1).getVatNo();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_in.sh", new OkHttpClientManager.ResultCallback<List<InCheckDetail>>() {
                                 @Override
@@ -200,16 +161,30 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                         myList.addAll(newList);
                                         newList.clear();
                                     }
-                                    Message msg=handler.obtainMessage();
-                                    msg.arg1=0x08;
-                                    handler.sendMessage(msg);
+                                    Collections.sort(myList, new Comparator<InCheckDetail>() {
+                                        @Override
+                                        public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
+                                            String  aFab=inCheckDetail.getFabRool();
+                                            if (aFab==null)
+                                                return -1;
+                                            String bFab=t1.getFabRool();
+                                            if (bFab==null)
+                                                return 1;
+                                            if (aFab!=null&&bFab!=null){
+                                                if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                                                    return 1;
+                                                }
+                                                return -1;
+                                            }
+                                            return 0;
+                                        }
+                                    });
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }, json);
                         } catch (Exception e) {
 
                         }
-                    }
-                }.start();
             }
     }
 

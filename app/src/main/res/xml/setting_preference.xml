@@ -90,6 +90,7 @@
                     android:title="功率"
                     app:myvalue="10"
                     android:max="30"
+                    android:defaultValue="20"
                     app:myimg="@mipmap/prower_s"
                     />
             <!--    <com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume

@@ -237,9 +237,6 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                         if (!dataEPC.contains(EPC)) {
 //                        查询
                             final String json = JSON.toJSONString(EPC);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
                                     try {
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
                                             @Override
@@ -276,9 +273,11 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                                         }
                                                     }
                                                 }
-                                                Message msg = handler.obtainMessage();
+                                                text1.setText("" + (dataList.size()));
+                                                mAdapter.notifyDataSetChanged();
+                                              /*  Message msg = handler.obtainMessage();
                                                 msg.arg1 = 0x04;
-                                                handler.sendMessage(msg);
+                                                handler.sendMessage(msg);*/
                                             }
                                         }, json);
                                     } catch (IOException e) {
@@ -286,12 +285,9 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-
-                                }
-                            }).start();
                         }
                         break;
-                    case 0x02:
+                  /*  case 0x02:
                         Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                         clearData();
                         mAdapter.notifyDataSetChanged();
@@ -302,7 +298,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     case 0x04:
                         text1.setText("" + (dataList.size()));
                         mAdapter.notifyDataSetChanged();
-                        break;
+                        break;*/
                 }
             }catch (Exception e){
 
@@ -355,9 +351,6 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     }
                 }
                 final String json = JSON.toJSONString(list);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
                         Response response = null;
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/inDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
@@ -371,13 +364,17 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                 @Override
                                 public void onResponse(String response) {
                                     if (response.equals("1")) {
-                                        Message msg = handler.obtainMessage();
+                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                        clearData();
+                                        mAdapter.notifyDataSetChanged();
+                                       /* Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x02;
-                                        handler.sendMessage(msg);
+                                        handler.sendMessage(msg);*/
                                     } else {
-                                        Message msg = handler.obtainMessage();
+                                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                    /*    Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x03;
-                                        handler.sendMessage(msg);
+                                        handler.sendMessage(msg);*/
                                     }
 
                                 }
@@ -388,8 +385,6 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-                    }
-                }).start();
                 dialog.dismiss();
             }
         });
@@ -433,7 +428,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
             IN_DETAIL_LIST.clear();
 //            IN_DETAIL_LIST.add(new InCheckDetail());//增加一个为头部
             for (InCheckDetail obj : dataList) {
-                if (obj.getVatNo().equals(key)) {
+                if (obj!=null&&obj.getVatNo()!=null&&obj.getVatNo().equals(key)) {
                     IN_DETAIL_LIST.add(obj);
                 }
             }

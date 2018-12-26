@@ -34,6 +34,7 @@ import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
@@ -93,19 +94,23 @@ public class Main2Activity extends AppCompatActivity
 
     //    导航数组
     private String[] mOptionTitle;
-    private EditTextPreference systemVersion,systemIP,systemPort, deviceNumber;
+    private EditTextPreference systemVersion, systemIP, systemPort, deviceNumber;
+
     private void initDate() {
         mOptionTitle = getResources().getStringArray(R.array.options_array);
 
-        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
-        App.SYSTEM_VERSION=sp.getString(getResources().getString(R.string.system_version_key),"20181210");
-        App.IP=sp.getString(getResources().getString(R.string.system_ip_key),"http://47.107.112.133");
-        App.PORT=sp.getString(getResources().getString(R.string.system_port_key),"8088");
-        App.DEVICE_NO=sp.getString(getResources().getString(R.string.system_device_number_key),"YiFeng-001");
-        App.MUSIC_SWITCH=sp.getBoolean(getResources().getString(R.string.system_music_key),false);
-        App.PROWER=sp.getInt(getResources().getString(R.string.device_prower_key),20);
-        App.LOGCAT_SWITCH=sp.getBoolean(getResources().getString(R.string.logcat_ket),false);
-        TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
+        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.107.112.133");
+        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "8088");
+        App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
+        App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), false);
+        App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
+        if (App.PROWER == 0)
+            App.PROWER = 20;
+
+        App.LOGCAT_SWITCH = sp.getBoolean(getResources().getString(R.string.logcat_ket), false);
+//        TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 //        App.DEVICE_ID=tm.getImei();
 //        App.DEVICE_ID=tm.getDeviceId();
       /*  App.SYSTEM_VERSION="20181210";
@@ -143,8 +148,10 @@ public class Main2Activity extends AppCompatActivity
             RFID_2DHander.getInstance().on_RFID();
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             rfidHander.registerObserver(UHFResult.getInstance());
-            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId,(byte)App.PROWER);
-//            RFID_2DHander.getInstance().off_RFID();
+//返回0表示成功？
+             int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
+
+            RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
             Log.w(TAG, "RFID读写器异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -181,12 +188,12 @@ public class Main2Activity extends AppCompatActivity
                 fragment = SettingFragment.newInstance();
                 break;
             case 4:
-                fragment= OutInspectionFragment.newInstance();
                 break;
             case 5:
-                fragment = CheckFragment.newInstance();
+                fragment= OutInspectionFragment.newInstance();
                 break;
             case 6:
+                fragment = CheckCarrierFragment.newInstance();
                 break;
             case 7:
                 fragment = AboutFragment.newInstance();
@@ -281,16 +288,16 @@ public class Main2Activity extends AppCompatActivity
 
                 }
             } else {
-                if (fragment != null && (fragment instanceof OutCheckFragment)){
+                if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
-                }else {
-                getFragmentManager().popBackStack();
+                } else {
+                    getFragmentManager().popBackStack();
                 }
             }
         }
     }
 
-    public void showProgress(final boolean show){
+    public void showProgress(final boolean show) {
 /*
         loginButton.setEnabled(show?false:true);
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -313,6 +320,7 @@ public class Main2Activity extends AppCompatActivity
             loginProgress.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
         }*/
     }
+
     private void askForBack() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -332,6 +340,7 @@ public class Main2Activity extends AppCompatActivity
                     }
                 }).setCancelable(false).show();
     }
+
     private void askForOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -410,23 +419,23 @@ public class Main2Activity extends AppCompatActivity
     private void disConnectRFID() {
         try {
 
-        RFID_2DHander.getInstance().off_RFID();
-        if (rfidHander != null)
-            rfidHander.unRegisterObserver(UHFResult.getInstance());
-        RFID_2DHander.getInstance().disConnectReader();
-        RFID_2DHander.getInstance().releaseRFID();
-        }catch (Exception e){
+            RFID_2DHander.getInstance().off_RFID();
+            if (rfidHander != null)
+                rfidHander.unRegisterObserver(UHFResult.getInstance());
+            RFID_2DHander.getInstance().disConnectReader();
+            RFID_2DHander.getInstance().releaseRFID();
+        } catch (Exception e) {
 
         }
     }
 
     private void disConnect2D() {
         try {
-        RFID_2DHander.getInstance().off_2D();
-        RFID_2DHander.getInstance().disConnect2D();
-        RFID_2DHander.getInstance().releaseRFID();
+            RFID_2DHander.getInstance().off_2D();
+            RFID_2DHander.getInstance().disConnect2D();
+            RFID_2DHander.getInstance().releaseRFID();
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

@@ -74,9 +74,11 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
+        getActivity().setTitle("盘点");
         initRFID();
         return view;
     }
+
     private void initRFID() {
         try {
             RFID_2DHander.getInstance().on_RFID();
@@ -85,6 +87,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
         }
     }
+
     private void disRFID() {
         try {
             RFID_2DHander.getInstance().off_RFID();
@@ -92,11 +95,12 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        App.CARRIER=null;
+        App.CARRIER = null;
         disRFID();
     }
 
@@ -104,12 +108,14 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-
-        Fragment fragment = CheckFragment.newInstance();
-        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-        transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-        transaction.show(fragment);
-        transaction.commit();
+        if (App.CARRIER != null) {
+            Fragment fragment = CheckFragment.newInstance();
+            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+            transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+            transaction.show(fragment);
+            transaction.commit();
+        } else
+            Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
     }
 
     long currenttime = 0;
@@ -142,21 +148,17 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
                                 @Override
                                 public void onResponse(Carrier response) {
-                                    Message msg = handler.obtainMessage();
-                                    msg.arg1 = 0x01;
-                                    msg.obj = response;
-                                    handler.sendMessage(msg);
+                                    if (response != null) {
+                                        App.CARRIER = response;
+                                        if (App.CARRIER != null) {
+                                            editkuwei.setText(App.CARRIER.getLocationNo() + "");
+                                            edittuopan.setText(App.CARRIER.getTrayNo() + "");
+                                        }
+                                    }
                                 }
                             }, json);
                         } catch (IOException e) {
 
-                        }
-                        break;
-                    case 0x01:
-                        App.CARRIER = (Carrier) msg.obj;
-                        if (App.CARRIER != null) {
-                            editkuwei.setText(App.CARRIER.getLocationNo() + "");
-                            edittuopan.setText(App.CARRIER.getTrayNo() + "");
                         }
                         break;
                 }

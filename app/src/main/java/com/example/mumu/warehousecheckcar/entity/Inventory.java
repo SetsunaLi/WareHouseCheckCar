@@ -33,14 +33,14 @@ public class Inventory {
     private Date operatingTime;
     /**设备号*/
     private String device;
-    /**标志位（默认为0；0为盘亏，1为盘盈，2为盘亏）*/
+    /**标志位（默认为0；0为盘亏，1为盘盈，2为正常）*/
     private int flag=0;
     /***库存数量（这个可以不用管）*/
-    private int countIn;
+    private int countIn=0;
     /***实盘数量（这个可以不用管）*/
-    private int count;
+    private int countReal=0;
     /***盘盈数量（这个可以不用管）*/
-    private int countProfit;
+    private int countProfit=0;
     /***盘亏数量（这个可以不用管）*/
     private int countLosses;
     /**勾选状态（默认选中；这个可以不用管）*/
@@ -50,8 +50,8 @@ public class Inventory {
         countIn++;
     }
     /**增加实际盘点数*/
-    public void addCount(){
-        count++;
+    public void addCountReal(){
+        countReal++;
     }
     /**增加盘盈数*/
     public void addCountProfit(){
@@ -181,12 +181,12 @@ public class Inventory {
         this.countIn = countIn;
     }
 
-    public int getCount() {
-        return count;
+    public int getCountReal() {
+        return countReal;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setCountReal(int countReal) {
+        this.countReal = countReal;
     }
 
     public int getCountProfit() {

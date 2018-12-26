@@ -22,7 +22,7 @@
                 android:orientation="vertical">
 
                 <include
-                    layout="@layout/item_layout_1"
+                    layout="@layout/check_item"
                     android:layout_width="match_parent"
                     android:layout_height="55dip" />
 
