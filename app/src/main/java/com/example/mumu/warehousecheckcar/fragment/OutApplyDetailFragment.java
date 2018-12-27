@@ -19,7 +19,7 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
-import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -46,8 +46,8 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     @Bind(R.id.text2)
     TextView text2;
     private final String TAG="OutApplyDetailFragment";
-    private List<InCheckDetail> myList;
-    private List<InCheckDetail> dataList;
+    private List<Inventory> myList;
+    private List<Inventory> dataList;
     private RecycleAdapter mAdapter;
 
     private OutApplyDetailFragment() {
@@ -66,16 +66,13 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     }
     public void initData(){
         myList=new ArrayList<>();
-        myList.add(new InCheckDetail());//增加一个为头部
+        myList.add(new Inventory());//增加一个为头部
         myList.addAll(App.OUT_APPLY_DETAIL);
-        for(InCheckDetail old:myList){
-            if (old.getFabRool()!=null)
-                old.setFlag(true);
-        }
-        Collections.sort(myList, new Comparator<InCheckDetail>() {
+
+        Collections.sort(myList, new Comparator<Inventory>() {
             @Override
-            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
-                String  aFab=inCheckDetail.getFabRool();
+            public int compare(Inventory Inventory, Inventory t1) {
+                String  aFab=Inventory.getFabRool();
                 if (aFab==null)
                     return -1;
                 String bFab=t1.getFabRool();
@@ -156,7 +153,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.notifyDataSetChanged();*/
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<Inventory> {
         private Context context;
 
         public void setContext(Context context) {
@@ -167,7 +164,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<Inventory> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
@@ -180,14 +177,11 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
          }*/
         @Override
-        public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
+        public void convert(RecyclerHolder holder, Inventory item, int position) {
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (item.isFlag())
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    else
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getFabRool() + "");
                     holder.setText(R.id.item2, item.getProduct_no() + "");

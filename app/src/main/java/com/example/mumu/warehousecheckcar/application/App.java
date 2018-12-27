@@ -16,7 +16,7 @@ import java.util.List;
 
 public class App extends Application {
 //    申请单号缓存
-    public static String applyNo="";
+    public static String APPLY_NO="";
 //    车牌号缓存
     public static String carNo="";
 //系统版本
@@ -41,9 +41,10 @@ public class App extends Application {
     //    出库缓存详细列表
     public static List<OutCheckDetail> OUTDETAIL_LIST=new ArrayList<>();
 //出库申请单
-    public static List<InCheckDetail> OUT_APPLY=new ArrayList<>();
-    public static List<InCheckDetail> OUT_APPLY_DETAIL=new ArrayList<>();
+//    public static List<InCheckDetail> OUT_APPLY=new ArrayList<>();
+    public static List<Inventory> OUT_APPLY_DETAIL=new ArrayList<>();
 //    盘点库位缓存
     public static Carrier CARRIER;
+//    盘点明细列表缓存
     public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
 }

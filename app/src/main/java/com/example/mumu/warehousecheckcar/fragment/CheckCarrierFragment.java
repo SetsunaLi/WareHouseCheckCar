@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
@@ -133,32 +134,43 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                             }
                         }
                         String EPC = (String) msg.obj;
-                        EPC.replace(" ", "");
-                        EPC.replace("\"", "");
-                        final String json = JSON.toJSONString(EPC);
+                        EPC.replace(" ","");
+//                        final String json = EPC;
+                        JSONObject epc = new JSONObject();
+                        epc.put("epc",EPC);
+                        final String json = epc.toJSONString();
                         try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getEpc;" + e.getMessage());
+                                        Log.i(TAG, "getInventory;" + e.getMessage());
                                         Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }
 
                                 @Override
                                 public void onResponse(Carrier response) {
-                                    if (response != null) {
-                                        App.CARRIER = response;
-                                        if (App.CARRIER != null) {
-                                            editkuwei.setText(App.CARRIER.getLocationNo() + "");
-                                            edittuopan.setText(App.CARRIER.getTrayNo() + "");
-                                        }
+                                    if (response!=null&&response.getLocationNo()!=null||response.getTrayNo()!=null) {
+                                        Message msg = handler.obtainMessage();
+                                        msg.arg1 = 0x01;
+                                        msg.obj = response;
+                                        handler.sendMessage(msg);
                                     }
                                 }
                             }, json);
                         } catch (IOException e) {
 
+                        }
+                        break;
+                    case 0x01:
+                        Carrier response=(Carrier) msg.obj;
+                        if (response != null) {
+                            App.CARRIER = response;
+                            if (App.CARRIER != null) {
+                                editkuwei.setText(App.CARRIER.getLocationNo() + "");
+                                edittuopan.setText(App.CARRIER.getTrayNo() + "");
+                            }
                         }
                         break;
                 }

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
@@ -144,7 +145,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         if (dataKEY != null)
             dataKEY.clear();
 
-        text1.setText("0");
+//        text1.setText("0");
     }
 
     private void initRFID() {
@@ -177,18 +178,21 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
             clearData();
             final String json = JSON.toJSONString(App.CARRIER);
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<List<Inventory>>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "getEpc;" + e.getMessage());
+                            Log.i(TAG, "getCarrier;" + e.getMessage());
                             Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
+                        Toast.makeText(getActivity(), "无法获取仓位信息请重试！", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onResponse(List<Inventory> response) {
-                        if (response != null && response.size() != 0) {
+                    public void onResponse(JSONArray jsonArray) {
+                        List<Inventory> response;
+                        response=jsonArray.toJavaList(Inventory.class);
+                        if (response != null && response.size()!= 0) {
                             for (Inventory obj : response) {
                                 if (obj != null && obj.getVatNo() != null) {
                                     if (keyValue.containsKey(obj.getVatNo())) {//里面有
@@ -202,6 +206,9 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                     dataList.add(obj);
                                 }
                             }
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            Toast.makeText(getActivity(), "无法获取仓位信息请重试！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, json);
@@ -357,11 +364,11 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 }
                 final String json = JSON.toJSONString(jsocList);
                         try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/inDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "inDetail;" + e.getMessage());
+                                        Log.i(TAG, "postInventory;" + e.getMessage());
                                         Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }

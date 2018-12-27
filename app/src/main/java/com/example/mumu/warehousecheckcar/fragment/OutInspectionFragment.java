@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,7 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.applyNo;
+import static com.example.mumu.warehousecheckcar.application.App.APPLY_NO;
 
 /**
  * Created by mumu on 2018/12/8.
@@ -115,11 +116,12 @@ public class OutInspectionFragment extends Fragment implements RXCallback {
                     /*先访系统得到列表后再跳转
                     尝试不异步情况下能否访问
                     * */
-                    applyNo = applaNO;
+                    APPLY_NO = applaNO;
                     Fragment fragment = OutApplyFragment.newInstance();
-                    FragmentManager fm = getActivity().getFragmentManager();
-                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    fm.beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(TAG_RETURN_FRAGMENT).commit();
+                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                    transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                    transaction.show(fragment);
+                    transaction.commit();
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.hint_void), Toast.LENGTH_SHORT).show();
                 }

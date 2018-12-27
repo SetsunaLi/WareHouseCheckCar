@@ -290,7 +290,9 @@ public class Main2Activity extends AppCompatActivity
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
-                } else {
+                } else if(fragment != null && (fragment instanceof CheckFragment)) {
+                    selectItem(6);
+                }else {
                     getFragmentManager().popBackStack();
                 }
             }
