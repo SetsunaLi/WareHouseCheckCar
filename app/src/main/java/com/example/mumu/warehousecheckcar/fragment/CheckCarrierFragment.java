@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
@@ -25,17 +24,12 @@ import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
-import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.Inventory;
-import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -166,11 +160,9 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                     case 0x01:
                         Carrier response=(Carrier) msg.obj;
                         if (response != null) {
-                            App.CARRIER = response;
-                            if (App.CARRIER != null) {
-                                editkuwei.setText(App.CARRIER.getLocationNo() + "");
-                                edittuopan.setText(App.CARRIER.getTrayNo() + "");
-                            }
+                            App.CARRIER=response;
+                                editkuwei.setText(response.getLocationNo() + "");
+                                edittuopan.setText(response.getTrayNo() + "");
                         }
                         break;
                 }

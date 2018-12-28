@@ -217,9 +217,9 @@ public class CheckDetailFragment extends Fragment implements BRecyclerAdapter.On
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     }else {
                     if (item.getFlag()==0)//亏
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
-                    else if (item.getFlag()==1)//盈
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    else if (item.getFlag()==1)//盈
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                     else//正常
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                     }

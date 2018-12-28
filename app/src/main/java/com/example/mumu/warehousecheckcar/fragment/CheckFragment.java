@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
@@ -174,6 +175,10 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     @Override
     public void onResume() {
         super.onResume();
+        downLoadData();
+    }
+
+    private void downLoadData() {
         if (App.CARRIER != null) {
             clearData();
             final String json = JSON.toJSONString(App.CARRIER);
@@ -191,8 +196,8 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     @Override
                     public void onResponse(JSONArray jsonArray) {
                         List<Inventory> response;
-                        response=jsonArray.toJavaList(Inventory.class);
-                        if (response != null && response.size()!= 0) {
+                        response = jsonArray.toJavaList(Inventory.class);
+                        if (response != null && response.size() != 0) {
                             for (Inventory obj : response) {
                                 if (obj != null && obj.getVatNo() != null) {
                                     if (keyValue.containsKey(obj.getVatNo())) {//里面有
@@ -207,14 +212,14 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                 }
                             }
                             mAdapter.notifyDataSetChanged();
-                        }else {
+                        } else {
                             Toast.makeText(getActivity(), "无法获取仓位信息请重试！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, json);
             } catch (IOException e) {
 
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
@@ -264,12 +269,15 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         }
                         String EPC = (String) msg.obj;
                         EPC.replace(" ", "");
-                        EPC.replace("\"", "");
+//                        EPC.replace("\"", "");
 //                        可能要查看Epc格式
+                        JSONObject epc = new JSONObject();
+                        epc.put("epc", EPC);
+                        final String json = epc.toJSONString();
                         if (!epcList.contains(EPC)) {
-                            final String json = JSON.toJSONString(EPC);
+//                            final String json = JSON.toJSONString(EPC);
                             try {
-                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<Inventory>() {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                                     @Override
                                     public void onError(Request request, Exception e) {
                                         if (App.LOGCAT_SWITCH) {
@@ -279,41 +287,48 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                     }
 
                                     @Override
-                                    public void onResponse(Inventory response) {
-                                        if (response != null && response.getEpc() != null && !epcList.contains(response.getEpc())) {
-                                            epcList.add(response.getEpc());
-                                            boolean flag = false;
-                                            for (Inventory data : dataList) {//判断
-                                                if (data.getEpc() != null && data.getEpc().equals(response.getEpc())) {//判断成功//实盘
-                                                    flag = true;
-                                                    data.setFlag(2);
-                                                    myList.get(keyValue.get(response.getVatNo())).addCountReal();
-                                                    break;
+                                    public void onResponse(JSONArray jsonArray) {
+                                        List<Inventory> arry;
+                                        arry = jsonArray.toJavaList(Inventory.class);
+                                        if (arry != null && arry.size() > 0) {
+                                            Inventory response = arry.get(0);
+                                            if (response != null && response.getEpc() != null && !epcList.contains(response.getEpc())) {
+                                                epcList.add(response.getEpc());
+                                                boolean flag = false;
+                                                for (Inventory data : dataList) {//判断
+                                                    if (data.getEpc() != null && data.getEpc().equals(response.getEpc())) {//判断成功//实盘
+                                                        if (response.getVatNo() != null && keyValue.containsKey(response.getVatNo())) {
+                                                            flag = true;
+                                                            data.setFlag(2);
+                                                            myList.get(keyValue.get(response.getVatNo())).addCountReal();
+                                                        }
+                                                        break;
+                                                    }
                                                 }
-                                            }
-                                            if (!flag) {//盘盈
-                                                response.setFlag(1);
-                                                dataList.add(response);
-                                                if (keyValue.containsKey(response.getVatNo())) {
-                                                    myList.get(keyValue.get(response.getVatNo())).addCountProfit();
-                                                } else {
-                                                    response.addCountProfit();
-                                                    myList.add(response);
-                                                    keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                if (!flag) {//盘盈
+                                                    response.setFlag(1);
+                                                    dataList.add(response);
+                                                    if (keyValue.containsKey(response.getVatNo())) {
+                                                        myList.get(keyValue.get(response.getVatNo())).addCountProfit();
+                                                    } else {
+                                                        response.addCountProfit();
+                                                        myList.add(response);
+                                                        keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                    }
                                                 }
+                                                mAdapter.notifyDataSetChanged();
                                             }
-
                                         }
                                     }
                                 }, json);
                             } catch (IOException e) {
-
+                                Log.i(TAG, "");
                             }
                         }
                         break;
                 }
             } catch (Exception e) {
-
+                Log.i(TAG, "");
             }
         }
     };
@@ -323,6 +338,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
+                downLoadData();
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
@@ -330,6 +346,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 break;
         }
     }
+
     private void blinkDialog() {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -363,37 +380,39 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     }
                 }
                 final String json = JSON.toJSONString(jsocList);
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "postInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                                @Override
-                                public void onResponse(String response) {
-                                    if (response.equals("1")) {
-                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                        clearData();
-                                        mAdapter.notifyDataSetChanged();
-                                    } else {
-                                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    }
-
-                                }
-                            }, json);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }catch (Exception e){
-                            e.printStackTrace();
+                try {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            if (App.LOGCAT_SWITCH) {
+                                Log.i(TAG, "postInventory;" + e.getMessage());
+                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
+
+                        @Override
+                        public void onResponse(String response) {
+                            if (response.equals("1")) {
+                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                clearData();
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                    }, json);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 dialog.dismiss();
             }
         });
     }
+
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @Override
@@ -468,7 +487,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getFlag() == 1)
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                     holder.setText(R.id.item1, item.getProduct_no() + "");
