@@ -149,8 +149,8 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        /*mAdapter.select(position);
-        mAdapter.notifyDataSetChanged();*/
+        mAdapter.select(position);
+        mAdapter.notifyDataSetChanged();
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Inventory> {
@@ -168,21 +168,29 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
             super(v, datas, itemLayoutId);
 
         }
-        /* private int index=-255;
+         private int index=-255;
          public void select(int index){
              if (this.index==index)
                  this.index=-255;
              else
                  this.index=index;
 
-         }*/
+         }
         @Override
         public void convert(RecyclerHolder holder, Inventory item, int position) {
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-
-//                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
+                    if (position==index){
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                    }else {
+                        if (item.getFlag()==0)//亏
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        else if (item.getFlag()==1)//盈
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+                        else//正常
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    }
                     holder.setText(R.id.item1, item.getFabRool() + "");
                     holder.setText(R.id.item2, item.getProduct_no() + "");
                     holder.setText(R.id.item3, item.getWeight_in() + "");

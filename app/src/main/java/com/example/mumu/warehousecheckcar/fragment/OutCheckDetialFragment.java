@@ -54,7 +54,7 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
     TextView text1;
     @Bind(R.id.text2)
     TextView text2;
-    private final String TAG="OutCheckDetialFragment";
+    private final String TAG = "OutCheckDetialFragment";
     private List<OutCheckDetail> myList;
     private List<OutCheckDetail> dataList;
     private RecycleAdapter mAdapter;
@@ -174,68 +174,46 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         if (myList.size() >= 2)
             if (myList.get(1) != null && myList.get(1).getVatNo() != null) {
                 final String json = myList.get(1).getVatNo();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_out.sh", new OkHttpClientManager.ResultCallback<List<OutCheckDetail>>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getVatNo_out;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取缸号信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onResponse(List<OutCheckDetail> response) {
-                                    if (response != null) {
-                                        List<OutCheckDetail> newList = new ArrayList<OutCheckDetail>();
-                                        for (OutCheckDetail re : response) {
-                                            if (re != null && re.getFabRool() != null) {
-                                                boolean isIn = false;
-//                                                for(int i=0;i<myList.size();i++){
-                                                for (OutCheckDetail old : myList) {
-                                                    if (old != null && old.getFabRool() != null)
-                                                        if (old.getFabRool().equals(re.getFabRool())) {
-                                                            isIn = true;
-                                                            old.setFlag(true);
-                                                        }
-                                                }
-                                                if (!isIn)
-                                                    newList.add(re);
-                                            }
-                                        }
-                                        myList.addAll(newList);
-                                        newList.clear();
-
-                                        /*myList.clear();
-                                        myList.add(new OutCheckDetail());
-                                        myList.addAll(response);
-                                        for (OutCheckDetail yes : dataList) {
-                                            for (int i = 0; i < myList.size(); i++) {
-                                                if (yes != null && myList.get(i) != null) {
-                                                    if (yes.getFabRool() != null && myList.get(i).getFabRool() != null) {
-                                                        if (yes.getFabRool().equals(myList.get(i).getFabRool())) {
-                                                            indexList.add(i);
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                        }*/
-                                    }
-                                    Message msg = handler.obtainMessage();
-                                    msg.arg1 = 0x09;
-                                    handler.sendMessage(msg);
-                                }
-                            }, json);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                try {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_out.sh", new OkHttpClientManager.ResultCallback<List<OutCheckDetail>>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            if (App.LOGCAT_SWITCH) {
+                                Log.i(TAG, "getVatNo_out;" + e.getMessage());
+                                Toast.makeText(getActivity(), "获取缸号信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                }.start();
+
+                        @Override
+                        public void onResponse(List<OutCheckDetail> response) {
+                            if (response != null) {
+                                List<OutCheckDetail> newList = new ArrayList<OutCheckDetail>();
+                                for (OutCheckDetail re : response) {
+                                    if (re != null && re.getFabRool() != null) {
+                                        boolean isIn = false;
+//                                                for(int i=0;i<myList.size();i++){
+                                        for (OutCheckDetail old : myList) {
+                                            if (old != null && old.getFabRool() != null)
+                                                if (old.getFabRool().equals(re.getFabRool())) {
+                                                    isIn = true;
+                                                    old.setFlag(true);
+                                                }
+                                        }
+                                        if (!isIn)
+                                            newList.add(re);
+                                    }
+                                }
+                                myList.addAll(newList);
+                                newList.clear();
+                            }
+                            Message msg = handler.obtainMessage();
+                            msg.arg1 = 0x09;
+                            handler.sendMessage(msg);
+                        }
+                    }, json);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
     }
 

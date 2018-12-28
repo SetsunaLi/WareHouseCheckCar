@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -379,7 +381,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         }
 
         @Override
-        public void convert(RecyclerHolder holder, Inventory item, int position) {
+        public void convert(RecyclerHolder holder,final Inventory item,final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
@@ -390,8 +392,41 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         if (dataKey.contains(item.getVatNo()))
                             dataKey .remove(item.getVatNo());
                     }
+                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    if (item.getFlag() == 1)
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+                    else
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    holder.setText(R.id.item1, item.getProduct_no() + "");
+                    holder.setText(R.id.item2, item.getSelNo() + "");
+                    holder.setText(R.id.item3, item.getColor() + "");
+                    holder.setText(R.id.item4, item.getVatNo() + "");
+                    holder.setText(R.id.item5, item.getCountIn() + "");
+                    holder.setText(R.id.item6, item.getCountReal() + "");
+                    holder.setText(R.id.item7, item.getCountProfit() + "");
+                    holder.setText(R.id.item8, item.getCountIn() - item.getCountReal() + "");
+                }
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            for (int i = 1; i < myList.size(); i++) {
+                                View view = llm.findViewByPosition(i);
+                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
+                                c.setChecked(isChecked);
+                            }
+                        } else {
+                            if (isChecked) {
+                                if (!dataKey.contains(item.getVatNo()))
+                                    dataKey.add(item.getVatNo());
+                            } else {
+                                if (dataKey.contains(item.getVatNo()))
+                                    dataKey.remove(item.getVatNo());
+                            }
+                        }
+                    }
+                });
                 }
             }
         }
-    }
 }

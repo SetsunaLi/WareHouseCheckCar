@@ -292,9 +292,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                         if (!dataEPC.contains(EPC)) {
 //                        查询
                             final String json = JSON.toJSONString(EPC);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
                                     try {
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
                                             @Override
@@ -344,8 +341,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                }
-                            }).start();
                         }
                         break;
                     case 0x12:
@@ -417,9 +412,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                     }
                 }
                 final String json = JSON.toJSONString(list);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
                         Response response = null;
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/outDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
@@ -449,8 +441,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                }).start();
                 dialog.dismiss();
             }
         });
