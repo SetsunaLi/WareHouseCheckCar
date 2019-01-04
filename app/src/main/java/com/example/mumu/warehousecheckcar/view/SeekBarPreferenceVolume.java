@@ -123,6 +123,9 @@ public class SeekBarPreferenceVolume extends Preference implements SeekBar.OnSee
         mValue = progress;
         if (mSeekBar != null)
             mSeekBar.setProgress(progress);
+        if (shouldPersist())
+            persistInt(progress);
+        callChangeListener(new Integer(progress));
     }
     public int getProgress() { return mValue; }
 }

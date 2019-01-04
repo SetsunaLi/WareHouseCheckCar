@@ -61,7 +61,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         music =(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.system_music_key));
         logcat =(SwitchPreference)getPreferenceScreen().findPreference(getString(R.string.logcat_ket));
         prower=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_prower_key));
+//        这个不生效
         prower.setProgress(App.PROWER);
+
      /*   workTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_work_time_key));
         intervalTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_interval_time_key));*/
         statuslist=(ListPreference)getPreferenceScreen().findPreference(getString(R.string.user_status_key));
@@ -112,8 +114,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 byte prower=(byte)getPrower(getActivity());
                 if (rfidHander!=null){
                     int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId,prower);
-                    if (i==0)
-                        Toast.makeText(getActivity(),"设置功率成功",Toast.LENGTH_SHORT).show();
+                                                       if (i!=0)
+                        Toast.makeText(getActivity(),"设置功率失败",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case Config.MUSIC:

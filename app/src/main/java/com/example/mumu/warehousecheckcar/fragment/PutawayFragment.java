@@ -36,10 +36,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by mumu on 2018/12/21.
+ * Created by mumu on 2019/1/4.
  */
 
-public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class PutawayFragment extends Fragment implements UHFCallbackLiatener{
     @Bind(R.id.editkuwei)
     EditText editkuwei;
     @Bind(R.id.edittuopan)
@@ -50,14 +50,14 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     Button button2;
     private final String TAG = "CheckCarrierFragment";
 
-    private CheckCarrierFragment() {
+    private PutawayFragment() {
     }
 
-    private static CheckCarrierFragment fragment;
+    private static PutawayFragment fragment;
 
-    public static CheckCarrierFragment newInstance() {
+    public static PutawayFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CheckCarrierFragment();
+        fragment = new PutawayFragment();
         return fragment;
     }
 
@@ -70,8 +70,6 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
         getActivity().setTitle("盘点");
-
-        button2.setText("确认库位");
         initRFID();
         return view;
     }
@@ -163,8 +161,8 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                         Carrier response=(Carrier) msg.obj;
                         if (response != null) {
                             App.CARRIER=response;
-                                editkuwei.setText(response.getLocationNo() + "");
-                                edittuopan.setText(response.getTrayNo() + "");
+                            editkuwei.setText(response.getLocationNo() + "");
+                            edittuopan.setText(response.getTrayNo() + "");
                         }
                         break;
                 }

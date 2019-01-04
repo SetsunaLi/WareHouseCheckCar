@@ -20,6 +20,8 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.Output;
+import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -46,8 +48,8 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     @Bind(R.id.text2)
     TextView text2;
     private final String TAG="OutApplyDetailFragment";
-    private List<Inventory> myList;
-    private List<Inventory> dataList;
+    private List<OutputDetail> myList;
+    private List<OutputDetail> dataList;
     private RecycleAdapter mAdapter;
 
     private OutApplyDetailFragment() {
@@ -66,13 +68,14 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     }
     public void initData(){
         myList=new ArrayList<>();
-        myList.add(new Inventory());//增加一个为头部
-        myList.addAll(App.OUT_APPLY_DETAIL);
+        myList.add(new OutputDetail());//增加一个为头部
+        if (App.OUTPUT_DETAIL_LIST!=null&&App.OUTPUT_DETAIL_LIST.size()>0)
+        myList.addAll(App.OUTPUT_DETAIL_LIST.get(0).getList());
 
-        Collections.sort(myList, new Comparator<Inventory>() {
+        Collections.sort(myList, new Comparator<OutputDetail>() {
             @Override
-            public int compare(Inventory Inventory, Inventory t1) {
-                String  aFab=Inventory.getFabRool();
+            public int compare(OutputDetail t0, OutputDetail t1) {
+                String  aFab=t0.getFabRool();
                 if (aFab==null)
                     return -1;
                 String bFab=t1.getFabRool();
@@ -95,7 +98,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_detail_item_layout);
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_put_detail_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
@@ -112,7 +115,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         return view;
     }
     private void setAdaperHeader() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_detail_item_layout, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.out_put_detail_item, null);
         mAdapter.setHeader(view);
     }
     @Override
@@ -144,7 +147,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         ButterKnife.unbind(this);
         myList.clear();
         dataList.clear();
-        App.OUTDETAIL_LIST.clear();
+        App.OUTPUT_DETAIL_LIST.clear();
     }
 
     @Override
@@ -153,7 +156,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.notifyDataSetChanged();
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<Inventory> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<OutputDetail> {
         private Context context;
 
         public void setContext(Context context) {
@@ -164,7 +167,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<Inventory> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<OutputDetail> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
@@ -177,26 +180,24 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
          }
         @Override
-        public void convert(RecyclerHolder holder, Inventory item, int position) {
+        public void convert(RecyclerHolder holder, OutputDetail item, int position) {
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (position==index){
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    }else {
                         if (item.getFlag()==0)//亏
-                            ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                        else if (item.getFlag()==1)//盈
-                            ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
-                        else//正常
                             ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    }
+                        else if (item.getFlag()==1)
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                        else if (item.getFlag()==2)//盈
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        else if (item.getFlag()==3)//正常
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+
                     holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getProduct_no() + "");
+                    if (App.OUTPUT_DETAIL_LIST!=null&&App.OUTPUT_DETAIL_LIST.size()>0)
+                    holder.setText(R.id.item2, App.OUTPUT_DETAIL_LIST.get(0).getProduct_no() + "");
                     holder.setText(R.id.item3, item.getWeight_in() + "");
                     holder.setText(R.id.item4, item.getWeight() + "");
-                    holder.setText(R.id.item5, item.getColor() + "");
-                    holder.setText(R.id.item6, item.getSelNo() + "");
                 }
             }
         }

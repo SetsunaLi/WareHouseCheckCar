@@ -108,7 +108,6 @@ public class Main2Activity extends AppCompatActivity
         App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
         if (App.PROWER == 0)
             App.PROWER = 20;
-
         App.LOGCAT_SWITCH = sp.getBoolean(getResources().getString(R.string.logcat_ket), false);
 //        TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 //        App.DEVICE_ID=tm.getImei();
@@ -150,7 +149,6 @@ public class Main2Activity extends AppCompatActivity
             rfidHander.registerObserver(UHFResult.getInstance());
 //返回0表示成功？
              int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
-
             RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
             Log.w(TAG, "RFID读写器异常");

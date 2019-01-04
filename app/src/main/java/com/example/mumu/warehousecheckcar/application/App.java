@@ -1,11 +1,14 @@
 package com.example.mumu.warehousecheckcar.application;
 
 import android.app.Application;
+import android.support.annotation.ArrayRes;
 
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.Output;
+import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,4 +50,8 @@ public class App extends Application {
     public static Carrier CARRIER;
 //    盘点明细列表缓存
     public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
+
+//  出库详情缓存
+    public static List<Output> OUTPUT_DETAIL_LIST=new ArrayList<>();
+
 }

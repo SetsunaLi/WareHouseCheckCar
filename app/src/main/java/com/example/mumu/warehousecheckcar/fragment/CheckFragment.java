@@ -268,44 +268,42 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             }
                         }
                         String EPC = (String) msg.obj;
-                        EPC.replace(" ", "");
-//                        EPC.replace("\"", "");
-//                        可能要查看Epc格式
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
+                        EPC.replaceAll("  ", "");
                         if (!epcList.contains(EPC)) {
-//                            final String json = JSON.toJSONString(EPC);
-                            try {
-                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                    @Override
-                                    public void onError(Request request, Exception e) {
-                                        if (App.LOGCAT_SWITCH) {
-                                            Log.i(TAG, "getEpc;" + e.getMessage());
-                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
+                            boolean isData = false;
+                            for (Inventory data : dataList) {
+                                if (data != null && data.getEpc() != null && data.getEpc().equals(EPC)) {//判断成功//实盘
+                                    if (data.getVatNo() != null && keyValue.containsKey(data.getVatNo())) {
+                                        isData = true;
+                                        data.setFlag(2);
+                                        epcList.add(EPC);
+                                        myList.get(keyValue.get(data.getVatNo())).addCountReal();
                                     }
-
-                                    @Override
-                                    public void onResponse(JSONArray jsonArray) {
-                                        List<Inventory> arry;
-                                        arry = jsonArray.toJavaList(Inventory.class);
-                                        if (arry != null && arry.size() > 0) {
-                                            Inventory response = arry.get(0);
-                                            if (response != null && response.getEpc() != null && !epcList.contains(response.getEpc())) {
-                                                epcList.add(response.getEpc());
-                                                boolean flag = false;
-                                                for (Inventory data : dataList) {//判断
-                                                    if (data.getEpc() != null && data.getEpc().equals(response.getEpc())) {//判断成功//实盘
-                                                        if (response.getVatNo() != null && keyValue.containsKey(response.getVatNo())) {
-                                                            flag = true;
-                                                            data.setFlag(2);
-                                                            myList.get(keyValue.get(response.getVatNo())).addCountReal();
-                                                        }
-                                                        break;
-                                                    }
+                                }
+                                mAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                            if (!isData) {
+                                JSONObject epc = new JSONObject();
+                                epc.put("epc", EPC);
+                                final String json = epc.toJSONString();
+                                if (!epcList.contains(EPC)) {
+                                    try {
+                                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                                            @Override
+                                            public void onError(Request request, Exception e) {
+                                                if (App.LOGCAT_SWITCH) {
+                                                    Log.i(TAG, "getEpc;" + e.getMessage());
+                                                    Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                                 }
-                                                if (!flag) {//盘盈
+                                            }
+
+                                            @Override
+                                            public void onResponse(JSONArray jsonArray) {
+                                                List<Inventory> arry;
+                                                arry = jsonArray.toJavaList(Inventory.class);
+                                                if (arry != null && arry.size() > 0) {
+                                                    Inventory response = arry.get(0);
                                                     response.setFlag(1);
                                                     dataList.add(response);
                                                     if (keyValue.containsKey(response.getVatNo())) {
@@ -318,11 +316,11 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                 }
                                                 mAdapter.notifyDataSetChanged();
                                             }
-                                        }
+                                        }, json);
+                                    } catch (IOException e) {
+                                        Log.i(TAG, "");
                                     }
-                                }, json);
-                            } catch (IOException e) {
-                                Log.i(TAG, "");
+                                }
                             }
                         }
                         break;

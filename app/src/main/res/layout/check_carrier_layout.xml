@@ -41,7 +41,8 @@
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/edit_text_style"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp"/>
+                android:paddingRight="15dp"
+                android:focusable="false"/>
 
         </LinearLayout>
         <TextView
@@ -73,7 +74,8 @@
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/edit_text_style"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp"/>
+                android:paddingRight="15dp"
+                android:focusable="false"/>
 
         </LinearLayout>
 
@@ -95,6 +97,6 @@
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/button_margin"
             android:layout_marginRight="@dimen/home_margin"
-            android:text="开始扫描" />
+            android:text="查找库位" />
     </LinearLayout>
 </LinearLayout>
