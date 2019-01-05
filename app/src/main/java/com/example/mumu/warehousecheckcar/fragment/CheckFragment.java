@@ -38,14 +38,12 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,6 +73,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     private final String TAG = "CheckFragment";
 
     private static CheckFragment fragment;
+
     @Bind(R.id.text1)
     TextView text1;
     @Bind(R.id.text2)
@@ -130,6 +129,11 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
         dataKEY = new ArrayList<>();
+        text1.setText(0+"");
+        if (App.CARRIER != null)
+            if (App.CARRIER.getLocationNo()!=null)
+                text2.setText(App.CARRIER.getLocationNo()+"");
+
     }
 
     private void clearData() {
@@ -181,6 +185,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     private void downLoadData() {
         if (App.CARRIER != null) {
             clearData();
+            text1.setText(0+"");
             final String json = JSON.toJSONString(App.CARRIER);
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
@@ -280,6 +285,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                         myList.get(keyValue.get(data.getVatNo())).addCountReal();
                                     }
                                 }
+                                text1.setText(epcList.size()+"");
                                 mAdapter.notifyDataSetChanged();
                                 break;
                             }
@@ -314,6 +320,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                         keyValue.put(response.getVatNo(), myList.size() - 1);
                                                     }
                                                 }
+                                                text1.setText(epcList.size()+"");
                                                 mAdapter.notifyDataSetChanged();
                                             }
                                         }, json);

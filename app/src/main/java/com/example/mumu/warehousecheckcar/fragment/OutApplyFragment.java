@@ -42,6 +42,7 @@ import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -199,9 +200,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     }
 
     private void downLoadData() {
-//        if (App.APPLY_NO != null) {
+        if (App.APPLY_NO != null) {
+            text2.setText(App.APPLY_NO+"");
         JSONObject object = new JSONObject();
-        object.put("applyNo", "A70400918");
+//        object.put("applyNo", "A70400918");
         final String json = object.toJSONString();
         try {
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
@@ -239,7 +241,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         } catch (Exception e) {
 
         }
-//        }
+        }
     }
 
     @Override
@@ -247,6 +249,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         super.onDestroyView();
         ButterKnife.unbind(this);
         clearData();
+        myList.clear();
         App.OUTPUT_DETAIL_LIST.clear();
         disRFID();
     }
@@ -387,6 +390,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                 } else {
                                                     detail.setFlag(1);//正常配货
                                                 }
+                                                data.setWeightall(ArithUtil.add(data.getWeightall(),detail.getWeight()));
                                                 text1.setText(epcList.size()+"");
                                                 mAdapter.notifyDataSetChanged();
                                             }
@@ -441,6 +445,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                             data.setCountProfit(1);
                                                             data.setCountLosses(0);
                                                             data.setFlag(2);
+                                                            data.setWeightall(response.getWeight());
                                                             List<OutputDetail> list = new ArrayList<OutputDetail>();
                                                             list.add(detail);
                                                             data.setList(list);
@@ -449,6 +454,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                             keyValue.put(response.getVatNo(), myList.size() - 1);
                                                         } else {
                                                             myList.get(keyValue.get(response.getVatNo())).addCount();
+                                                            myList.get(keyValue.get(response.getVatNo())).setWeightall(ArithUtil.add(myList.get(keyValue.get(response.getVatNo())).getWeightall(),response.getWeight()));
                                                             for (Output op : dataList) {
                                                                 if (op.getVatNo().equals(response.getVatNo()))
                                                                     op.getList().add(detail);
@@ -549,6 +555,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     holder.setText(R.id.item4, item.getVatNo() + "");
                     holder.setText(R.id.item5, item.getCountOut() + "");
                     holder.setText(R.id.item6, item.getCount() + "");
+                    holder.setText(R.id.item7, item.getWeightall() + "");
                 }
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
