@@ -313,14 +313,14 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
                         @Override
                         public void onResponse(JSONObject response) {
-                           /* if (response.equals("1")) {
+                            BaseReturn baseReturn=response.toJavaObject(BaseReturn.class);
+                            if (baseReturn!=null&&baseReturn.getStatus()==1) {
                                 Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                                 clearData();
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                            }*/
-
+                            }
                         }
                     }, json);
 
