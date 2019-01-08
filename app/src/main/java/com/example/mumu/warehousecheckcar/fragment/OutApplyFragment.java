@@ -131,7 +131,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.apply_item_layout_1, null);
         mAdapter.setHeader(view);
     }
+//    主页返回执行
 
+    public void onBackPressed() {
+        RFID_2DHander.getInstance().on_2D();
+    }
     private void clearData() {
         if (myList != null) {
             myList.clear();

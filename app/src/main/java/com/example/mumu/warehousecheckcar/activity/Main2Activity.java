@@ -33,6 +33,7 @@ import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutApplyFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
@@ -287,6 +288,9 @@ public class Main2Activity extends AppCompatActivity
                     askForBack();
                 } else if(fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(6);
+                }else if (fragment != null && (fragment instanceof OutApplyFragment)){
+                    ((OutApplyFragment)fragment).onBackPressed();
+                    getFragmentManager().popBackStack();
                 }else {
                     getFragmentManager().popBackStack();
                 }
