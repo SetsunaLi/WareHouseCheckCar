@@ -201,11 +201,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     }
 
     private void downLoadData() {
-        if (App.APPLY_NO != null) {
+        try {
+            if (App.APPLY_NO != null) {
         JSONObject object = new JSONObject();
         object.put("applyNo", App.APPLY_NO);
         final String json = object.toJSONString();
-        try {
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                 @Override
                 public void onError(Request request, Exception e) {
@@ -238,9 +238,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     }
                 }
             }, json);
+            }else
+            Toast.makeText(getActivity(),"申请单号为空！",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
 
-        }
         }
     }
 
@@ -374,7 +375,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         }
                        final String EPC = ((String) msg.obj).replaceAll("  ", "");
                         if (!epcList.contains(EPC)) {
-                            epcList.add(EPC);
                             boolean isData = false;
                             for (Output data : dataList) {
                                 List<OutputDetail> detailList = data.getList();
@@ -383,7 +383,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         if (detail != null && detail.getEpc() != null && detail.getEpc().equals(EPC)) {//判断成功//实盘
                                             if (data.getVatNo() != null && keyValue.containsKey(data.getVatNo())) {
                                                 isData = true;
-//                                                epcList.add(EPC);
+                                                epcList.add(EPC);
                                                 myList.get(keyValue.get(data.getVatNo())).addCount();
                                                 if (myList.get(keyValue.get(data.getVatNo())).getCount() > myList.get(keyValue.get(data.getVatNo())).getCountOut()) {
                                                     detail.setFlag(3);//超出配货单量
@@ -395,12 +395,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                 mAdapter.notifyDataSetChanged();
                                             }
                                         }
-                                        if (isData)
-                                            break;
                                     }
                                 }
-                                if (isData)
-                                    break;
                             }
                             if (!isData) {
                                 JSONObject epc = new JSONObject();
@@ -411,13 +407,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                                             @Override
                                             public void onError(Request request, Exception e) {
-                                                epcList.remove(EPC);
                                                 if (App.LOGCAT_SWITCH) {
                                                     Log.i(TAG, "getEpc;" + e.getMessage());
                                                     Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                                 }
                                             }
-
                                             @Override
                                             public void onResponse(JSONArray jsonArray) {
                                                 List<Inventory> arry;
@@ -425,7 +419,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                 if (arry != null && arry.size() > 0) {
                                                     Inventory response = arry.get(0);
                                                     if (response != null) {
-                                                        epcList.add(response.getEpc());
+                                                        epcList.add(EPC);
+//                                                        epcList.add(response.getEpc());
                                                         OutputDetail detail = new OutputDetail();
                                                         detail.setEpc(response.getEpc() + "");
                                                         detail.setFabRool(response.getFabRool() + "");

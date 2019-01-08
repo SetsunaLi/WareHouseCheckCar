@@ -22,7 +22,7 @@ public class Output {
     /***配货数量*/
     private int countOut;
     /***实盘数量（这个可以不用管）*/
-    private int count;
+    private int count=0;
     /***盘盈数量（这个可以不用管）*/
     private int countProfit;
     /***盘亏数量（这个可以不用管）*/

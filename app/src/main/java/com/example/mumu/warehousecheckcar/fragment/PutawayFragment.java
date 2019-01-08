@@ -459,7 +459,8 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     holder.setText(R.id.item2, item.getSelNo() + "");
                     holder.setText(R.id.item3, item.getColor() + "");
                     holder.setText(R.id.item4, item.getVatNo() + "");
-                    holder.setText(R.id.item6, item.getCount() + "");
+                    holder.setText(R.id.item5, item.getCount() + "");
+                    holder.setText(R.id.item5, item.getWeightall() + "");
                 }
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override

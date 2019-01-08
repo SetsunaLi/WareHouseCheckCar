@@ -78,6 +78,8 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     TextView text1;
     @Bind(R.id.text2)
     TextView text2;
+    @Bind(R.id.text3)
+    TextView text3;
 
     private CheckFragment() {
     }
@@ -129,10 +131,13 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
         dataKEY = new ArrayList<>();
-        text1.setText(0+"");
-        if (App.CARRIER != null)
-            if (App.CARRIER.getLocationNo()!=null)
-                text2.setText(App.CARRIER.getLocationNo()+"");
+        text1.setText(0 + "");
+        if (App.CARRIER != null) {
+            if (App.CARRIER.getLocationNo() != null)
+                text2.setText(App.CARRIER.getLocationNo() + "");
+            if (App.CARRIER.getTrayNo() != null)
+                text3.setText(App.CARRIER.getTrayNo() + "");
+        }
 
     }
 
@@ -185,7 +190,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     private void downLoadData() {
         if (App.CARRIER != null) {
             clearData();
-            text1.setText(0+"");
+            text1.setText(0 + "");
             final String json = JSON.toJSONString(App.CARRIER);
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
@@ -285,7 +290,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                         myList.get(keyValue.get(data.getVatNo())).addCountReal();
                                     }
                                 }
-                                text1.setText(epcList.size()+"");
+                                text1.setText(epcList.size() + "");
                                 mAdapter.notifyDataSetChanged();
                                 break;
                             }
@@ -320,7 +325,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                         keyValue.put(response.getVatNo(), myList.size() - 1);
                                                     }
                                                 }
-                                                text1.setText(epcList.size()+"");
+                                                text1.setText(epcList.size() + "");
                                                 mAdapter.notifyDataSetChanged();
                                             }
                                         }, json);

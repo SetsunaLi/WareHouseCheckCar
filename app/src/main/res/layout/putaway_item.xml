@@ -58,7 +58,13 @@
             android:layout_height="match_parent"
             android:text="扫描条数"
             />
-
+        <View style="@style/view_item_mid" />
+        <TextView
+            android:id="@+id/item6"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="扫描重量"/>
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />
