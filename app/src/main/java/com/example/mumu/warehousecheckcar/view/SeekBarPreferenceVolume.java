@@ -7,6 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -104,17 +105,21 @@ public class SeekBarPreferenceVolume extends Preference implements SeekBar.OnSee
         else
             mValue = (Integer)defaultValue;
     }
-
+    private  int callValue;
     public void onProgressChanged(SeekBar seek, int value, boolean fromTouch)
     {
+        callValue=value;
         String t = String.valueOf(value);
         mValueText.setText(t);
         if (shouldPersist())
-            persistInt(value);
-        callChangeListener(new Integer(value));
+            persistInt(callValue);
+        callChangeListener(new Integer(callValue));
     }
-    public void onStartTrackingTouch(SeekBar seek) {}
-    public void onStopTrackingTouch(SeekBar seek) {}
+    public void onStartTrackingTouch(SeekBar seek) {
+    }
+    public void onStopTrackingTouch(SeekBar seek) {
+
+    }
 
     public void setMax(int max) { mMax = max; }
     public int getMax() { return mMax; }

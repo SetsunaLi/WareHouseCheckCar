@@ -5,6 +5,7 @@ import android.support.annotation.ArrayRes;
 
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Output;
@@ -53,5 +54,7 @@ public class App extends Application {
 
 //  出库详情缓存
     public static List<Output> OUTPUT_DETAIL_LIST=new ArrayList<>();
+//   上架详情缓存
+    public static List<Input> INPUT_DETAIL_LIST=new ArrayList<>();
 
 }

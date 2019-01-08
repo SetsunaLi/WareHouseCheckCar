@@ -4,110 +4,107 @@
     <!--用户-->
     <PreferenceCategory android:title="@string/user_managment_group">
         <PreferenceScreen android:title="@string/user_managment_title">
-            <PreferenceCategory
-                android:title="用户信息">
+            <PreferenceCategory android:title="用户信息">
                 <!--<com.example.mumu.warehousecheckcar.view.UserHeadPreference
                     android:key="@string/user_message_key"
                     android:layout="@layout/user_item1"/>-->
-                <EditTextPreference android:key="@string/user_name_key"
+                <EditTextPreference
+                    android:key="@string/user_name_key"
                     android:summary="@string/user_name_summary"
-                    android:title="@string/user_name_title"
-                    />
-                <EditTextPreference android:key="@string/user_id_key"
+                    android:title="@string/user_name_title" />
+                <EditTextPreference
+                    android:key="@string/user_id_key"
                     android:summary="@string/user_id_summary"
-                    android:title="@string/user_id_title"/>
-                    <ListPreference
-                        android:key="@string/user_status_key"
-                        android:title="@string/user_status_title"
-                        android:summary="@string/user_status_summary"
-                        android:dialogTitle="请更改状态"
-                        android:entries="@array/status"
-                        android:entryValues="@array/status"/>
+                    android:title="@string/user_id_title" />
+                <ListPreference
+                    android:dialogTitle="请更改状态"
+                    android:entries="@array/status"
+                    android:entryValues="@array/status"
+                    android:key="@string/user_status_key"
+                    android:summary="@string/user_status_summary"
+                    android:title="@string/user_status_title" />
             </PreferenceCategory>
-            <PreferenceCategory
-                android:title="用户权限">
+            <PreferenceCategory android:title="用户权限">
                 <SwitchPreference
+                    android:defaultValue="true"
                     android:key="@string/user_in_storage_key"
-                    android:summary="@string/user_in_storage_key"
-                    android:defaultValue="true" />
+                    android:summary="@string/user_in_storage_key" />
                 <SwitchPreference
+                    android:defaultValue="true"
                     android:key="@string/user_stock_up_key"
-                    android:summary="@string/user_stock_up_key"
-                    android:defaultValue="true" />
+                    android:summary="@string/user_stock_up_key" />
                 <SwitchPreference
+                    android:defaultValue="true"
                     android:key="@string/user_out_storage_key"
-                    android:summary="@string/user_out_storage_key"
-                    android:defaultValue="true" />
+                    android:summary="@string/user_out_storage_key" />
                 <SwitchPreference
+                    android:defaultValue="true"
                     android:key="@string/user_move_key"
-                    android:summary="@string/user_move_key"
-                    android:defaultValue="true" />
+                    android:summary="@string/user_move_key" />
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
     <!--设备管理-->
     <PreferenceCategory android:title="@string/system_managment_group">
-       <!--系统-->
+        <!--系统-->
         <PreferenceScreen android:title="@string/system_managment_title">
-            <PreferenceCategory
-                android:title="系统设置">
-                <EditTextPreference android:key="@string/system_version_key"
-                    android:summary="@string/system_version_summary"
+            <PreferenceCategory android:title="系统设置">
+                <EditTextPreference
                     android:defaultValue="@string/system_version_summary"
-                    android:title="@string/system_version_title"
-                    />
-                <EditTextPreference android:key="@string/system_ip_key"
-                    android:summary="@string/system_ip_summary"
+                    android:key="@string/system_version_key"
+                    android:summary="@string/system_version_summary"
+                    android:title="@string/system_version_title" />
+                <EditTextPreference
                     android:defaultValue="@string/system_ip_summary"
-                    android:title="@string/system_ip_title"/>
-                <EditTextPreference android:key="@string/system_port_key"
-                    android:summary="@string/system_port_summary"
+                    android:key="@string/system_ip_key"
+                    android:summary="@string/system_ip_summary"
+                    android:title="@string/system_ip_title" />
+                <EditTextPreference
                     android:defaultValue="@string/system_port_summary"
-                    android:title="@string/system_port_title"/>
-                <EditTextPreference android:key="@string/system_device_number_key"
-                    android:summary="@string/system_device_number_summary"
+                    android:key="@string/system_port_key"
+                    android:summary="@string/system_port_summary"
+                    android:title="@string/system_port_title" />
+                <EditTextPreference
                     android:defaultValue="@string/system_device_number_summary"
-                    android:title="@string/system_device_number_title"/>
-                <SwitchPreference android:title="@string/system_music_title"
+                    android:key="@string/system_device_number_key"
+                    android:summary="@string/system_device_number_summary"
+                    android:title="@string/system_device_number_title" />
+                <SwitchPreference
+                    android:defaultValue="true"
                     android:key="@string/system_music_key"
-                    android:summaryOn="@string/system_music_summaryON"
                     android:summaryOff="@string/system_music_summaryOFF"
-                    android:defaultValue="true" />
-                <SwitchPreference android:title="@string/logcat_title"
+                    android:summaryOn="@string/system_music_summaryON"
+                    android:title="@string/system_music_title" />
+                <SwitchPreference
+                    android:defaultValue="false"
                     android:key="@string/logcat_ket"
-                    android:summaryOn="@string/logcat_title_on"
                     android:summaryOff="@string/logcat_title_off"
-                    android:defaultValue="false" />
+                    android:summaryOn="@string/logcat_title_on"
+                    android:title="@string/logcat_title" />
             </PreferenceCategory>
         </PreferenceScreen>
-       <!--设备-->
-        <PreferenceScreen android:title="@string/device_managment_title">
-            <PreferenceCategory
-                android:title="设备设置">
-                <com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume
-                    android:key="@string/device_prower_key"
-                    android:layout="@layout/ring_volume_prefs"
-                    android:title="功率"
-                    app:myvalue="10"
-                    android:max="30"
-                    android:defaultValue="20"
-                    app:myimg="@mipmap/prower_s"
-                    />
-            <!--    <com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume
-                    android:key="@string/device_work_time_key"
-                    android:layout="@layout/ring_volume_prefs"
-                    android:title="工作时间"
-                    android:max="100"
-                    app:myimg="@mipmap/time_s"
-                    />
-                <com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume
-                    android:key="@string/device_interval_time_key"
-                    android:layout="@layout/ring_volume_prefs"
-                    android:title="间隔时间"
-                    android:max="100"
-                    app:myimg="@mipmap/stoptime_s"/>-->
-            </PreferenceCategory>
-        </PreferenceScreen>
-    </PreferenceCategory>
+    <!--设备-->
+    <PreferenceScreen android:title="@string/device_managment_title">
+        <PreferenceCategory android:title="设备设置">
+               <com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume
+                   android:key="@string/device_prower_key"
+                   android:layout="@layout/ring_volume_prefs"
+                   android:title="功率"
+                   app:myvalue="10"
+                   android:max="30"
+                   android:defaultValue="20"
+                   app:myimg="@mipmap/prower_s"
+                   />
+        </PreferenceCategory>
+        <PreferenceCategory >
 
-</PreferenceScreen>
+        <EditTextPreference
+                android:defaultValue="@string/prower_edit_summary"
+                android:key="@string/prower_edit_key"
+                android:summary="@string/prower_edit_summary"
+                android:title="获取功率" />
+        </PreferenceCategory>
+    </PreferenceScreen>
+</PreferenceCategory>
+
+    </PreferenceScreen>

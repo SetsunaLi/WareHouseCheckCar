@@ -8,6 +8,7 @@ public class Config {
     public static final String USER_NAME_KEY="name_key";
     public static final String USER_PUSH_KEY="push_key";
     public static final String USER_PROWER_KEY="prower_key";
+    public static final String USER_PROWER_EDIT_KEY="get_prower_key";
     public static final String USER_STATUS_KEY="status_key";
     public static final String USER_ID_KEY="id_key";
     public static final String VERSION_KEY="version_key";

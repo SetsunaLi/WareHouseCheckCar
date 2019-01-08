@@ -256,8 +256,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                                         if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
                                                             dataEPC.add(ocd.getEpc());
                                                             dataList.add(ocd);
-                                                            String key = ocd.getVatNo() + ocd.getProduct_no()
-                                                                    + ocd.getSelNo() + ocd.getColor() + "";
+                                                          /*  String key = ocd.getVatNo() + ocd.getProduct_no()
+                                                                    + ocd.getSelNo() + ocd.getColor() + "";*/
+                                                            String key = ocd.getVatNo() + "";
+
                                                             if (!strIndex.containsKey(key)) {//当前没有
                                                                 ocd.setCount(1);
                                                                 ocd.setWeightall(ocd.getWeight());

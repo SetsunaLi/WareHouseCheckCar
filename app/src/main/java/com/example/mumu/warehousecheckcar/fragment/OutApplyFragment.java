@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
@@ -199,9 +200,9 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     }
 
     private void downLoadData() {
-//        if (App.APPLY_NO != null) {
+        if (App.APPLY_NO != null) {
         JSONObject object = new JSONObject();
-        object.put("applyNo", "A70400918");
+        object.put("applyNo", App.APPLY_NO);
         final String json = object.toJSONString();
         try {
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
@@ -239,7 +240,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         } catch (Exception e) {
 
         }
-//        }
+        }
     }
 
     @Override
@@ -310,14 +311,14 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
                         @Override
                         public void onResponse(JSONObject response) {
-                           /* if (response.equals("1")) {
+                            BaseReturn baseReturn=response.toJavaObject(BaseReturn.class);
+                            if (baseReturn!=null&&baseReturn.getStatus()==1) {
                                 Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                                 clearData();
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                            }*/
-
+                            }
                         }
                     }, json);
 

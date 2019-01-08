@@ -1,7 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +32,7 @@ import static com.example.mumu.warehousecheckcar.application.App.APPLY_NO;
  * Created by mumu on 2018/12/8.
  */
 
-public class OutInspectionFragment extends Fragment implements RXCallback {
+public class OutApplyNoFragment extends Fragment implements RXCallback {
     @Bind(R.id.editNO)
     EditText editNO;
     @Bind(R.id.button1)
@@ -42,14 +41,14 @@ public class OutInspectionFragment extends Fragment implements RXCallback {
     Button button2;
 
 
-    private final String TAG = "OutInspectionFragment";
+    private final String TAG = "OutApplyNoFragment";
 
-    private OutInspectionFragment() {
+    private OutApplyNoFragment() {
     }
-    private static OutInspectionFragment fragment;
-    public static OutInspectionFragment newInstance(){
+    private static OutApplyNoFragment fragment;
+    public static OutApplyNoFragment newInstance(){
         if (fragment==null);
-        fragment=new OutInspectionFragment();
+        fragment=new OutApplyNoFragment();
         return fragment;
     }
     private TDScannerHelper scannerHander;

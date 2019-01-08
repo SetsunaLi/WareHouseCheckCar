@@ -36,10 +36,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by mumu on 2018/12/21.
+ * Created by mumu on 2019/1/4.
  */
 
-public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiatener {
 
     private final String TAG = "CheckCarrierFragment";
     @Bind(R.id.text1)
@@ -51,14 +51,14 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     @Bind(R.id.button2)
     Button button2;
 
-    private CheckCarrierFragment() {
+    private PutawayCarrierFragment() {
     }
 
-    private static CheckCarrierFragment fragment;
+    private static PutawayCarrierFragment fragment;
 
-    public static CheckCarrierFragment newInstance() {
+    public static PutawayCarrierFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CheckCarrierFragment();
+        fragment = new PutawayCarrierFragment();
         return fragment;
     }
 
@@ -67,12 +67,11 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        和盘点Check布局一样
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
         getActivity().setTitle("盘点");
-
-        button2.setText("确认库位");
         initRFID();
         return view;
     }
@@ -106,7 +105,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null) {
+        if (App.CARRIER != null&&App.CARRIER.getTrayNo()!=null||App.CARRIER .getLocationNo()!=null) {
             Fragment fragment = CheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);

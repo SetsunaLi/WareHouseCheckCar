@@ -38,6 +38,9 @@ public class Input {
     /**勾选状态（默认选中；这个可以不用管）*/
     private boolean status=true;
 
+    public void addCount(){
+        count++;
+    }
     public Carrier getCarrier() {
         return carrier;
     }

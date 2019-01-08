@@ -109,6 +109,8 @@
     <string name="logcat_ket">logcat_ket</string>
     <string name="logcat_title_on">显示日志</string>
     <string name="logcat_title_off">隐藏日志</string>
+    <string name="prower_edit_key">get_prower_key</string>
+    <string name="prower_edit_summary">20</string>
 
     <!--about-->
     <string name="RFID_demo_app">WareHouseCheckCAR Application</string>

@@ -1,13 +1,9 @@
 package com.example.mumu.warehousecheckcar.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
@@ -18,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,12 +33,12 @@ import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
-import com.example.mumu.warehousecheckcar.fragment.OutInspectionFragment;
+import com.example.mumu.warehousecheckcar.fragment.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
-import com.nativec.tools.ModuleManager;
 import com.rfid.RFIDReaderHelper;
 
 import butterknife.Bind;
@@ -147,9 +142,9 @@ public class Main2Activity extends AppCompatActivity
             RFID_2DHander.getInstance().on_RFID();
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             rfidHander.registerObserver(UHFResult.getInstance());
-//返回0表示成功？
-             int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
-            RFID_2DHander.getInstance().off_RFID();
+            //返回0表示成功？
+            int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
+//            RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
             Log.w(TAG, "RFID读写器异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -186,9 +181,10 @@ public class Main2Activity extends AppCompatActivity
                 fragment = SettingFragment.newInstance();
                 break;
             case 4:
+                fragment= PutawayCarrierFragment.newInstance();
                 break;
             case 5:
-                fragment= OutInspectionFragment.newInstance();
+                fragment= OutApplyNoFragment.newInstance();
                 break;
             case 6:
                 fragment = CheckCarrierFragment.newInstance();
@@ -268,7 +264,8 @@ public class Main2Activity extends AppCompatActivity
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
             if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof
                     OutCheckCarFragment || fragment instanceof InCheckFragment || fragment instanceof SettingFragment
-                    || fragment instanceof HomeFragment
+                    || fragment instanceof HomeFragment|| fragment instanceof CheckCarrierFragment
+                    ||fragment instanceof PutawayCarrierFragment || fragment instanceof OutApplyNoFragment
             )) {
 
                 //update the selected item in the drawer and the title
@@ -433,7 +430,7 @@ public class Main2Activity extends AppCompatActivity
         try {
             RFID_2DHander.getInstance().off_2D();
             RFID_2DHander.getInstance().disConnect2D();
-            RFID_2DHander.getInstance().releaseRFID();
+//            RFID_2DHander.getInstance().releaseRFID();
 
         } catch (Exception e) {
 
