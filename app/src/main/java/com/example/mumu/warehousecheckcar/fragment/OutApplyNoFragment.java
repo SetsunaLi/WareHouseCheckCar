@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.application.App;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
 
@@ -98,6 +99,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         super.onDestroyView();
         ButterKnife.unbind(this);
         RFID_2DHander.getInstance().off_2D();
+        App.APPLY_NO=null;
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";

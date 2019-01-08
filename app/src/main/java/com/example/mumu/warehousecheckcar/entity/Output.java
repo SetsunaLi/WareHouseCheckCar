@@ -16,7 +16,7 @@ public class Output {
     /***颜色*/
     private String color;
     /**总重量（手持机扫描时候计算，这个可以不用管）*/
-    private double weightall;
+    private double weightall=0;
     /**设备号*/
     private String device;
     /***配货数量*/
