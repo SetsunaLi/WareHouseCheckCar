@@ -25,7 +25,7 @@
     <string name="btn_message">入库检验</string>
     <string name="btn_check">出库校验</string>
     <string name="btn_setting">系统设置</string>
-    <string name="btn_individuality1">入库</string>
+    <string name="btn_individuality1">上架</string>
     <string name="btn_individuality2">出库</string>
     <string name="btn_individuality3">盘点</string>
     <string name="btn_yes">确认</string>
@@ -50,7 +50,7 @@
         <item>入库检验</item>
         <item>出库校验</item>
         <item>设备管理</item>
-        <item>入库</item>
+        <item>上架</item>
         <item>出库</item>
         <item>盘点</item>
         <item>关于</item>

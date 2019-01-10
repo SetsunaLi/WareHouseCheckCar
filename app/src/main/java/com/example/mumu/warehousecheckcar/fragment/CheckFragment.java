@@ -200,7 +200,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             Log.i(TAG, "getCarrier;" + e.getMessage());
                             Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                        Toast.makeText(getActivity(), "无法获取仓位信息请重试！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "获取库位信息失败！", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -223,7 +223,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             }
                             mAdapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(getActivity(), "无法获取仓位信息请重试！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "该仓位没有库存！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, json);
@@ -261,6 +261,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         clearData();
         myList.clear();
         CHECK_DETAIL_LIST.clear();
+        App.CARRIER=null;
     }
 
     long currenttime = 0;
@@ -277,8 +278,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                 currenttime = System.currentTimeMillis();
                             }
                         }
-                        String EPC = (String) msg.obj;
-                        EPC.replaceAll("  ", "");
+                        String EPC = ((String) msg.obj).replaceAll(" ", "");
                         if (!epcList.contains(EPC)) {
                             boolean isData = false;
                             for (Inventory data : dataList) {
@@ -315,14 +315,17 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                 arry = jsonArray.toJavaList(Inventory.class);
                                                 if (arry != null && arry.size() > 0) {
                                                     Inventory response = arry.get(0);
-                                                    response.setFlag(1);
-                                                    dataList.add(response);
-                                                    if (keyValue.containsKey(response.getVatNo())) {
-                                                        myList.get(keyValue.get(response.getVatNo())).addCountProfit();
-                                                    } else {
-                                                        response.addCountProfit();
-                                                        myList.add(response);
-                                                        keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                    if (response!=null&&!epcList.contains(response.getEpc())) {
+                                                        response.setFlag(1);
+                                                        dataList.add(response);
+                                                        epcList.add(response.getEpc());
+                                                        if (keyValue.containsKey(response.getVatNo())) {
+                                                            myList.get(keyValue.get(response.getVatNo())).addCountProfit();
+                                                        } else {
+                                                            response.addCountProfit();
+                                                            myList.add(response);
+                                                            keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                        }
                                                     }
                                                 }
                                                 text1.setText(epcList.size() + "");
@@ -406,6 +409,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                 Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                                 clearData();
                                 mAdapter.notifyDataSetChanged();
+                                getFragmentManager().popBackStack();
                             } else {
                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                             }

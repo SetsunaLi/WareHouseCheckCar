@@ -86,10 +86,10 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
             @Override
             public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
                 String aFab = outCheckDetail.getFabRool();
-                if (aFab == null)
+                if (aFab == null||aFab.equals(""))
                     return -1;
                 String bFab = t1.getFabRool();
-                if (bFab == null)
+                if (bFab == null||bFab.equals(""))
                     return 1;
                 if (aFab != null && bFab != null) {
                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {

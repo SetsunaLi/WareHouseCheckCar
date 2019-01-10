@@ -106,7 +106,8 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null) {
+        if (App.CARRIER != null&&(App.CARRIER.getTrayNo()!=null||App.CARRIER .getLocationNo()!=null)&&
+                (!App.CARRIER.getTrayNo().equals("")||!App.CARRIER.getLocationNo().equals(""))) {
             Fragment fragment = CheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -148,7 +149,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
                                 @Override
                                 public void onResponse(Carrier response) {
-                                    if (response != null && response.getLocationNo() != null || response.getTrayNo() != null) {
+                                    if (response != null && (response.getLocationNo() != null || response.getTrayNo() != null)) {
                                         Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x01;
                                         msg.obj = response;
@@ -162,7 +163,8 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                         break;
                     case 0x01:
                         Carrier response = (Carrier) msg.obj;
-                        if (response != null) {
+                        if (response != null&&(response.getTrayNo()!=null||response .getLocationNo()!=null)&&
+                                (!response.getTrayNo().equals("")||!response.getLocationNo().equals(""))) {
                             App.CARRIER = response;
                             text2.setText(response.getLocationNo() + "");
                             text1.setText(response.getTrayNo() + "");

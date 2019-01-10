@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayCarrierFragment;
+import com.example.mumu.warehousecheckcar.fragment.PutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.rfid.RFIDReaderHelper;
@@ -286,7 +287,9 @@ public class Main2Activity extends AppCompatActivity
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
-                } else if(fragment != null && (fragment instanceof CheckFragment)) {
+                } else if(fragment != null && (fragment instanceof PutawayFragment)) {
+                    selectItem(4);
+                }else if(fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(6);
                 }else if (fragment != null && (fragment instanceof OutApplyFragment)){
                     ((OutApplyFragment)fragment).onBackPressed();

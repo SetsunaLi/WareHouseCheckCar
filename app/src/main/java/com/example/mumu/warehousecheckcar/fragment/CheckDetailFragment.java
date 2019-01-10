@@ -80,10 +80,10 @@ public class CheckDetailFragment extends Fragment implements BRecyclerAdapter.On
             @Override
             public int compare(Inventory obj1, Inventory obj2) {
                 String aFab = obj1.getFabRool();
-                if (aFab == null)
+                if (aFab == null||aFab.equals(""))
                     return -1;
                 String bFab = obj2.getFabRool();
-                if (bFab == null)
+                if (bFab == null||bFab.equals(""))
                     return 1;
                 if (aFab != null && bFab != null) {
                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {

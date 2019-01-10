@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.UHF.Sound;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
@@ -53,6 +54,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         return fragment;
     }
     private TDScannerHelper scannerHander;
+    private Sound sound;
 
     @Nullable
     @Override
@@ -60,6 +62,8 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("出库");
+        sound = new Sound(getActivity());
+
         try {
             RFID_2DHander.getInstance().on_2D();
             scannerHander = RFID_2DHander.getInstance().getTDScanner();
@@ -117,12 +121,10 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     protected static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 
-    @OnClick({R.id.button1, R.id.button2})
+    @OnClick({ R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.button1:
 
-                break;
             case R.id.button2:
                 String applaNO = editNO.getText().toString();
                 if (applaNO != null) {
@@ -147,6 +149,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            sound.callAlarm();
             editNO.setText((String) msg.obj + "");
         }
     };

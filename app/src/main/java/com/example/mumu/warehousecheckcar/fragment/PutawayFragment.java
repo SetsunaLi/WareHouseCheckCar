@@ -47,6 +47,7 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -218,8 +219,9 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         disRFID();
         clearData();
         myList.clear();
-        App.CARRIER = null;
         INPUT_DETAIL_LIST.clear();
+        App.CARRIER=null;
+
     }
 
     long currenttime = 0;
@@ -381,7 +383,18 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                 }
                 final String json = JSON.toJSONString(jsocList);
                 try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                    /*new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                Response response=OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh",json);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();*/
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
                             if (App.LOGCAT_SWITCH) {
@@ -460,7 +473,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     holder.setText(R.id.item3, item.getColor() + "");
                     holder.setText(R.id.item4, item.getVatNo() + "");
                     holder.setText(R.id.item5, item.getCount() + "");
-                    holder.setText(R.id.item5, item.getWeightall() + "");
+                    holder.setText(R.id.item6, item.getWeightall() + "");
                 }
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
