@@ -289,12 +289,14 @@ public class Main2Activity extends AppCompatActivity
                     askForBack();
                 } else if(fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(4);
+                }else if(fragment != null && (fragment instanceof OutApplyFragment)) {
+                    selectItem(5);
                 }else if(fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(6);
-                }else if (fragment != null && (fragment instanceof OutApplyFragment)){
+                }/*else if (fragment != null && (fragment instanceof OutApplyFragment)){
                     ((OutApplyFragment)fragment).onBackPressed();
                     getFragmentManager().popBackStack();
-                }else {
+                }*/else {
                     getFragmentManager().popBackStack();
                 }
             }

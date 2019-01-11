@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
@@ -285,12 +286,13 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                                 currenttime = System.currentTimeMillis();
                             }
                         }
-
-                        String EPC = (String) msg.obj;
-                        EPC.replaceAll(" ", "");
+                        String EPC = ((String) msg.obj).replaceAll(" ", "");
                         if (!dataEPC.contains(EPC)) {
 //                        查询
-                            final String json = JSON.toJSONString(EPC);
+                            JSONObject epc = new JSONObject();
+                            epc.put("epc", EPC);
+                            final String json = epc.toJSONString();
+//                            final String json = JSON.toJSONString(EPC);
                                     try {
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
                                             @Override

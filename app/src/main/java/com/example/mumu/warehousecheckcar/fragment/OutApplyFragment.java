@@ -228,13 +228,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     if (response != null && response.size() != 0) {
                         for (Output op : response) {
                             if (op != null && op.getVatNo() != null) {
-                                if (keyValue.containsKey(op.getVatNo())) {//里面有
+//                                if (keyValue.containsKey(op.getVatNo())) {//里面有
 //                                        目前应该不会重复
 //                                        如果是重复的话在这里加载进myList的list里面
-                                } else {//里面没有
+//                                } else {//里面没有
                                     myList.add(op);
                                     keyValue.put(op.getVatNo(), myList.size() - 1);
-                                }
+//                                }
                                 dataList.add(op);
                             }
                         }
@@ -368,7 +368,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            try {
                 switch (msg.arg1) {
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
@@ -377,7 +376,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                 currenttime = System.currentTimeMillis();
                             }
                         }
-                       final String EPC = ((String) msg.obj).replaceAll("  ", "");
+                       final String EPC = ((String) msg.obj).replaceAll(" ", "");
                         if (!epcList.contains(EPC)) {
                             boolean isData = false;
                             for (Output data : dataList) {
@@ -467,15 +466,15 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         }, json);
                                     } catch (IOException e) {
                                         Log.i(TAG, "");
+                                    }catch (Exception e) {
+
                                     }
                                 }
                             }
                         }
                         break;
                 }
-            } catch (Exception e) {
 
-            }
         }
     };
 
