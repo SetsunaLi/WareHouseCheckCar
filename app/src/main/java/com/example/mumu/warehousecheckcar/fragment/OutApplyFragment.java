@@ -418,6 +418,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                             }
                                             @Override
                                             public void onResponse(JSONArray jsonArray) {
+                                                try {
+
                                                 List<Inventory> arry;
                                                 arry = jsonArray.toJavaList(Inventory.class);
                                                 if (arry != null && arry.size() > 0) {
@@ -470,12 +472,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                     text1.setText(epcList.size()+"");
                                                     mAdapter.notifyDataSetChanged();
                                                 }
+                                                }catch (Exception e) {
+
+                                                }
                                             }
                                         }, json);
                                     } catch (IOException e) {
                                         Log.i(TAG, "");
-                                    }catch (Exception e) {
-
                                     }
                                 }
                             }

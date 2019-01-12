@@ -184,7 +184,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         @Override
         public void convert(RecyclerHolder holder, OutputDetail item, int position) {
             if (position != 0) {
-                if (item != null) {
+                if (item != null) {//（默认为0；0为默认状态，1为实盘扫码出库状态，2为非正常申请单扫码，3默认超出配货值第一个开始为3）
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                         if (item.getFlag()==0)//亏
                             ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
@@ -192,7 +192,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                             ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                         else if (item.getFlag()==2)//盈
                             ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                        else if (item.getFlag()==3)//正常
+                        else if (item.getFlag()==3)
                             ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
 
                     holder.setText(R.id.item1, item.getFabRool() + "");

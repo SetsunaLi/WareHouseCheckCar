@@ -1,6 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,7 +71,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
     private void init2D() {
         try {
             boolean flag2=RFID_2DHander.getInstance().on_2D();
-            boolean flag1=RFID_2DHander.getInstance().connect2D();
+//            boolean flag1=RFID_2DHander.getInstance().connect2D();
             scannerHander = RFID_2DHander.getInstance().getTDScanner();
             scannerHander.regist2DCodeData(this);
             if (!flag2)
@@ -83,7 +84,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
     private void disConnect2D() {
         try {
             RFID_2DHander.getInstance().off_2D();
-            RFID_2DHander.getInstance().disConnect2D();
+//            RFID_2DHander.getInstance().disConnect2D();
 
         } catch (Exception e) {
 
@@ -149,10 +150,12 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                     disConnect2D();
                     APPLY_NO = applaNO;
                     Fragment fragment = OutApplyFragment.newInstance();
-                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                   /* FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                     transaction.show(fragment);
-                    transaction.commit();
+                    transaction.commit();*/
+                    getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.hint_void), Toast.LENGTH_SHORT).show();
                 }

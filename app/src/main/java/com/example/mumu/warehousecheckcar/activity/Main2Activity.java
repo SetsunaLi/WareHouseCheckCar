@@ -84,7 +84,7 @@ public class Main2Activity extends AppCompatActivity
         initDate();
         initView();
         initRFID();
-//        init2D();
+        init2D();
 //      首页
         selectItem(0);
     }
@@ -152,7 +152,15 @@ public class Main2Activity extends AppCompatActivity
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
         }
     }
+    private void init2D() {
+        try {
+            boolean flag1=RFID_2DHander.getInstance().connect2D();
 
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
 
 
     //Tag to identify the currently displayed fragment
@@ -192,6 +200,7 @@ public class Main2Activity extends AppCompatActivity
         }
         FragmentManager fragmentManager = getFragmentManager();
         if (fragment instanceof HomeFragment) {
+
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
         } else if (fragment != null) {
@@ -411,6 +420,7 @@ public class Main2Activity extends AppCompatActivity
         super.onDestroy();
         ButterKnife.unbind(this);
         disConnectRFID();
+        disConnect2D();
     }
 
     private void disConnectRFID() {
@@ -425,6 +435,14 @@ public class Main2Activity extends AppCompatActivity
 
         }
     }
+    private void disConnect2D() {
+        try {
+//            RFID_2DHander.getInstance().off_2D();
+            RFID_2DHander.getInstance().disConnect2D();
 
+        } catch (Exception e) {
+
+        }
+    }
 
 }
