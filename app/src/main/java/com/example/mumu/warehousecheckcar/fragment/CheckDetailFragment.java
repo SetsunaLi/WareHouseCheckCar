@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2018/12/26.
  */
 
-public class CheckDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener {
+public class CheckDetailFragment extends Fragment{
 
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -106,7 +106,6 @@ public class CheckDetailFragment extends Fragment implements BRecyclerAdapter.On
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
         LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
@@ -176,12 +175,6 @@ public class CheckDetailFragment extends Fragment implements BRecyclerAdapter.On
         App.CHECK_DETAIL_LIST.clear();
     }
 
-    @Override
-    public void onItemClick(View view, Object data, int position) {
-        mAdapter.select(position);
-        mAdapter.notifyDataSetChanged();
-    }
-
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Inventory> {
         private Context context;
 
@@ -198,31 +191,18 @@ public class CheckDetailFragment extends Fragment implements BRecyclerAdapter.On
 
         }
 
-        private int index = -255;
-
-        public void select(int index) {
-            if (this.index == index)
-                this.index = -255;
-            else
-                this.index = index;
-
-        }
-
         @Override
         public void convert(RecyclerHolder holder, Inventory item, int position) {
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (position==index){
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    }else {
                     if (item.getFlag()==0)//亏
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                     else if (item.getFlag()==1)//盈
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
-                    else//正常
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    }
+                    else if(item.getFlag()==2)//正常
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+
 //                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
                     holder.setText(R.id.item1, item.getFabRool() + "");
                     holder.setText(R.id.item2, item.getProduct_no() + "");

@@ -287,7 +287,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                             }
                         }
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (!dataEPC.contains(EPC)) {
+                        if (!EPC.startsWith("31")&&!dataEPC.contains(EPC)) {
 //                        查询
                             JSONObject epc = new JSONObject();
                             epc.put("epc", EPC);

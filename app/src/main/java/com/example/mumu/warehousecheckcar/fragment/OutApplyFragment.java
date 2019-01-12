@@ -93,6 +93,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     private List<Output> myList;
     /**
      * 匹配机制应该是item分组字段
+     * key:缸号、布号、色号
      */
     private Map<String, Integer> keyValue;
     private List<Output> dataList;
@@ -233,7 +234,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 //                                        如果是重复的话在这里加载进myList的list里面
 //                                } else {//里面没有
                                     myList.add(op);
-                                    keyValue.put(op.getVatNo(), myList.size() - 1);
+                                    String key=op.getVatNo()+op.getProduct_no()+op.getSelNo();
+                                    keyValue.put(key, myList.size() - 1);
 //                                }
                                 dataList.add(op);
                             }
@@ -377,18 +379,18 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                             }
                         }
                        final String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (!epcList.contains(EPC)) {
+                        if (!EPC.startsWith("31")&&!epcList.contains(EPC)) {
                             boolean isData = false;
                             for (Output data : dataList) {
                                 List<OutputDetail> detailList = data.getList();
                                 if (detailList != null && detailList.size() != 0) {
                                     for (OutputDetail detail : detailList) {
                                         if (detail != null && detail.getEpc() != null && detail.getEpc().equals(EPC)) {//判断成功//实盘
-                                            if (data.getVatNo() != null && keyValue.containsKey(data.getVatNo())) {
+                                            String key1=data.getVatNo()+data.getProduct_no()+data.getSelNo();
                                                 isData = true;
                                                 epcList.add(EPC);
-                                                myList.get(keyValue.get(data.getVatNo())).addCount();
-                                                if (myList.get(keyValue.get(data.getVatNo())).getCount() > myList.get(keyValue.get(data.getVatNo())).getCountOut()) {
+                                                myList.get(keyValue.get(key1)).addCount();
+                                                if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
                                                     detail.setFlag(3);//超出配货单量
                                                 } else {
                                                     detail.setFlag(1);//正常配货
@@ -396,7 +398,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                 data.setWeightall(ArithUtil.add(data.getWeightall(),detail.getWeight()));
                                                 text1.setText(epcList.size()+"");
                                                 mAdapter.notifyDataSetChanged();
-                                            }
                                         }
                                     }
                                 }
@@ -422,8 +423,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                 if (arry != null && arry.size() > 0) {
                                                     Inventory response = arry.get(0);
                                                     if (response != null) {
-                                                        epcList.add(EPC);
-//                                                        epcList.add(response.getEpc());
+                                                        epcList.add(response.getEpc());
                                                         OutputDetail detail = new OutputDetail();
                                                         detail.setEpc(response.getEpc() + "");
                                                         detail.setFabRool(response.getFabRool() + "");
@@ -432,7 +432,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                         detail.setOperator(response.getOperator() + "");
                                                         detail.setOperatingTime(response.getOperatingTime());
                                                         detail.setFlag(2);
-                                                        if (!keyValue.containsKey(response.getVatNo())) {
+                                                        String key2=response.getVatNo()+response.getProduct_no()+response.getSelNo();
+                                                        if (!keyValue.containsKey(key2)) {
                                                             Output data = new Output();
                                                             data.setProduct_no(response.getProduct_no() + "");
                                                             data.setVatNo(response.getVatNo() + "");
@@ -449,13 +450,20 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                                             data.setList(list);
                                                             dataList.add(data);
                                                             myList.add(data);
-                                                            keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                            keyValue.put(key2, myList.size() - 1);
                                                         } else {
-                                                            myList.get(keyValue.get(response.getVatNo())).addCount();
-                                                            myList.get(keyValue.get(response.getVatNo())).setWeightall(ArithUtil.add(myList.get(keyValue.get(response.getVatNo())).getWeightall(),response.getWeight()));
+                                                            myList.get(keyValue.get(key2)).addCount();
+                                                            myList.get(keyValue.get(key2)).setWeightall(ArithUtil.add(myList.get(keyValue.get(key2)).getWeightall(),response.getWeight()));
                                                             for (Output op : dataList) {
-                                                                if (op.getVatNo().equals(response.getVatNo()))
-                                                                    op.getList().add(detail);
+                                                                if ((op.getVatNo() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
+                                                                    boolean isIn = false;
+                                                                    for (OutputDetail od : op.getList()) {
+                                                                        if (od.getEpc().equals(detail.getEpc()))
+                                                                            isIn = true;
+                                                                    }
+                                                                    if (!isIn)
+                                                                        op.getList().add(detail);
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -546,7 +554,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                     else if (item.getFlag() == 2)
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-
+                    else
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                     holder.setText(R.id.item1, item.getProduct_no() + "");
                     holder.setText(R.id.item2, item.getSelNo() + "");
                     holder.setText(R.id.item3, item.getColor() + "");

@@ -49,7 +49,6 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     TextView text2;
     private final String TAG="OutApplyDetailFragment";
     private List<OutputDetail> myList;
-    private List<OutputDetail> dataList;
     private RecycleAdapter mAdapter;
 
     private OutApplyDetailFragment() {
@@ -90,7 +89,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                 return 0;
             }
         });
-        dataList=new ArrayList<>();
+
     }
     //    这里加载视图
     @Nullable
@@ -108,9 +107,13 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
-        if (App.IN_DETAIL_LIST.size() > 1) {
-            text1.setText(App.IN_DETAIL_LIST.size() + "");
-            text2.setText(App.IN_DETAIL_LIST.get(1).getVatNo() + "");
+        if (App.OUTPUT_DETAIL_LIST.size() > 0) {
+            text2.setText(App.OUTPUT_DETAIL_LIST.get(0).getVatNo() + "");
+            int i=0;
+            for (OutputDetail od:App.OUTPUT_DETAIL_LIST.get(0).getList())
+                if (od.getFlag()!=0)
+                    i++;
+            text1.setText(i+"");
         }
         return view;
     }
@@ -146,7 +149,6 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         super.onDestroyView();
         ButterKnife.unbind(this);
         myList.clear();
-        dataList.clear();
         App.OUTPUT_DETAIL_LIST.clear();
     }
 

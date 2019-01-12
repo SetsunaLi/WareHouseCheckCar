@@ -261,7 +261,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         clearData();
         myList.clear();
         CHECK_DETAIL_LIST.clear();
-        App.CARRIER=null;
+        App.CARRIER = null;
     }
 
     long currenttime = 0;
@@ -279,63 +279,58 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             }
                         }
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (!epcList.contains(EPC)) {
-                            boolean isData = false;
-                            for (Inventory data : dataList) {
-                                if (data != null && data.getEpc() != null && data.getEpc().equals(EPC)) {//判断成功//实盘
-                                    if (data.getVatNo() != null && keyValue.containsKey(data.getVatNo())) {
-                                        isData = true;
-                                        data.setFlag(2);
-                                        epcList.add(EPC);
-                                        myList.get(keyValue.get(data.getVatNo())).addCountReal();
+                        if (!EPC.startsWith("31")&&!epcList.contains(EPC)) {
+                            JSONObject epc = new JSONObject();
+                            epc.put("epc", EPC);
+                            final String json = epc.toJSONString();
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getEpc;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                }
-                                text1.setText(epcList.size() + "");
-                                mAdapter.notifyDataSetChanged();
-                                break;
-                            }
-                            if (!isData) {
-                                JSONObject epc = new JSONObject();
-                                epc.put("epc", EPC);
-                                final String json = epc.toJSONString();
-                                if (!epcList.contains(EPC)) {
-                                    try {
-                                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                            @Override
-                                            public void onError(Request request, Exception e) {
-                                                if (App.LOGCAT_SWITCH) {
-                                                    Log.i(TAG, "getEpc;" + e.getMessage());
-                                                    Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                }
-                                            }
 
-                                            @Override
-                                            public void onResponse(JSONArray jsonArray) {
-                                                List<Inventory> arry;
-                                                arry = jsonArray.toJavaList(Inventory.class);
-                                                if (arry != null && arry.size() > 0) {
-                                                    Inventory response = arry.get(0);
-                                                    if (response!=null&&!epcList.contains(response.getEpc())) {
-                                                        response.setFlag(1);
-                                                        dataList.add(response);
-                                                        epcList.add(response.getEpc());
-                                                        if (keyValue.containsKey(response.getVatNo())) {
-                                                            myList.get(keyValue.get(response.getVatNo())).addCountProfit();
-                                                        } else {
-                                                            response.addCountProfit();
-                                                            myList.add(response);
-                                                            keyValue.put(response.getVatNo(), myList.size() - 1);
-                                                        }
+                                    @Override
+                                    public void onResponse(JSONArray jsonArray) {
+                                        List<Inventory> arry;
+                                        arry = jsonArray.toJavaList(Inventory.class);
+                                        if (arry != null && arry.size() > 0) {
+                                            Inventory response = arry.get(0);
+                                            if (response != null && !epcList.contains(response.getEpc())) {
+                                                epcList.add(response.getEpc());
+                                                boolean isData = false;
+                                                for (Inventory obj : dataList) {
+                                                    if (obj.getEpc().equals(response.getEpc())) {//正常
+                                                        isData = true;
+                                                        obj.setFlag(2);
                                                     }
                                                 }
-                                                text1.setText(epcList.size() + "");
-                                                mAdapter.notifyDataSetChanged();
+                                                if (!isData) {//盘盈
+                                                    response.setFlag(1);
+                                                    dataList.add(response);
+                                                }
+                                                if (keyValue.containsKey(response.getVatNo())) {
+                                                    if (isData)
+                                                        myList.get(keyValue.get(response.getVatNo())).addCountReal();
+                                                    else
+                                                        myList.get(keyValue.get(response.getVatNo())).addCountProfit();
+                                                } else {
+                                                    response.addCountProfit();
+                                                    response.setFlag(1);
+                                                    myList.add(response);
+                                                    keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                }
                                             }
-                                        }, json);
-                                    } catch (IOException e) {
-                                        Log.i(TAG, "");
+                                        }
+                                        text1.setText(epcList.size() + "");
+                                        mAdapter.notifyDataSetChanged();
                                     }
-                                }
+                                }, json);
+                            } catch (IOException e) {
+                                Log.i(TAG, "");
                             }
                         }
                         break;

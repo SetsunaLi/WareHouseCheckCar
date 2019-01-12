@@ -239,7 +239,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     }
                     RXInventoryTag tag = (RXInventoryTag) msg.obj;
                     final String EPC = tag.strEPC.replaceAll(" ", "");
-                    if (!epcList.contains(EPC)) {
+                    if (!EPC.startsWith("31")&&!epcList.contains(EPC)) {
                         JSONObject epc = new JSONObject();
                         epc.put("epc", EPC);
                         final String json = epc.toJSONString();

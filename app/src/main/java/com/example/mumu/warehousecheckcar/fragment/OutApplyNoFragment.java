@@ -63,18 +63,32 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         ButterKnife.bind(this, view);
         getActivity().setTitle("出库");
         sound = new Sound(getActivity());
+        init2D();
 
-        try {
-            RFID_2DHander.getInstance().on_2D();
-            scannerHander = RFID_2DHander.getInstance().getTDScanner();
-            scannerHander.regist2DCodeData(this);
-        } catch (Exception e) {
-            Log.w(TAG, "RFID读写器异常");
-            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
-        }
         return view;
     }
+    private void init2D() {
+        try {
+            boolean flag2=RFID_2DHander.getInstance().on_2D();
+            boolean flag1=RFID_2DHander.getInstance().connect2D();
+            scannerHander = RFID_2DHander.getInstance().getTDScanner();
+            scannerHander.regist2DCodeData(this);
+            if (!flag2)
+                Toast.makeText(getActivity(),"一维读头连接失败", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
+    private void disConnect2D() {
+        try {
+            RFID_2DHander.getInstance().off_2D();
+            RFID_2DHander.getInstance().disConnect2D();
 
+        } catch (Exception e) {
+
+        }
+    }
     //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -116,6 +130,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         ButterKnife.unbind(this);
         RFID_2DHander.getInstance().off_2D();
         App.APPLY_NO=null;
+        disConnect2D();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -131,7 +146,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                     /*先访系统得到列表后再跳转
                     尝试不异步情况下能否访问
                     * */
-                    RFID_2DHander.getInstance().off_2D();
+                    disConnect2D();
                     APPLY_NO = applaNO;
                     Fragment fragment = OutApplyFragment.newInstance();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
