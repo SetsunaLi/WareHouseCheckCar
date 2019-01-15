@@ -186,29 +186,33 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
 
                         @Override
                         public void onResponse(List<OutCheckDetail> response) {
-                            if (response != null) {
-                                List<OutCheckDetail> newList = new ArrayList<OutCheckDetail>();
-                                for (OutCheckDetail re : response) {
-                                    if (re != null && re.getFabRool() != null) {
-                                        boolean isIn = false;
+                            try{
+                                if (response != null) {
+                                    List<OutCheckDetail> newList = new ArrayList<OutCheckDetail>();
+                                    for (OutCheckDetail re : response) {
+                                        if (re != null && re.getFabRool() != null) {
+                                            boolean isIn = false;
 //                                                for(int i=0;i<myList.size();i++){
-                                        for (OutCheckDetail old : myList) {
-                                            if (old != null && old.getFabRool() != null)
-                                                if (old.getFabRool().equals(re.getFabRool())) {
-                                                    isIn = true;
-                                                    old.setFlag(true);
-                                                }
+                                            for (OutCheckDetail old : myList) {
+                                                if (old != null && old.getFabRool() != null)
+                                                    if (old.getFabRool().equals(re.getFabRool())) {
+                                                        isIn = true;
+                                                        old.setFlag(true);
+                                                    }
+                                            }
+                                            if (!isIn)
+                                                newList.add(re);
                                         }
-                                        if (!isIn)
-                                            newList.add(re);
                                     }
+                                    myList.addAll(newList);
+                                    newList.clear();
                                 }
-                                myList.addAll(newList);
-                                newList.clear();
+                                Message msg = handler.obtainMessage();
+                                msg.arg1 = 0x09;
+                                handler.sendMessage(msg);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            Message msg = handler.obtainMessage();
-                            msg.arg1 = 0x09;
-                            handler.sendMessage(msg);
                         }
                     }, json);
                 } catch (Exception e) {

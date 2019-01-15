@@ -111,14 +111,16 @@ public class SeekBarPreferenceVolume extends Preference implements SeekBar.OnSee
         callValue=value;
         String t = String.valueOf(value);
         mValueText.setText(t);
-        if (shouldPersist())
-            persistInt(callValue);
+       /* if (shouldPersist())
+            persistInt(callValue);*/
         callChangeListener(new Integer(callValue));
+//        setProgress(callValue);
     }
     public void onStartTrackingTouch(SeekBar seek) {
     }
     public void onStopTrackingTouch(SeekBar seek) {
-
+        if (shouldPersist())
+            persistInt(callValue);
     }
 
     public void setMax(int max) { mMax = max; }

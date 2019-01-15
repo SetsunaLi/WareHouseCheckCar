@@ -255,29 +255,33 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
 
                                 @Override
                                 public void onResponse(JSONArray jsonArray) {
-                                    List<Input> arry;
-                                    arry = jsonArray.toJavaList(Input.class);
-                                    if (arry != null && arry.size() > 0) {
-                                        Input response = arry.get(0);
-                                        if (response != null) {
-                                            if (response.getEpc() != null && !epcList.contains(response.getEpc())) {
-                                                epcList.add(EPC);
-                                                dataList.add(response);
-                                                String key = response.getVatNo() + "";
-                                                if (!keyValue.containsKey(key)) {//当前没有
-                                                    response.setCount(1);
-                                                    response.setWeightall(response.getWeight());
-                                                    myList.add(response);
-                                                    keyValue.put(key, myList.size() - 1);
-                                                } else {
-                                                    int index = keyValue.get(key);
-                                                    myList.get(index).addCount();
-                                                    myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), response.getWeight()));
+                                    try{
+                                        List<Input> arry;
+                                        arry = jsonArray.toJavaList(Input.class);
+                                        if (arry != null && arry.size() > 0) {
+                                            Input response = arry.get(0);
+                                            if (response != null) {
+                                                if (response.getEpc() != null && !epcList.contains(response.getEpc())) {
+                                                    epcList.add(EPC);
+                                                    dataList.add(response);
+                                                    String key = response.getVatNo() + "";
+                                                    if (!keyValue.containsKey(key)) {//当前没有
+                                                        response.setCount(1);
+                                                        response.setWeightall(response.getWeight());
+                                                        myList.add(response);
+                                                        keyValue.put(key, myList.size() - 1);
+                                                    } else {
+                                                        int index = keyValue.get(key);
+                                                        myList.get(index).addCount();
+                                                        myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), response.getWeight()));
+                                                    }
                                                 }
+                                                text1.setText(epcList.size() + "");
+                                                mAdapter.notifyDataSetChanged();
                                             }
-                                            text1.setText(epcList.size() + "");
-                                            mAdapter.notifyDataSetChanged();
                                         }
+                                    } catch (Exception e) {
+
                                     }
                                 }
                             }, json);
@@ -405,14 +409,18 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
 
                         @Override
                         public void onResponse(JSONObject response) {
-                            BaseReturn baseReturn=response.toJavaObject(BaseReturn.class);
-                            if (baseReturn!=null&&baseReturn.getStatus()==1) {
-                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                clearData();
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                            }
+                           try{
+                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    clearData();
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                }
+                           } catch (Exception e) {
+
+                           }
                         }
                     }, json);
 

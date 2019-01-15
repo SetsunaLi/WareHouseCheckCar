@@ -19,6 +19,8 @@ import java.util.List;
  */
 
 public class App extends Application {
+    public  static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
+    public static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 //    申请单号缓存
     public static String APPLY_NO="";
 //    车牌号缓存

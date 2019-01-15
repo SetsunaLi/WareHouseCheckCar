@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
@@ -205,26 +206,30 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
 
                     @Override
                     public void onResponse(JSONArray jsonArray) {
-                        List<Inventory> response;
-                        response = jsonArray.toJavaList(Inventory.class);
-                        if (response != null && response.size() != 0) {
-                            for (Inventory obj : response) {
-                                if (obj != null && obj.getVatNo() != null) {
-                                    if (keyValue.containsKey(obj.getVatNo())) {//里面有
-                                        myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
-                                    } else {//里面没有
-                                        obj.setCountIn(1);
-                                        myList.add(obj);
-                                        keyValue.put(obj.getVatNo(), myList.size() - 1);
+                       try{
+                            List<Inventory> response;
+                            response = jsonArray.toJavaList(Inventory.class);
+                            if (response != null && response.size() != 0) {
+                                for (Inventory obj : response) {
+                                    if (obj != null && obj.getVatNo() != null) {
+                                        if (keyValue.containsKey(obj.getVatNo())) {//里面有
+                                            myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
+                                        } else {//里面没有
+                                            obj.setCountIn(1);
+                                            myList.add(obj);
+                                            keyValue.put(obj.getVatNo(), myList.size() - 1);
+                                        }
+                                        obj.setFlag(0);//默认为0//0为盘亏
+                                        dataList.add(obj);
                                     }
-                                    obj.setFlag(0);//默认为0//0为盘亏
-                                    dataList.add(obj);
                                 }
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(getActivity(), "该仓位没有库存！", Toast.LENGTH_SHORT).show();
                             }
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getActivity(), "该仓位没有库存！", Toast.LENGTH_SHORT).show();
-                        }
+                       }catch (Exception e){
+
+                       }
                     }
                 }, json);
             } catch (IOException e) {
@@ -252,7 +257,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
 
         return super.onOptionsItemSelected(item);
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -269,7 +273,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            try {
                 switch (msg.arg1) {
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
@@ -295,38 +298,42 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
 
                                     @Override
                                     public void onResponse(JSONArray jsonArray) {
-                                        List<Inventory> arry;
-                                        arry = jsonArray.toJavaList(Inventory.class);
-                                        if (arry != null && arry.size() > 0) {
-                                            Inventory response = arry.get(0);
-                                            if (response != null && !epcList.contains(response.getEpc())) {
-                                                epcList.add(response.getEpc());
-                                                boolean isData = false;
-                                                for (Inventory obj : dataList) {
-                                                    if (obj.getEpc().equals(response.getEpc())) {//正常
-                                                        isData = true;
-                                                        obj.setFlag(2);
+                                       try {
+                                            List<Inventory> arry;
+                                            arry = jsonArray.toJavaList(Inventory.class);
+                                            if (arry != null && arry.size() > 0) {
+                                                Inventory response = arry.get(0);
+                                                if (response != null && !epcList.contains(response.getEpc())) {
+                                                    epcList.add(response.getEpc());
+                                                    boolean isData = false;
+                                                    for (Inventory obj : dataList) {
+                                                        if (obj.getEpc().equals(response.getEpc())) {//正常
+                                                            isData = true;
+                                                            obj.setFlag(2);
+                                                        }
+                                                    }
+                                                    if (!isData) {//盘盈
+                                                        response.setFlag(1);
+                                                        dataList.add(response);
+                                                    }
+                                                    if (keyValue.containsKey(response.getVatNo())) {
+                                                        if (isData)
+                                                            myList.get(keyValue.get(response.getVatNo())).addCountReal();
+                                                        else
+                                                            myList.get(keyValue.get(response.getVatNo())).addCountProfit();
+                                                    } else {
+                                                        response.addCountProfit();
+                                                        response.setFlag(1);
+                                                        myList.add(response);
+                                                        keyValue.put(response.getVatNo(), myList.size() - 1);
                                                     }
                                                 }
-                                                if (!isData) {//盘盈
-                                                    response.setFlag(1);
-                                                    dataList.add(response);
-                                                }
-                                                if (keyValue.containsKey(response.getVatNo())) {
-                                                    if (isData)
-                                                        myList.get(keyValue.get(response.getVatNo())).addCountReal();
-                                                    else
-                                                        myList.get(keyValue.get(response.getVatNo())).addCountProfit();
-                                                } else {
-                                                    response.addCountProfit();
-                                                    response.setFlag(1);
-                                                    myList.add(response);
-                                                    keyValue.put(response.getVatNo(), myList.size() - 1);
-                                                }
                                             }
-                                        }
-                                        text1.setText(epcList.size() + "");
-                                        mAdapter.notifyDataSetChanged();
+                                            text1.setText(epcList.size() + "");
+                                            mAdapter.notifyDataSetChanged();
+                                        }catch (Exception e){
+
+                                       }
                                     }
                                 }, json);
                             } catch (IOException e) {
@@ -335,9 +342,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         }
                         break;
                 }
-            } catch (Exception e) {
-                Log.i(TAG, "");
-            }
         }
     };
 
@@ -382,8 +386,14 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 ArrayList<Inventory> jsocList = new ArrayList<>();
                 for (Inventory obj : dataList) {
                     if (obj.getVatNo() != null && dataKEY.contains(obj.getVatNo())) {
+                        Carrier c=new Carrier();
+                        c.setTrayNo(App.CARRIER.getTrayNo());
+                        c.setLocationNo(App.CARRIER.getLocationNo());
+                        c.setLocationEPC(App.CARRIER.getLocationEPC());
+                        c.setTrayEPC(App.CARRIER.getTrayEPC());
+                        c.setId(App.CARRIER.getId());
                         obj.setDevice(App.DEVICE_NO);
-                        obj.setCarrier(App.CARRIER);
+                        obj.setCarrier(c);
                         jsocList.add(obj);
                     }
                 }
@@ -400,15 +410,19 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
 
                         @Override
                         public void onResponse(String response) {
-                            if (response.equals("1")) {
-                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                clearData();
-                                mAdapter.notifyDataSetChanged();
-                                getFragmentManager().popBackStack();
-                            } else {
-                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                            }
+                            try{
+                                if (response.equals("1")) {
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    clearData();
+                                    mAdapter.notifyDataSetChanged();
+                                    //调用Activity中onBackPressed()方法
+                                    getActivity().onBackPressed();
+                                } else {
+                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                }
+                            }catch (Exception e){
 
+                            }
                         }
                     }, json);
 

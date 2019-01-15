@@ -72,6 +72,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
         getActivity().setTitle("上架");
+        button2.setText("确认库位");
         initRFID();
         return view;
     }
@@ -148,11 +149,16 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
                                 @Override
                                 public void onResponse(Carrier response) {
-                                    if (response != null && (response.getLocationNo() != null || response.getTrayNo() != null)) {
-                                        Message msg = handler.obtainMessage();
-                                        msg.arg1 = 0x01;
-                                        msg.obj = response;
-                                        handler.sendMessage(msg);
+                                    try{
+                                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
+                                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
+                                            Message msg = handler.obtainMessage();
+                                            msg.arg1 = 0x01;
+                                            msg.obj = response;
+                                            handler.sendMessage(msg);
+                                        }
+                                    } catch (Exception e) {
+
                                     }
                                 }
                             }, json);

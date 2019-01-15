@@ -142,52 +142,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
         initRFID();
         return view;
     }
-/*
-
-    public void textData() {
-        {
-            OutCheckDetail in1 = new OutCheckDetail("123", "123", "123", "123", "123", 10, 10, "123", 10);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-        {
-            OutCheckDetail in1 = new OutCheckDetail("456", "456", "456", "456", "456", 20, 20, "456", 20);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-
-        {
-            OutCheckDetail in1 = new OutCheckDetail("789", "789", "789", "789", "789", 30, 30, "789", 30);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-        {
-            OutCheckDetail in1 = new OutCheckDetail("000", "000", "000", "000", "000", 30, 30, "000", 30);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-        {
-            OutCheckDetail in1 = new OutCheckDetail("111", "111", "111", "111", "111", 30, 30, "111", 30);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-        {
-            OutCheckDetail in1 = new OutCheckDetail("222", "222", "222", "222", "222", 30, 30, "222", 30);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-        {
-            OutCheckDetail in1 = new OutCheckDetail("333", "333", "333", "333", "333", 30, 30, "333", 30);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-        {
-            OutCheckDetail in1 = new OutCheckDetail("444", "444", "444", "444", "444", 30, 30, "444", 30);
-            myList.add(in1);
-            dataList.add(in1);
-        }
-    }
-*/
 
     public void initView() {
         text1.setText("0");
@@ -289,9 +243,10 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
                         if (!EPC.startsWith("31")&&!dataEPC.contains(EPC)) {
 //                        查询
-                            JSONObject epc = new JSONObject();
+                           /* JSONObject epc = new JSONObject();
                             epc.put("epc", EPC);
-                            final String json = epc.toJSONString();
+                            final String json = epc.toJSONString();*/
+                            final String json=JSON.toJSONString(EPC);
 //                            final String json = JSON.toJSONString(EPC);
                                     try {
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
@@ -304,37 +259,40 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                                             }
                                             @Override
                                             public void onResponse(ArrayList<OutCheckDetail> response) {
-                                                Log.i("EPC", "onResponse");
-                                                if (response != null && response.size() != 0) {
-                                                    OutCheckDetail ocd = response.get(0);
-                                                    if (ocd != null) {
-                                                        ocd.setCarNo(App.carNo);
-                                                        if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
-                                                            dataEPC.add(ocd.getEpc());
-                                                            dataList.add(ocd);
+                                                try{
+                                                    if (response != null && response.size() != 0) {
+                                                        OutCheckDetail ocd = response.get(0);
+                                                        if (ocd != null) {
+                                                            ocd.setCarNo(App.carNo);
+                                                            if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
+                                                                dataEPC.add(ocd.getEpc());
+                                                                dataList.add(ocd);
                                                            /* String key = ocd.getVatNo() + ocd.getProduct_no()
                                                                     + ocd.getSelNo() + ocd.getColor() + "";*/
-                                                            String key = ocd.getVatNo() + "";
-                                                            if (!strIndex.containsKey(key)) {//当前没有
-                                                                ocd.setCount(1);
-                                                                ocd.setWeightall(ocd.getWeight());
+                                                                String key = ocd.getVatNo() + "";
+                                                                if (!strIndex.containsKey(key)) {//当前没有
+                                                                    ocd.setCount(1);
+                                                                    ocd.setWeightall(ocd.getWeight());
 //                                                                勾选框用
 //                                                                ocd.setFlag(true);
-                                                                myList.add(ocd);
-                                                                strIndex.put(key, myList.size() - 1);
-                                                            } else {
-                                                                int index = strIndex.get(key);
-                                                                myList.get(index).addCount();
-                                                                myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), ocd.getWeight()));
+                                                                    myList.add(ocd);
+                                                                    strIndex.put(key, myList.size() - 1);
+                                                                } else {
+                                                                    int index = strIndex.get(key);
+                                                                    myList.get(index).addCount();
+                                                                    myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), ocd.getWeight()));
 
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                                Message msg = handler.obtainMessage();
-                                                msg.arg1 = 0x14;
-                                                handler.sendMessage(msg);
+                                                    Message msg = handler.obtainMessage();
+                                                    msg.arg1 = 0x14;
+                                                    handler.sendMessage(msg);
 
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
                                         }, json);
                                     } catch (IOException e) {
@@ -426,14 +384,18 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
 
                                 @Override
                                 public void onResponse(String response) {
-                                    if (response.equals("1")) {
-                                        Message msg = handler.obtainMessage();
-                                        msg.arg1 = 0x12;
-                                        handler.sendMessage(msg);
-                                    } else {
-                                        Message msg = handler.obtainMessage();
-                                        msg.arg1 = 0x13;
-                                        handler.sendMessage(msg);
+                                    try{
+                                        if (response.equals("1")) {
+                                            Message msg = handler.obtainMessage();
+                                            msg.arg1 = 0x12;
+                                            handler.sendMessage(msg);
+                                        } else {
+                                            Message msg = handler.obtainMessage();
+                                            msg.arg1 = 0x13;
+                                            handler.sendMessage(msg);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
                             }, json);

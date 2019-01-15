@@ -142,44 +142,49 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
 
                                 @Override
                                 public void onResponse(List<InCheckDetail> response) {
-                                    if (response != null) {
-                                        List<InCheckDetail> newList=new ArrayList<InCheckDetail>();
-                                        for (InCheckDetail re:response){
-                                            if (re!=null&&re.getFabRool()!=null){
-                                                boolean isIn=false;
-                                                for (InCheckDetail old:myList){
-                                                    if (old!=null&&old.getFabRool()!=null)
-                                                        if (old.getFabRool().equals(re.getFabRool())){
-                                                            isIn=true;
-                                                            old.setFlag(true);
-                                                        }
+                                   try{
+                                        if (response != null) {
+                                            List<InCheckDetail> newList = new ArrayList<InCheckDetail>();
+                                            for (InCheckDetail re : response) {
+                                                if (re != null && re.getFabRool() != null) {
+                                                    boolean isIn = false;
+                                                    for (InCheckDetail old : myList) {
+                                                        if (old != null && old.getFabRool() != null)
+                                                            if (old.getFabRool().equals(re.getFabRool())) {
+                                                                isIn = true;
+                                                                old.setFlag(true);
+                                                            }
+                                                    }
+                                                    if (!isIn)
+                                                        newList.add(re);
                                                 }
-                                                if (!isIn)
-                                                    newList.add(re);
                                             }
+
+                                            myList.addAll(newList);
+                                            newList.clear();
                                         }
-                                        myList.addAll(newList);
-                                        newList.clear();
-                                    }
-                                    Collections.sort(myList, new Comparator<InCheckDetail>() {
-                                        @Override
-                                        public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
-                                            String  aFab=inCheckDetail.getFabRool();
-                                            if (aFab==null)
-                                                return -1;
-                                            String bFab=t1.getFabRool();
-                                            if (bFab==null)
-                                                return 1;
-                                            if (aFab!=null&&bFab!=null){
-                                                if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                                        Collections.sort(myList, new Comparator<InCheckDetail>() {
+                                            @Override
+                                            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
+                                                String aFab = inCheckDetail.getFabRool();
+                                                if (aFab == null)
+                                                    return -1;
+                                                String bFab = t1.getFabRool();
+                                                if (bFab == null)
                                                     return 1;
+                                                if (aFab != null && bFab != null) {
+                                                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
+                                                        return 1;
+                                                    }
+                                                    return -1;
                                                 }
-                                                return -1;
+                                                return 0;
                                             }
-                                            return 0;
-                                        }
-                                    });
-                                    mAdapter.notifyDataSetChanged();
+                                        });
+                                        mAdapter.notifyDataSetChanged();
+                                   }catch (Exception e){
+
+                                   }
                                 }
                             }, json);
                         } catch (Exception e) {

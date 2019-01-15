@@ -224,23 +224,27 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                 /**这里应该要大改*/
                 @Override
                 public void onResponse(JSONArray json) {
-                    List<Output> response;
-                    response = json.toJavaList(Output.class);
-                    if (response != null && response.size() != 0) {
-                        for (Output op : response) {
-                            if (op != null && op.getVatNo() != null) {
+                    try {
+                        List<Output> response;
+                        response = json.toJavaList(Output.class);
+                        if (response != null && response.size() != 0) {
+                            for (Output op : response) {
+                                if (op != null && op.getVatNo() != null) {
 //                                if (keyValue.containsKey(op.getVatNo())) {//里面有
 //                                        目前应该不会重复
 //                                        如果是重复的话在这里加载进myList的list里面
 //                                } else {//里面没有
                                     myList.add(op);
-                                    String key=op.getVatNo()+op.getProduct_no()+op.getSelNo();
+                                    String key = op.getVatNo() + op.getProduct_no() + op.getSelNo();
                                     keyValue.put(key, myList.size() - 1);
 //                                }
-                                dataList.add(op);
+                                    dataList.add(op);
+                                }
                             }
+                            mAdapter.notifyDataSetChanged();
                         }
-                        mAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }, json);
@@ -257,6 +261,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         ButterKnife.unbind(this);
         clearData();
         myList.clear();
+        App.APPLY_NO=null;
         App.OUTPUT_DETAIL_LIST.clear();
         disRFID();
     }
@@ -320,14 +325,18 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
                         @Override
                         public void onResponse(JSONObject response) {
-                            BaseReturn baseReturn=response.toJavaObject(BaseReturn.class);
-                            if (baseReturn!=null&&baseReturn.getStatus()==1) {
-                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                clearData();
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                            }
+                           try{
+                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    clearData();
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                }
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
                         }
                     }, json);
 
@@ -418,63 +427,62 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                             }
                                             @Override
                                             public void onResponse(JSONArray jsonArray) {
-                                                try {
-
-                                                List<Inventory> arry;
-                                                arry = jsonArray.toJavaList(Inventory.class);
-                                                if (arry != null && arry.size() > 0) {
-                                                    Inventory response = arry.get(0);
-                                                    if (response != null) {
-                                                        epcList.add(response.getEpc());
-                                                        OutputDetail detail = new OutputDetail();
-                                                        detail.setEpc(response.getEpc() + "");
-                                                        detail.setFabRool(response.getFabRool() + "");
-                                                        detail.setWeight(response.getWeight());
-                                                        detail.setWeight_in(response.getWeight_in());
-                                                        detail.setOperator(response.getOperator() + "");
-                                                        detail.setOperatingTime(response.getOperatingTime());
-                                                        detail.setFlag(2);
-                                                        String key2=response.getVatNo()+response.getProduct_no()+response.getSelNo();
-                                                        if (!keyValue.containsKey(key2)) {
-                                                            Output data = new Output();
-                                                            data.setProduct_no(response.getProduct_no() + "");
-                                                            data.setVatNo(response.getVatNo() + "");
-                                                            data.setSelNo(response.getSelNo() + "");
-                                                            data.setColor(response.getColor() + "");
-                                                            data.setCountOut(0);
-                                                            data.setCount(1);
-                                                            data.setCountProfit(1);
-                                                            data.setCountLosses(0);
-                                                            data.setFlag(2);
-                                                            data.setWeightall(response.getWeight());
-                                                            List<OutputDetail> list = new ArrayList<OutputDetail>();
-                                                            list.add(detail);
-                                                            data.setList(list);
-                                                            dataList.add(data);
-                                                            myList.add(data);
-                                                            keyValue.put(key2, myList.size() - 1);
-                                                        } else {
-                                                            myList.get(keyValue.get(key2)).addCount();
-                                                            myList.get(keyValue.get(key2)).setWeightall(ArithUtil.add(myList.get(keyValue.get(key2)).getWeightall(),response.getWeight()));
-                                                            for (Output op : dataList) {
-                                                                if ((op.getVatNo() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
-                                                                    boolean isIn = false;
-                                                                    for (OutputDetail od : op.getList()) {
-                                                                        if (od.getEpc().equals(detail.getEpc()))
-                                                                            isIn = true;
+                                                    try{
+                                                        List<Inventory> arry;
+                                                        arry = jsonArray.toJavaList(Inventory.class);
+                                                        if (arry != null && arry.size() > 0) {
+                                                            Inventory response = arry.get(0);
+                                                            if (response != null) {
+                                                                epcList.add(response.getEpc());
+                                                                OutputDetail detail = new OutputDetail();
+                                                                detail.setEpc(response.getEpc() + "");
+                                                                detail.setFabRool(response.getFabRool() + "");
+                                                                detail.setWeight(response.getWeight());
+                                                                detail.setWeight_in(response.getWeight_in());
+                                                                detail.setOperator(response.getOperator() + "");
+                                                                detail.setOperatingTime(response.getOperatingTime());
+                                                                detail.setFlag(2);
+                                                                String key2 = response.getVatNo() + response.getProduct_no() + response.getSelNo();
+                                                                if (!keyValue.containsKey(key2)) {
+                                                                    Output data = new Output();
+                                                                    data.setProduct_no(response.getProduct_no() + "");
+                                                                    data.setVatNo(response.getVatNo() + "");
+                                                                    data.setSelNo(response.getSelNo() + "");
+                                                                    data.setColor(response.getColor() + "");
+                                                                    data.setCountOut(0);
+                                                                    data.setCount(1);
+                                                                    data.setCountProfit(1);
+                                                                    data.setCountLosses(0);
+                                                                    data.setFlag(2);
+                                                                    data.setWeightall(response.getWeight());
+                                                                    List<OutputDetail> list = new ArrayList<OutputDetail>();
+                                                                    list.add(detail);
+                                                                    data.setList(list);
+                                                                    dataList.add(data);
+                                                                    myList.add(data);
+                                                                    keyValue.put(key2, myList.size() - 1);
+                                                                } else {
+                                                                    myList.get(keyValue.get(key2)).addCount();
+                                                                    myList.get(keyValue.get(key2)).setWeightall(ArithUtil.add(myList.get(keyValue.get(key2)).getWeightall(), response.getWeight()));
+                                                                    for (Output op : dataList) {
+                                                                        if ((op.getVatNo() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
+                                                                            boolean isIn = false;
+                                                                            for (OutputDetail od : op.getList()) {
+                                                                                if (od.getEpc().equals(detail.getEpc()))
+                                                                                    isIn = true;
+                                                                            }
+                                                                            if (!isIn)
+                                                                                op.getList().add(detail);
+                                                                        }
                                                                     }
-                                                                    if (!isIn)
-                                                                        op.getList().add(detail);
                                                                 }
                                                             }
+                                                            text1.setText(epcList.size() + "");
+                                                            mAdapter.notifyDataSetChanged();
                                                         }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
                                                     }
-                                                    text1.setText(epcList.size()+"");
-                                                    mAdapter.notifyDataSetChanged();
-                                                }
-                                                }catch (Exception e) {
-
-                                                }
                                             }
                                         }, json);
                                     } catch (IOException e) {

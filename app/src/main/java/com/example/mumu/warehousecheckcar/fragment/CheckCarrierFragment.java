@@ -98,7 +98,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        App.CARRIER = null;
+//        App.CARRIER = null;
         disRFID();
     }
 
@@ -149,12 +149,17 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
                                 @Override
                                 public void onResponse(Carrier response) {
-                                    if (response != null && (response.getLocationNo() != null || response.getTrayNo() != null)) {
+                                   try {
+                                    if (response != null&&(response.getTrayNo()!=null||response .getLocationNo()!=null)&&
+                                            (!response.getTrayNo().equals("")||!response.getLocationNo().equals(""))) {
                                         Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x01;
                                         msg.obj = response;
                                         handler.sendMessage(msg);
                                     }
+                                   }catch (Exception e){
+
+                                   }
                                 }
                             }, json);
                         } catch (IOException e) {

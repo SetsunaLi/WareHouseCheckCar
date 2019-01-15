@@ -15,6 +15,8 @@ public class Inventory {
     private String product_no;
     /***缸号*/
     private String vatNo;
+    /***染厂*/
+    private String dyeing;
     /***色号（色号指的都是销售色号）*/
     private String selNo;
     /***颜色*/
@@ -67,6 +69,14 @@ public class Inventory {
 
     public void setCarrier(Carrier carrier) {
         this.carrier = carrier;
+    }
+
+    public String getDyeing() {
+        return dyeing;
+    }
+
+    public void setDyeing(String dyeing) {
+        this.dyeing = dyeing;
     }
 
     public String getEpc() {

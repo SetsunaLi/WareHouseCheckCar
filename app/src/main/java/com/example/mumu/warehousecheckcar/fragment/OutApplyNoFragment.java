@@ -130,7 +130,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         super.onDestroyView();
         ButterKnife.unbind(this);
         RFID_2DHander.getInstance().off_2D();
-        App.APPLY_NO=null;
+//        App.APPLY_NO=null;
         disConnect2D();
     }
 
@@ -147,7 +147,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                     /*先访系统得到列表后再跳转
                     尝试不异步情况下能否访问
                     * */
-                    disConnect2D();
+//                    disConnect2D();
                     APPLY_NO = applaNO;
                     Fragment fragment = OutApplyFragment.newInstance();
                    /* FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();

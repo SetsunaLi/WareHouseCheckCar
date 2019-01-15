@@ -30,6 +30,8 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.mumu.warehousecheckcar.application.App.PROWER;
+
 
 /**
  * Created by mumu on 2018/11/22.
@@ -76,7 +78,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         prowerText=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.prower_edit_key));
         prowerText.setOnPreferenceClickListener(this);
 //        这个不生效
-        prower.setProgress(App.PROWER);
+        prower.setProgress(PROWER);
      /*   workTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_work_time_key));
         intervalTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_interval_time_key));*/
         statuslist = (ListPreference) getPreferenceScreen().findPreference(getString(R.string.user_status_key));
@@ -135,12 +137,13 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 App.DEVICE_NO=deviceNumber.getText();
                 break;
             case Config.USER_PROWER_KEY:
-                App.PROWER=getPrower(getActivity());
-                byte p = (byte) App.PROWER;
+                PROWER=getPrower(getActivity());
+                byte p = (byte) PROWER;
                 if (rfidHander != null&&p!=0) {
                     int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, p);
                     if (i != 0)
                         Toast.makeText(getActivity(), "设置功率失败", Toast.LENGTH_SHORT).show();
+
                 }
                 break;
             case Config.MUSIC:
@@ -222,18 +225,20 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(Config.USER_PROWER_KEY, 12);
     }
 
-    Handler handler=new Handler(){
+    private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ReaderSetting obj=(ReaderSetting)msg.obj;
+            if (obj.btAryOutputPower!=null&&obj.btAryOutputPower.length>0)
             setEditTextPre(prowerText,obj.btAryOutputPower[0]+"");
         }
     };
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
         Log.i("Setting", "refreshSettingCallBack");
-        if (flag) {
+        if (flag&&readerSetting!=null) {
+            flag=false;
             Message msg = handler.obtainMessage();
             msg.obj = readerSetting;
             handler.sendMessage(msg);
