@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,9 +49,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     TextView text1;
     @Bind(R.id.text2)
     TextView text2;
-    private final String TAG="OutApplyDetailFragment";
+    private final String TAG = "OutApplyDetailFragment";
     private List<OutputDetail> myList;
     private RecycleAdapter mAdapter;
+    private List<String> dataKey;
 
     private OutApplyDetailFragment() {
     }
@@ -65,23 +68,24 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         super.onCreate(savedInstanceState);
         initData();
     }
-    public void initData(){
-        myList=new ArrayList<>();
+
+    public void initData() {
+        myList = new ArrayList<>();
         myList.add(new OutputDetail());//增加一个为头部
-        if (App.OUTPUT_DETAIL_LIST!=null&&App.OUTPUT_DETAIL_LIST.size()>0)
-        myList.addAll(App.OUTPUT_DETAIL_LIST.get(0).getList());
+        if (App.OUTPUT_DETAIL_LIST != null && App.OUTPUT_DETAIL_LIST.size() > 0)
+            myList.addAll(App.OUTPUT_DETAIL_LIST.get(0).getList());
 
         Collections.sort(myList, new Comparator<OutputDetail>() {
             @Override
             public int compare(OutputDetail t0, OutputDetail t1) {
-                String  aFab=t0.getFabRool();
-                if (aFab==null||aFab.equals(""))
+                String aFab = t0.getFabRool();
+                if (aFab == null || aFab.equals(""))
                     return -1;
-                String bFab=t1.getFabRool();
-                if (bFab==null||bFab.equals(""))
+                String bFab = t1.getFabRool();
+                if (bFab == null || bFab.equals(""))
                     return 1;
-                if (aFab!=null&&bFab!=null){
-                    if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
+                if (aFab != null && bFab != null) {
+                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                         return 1;
                     }
                     return -1;
@@ -89,8 +93,9 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                 return 0;
             }
         });
-
+        dataKey=new ArrayList<>();
     }
+    private LinearLayoutManager llm;
     //    这里加载视图
     @Nullable
     @Override
@@ -102,25 +107,28 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
         mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
-        ms.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(ms);
+        llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
 
         if (App.OUTPUT_DETAIL_LIST.size() > 0) {
             text2.setText(App.OUTPUT_DETAIL_LIST.get(0).getVatNo() + "");
-            int i=0;
-            for (OutputDetail od:App.OUTPUT_DETAIL_LIST.get(0).getList())
-                if (od.getFlag()!=0)
+            int i = 0;
+            for (OutputDetail od : App.OUTPUT_DETAIL_LIST.get(0).getList())
+                if (od.getFlag() != 0)
                     i++;
-            text1.setText(i+"");
+            text1.setText(i + "");
         }
         return view;
     }
+
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.out_put_detail_item, null);
+        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -148,7 +156,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        App.FABROOL_LIST.clear();
+        App.FABROOL_LIST.addAll(dataKey);
         myList.clear();
+        dataKey.clear();
         App.OUTPUT_DETAIL_LIST.clear();
     }
 
@@ -173,34 +184,71 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
             super(v, datas, itemLayoutId);
 
         }
-         private int index=-255;
-         public void select(int index){
-             if (this.index==index)
-                 this.index=-255;
-             else
-                 this.index=index;
 
-         }
+        private int index = -255;
+
+        public void select(int index) {
+            if (this.index == index)
+                this.index = -255;
+            else
+                this.index = index;
+
+        }
+
         @Override
-        public void convert(RecyclerHolder holder, OutputDetail item, int position) {
-            if (position != 0) {
-                if (item != null) {//（默认为0；0为默认状态，1为实盘扫码出库状态，2为非正常申请单扫码，3默认超出配货值第一个开始为3）
+        public void convert(RecyclerHolder holder,final OutputDetail item,final int position) {
+            if (item != null) {
+                CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                if (position != 0) {
+                    if (cb.isChecked()) {
+                        if (!dataKey.contains(item.getFabRool()))
+                            dataKey.add(item.getFabRool());
+                    } else {
+                        if (dataKey.contains(item.getFabRool()))
+                            dataKey.remove(item.getFabRool());
+                    }
+                    //（默认为0；0为默认状态，1为实盘扫码出库状态，2为非正常申请单扫码，3默认超出配货值第一个开始为3）
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                        if (item.getFlag()==0)//亏
-                            ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                        else if (item.getFlag()==1)
-                            ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                        else if (item.getFlag()==2)//盈
-                            ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                        else if (item.getFlag()==3)
-                            ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+                    if (item.getFlag() == 0) {//亏
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                        cb.setEnabled(false);
+                    }else if (item.getFlag() == 1) {
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                        cb.setEnabled(true);
+                    }else if (item.getFlag() == 2) {//错
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        cb.setEnabled(true);
+                    }else if (item.getFlag() == 3) {//多
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+                        cb.setEnabled(true);
+                    }
 
                     holder.setText(R.id.item1, item.getFabRool() + "");
-                    if (App.OUTPUT_DETAIL_LIST!=null&&App.OUTPUT_DETAIL_LIST.size()>0)
-                    holder.setText(R.id.item2, App.OUTPUT_DETAIL_LIST.get(0).getProduct_no() + "");
+                    if (App.OUTPUT_DETAIL_LIST != null && App.OUTPUT_DETAIL_LIST.size() > 0)
+                        holder.setText(R.id.item2, App.OUTPUT_DETAIL_LIST.get(0).getProduct_no() + "");
                     holder.setText(R.id.item3, item.getWeight_in() + "");
                     holder.setText(R.id.item4, item.getWeight() + "");
                 }
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            for (int i = 1; i < myList.size(); i++) {
+                                View view = llm.findViewByPosition(i);
+                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
+                                c.setChecked(isChecked);
+                            }
+                        } else {
+                            if (isChecked) {
+                                if (!dataKey.contains(item.getFabRool()))
+                                    dataKey.add(item.getFabRool());
+                            } else {
+                                if (dataKey.contains(item.getFabRool()))
+                                    dataKey.remove(item.getFabRool());
+                            }
+                        }
+                    }
+                });
             }
         }
     }

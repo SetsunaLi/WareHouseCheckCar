@@ -6,7 +6,7 @@ import java.util.List;
  * Created by mumu on 2019/1/3.
  */
 
-public class Output {
+public class Output implements Cloneable {
     /***布号*/
     private String product_no;
     /***缸号*/
@@ -140,5 +140,16 @@ public class Output {
 
     public void setList(List<OutputDetail> list) {
         this.list = list;
+    }
+
+    @Override
+    public Object clone() {
+        Output stu = null;
+        try{
+            stu = (Output)super.clone();
+        }catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return stu;
     }
 }

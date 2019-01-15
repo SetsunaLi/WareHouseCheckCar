@@ -60,6 +60,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.mumu.warehousecheckcar.application.App.KEY;
 import static com.example.mumu.warehousecheckcar.application.App.OUTPUT_DETAIL_LIST;
 
 /**
@@ -97,7 +98,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
      */
     private Map<String, Integer> keyValue;
     private List<Output> dataList;
-    private List<String> dataKey;
+//    private List<String> dataKey;
+    private Map<String,List<String>>dataKey;
     private List<String> epcList;
     private LinearLayoutManager llm;
     private Sound sound;
@@ -130,6 +132,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.apply_item_layout_1, null);
+        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 //    主页返回执行
@@ -155,7 +158,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     private void initData() {
         myList = new ArrayList<>();
-        dataKey = new ArrayList<>();
+        dataKey = new HashMap<>();
         dataList = new ArrayList<>();
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
@@ -307,9 +310,19 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 //                上传数据
                 ArrayList<Output> jsocList = new ArrayList<>();
                 for (Output obj : dataList) {
-                    if (obj.getVatNo() != null && dataKey.contains(obj.getVatNo())) {
+                    String key=obj.getVatNo()+obj.getProduct_no()+obj.getSelNo();
+                    if (key != null && dataKey.containsKey(key)) {
                         obj.setDevice(App.DEVICE_NO);
-                        jsocList.add(obj);
+                        Output obj2= (Output) obj.clone();
+                        obj2.getList().clear();
+                        ArrayList<OutputDetail> newList=new ArrayList<OutputDetail>();
+                        for (OutputDetail od:obj.getList()){
+                            if (dataKey.get(key).contains(od.getFabRool())){
+                                newList.add(od);
+                            }
+                        }
+                        obj2.getList().addAll(newList);
+                        jsocList.add(obj2);
                     }
                 }
                 final String json = JSON.toJSONString(jsocList);
@@ -359,10 +372,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             mAdapter.notifyDataSetChanged();
 
             Output obj = myList.get(position);
-            String key = obj.getVatNo();
+            String key = obj.getVatNo()+obj.getProduct_no()+obj.getSelNo();
+            KEY=key;
             OUTPUT_DETAIL_LIST.clear();
             for (Output obj2 : dataList) {
-                if (obj2.getVatNo().equals(key)) {
+                if ((obj.getVatNo()+obj.getProduct_no()+obj.getSelNo()).equals(key)) {
                     OUTPUT_DETAIL_LIST.add(obj2);
                 }
             }
@@ -493,7 +507,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         }
                         break;
                 }
-
         }
     };
 
@@ -551,12 +564,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
+                    String key=item.getVatNo()+item.getProduct_no()+item.getSelNo();
                     if (cb.isChecked()) {
-                        if (!dataKey.contains(item.getVatNo()))
-                            dataKey.add(item.getVatNo());
+                        if (!dataKey.containsKey(key))
+                            dataKey.put(key,new ArrayList<String>());
                     } else {
-                        if (dataKey.contains(item.getVatNo()))
-                            dataKey.remove(item.getVatNo());
+                        if (dataKey.containsKey(key))
+                            dataKey.remove(key);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getCount() == item.getCountOut())
@@ -585,12 +599,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                 c.setChecked(isChecked);
                             }
                         } else {
+                            String key=item.getVatNo()+item.getProduct_no()+item.getSelNo();
                             if (isChecked) {
-                                if (!dataKey.contains(item.getVatNo()))
-                                    dataKey.add(item.getVatNo());
+                                if (!dataKey.containsKey(key))
+                                    dataKey.put(key,new ArrayList<String>());
                             } else {
-                                if (dataKey.contains(item.getVatNo()))
-                                    dataKey.remove(item.getVatNo());
+                                if (dataKey.containsKey(key))
+                                    dataKey.remove(key);
                             }
                         }
                     }

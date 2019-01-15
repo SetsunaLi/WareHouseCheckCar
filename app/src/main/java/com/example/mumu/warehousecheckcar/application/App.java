@@ -58,5 +58,7 @@ public class App extends Application {
     public static List<Output> OUTPUT_DETAIL_LIST=new ArrayList<>();
 //   上架详情缓存
     public static List<Input> INPUT_DETAIL_LIST=new ArrayList<>();
-
+//布票号缓存
+    public static List<String> FABROOL_LIST=new ArrayList<>();
+    public static String KEY;
 }

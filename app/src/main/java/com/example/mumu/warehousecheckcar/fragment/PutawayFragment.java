@@ -131,6 +131,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.putaway_item, null);
+        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 
