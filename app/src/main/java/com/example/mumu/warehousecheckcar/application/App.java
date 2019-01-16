@@ -12,7 +12,9 @@ import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mumu on 2018/12/8.
@@ -59,6 +61,7 @@ public class App extends Application {
 //   上架详情缓存
     public static List<Input> INPUT_DETAIL_LIST=new ArrayList<>();
 //布票号缓存
-    public static List<String> FABROOL_LIST=new ArrayList<>();
+//    public static List<String> FABROOL_LIST=new ArrayList<>();
     public static String KEY;
+    public static Map<String,List<String>> DATA_KEY=new HashMap<>();
 }

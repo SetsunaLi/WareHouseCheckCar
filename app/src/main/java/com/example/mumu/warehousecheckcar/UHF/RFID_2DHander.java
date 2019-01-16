@@ -99,10 +99,10 @@ public class RFID_2DHander {
     public boolean connect2D(){
         if (Connector2D ==null)
             Connector2D = new TDScannerConnector();
-        if (!Connector2D.isConnected())
+//        if (!Connector2D.isConnected())
         //连接指定串口，返回true表示成功，false失败
         return Connector2D.connectCom("dev/ttyS1", 9600);
-        return true;
+//        return true;
     }
     /**
      * 断开2D模块

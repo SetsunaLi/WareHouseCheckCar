@@ -36,12 +36,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.example.mumu.warehousecheckcar.R.id.recyle;
+import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
+import static com.example.mumu.warehousecheckcar.application.App.KEY;
 
 /**
  * Created by mumu on 2018/12/21.
  */
 
-public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener {
+public class OutApplyDetailFragment extends Fragment{
     private static OutApplyDetailFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -93,9 +95,14 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                 return 0;
             }
         });
-        dataKey=new ArrayList<>();
+        dataKey = new ArrayList<>();
+        if (DATA_KEY.containsKey(KEY)){
+            dataKey.addAll(DATA_KEY.get(KEY));
+        }
     }
+
     private LinearLayoutManager llm;
+
     //    这里加载视图
     @Nullable
     @Override
@@ -106,7 +113,6 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
         llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
@@ -156,18 +162,19 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        App.FABROOL_LIST.clear();
-        App.FABROOL_LIST.addAll(dataKey);
+     /*   App.FABROOL_LIST.clear();
+        App.FABROOL_LIST.addAll(dataKey);*/
+        if (DATA_KEY.containsKey(KEY)) {
+            DATA_KEY.get(KEY).clear();
+            DATA_KEY.get(KEY).addAll(dataKey);
+        } else {
+            DATA_KEY.put(KEY, dataKey);
+        }
         myList.clear();
         dataKey.clear();
         App.OUTPUT_DETAIL_LIST.clear();
     }
 
-    @Override
-    public void onItemClick(View view, Object data, int position) {
-        mAdapter.select(position);
-        mAdapter.notifyDataSetChanged();
-    }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<OutputDetail> {
         private Context context;
@@ -185,21 +192,13 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
         }
 
-        private int index = -255;
-
-        public void select(int index) {
-            if (this.index == index)
-                this.index = -255;
-            else
-                this.index = index;
-
-        }
-
         @Override
-        public void convert(RecyclerHolder holder,final OutputDetail item,final int position) {
+        public void convert(RecyclerHolder holder, final OutputDetail item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
+                    if (dataKey.contains(item.getFabRool()))
+                        cb.setChecked(true);
                     if (cb.isChecked()) {
                         if (!dataKey.contains(item.getFabRool()))
                             dataKey.add(item.getFabRool());
@@ -212,13 +211,13 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                     if (item.getFlag() == 0) {//亏
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                         cb.setEnabled(false);
-                    }else if (item.getFlag() == 1) {
+                    } else if (item.getFlag() == 1) {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                         cb.setEnabled(true);
-                    }else if (item.getFlag() == 2) {//错
+                    } else if (item.getFlag() == 2) {//错
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         cb.setEnabled(true);
-                    }else if (item.getFlag() == 3) {//多
+                    } else if (item.getFlag() == 3) {//多
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                         cb.setEnabled(true);
                     }

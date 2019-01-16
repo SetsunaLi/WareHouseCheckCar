@@ -60,6 +60,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
 import static com.example.mumu.warehousecheckcar.application.App.KEY;
 import static com.example.mumu.warehousecheckcar.application.App.OUTPUT_DETAIL_LIST;
 
@@ -99,7 +100,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     private Map<String, Integer> keyValue;
     private List<Output> dataList;
 //    private List<String> dataKey;
-    private Map<String,List<String>>dataKey;
+//    private Map<String,List<String>>dataKey;
     private List<String> epcList;
     private LinearLayoutManager llm;
     private Sound sound;
@@ -130,6 +131,21 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.apply_item_layout_1, null);
         ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
@@ -147,8 +163,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         }
         if (keyValue != null)
             keyValue.clear();
-        if (dataKey != null)
-            dataKey.clear();
+        if (DATA_KEY != null)
+            DATA_KEY.clear();
         if (dataList != null)
             dataList.clear();
         if (epcList != null)
@@ -158,7 +174,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     private void initData() {
         myList = new ArrayList<>();
-        dataKey = new HashMap<>();
+//        dataKey = new HashMap<>();
         dataList = new ArrayList<>();
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
@@ -266,6 +282,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         myList.clear();
         App.APPLY_NO=null;
         App.OUTPUT_DETAIL_LIST.clear();
+
         disRFID();
     }
 
@@ -311,17 +328,17 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                 ArrayList<Output> jsocList = new ArrayList<>();
                 for (Output obj : dataList) {
                     String key=obj.getVatNo()+obj.getProduct_no()+obj.getSelNo();
-                    if (key != null && dataKey.containsKey(key)) {
+                    if (key != null && DATA_KEY.containsKey(key)) {
                         obj.setDevice(App.DEVICE_NO);
                         Output obj2= (Output) obj.clone();
-                        obj2.getList().clear();
                         ArrayList<OutputDetail> newList=new ArrayList<OutputDetail>();
                         for (OutputDetail od:obj.getList()){
-                            if (dataKey.get(key).contains(od.getFabRool())){
+                            if (DATA_KEY.get(key).contains(od.getFabRool())){
                                 newList.add(od);
                             }
                         }
-                        obj2.getList().addAll(newList);
+                        obj2.setList(newList);
+                        obj2.setCount(newList.size());
                         jsocList.add(obj2);
                     }
                 }
@@ -376,7 +393,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             KEY=key;
             OUTPUT_DETAIL_LIST.clear();
             for (Output obj2 : dataList) {
-                if ((obj.getVatNo()+obj.getProduct_no()+obj.getSelNo()).equals(key)) {
+                if ((obj2.getVatNo()+obj2.getProduct_no()+obj2.getSelNo()).equals(key)) {
                     OUTPUT_DETAIL_LIST.add(obj2);
                 }
             }
@@ -565,12 +582,14 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
                     String key=item.getVatNo()+item.getProduct_no()+item.getSelNo();
+                    if (DATA_KEY.containsKey(key))
+                        cb.setChecked(true);
                     if (cb.isChecked()) {
-                        if (!dataKey.containsKey(key))
-                            dataKey.put(key,new ArrayList<String>());
+                        if (!DATA_KEY.containsKey(key))
+                            DATA_KEY.put(key,new ArrayList<String>());
                     } else {
-                        if (dataKey.containsKey(key))
-                            dataKey.remove(key);
+                        if (DATA_KEY.containsKey(key))
+                            DATA_KEY.remove(key);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getCount() == item.getCountOut())
@@ -601,11 +620,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         } else {
                             String key=item.getVatNo()+item.getProduct_no()+item.getSelNo();
                             if (isChecked) {
-                                if (!dataKey.containsKey(key))
-                                    dataKey.put(key,new ArrayList<String>());
+                                if (!DATA_KEY.containsKey(key))
+                                    DATA_KEY.put(key,new ArrayList<String>());
                             } else {
-                                if (dataKey.containsKey(key))
-                                    dataKey.remove(key);
+                                if (DATA_KEY.containsKey(key))
+                                    DATA_KEY.remove(key);
                             }
                         }
                     }
