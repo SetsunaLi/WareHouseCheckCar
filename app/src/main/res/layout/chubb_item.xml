@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="51dp"
-    android:orientation="vertical">
-
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:descendantFocusability="blocksDescendants"
         android:orientation="horizontal">
-
         <CheckBox
             android:id="@+id/checkbox1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:checked="true" />
-
+            android:checked="true"
+            />
         <View style="@style/view_item_mid" />
 
         <TextView
@@ -32,9 +29,9 @@
         <TextView
             android:id="@+id/item2"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="销售色号" />
+            android:text="缸号" />
 
         <View style="@style/view_item_mid" />
 
@@ -43,7 +40,7 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="颜色" />
+            android:text="布号" />
 
         <View style="@style/view_item_mid" />
 
@@ -52,49 +49,23 @@
             style="@style/text_item"
             android:layout_width="120dip"
             android:layout_height="match_parent"
-            android:text="缸号" />
-
+            android:text="色号" />
         <View style="@style/view_item_mid" />
-
         <TextView
             android:id="@+id/item5"
             style="@style/text_item"
-            android:layout_width="80dip"
+            android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="库存" />
-
+            android:text="颜色"
+            />
         <View style="@style/view_item_mid" />
-
         <TextView
             android:id="@+id/item6"
             style="@style/text_item"
-            android:layout_width="80dip"
+            android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="实盘"
-            android:textColor="@color/colorDialogButtonYes1"/>
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            android:id="@+id/item7"
-            style="@style/text_item"
-            android:layout_width="80dip"
-            android:layout_height="match_parent"
-            android:text="盘盈"
-            android:textColor="@color/colorDataYesText"/>
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            android:id="@+id/item8"
-            style="@style/text_item"
-            android:layout_width="80dip"
-            android:layout_height="match_parent"
-            android:text="盘亏"
-            android:textColor="@color/colorDataNoText"/>
-
+            android:text="重量"/>
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />
-
 </LinearLayout>

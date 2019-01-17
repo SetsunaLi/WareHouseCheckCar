@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,9 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -32,6 +37,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +50,7 @@ import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
  * Created by mumu on 2019/1/14.
  */
 
-public class ChubbFragment extends Fragment implements UHFCallbackLiatener {
+public class ChubbFragment extends Fragment implements UHFCallbackLiatener,BRecyclerAdapter.OnItemClickListener {
     private static ChubbFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -52,8 +58,6 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener {
     ImageView imgview;
     @Bind(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
-    TextView text2;
     @Bind(R.id.button1)
     Button button1;
     @Bind(R.id.button2)
@@ -89,9 +93,72 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chubb_layout, container, false);
         ButterKnife.bind(this, view);
+
+        initData();
+        clearData();
+        text1.setText(epcList.size() + "");
+        sound = new Sound(getActivity());
+
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.chubb_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+        mAdapter.setOnItemClickListener(this);
+        llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(llm);
+        recyle.setAdapter(mAdapter);
+
+        initRFID();
         return view;
     }
+    private void setAdaperHeader() {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.putaway_item, null);
+        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
+        mAdapter.setHeader(view);
+    }
 
+    private void clearData() {
+        if (myList != null) {
+            myList.clear();
+            myList.add(new Input());
+        }
+        if (keyValue != null)
+            keyValue.clear();
+        if (dataKey != null)
+            dataKey.clear();
+        if (dataList != null)
+            dataList.clear();
+        if (epcList != null)
+            epcList.clear();
+//        text1.setText(epcList.size()+"");
+    }
+
+    private void initData() {
+        myList = new ArrayList<>();
+        dataKey = new ArrayList<>();
+        dataList = new ArrayList<>();
+        epcList = new ArrayList<>();
+        keyValue = new HashMap<>();
+
+    }
+
+    private void initRFID() {
+        try {
+            RFID_2DHander.getInstance().on_RFID();
+            UHFResult.getInstance().setCallbackLiatener(this);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void disRFID() {
+        try {
+            RFID_2DHander.getInstance().off_RFID();
+        } catch (Exception e) {
+
+        }
+    }
     //这里写界面
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -139,6 +206,11 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener {
 
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
+
+    }
+
+    @Override
+    public void onItemClick(View view, Object data, int position) {
 
     }
 

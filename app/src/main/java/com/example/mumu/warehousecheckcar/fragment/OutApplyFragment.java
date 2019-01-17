@@ -99,7 +99,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
      */
     private Map<String, Integer> keyValue;
     private List<Output> dataList;
-//    private List<String> dataKey;
+    //    private List<String> dataKey;
 //    private Map<String,List<String>>dataKey;
     private List<String> epcList;
     private LinearLayoutManager llm;
@@ -114,7 +114,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
         initData();
         clearData();
-        text1.setText(epcList.size()+"");
+        text1.setText(epcList.size() + "");
         sound = new Sound(getActivity());
 
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.apply_item_layout_1);
@@ -156,6 +156,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     public void onBackPressed() {
         RFID_2DHander.getInstance().on_2D();
     }
+
     private void clearData() {
         if (myList != null) {
             myList.clear();
@@ -179,7 +180,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
 
-        text2.setText(App.APPLY_NO+"");
+        text2.setText(App.APPLY_NO + "");
     }
 
     private void initRFID() {
@@ -198,7 +199,9 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
         }
     }
-
+    public void upLoad(){
+        mAdapter.notifyDataSetChanged();
+    }
     //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -227,48 +230,48 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     private void downLoadData() {
         try {
             if (App.APPLY_NO != null) {
-        JSONObject object = new JSONObject();
-        object.put("applyNo", App.APPLY_NO);
-        final String json = object.toJSONString();
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                @Override
-                public void onError(Request request, Exception e) {
-                    if (App.LOGCAT_SWITCH) {
-                        Log.i(TAG, "getEpc;" + e.getMessage());
-                        Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                JSONObject object = new JSONObject();
+                object.put("applyNo", App.APPLY_NO);
+                final String json = object.toJSONString();
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getEpc;" + e.getMessage());
+                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
 //                        Toast.makeText(getActivity(), "无法获取申请单信息请返回重试！", Toast.LENGTH_SHORT).show();
-                }
+                    }
 
-                /**这里应该要大改*/
-                @Override
-                public void onResponse(JSONArray json) {
-                    try {
-                        List<Output> response;
-                        response = json.toJavaList(Output.class);
-                        if (response != null && response.size() != 0) {
-                            for (Output op : response) {
-                                if (op != null && op.getVatNo() != null) {
+                    /**这里应该要大改*/
+                    @Override
+                    public void onResponse(JSONArray json) {
+                        try {
+                            List<Output> response;
+                            response = json.toJavaList(Output.class);
+                            if (response != null && response.size() != 0) {
+                                for (Output op : response) {
+                                    if (op != null && op.getVatNo() != null) {
 //                                if (keyValue.containsKey(op.getVatNo())) {//里面有
 //                                        目前应该不会重复
 //                                        如果是重复的话在这里加载进myList的list里面
 //                                } else {//里面没有
-                                    myList.add(op);
-                                    String key = op.getVatNo() + op.getProduct_no() + op.getSelNo();
-                                    keyValue.put(key, myList.size() - 1);
+                                        myList.add(op);
+                                        String key = op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo();
+                                        keyValue.put(key, myList.size() - 1);
 //                                }
-                                    dataList.add(op);
+                                        dataList.add(op);
+                                    }
                                 }
+                                mAdapter.notifyDataSetChanged();
                             }
-                            mAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
-            }, json);
-            }else
-            Toast.makeText(getActivity(),"申请单号为空！",Toast.LENGTH_SHORT).show();
+                }, json);
+            } else
+                Toast.makeText(getActivity(), "申请单号为空！", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
 
         }
@@ -280,9 +283,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         ButterKnife.unbind(this);
         clearData();
         myList.clear();
-        App.APPLY_NO=null;
+        App.APPLY_NO = null;
         App.OUTPUT_DETAIL_LIST.clear();
-
+        App.DATA_KEY.clear();
+        App.KEY = null;
         disRFID();
     }
 
@@ -291,7 +295,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                text1.setText(epcList.size()+"");
+                text1.setText(epcList.size() + "");
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
                 break;
@@ -327,13 +331,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 //                上传数据
                 ArrayList<Output> jsocList = new ArrayList<>();
                 for (Output obj : dataList) {
-                    String key=obj.getVatNo()+obj.getProduct_no()+obj.getSelNo();
+                    String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
                     if (key != null && DATA_KEY.containsKey(key)) {
                         obj.setDevice(App.DEVICE_NO);
-                        Output obj2= (Output) obj.clone();
-                        ArrayList<OutputDetail> newList=new ArrayList<OutputDetail>();
-                        for (OutputDetail od:obj.getList()){
-                            if (DATA_KEY.get(key).contains(od.getFabRool())){
+                        Output obj2 = (Output) obj.clone();
+                        ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
+                        for (OutputDetail od : obj.getList()) {
+                            if (DATA_KEY.get(key).contains(od.getFabRool())) {
                                 newList.add(od);
                             }
                         }
@@ -355,7 +359,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
                         @Override
                         public void onResponse(JSONObject response) {
-                           try{
+                            try {
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
@@ -364,9 +368,9 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                 }
-                           } catch (Exception e) {
-                               e.printStackTrace();
-                           }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }, json);
 
@@ -389,11 +393,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             mAdapter.notifyDataSetChanged();
 
             Output obj = myList.get(position);
-            String key = obj.getVatNo()+obj.getProduct_no()+obj.getSelNo();
-            KEY=key;
+            String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
+            KEY = key;
             OUTPUT_DETAIL_LIST.clear();
             for (Output obj2 : dataList) {
-                if ((obj2.getVatNo()+obj2.getProduct_no()+obj2.getSelNo()).equals(key)) {
+                if ((obj2.getOutp_id() + obj2.getVatNo() + obj2.getProduct_no() + obj2.getSelNo()).equals(key)) {
                     OUTPUT_DETAIL_LIST.add(obj2);
                 }
             }
@@ -410,120 +414,122 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-                switch (msg.arg1) {
-                    case 0x00:
-                        if (App.MUSIC_SWITCH) {
-                            if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
-                                currenttime = System.currentTimeMillis();
-                            }
+            switch (msg.arg1) {
+                case 0x00:
+                    if (App.MUSIC_SWITCH) {
+                        if (System.currentTimeMillis() - currenttime > 150) {
+                            sound.callAlarm();
+                            currenttime = System.currentTimeMillis();
                         }
-                       final String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (!EPC.startsWith("31")&&!epcList.contains(EPC)) {
-                            boolean isData = false;
-                            for (Output data : dataList) {
-                                List<OutputDetail> detailList = data.getList();
-                                if (detailList != null && detailList.size() != 0) {
-                                    for (OutputDetail detail : detailList) {
-                                        if (detail != null && detail.getEpc() != null && detail.getEpc().equals(EPC)) {//判断成功//实盘
-                                            String key1=data.getVatNo()+data.getProduct_no()+data.getSelNo();
-                                                isData = true;
-                                                epcList.add(EPC);
-                                                myList.get(keyValue.get(key1)).addCount();
-                                                if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
-                                                    detail.setFlag(3);//超出配货单量
-                                                } else {
-                                                    detail.setFlag(1);//正常配货
-                                                }
-                                                data.setWeightall(ArithUtil.add(data.getWeightall(),detail.getWeight()));
-                                                text1.setText(epcList.size()+"");
-                                                mAdapter.notifyDataSetChanged();
+                    }
+                    final String EPC = ((String) msg.obj).replaceAll(" ", "");
+                    if (!EPC.startsWith("31") && !epcList.contains(EPC)) {
+                        boolean isData = false;
+                        for (Output data : dataList) {
+                            List<OutputDetail> detailList = data.getList();
+                            if (detailList != null && detailList.size() != 0) {
+                                for (OutputDetail detail : detailList) {
+                                    if (detail != null && detail.getEpc() != null && detail.getEpc().equals(EPC)) {//判断成功//实盘
+                                        String key1 = data.getOutp_id() + data.getVatNo() + data.getProduct_no() + data.getSelNo();
+                                        isData = true;
+                                        epcList.add(EPC);
+                                        myList.get(keyValue.get(key1)).addCount();
+                                        if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
+                                            detail.setFlag(3);//超出配货单量
+                                        } else {
+                                            detail.setFlag(1);//正常配货
                                         }
+                                        data.setWeightall(ArithUtil.add(data.getWeightall(), detail.getWeight()));
+                                        text1.setText(epcList.size() + "");
+                                        mAdapter.notifyDataSetChanged();
                                     }
                                 }
                             }
-                            if (!isData) {
-                                JSONObject epc = new JSONObject();
-                                epc.put("epc", EPC);
-                                final String json = epc.toJSONString();
-                                if (!epcList.contains(EPC)) {
-                                    try {
-                                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                            @Override
-                                            public void onError(Request request, Exception e) {
-                                                if (App.LOGCAT_SWITCH) {
-                                                    Log.i(TAG, "getEpc;" + e.getMessage());
-                                                    Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                }
+                        }
+                        if (!isData) {
+                            JSONObject epc = new JSONObject();
+                            epc.put("epc", EPC);
+                            final String json = epc.toJSONString();
+                            if (!epcList.contains(EPC)) {
+                                try {
+                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                                        @Override
+                                        public void onError(Request request, Exception e) {
+                                            if (App.LOGCAT_SWITCH) {
+                                                Log.i(TAG, "getEpc;" + e.getMessage());
+                                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                             }
-                                            @Override
-                                            public void onResponse(JSONArray jsonArray) {
-                                                    try{
-                                                        List<Inventory> arry;
-                                                        arry = jsonArray.toJavaList(Inventory.class);
-                                                        if (arry != null && arry.size() > 0) {
-                                                            Inventory response = arry.get(0);
-                                                            if (response != null) {
-                                                                epcList.add(response.getEpc());
-                                                                OutputDetail detail = new OutputDetail();
-                                                                detail.setEpc(response.getEpc() + "");
-                                                                detail.setFabRool(response.getFabRool() + "");
-                                                                detail.setWeight(response.getWeight());
-                                                                detail.setWeight_in(response.getWeight_in());
-                                                                detail.setOperator(response.getOperator() + "");
-                                                                detail.setOperatingTime(response.getOperatingTime());
-                                                                detail.setFlag(2);
-                                                                String key2 = response.getVatNo() + response.getProduct_no() + response.getSelNo();
-                                                                if (!keyValue.containsKey(key2)) {
-                                                                    Output data = new Output();
-                                                                    data.setProduct_no(response.getProduct_no() + "");
-                                                                    data.setVatNo(response.getVatNo() + "");
-                                                                    data.setSelNo(response.getSelNo() + "");
-                                                                    data.setColor(response.getColor() + "");
-                                                                    data.setCountOut(0);
-                                                                    data.setCount(1);
-                                                                    data.setCountProfit(1);
-                                                                    data.setCountLosses(0);
-                                                                    data.setFlag(2);
-                                                                    data.setWeightall(response.getWeight());
-                                                                    List<OutputDetail> list = new ArrayList<OutputDetail>();
-                                                                    list.add(detail);
-                                                                    data.setList(list);
-                                                                    dataList.add(data);
-                                                                    myList.add(data);
-                                                                    keyValue.put(key2, myList.size() - 1);
-                                                                } else {
-                                                                    myList.get(keyValue.get(key2)).addCount();
-                                                                    myList.get(keyValue.get(key2)).setWeightall(ArithUtil.add(myList.get(keyValue.get(key2)).getWeightall(), response.getWeight()));
-                                                                    for (Output op : dataList) {
-                                                                        if ((op.getVatNo() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
-                                                                            boolean isIn = false;
-                                                                            for (OutputDetail od : op.getList()) {
-                                                                                if (od.getEpc().equals(detail.getEpc()))
-                                                                                    isIn = true;
-                                                                            }
-                                                                            if (!isIn)
-                                                                                op.getList().add(detail);
-                                                                        }
+                                        }
+
+                                        @Override
+                                        public void onResponse(JSONArray jsonArray) {
+                                            try {
+                                                List<Inventory> arry;
+                                                arry = jsonArray.toJavaList(Inventory.class);
+                                                if (arry != null && arry.size() > 0) {
+                                                    Inventory response = arry.get(0);
+                                                    if (response != null) {
+                                                        epcList.add(response.getEpc());
+                                                        OutputDetail detail = new OutputDetail();
+                                                        detail.setEpc(response.getEpc() + "");
+                                                        detail.setFabRool(response.getFabRool() + "");
+                                                        detail.setWeight(response.getWeight());
+                                                        detail.setWeight_in(response.getWeight_in());
+                                                        detail.setOperator(response.getOperator() + "");
+                                                        detail.setOperatingTime(response.getOperatingTime());
+                                                        detail.setFlag(2);
+                                                        String key2 = "" + response.getVatNo() + response.getProduct_no() + response.getSelNo();
+                                                        if (!keyValue.containsKey(key2)) {
+                                                            Output data = new Output();
+                                                            data.setProduct_no(response.getProduct_no() + "");
+                                                            data.setVatNo(response.getVatNo() + "");
+                                                            data.setSelNo(response.getSelNo() + "");
+                                                            data.setColor(response.getColor() + "");
+                                                            data.setCountOut(0);
+                                                            data.setCount(1);
+                                                            data.setCountProfit(1);
+                                                            data.setCountLosses(0);
+                                                            data.setFlag(2);
+                                                            data.setOutp_id("");
+                                                            data.setWeightall(response.getWeight());
+                                                            List<OutputDetail> list = new ArrayList<OutputDetail>();
+                                                            list.add(detail);
+                                                            data.setList(list);
+                                                            dataList.add(data);
+                                                            myList.add(data);
+                                                            keyValue.put(key2, myList.size() - 1);
+                                                        } else {
+                                                            myList.get(keyValue.get(key2)).addCount();
+                                                            myList.get(keyValue.get(key2)).setWeightall(ArithUtil.add(myList.get(keyValue.get(key2)).getWeightall(), response.getWeight()));
+                                                            for (Output op : dataList) {
+                                                                if ((op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
+                                                                    boolean isIn = false;
+                                                                    for (OutputDetail od : op.getList()) {
+                                                                        if (od.getEpc().equals(detail.getEpc()))
+                                                                            isIn = true;
                                                                     }
+                                                                    if (!isIn)
+                                                                        op.getList().add(detail);
                                                                 }
                                                             }
-                                                            text1.setText(epcList.size() + "");
-                                                            mAdapter.notifyDataSetChanged();
                                                         }
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
                                                     }
+                                                    text1.setText(epcList.size() + "");
+                                                    mAdapter.notifyDataSetChanged();
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
-                                        }, json);
-                                    } catch (IOException e) {
-                                        Log.i(TAG, "");
-                                    }
+                                        }
+                                    }, json);
+                                } catch (IOException e) {
+                                    Log.i(TAG, "");
                                 }
                             }
                         }
-                        break;
-                }
+                    }
+                    break;
+            }
         }
     };
 
@@ -581,12 +587,14 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
-                    String key=item.getVatNo()+item.getProduct_no()+item.getSelNo();
+                    String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
+                    if (item.getCountOut() == 0)
+                        cb.setChecked(false);
                     if (DATA_KEY.containsKey(key))
                         cb.setChecked(true);
                     if (cb.isChecked()) {
                         if (!DATA_KEY.containsKey(key))
-                            DATA_KEY.put(key,new ArrayList<String>());
+                            DATA_KEY.put(key, new ArrayList<String>());
                     } else {
                         if (DATA_KEY.containsKey(key))
                             DATA_KEY.remove(key);
@@ -594,10 +602,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getCount() == item.getCountOut())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                    else if (item.getCount() > item.getCountOut())
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                     else if (item.getFlag() == 2)
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    else if (item.getCount() > item.getCountOut())
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                     holder.setText(R.id.item1, item.getProduct_no() + "");
@@ -618,10 +626,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                 c.setChecked(isChecked);
                             }
                         } else {
-                            String key=item.getVatNo()+item.getProduct_no()+item.getSelNo();
+                            String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
                             if (isChecked) {
                                 if (!DATA_KEY.containsKey(key))
-                                    DATA_KEY.put(key,new ArrayList<String>());
+                                    DATA_KEY.put(key, new ArrayList<String>());
                             } else {
                                 if (DATA_KEY.containsKey(key))
                                     DATA_KEY.remove(key);

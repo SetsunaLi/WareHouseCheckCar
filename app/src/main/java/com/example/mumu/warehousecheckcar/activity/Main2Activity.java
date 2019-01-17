@@ -297,6 +297,9 @@ public class Main2Activity extends AppCompatActivity
                     selectItem(6);
                 }else if(fragment !=null&&(fragment instanceof OutApplyDetailFragment)){
                     getFragmentManager().popBackStack();
+                    Fragment fragment1=getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
+                    if (fragment1 instanceof OutApplyFragment)
+                        ((OutApplyFragment)fragment1).upLoad();
                 }
                     /*else if (fragment != null && (fragment instanceof OutApplyFragment)){
                     ((OutApplyFragment)fragment).onBackPressed();

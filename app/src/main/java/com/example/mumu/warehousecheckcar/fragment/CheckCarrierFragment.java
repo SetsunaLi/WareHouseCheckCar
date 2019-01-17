@@ -133,6 +133,9 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                         }
                         String EPC = (String) msg.obj;
                         EPC.replaceAll(" ", "");
+                       /* if (EPC.startsWith("31")) {
+                            EPC.replaceAll(" ", "");
+                        }*/
 //                        final String json = EPC;
                         JSONObject epc = new JSONObject();
                         epc.put("epc", EPC);

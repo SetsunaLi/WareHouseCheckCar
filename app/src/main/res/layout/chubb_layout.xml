@@ -23,9 +23,6 @@
             android:layout_height="match_parent"
             android:layout_margin="18dp"
             android:src="@mipmap/screen"/>
-        <ProgressBar
-            android:layout_width=""
-            android:layout_height="" />
     </RelativeLayout>
     <View style="@style/view_item_bottom" />
     <LinearLayout
@@ -43,21 +40,10 @@
             style="@style/text_style2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
+            android:layout_weight="5"
             android:gravity="left|center_vertical"
             android:text="10"/>
-        <TextView
-            style="@style/text_style2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="申请单号："/>
-        <TextView
-            android:id="@+id/text2"
-            style="@style/text_style2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="left|center_vertical"/>
+
     </LinearLayout>
     <View style="@style/view_item_bottom" />
     <LinearLayout

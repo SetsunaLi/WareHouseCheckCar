@@ -7,6 +7,8 @@ import java.util.List;
  */
 
 public class Output implements Cloneable {
+    /***id*/
+    private String outp_id;
     /***布号*/
     private String product_no;
     /***缸号*/
@@ -33,6 +35,14 @@ public class Output implements Cloneable {
     private List<OutputDetail> list;
     /***标志位,0为正常，2为非正常申请单扫码*/
     private int flag=0;
+
+    public String getOutp_id() {
+        return outp_id;
+    }
+
+    public void setOutp_id(String outp_id) {
+        this.outp_id = outp_id;
+    }
 
     public void addCount(){
         count++;

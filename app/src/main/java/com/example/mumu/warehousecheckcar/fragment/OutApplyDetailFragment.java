@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
@@ -70,13 +71,14 @@ public class OutApplyDetailFragment extends Fragment{
         super.onCreate(savedInstanceState);
         initData();
     }
-
+    int COUNT;
     public void initData() {
         myList = new ArrayList<>();
         myList.add(new OutputDetail());//增加一个为头部
-        if (App.OUTPUT_DETAIL_LIST != null && App.OUTPUT_DETAIL_LIST.size() > 0)
+        if (App.OUTPUT_DETAIL_LIST != null && App.OUTPUT_DETAIL_LIST.size() > 0) {
             myList.addAll(App.OUTPUT_DETAIL_LIST.get(0).getList());
-
+            COUNT=App.OUTPUT_DETAIL_LIST.get(0).getCountOut();
+        }
         Collections.sort(myList, new Comparator<OutputDetail>() {
             @Override
             public int compare(OutputDetail t0, OutputDetail t1) {
@@ -195,7 +197,7 @@ public class OutApplyDetailFragment extends Fragment{
         @Override
         public void convert(RecyclerHolder holder, final OutputDetail item, final int position) {
             if (item != null) {
-                CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                final CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
                     if (dataKey.contains(item.getFabRool()))
                         cb.setChecked(true);
@@ -239,8 +241,14 @@ public class OutApplyDetailFragment extends Fragment{
                             }
                         } else {
                             if (isChecked) {
-                                if (!dataKey.contains(item.getFabRool()))
-                                    dataKey.add(item.getFabRool());
+                                if (!dataKey.contains(item.getFabRool())) {
+                                    if (dataKey.size()<COUNT) {
+                                        dataKey.add(item.getFabRool());
+                                    }else {
+                                        cb.setChecked(false);
+                                        Toast.makeText(getActivity(),"已选布匹超出申请数量！",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
                             } else {
                                 if (dataKey.contains(item.getFabRool()))
                                     dataKey.remove(item.getFabRool());
