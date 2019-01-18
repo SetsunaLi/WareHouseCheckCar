@@ -106,8 +106,8 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null&&(App.CARRIER.getTrayNo()!=null||App.CARRIER .getLocationNo()!=null)&&
-                (!App.CARRIER.getTrayNo().equals("")||!App.CARRIER.getLocationNo().equals(""))) {
+        if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
+                (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {
             Fragment fragment = CheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -132,47 +132,49 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                             }
                         }
                         String EPC = (String) msg.obj;
-                        EPC.replaceAll(" ", "");
+                        EPC=EPC.replaceAll(" ", "");
                        /* if (EPC.startsWith("31")) {
                             EPC.replaceAll(" ", "");
                         }*/
 //                        final String json = EPC;
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        if (EPC.startsWith("31B5A5AF")) {
+                            JSONObject epc = new JSONObject();
+                            epc.put("epc", EPC);
+                            final String json = epc.toJSONString();
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getInventory;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onResponse(Carrier response) {
-                                   try {
-                                    if (response != null&&(response.getTrayNo()!=null||response .getLocationNo()!=null)&&
-                                            (!response.getTrayNo().equals("")||!response.getLocationNo().equals(""))) {
-                                        Message msg = handler.obtainMessage();
-                                        msg.arg1 = 0x01;
-                                        msg.obj = response;
-                                        handler.sendMessage(msg);
+                                    @Override
+                                    public void onResponse(Carrier response) {
+                                        try {
+                                            if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
+                                                    (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
+                                                Message msg = handler.obtainMessage();
+                                                msg.arg1 = 0x01;
+                                                msg.obj = response;
+                                                handler.sendMessage(msg);
+                                            }
+                                        } catch (Exception e) {
+
+                                        }
                                     }
-                                   }catch (Exception e){
+                                }, json);
+                            } catch (IOException e) {
 
-                                   }
-                                }
-                            }, json);
-                        } catch (IOException e) {
-
+                            }
                         }
                         break;
                     case 0x01:
                         Carrier response = (Carrier) msg.obj;
-                        if (response != null&&(response.getTrayNo()!=null||response .getLocationNo()!=null)&&
-                                (!response.getTrayNo().equals("")||!response.getLocationNo().equals(""))) {
+                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
+                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
                             App.CARRIER = response;
                             text2.setText(response.getLocationNo() + "");
                             text1.setText(response.getTrayNo() + "");

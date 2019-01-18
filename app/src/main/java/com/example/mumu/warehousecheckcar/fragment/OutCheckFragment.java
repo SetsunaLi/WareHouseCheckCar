@@ -241,12 +241,12 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                             }
                         }
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (!EPC.startsWith("31")&&!dataEPC.contains(EPC)) {
+                        if (EPC.startsWith("3035A537")&&!dataEPC.contains(EPC)) {
 //                        查询
-                           /* JSONObject epc = new JSONObject();
+                            JSONObject epc = new JSONObject();
                             epc.put("epc", EPC);
-                            final String json = epc.toJSONString();*/
-                            final String json=JSON.toJSONString(EPC);
+                            final String json = epc.toJSONString();
+//                            final String json=JSON.toJSONString(EPC);
 //                            final String json = JSON.toJSONString(EPC);
                                     try {
                                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<OutCheckDetail>>() {
@@ -489,6 +489,10 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
+                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                        cb.setChecked(false);
+                        cb.setVisibility(View.INVISIBLE);
+                    }
                     if (cb.isChecked()) {
                         if (!dataKEY.contains(item.getVatNo()))
                             dataKEY.add(item.getVatNo());

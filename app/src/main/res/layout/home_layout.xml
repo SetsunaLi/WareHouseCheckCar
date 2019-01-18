@@ -195,9 +195,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/setting_l"
+                android:drawableTop="@mipmap/chubb_l"
                 android:onClick="setClick"
-                android:text="@string/btn_setting" />
+                android:text="@string/btn_chubb" />
         </LinearLayout>
 
         <LinearLayout

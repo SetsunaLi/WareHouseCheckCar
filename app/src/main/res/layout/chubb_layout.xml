@@ -21,7 +21,7 @@
             android:id="@+id/imgview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="18dp"
+            android:layout_margin="58dp"
             android:src="@mipmap/screen"/>
     </RelativeLayout>
     <View style="@style/view_item_bottom" />

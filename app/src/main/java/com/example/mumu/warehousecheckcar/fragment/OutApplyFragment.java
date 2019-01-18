@@ -250,6 +250,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                             List<Output> response;
                             response = json.toJavaList(Output.class);
                             if (response != null && response.size() != 0) {
+                                clearData();
                                 for (Output op : response) {
                                     if (op != null && op.getVatNo() != null) {
 //                                if (keyValue.containsKey(op.getVatNo())) {//里面有
@@ -423,7 +424,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         }
                     }
                     final String EPC = ((String) msg.obj).replaceAll(" ", "");
-                    if (!EPC.startsWith("31") && !epcList.contains(EPC)) {
+                    if (EPC.startsWith("3035A537") && !epcList.contains(EPC)) {
                         boolean isData = false;
                         for (Output data : dataList) {
                             List<OutputDetail> detailList = data.getList();
@@ -587,6 +588,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
+                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                        cb.setChecked(false);
+                        cb.setVisibility(View.INVISIBLE);
+                    }
                     String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
                     if (item.getCountOut() == 0)
                         cb.setChecked(false);

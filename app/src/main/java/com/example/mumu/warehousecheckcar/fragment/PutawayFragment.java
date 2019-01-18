@@ -240,7 +240,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     }
                     RXInventoryTag tag = (RXInventoryTag) msg.obj;
                     final String EPC = tag.strEPC.replaceAll(" ", "");
-                    if (!EPC.startsWith("31")&&!epcList.contains(EPC)) {
+                    if (EPC.startsWith("3035A537")&&!epcList.contains(EPC)) {
                         JSONObject epc = new JSONObject();
                         epc.put("epc", EPC);
                         final String json = epc.toJSONString();
@@ -464,6 +464,10 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
+                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                        cb.setChecked(false);
+                        cb.setVisibility(View.INVISIBLE);
+                    }
                     if (cb.isChecked()) {
                         if (!dataKey.contains(item.getVatNo()))
                             dataKey.add(item.getVatNo());

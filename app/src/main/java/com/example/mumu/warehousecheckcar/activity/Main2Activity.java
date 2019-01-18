@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyDetailFragment;
@@ -181,7 +182,7 @@ public class Main2Activity extends AppCompatActivity
                 fragment = OutCheckCarFragment.newInstance();
                 break;
             case 3:
-                fragment = SettingFragment.newInstance();
+                fragment = ChubbFragment.newInstance();
                 break;
             case 4:
                 fragment= PutawayCarrierFragment.newInstance();
@@ -192,7 +193,13 @@ public class Main2Activity extends AppCompatActivity
             case 6:
                 fragment = CheckCarrierFragment.newInstance();
                 break;
-            case 7:
+            case 7://寻货待开发
+
+                break;
+            case 8:
+                fragment = SettingFragment.newInstance();
+                break;
+            case 9:
                 fragment = AboutFragment.newInstance();
                 break;
             default:

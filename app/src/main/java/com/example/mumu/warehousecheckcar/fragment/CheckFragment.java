@@ -210,6 +210,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             List<Inventory> response;
                             response = jsonArray.toJavaList(Inventory.class);
                             if (response != null && response.size() != 0) {
+                                clearData();
                                 for (Inventory obj : response) {
                                     if (obj != null && obj.getVatNo() != null) {
                                         if (keyValue.containsKey(obj.getVatNo())) {//里面有
@@ -282,7 +283,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             }
                         }
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (!EPC.startsWith("31")&&!epcList.contains(EPC)) {
+                        if (EPC.startsWith("3035A537")&&!epcList.contains(EPC)) {
                             JSONObject epc = new JSONObject();
                             epc.put("epc", EPC);
                             final String json = epc.toJSONString();
@@ -501,6 +502,10 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
+                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                        cb.setChecked(false);
+                        cb.setVisibility(View.INVISIBLE);
+                    }
                     if (cb.isChecked()) {
                         if (!dataKEY.contains(item.getVatNo()))
                             dataKEY.add(item.getVatNo());

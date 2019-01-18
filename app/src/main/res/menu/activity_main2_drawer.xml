@@ -16,7 +16,7 @@
             android:title="Slideshow" />
         <item
             android:id="@+id/nav_item4"
-            android:icon="@mipmap/setting_s"
+            android:icon="@mipmap/chubb_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item5"
@@ -30,10 +30,23 @@
             android:id="@+id/nav_item7"
             android:icon="@mipmap/individuality3_s"
             android:title="Tools" />
+        <item
+            android:id="@+id/nav_item8"
+            android:icon="@mipmap/find_s"
+            android:title="Tools" />
+     <!--   <item
+            android:id="@+id/nav_item9"
+            android:icon="@mipmap/individuality3_s"
+            android:title="Tools" />-->
+
     </group>
 
     <item android:title="Communicate">
         <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@mipmap/setting_s"
+                android:title="Share" />
             <item
                 android:id="@+id/nav_about"
                 android:icon="@mipmap/about_s"

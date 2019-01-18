@@ -132,38 +132,40 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                             }
                         }
                         String EPC = (String) msg.obj;
-                        EPC.replaceAll(" ", "");
+                        EPC=EPC.replaceAll(" ", "");
+                        if (EPC.startsWith("31B5A5AF")) {
 //                        final String json = EPC;
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onResponse(Carrier response) {
-                                    try{
-                                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
-                                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
-                                            Message msg = handler.obtainMessage();
-                                            msg.arg1 = 0x01;
-                                            msg.obj = response;
-                                            handler.sendMessage(msg);
+                            JSONObject epc = new JSONObject();
+                            epc.put("epc", EPC);
+                            final String json = epc.toJSONString();
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getInventory;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
-                                    } catch (Exception e) {
-
                                     }
-                                }
-                            }, json);
-                        } catch (IOException e) {
 
+                                    @Override
+                                    public void onResponse(Carrier response) {
+                                        try {
+                                            if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
+                                                    (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
+                                                Message msg = handler.obtainMessage();
+                                                msg.arg1 = 0x01;
+                                                msg.obj = response;
+                                                handler.sendMessage(msg);
+                                            }
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
+                                }, json);
+                            } catch (IOException e) {
+
+                            }
                         }
                         break;
                     case 0x01:
