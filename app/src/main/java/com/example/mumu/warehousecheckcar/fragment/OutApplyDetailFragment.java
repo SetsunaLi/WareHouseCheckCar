@@ -216,13 +216,13 @@ public class OutApplyDetailFragment extends Fragment{
                     } else if (item.getFlag() == 1) {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                         cb.setEnabled(true);
-                    } else if (item.getFlag() == 2) {//错
+                    } /*else if (item.getFlag() == 2) {//错
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         cb.setEnabled(true);
                     } else if (item.getFlag() == 3) {//多
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                         cb.setEnabled(true);
-                    }
+                    }*/
 
                     holder.setText(R.id.item1, item.getFabRool() + "");
                     if (App.OUTPUT_DETAIL_LIST != null && App.OUTPUT_DETAIL_LIST.size() > 0)

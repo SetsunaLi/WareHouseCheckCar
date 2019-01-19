@@ -485,9 +485,13 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
 
                 if (position != 0) {
-                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
-                        cb.setVisibility(View.INVISIBLE);
+                        if (cb.getVisibility()!=View.INVISIBLE)
+                            cb.setVisibility(View.INVISIBLE);
+                    }else {
+                        if (cb.getVisibility()!=View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
                     }
                     if (cb.isChecked()) {
                         if (!dataKEY.contains(item.getVatNo()))

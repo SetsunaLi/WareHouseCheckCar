@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
@@ -42,6 +43,8 @@ import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
+import com.example.mumu.warehousecheckcar.listener.ComeBack;
+import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.rfid.RFIDReaderHelper;
 
@@ -89,8 +92,9 @@ public class Main2Activity extends AppCompatActivity
         init2D();
 //      首页
         selectItem(0);
+        comeBack=ComeBack.getInstance();
     }
-
+    private ComeBack comeBack;
     //    导航数组
     private String[] mOptionTitle;
     private EditTextPreference systemVersion, systemIP, systemPort, deviceNumber;
@@ -265,6 +269,7 @@ public class Main2Activity extends AppCompatActivity
         selectItem(6);
     }
 
+
     //返回键监听
     @Override
     public void onBackPressed() {
@@ -304,9 +309,8 @@ public class Main2Activity extends AppCompatActivity
                     selectItem(6);
                 }else if(fragment !=null&&(fragment instanceof OutApplyDetailFragment)){
                     getFragmentManager().popBackStack();
-                    Fragment fragment1=getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-                    if (fragment1 instanceof OutApplyFragment)
-                        ((OutApplyFragment)fragment1).upLoad();
+                    if (comeBack.fragmentCallBackListener!=null)
+                        comeBack.fragmentCallBackListener.comeBackListener();
                 }
                     /*else if (fragment != null && (fragment instanceof OutApplyFragment)){
                     ((OutApplyFragment)fragment).onBackPressed();

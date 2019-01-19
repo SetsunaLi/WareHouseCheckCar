@@ -232,7 +232,7 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                 obj.put("epc", EPC);
                 String json = obj.toJSONString();
                 try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/getCheckByEpc", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
                             if (App.LOGCAT_SWITCH) {
@@ -242,41 +242,38 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                         }
 
                         @Override
-                        public void onResponse(ArrayList<InCheckDetail> list) {
+                        public void onResponse(JSONObject object) {
                             try {
-                                if (list != null && list.size() != 0){
-                                    InCheckDetail response=list.get(0);
-                                /*List<InCheckDetail> arry;
-                                arry = jsonArray.toJavaList(InCheckDetail.class);
-                                if (arry != null && arry.size() > 0) {
-                                    InCheckDetail response = arry.get(0);*/
-                                    if (response != null) {
-                                        if (!epcList.contains(response.getEpc())) {
-                                            epcList.add(response.getEpc());
-                                            myList.add(response);
-                                            Collections.sort(myList, new Comparator<InCheckDetail>() {
-                                                @Override
-                                                public int compare(InCheckDetail obj1, InCheckDetail obj2) {
-                                                    String aFab = obj1.getFabRool();
-                                                    if (aFab == null||aFab.equals(""))
-                                                        return -1;
-                                                    String bFab = obj2.getFabRool();
-                                                    if (bFab == null||bFab.equals(""))
+                            if (object.getJSONObject("data")!=null){
+                                JSONObject obj=object.getJSONObject("data");
+                                InCheckDetail value=obj.toJavaObject(InCheckDetail.class);
+                                if (value != null) {
+                                    if (!epcList.contains(value.getEpc())) {
+                                        epcList.add(value.getEpc());
+                                        myList.add(value);
+                                        Collections.sort(myList, new Comparator<InCheckDetail>() {
+                                            @Override
+                                            public int compare(InCheckDetail obj1, InCheckDetail obj2) {
+                                                String aFab = obj1.getFabRool();
+                                                if (aFab == null||aFab.equals(""))
+                                                    return -1;
+                                                String bFab = obj2.getFabRool();
+                                                if (bFab == null||bFab.equals(""))
+                                                    return 1;
+                                                if (aFab != null && bFab != null) {
+                                                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                                                         return 1;
-                                                    if (aFab != null && bFab != null) {
-                                                        if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
-                                                            return 1;
-                                                        }
-                                                        return -1;
                                                     }
-                                                    return 0;
+                                                    return -1;
                                                 }
-                                            });
-                                        }
+                                                return 0;
+                                            }
+                                        });
                                     }
                                     text1.setText(epcList.size() + "");
                                     mAdapter.notifyDataSetChanged();
                                 }
+                            }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -425,9 +422,13 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
 
                 String key=item.getEpc();
                 if (position != 0) {
-                    if ((item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals(""))){
+                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
+                        if (cb.getVisibility()!=View.INVISIBLE)
                         cb.setVisibility(View.INVISIBLE);
+                    }else {
+                        if (cb.getVisibility()!=View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
                     }
                     if (cb.isChecked()) {
                         if (!dataKey.contains(key))

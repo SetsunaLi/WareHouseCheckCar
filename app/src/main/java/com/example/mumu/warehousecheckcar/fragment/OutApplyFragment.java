@@ -42,6 +42,8 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.listener.ComeBack;
+import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
@@ -68,7 +70,8 @@ import static com.example.mumu.warehousecheckcar.application.App.OUTPUT_DETAIL_L
  * Created by mumu on 2018/12/8.
  */
 
-public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, BasePullUpRecyclerAdapter.OnItemClickListener {
+public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, BasePullUpRecyclerAdapter.OnItemClickListener
+,FragmentCallBackListener{
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.button1)
@@ -128,6 +131,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         recyle.setAdapter(mAdapter);
 
         initRFID();
+        ComeBack.getInstance().setCallbackLiatener(this);
         return view;
     }
 
@@ -435,11 +439,12 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         isData = true;
                                         epcList.add(EPC);
                                         myList.get(keyValue.get(key1)).addCount();
-                                        if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
+                                        detail.setFlag(1);
+                                        /*if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
                                             detail.setFlag(3);//超出配货单量
                                         } else {
                                             detail.setFlag(1);//正常配货
-                                        }
+                                        }*/
                                         data.setWeightall(ArithUtil.add(data.getWeightall(), detail.getWeight()));
                                         text1.setText(epcList.size() + "");
                                         mAdapter.notifyDataSetChanged();
@@ -558,6 +563,12 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     }
 
+    @Override
+    public void comeBackListener() {
+        mAdapter.notifyDataSetChanged();
+
+    }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
         private Context context;
 
@@ -588,9 +599,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
-                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
-                        cb.setVisibility(View.INVISIBLE);
+                        if (cb.getVisibility()!=View.INVISIBLE)
+                            cb.setVisibility(View.INVISIBLE);
+                    }else {
+                        if (cb.getVisibility()!=View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
                     }
                     String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
                     if (item.getCountOut() == 0)
@@ -618,8 +633,24 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     holder.setText(R.id.item3, item.getColor() + "");
                     holder.setText(R.id.item4, item.getVatNo() + "");
                     holder.setText(R.id.item5, item.getCountOut() + "");
-                    holder.setText(R.id.item6, item.getCount() + "");
+                    holder.setText(R.id.item9, item.getCount() + "");
                     holder.setText(R.id.item7, item.getWeightall() + "");
+                    if (DATA_KEY.containsKey(key)) {
+                        int countChoose=0;
+                        double weightChoose=0.0;
+                        for (OutputDetail od : item.getList()) {
+                            if (DATA_KEY.get(key).contains(od.getFabRool())){
+                                countChoose++;
+                                weightChoose=ArithUtil.add(weightChoose, od.getWeight());
+                            }
+                        }
+                        holder.setText(R.id.item6, countChoose + "");
+                        holder.setText(R.id.item8, weightChoose + "");
+                    }else {
+                        holder.setText(R.id.item6, "0");
+                        holder.setText(R.id.item8, "0.0");
+                    }
+
                 }
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override

@@ -158,7 +158,6 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
 
-        text2.setText(App.APPLY_NO + "");
     }
 
     private void initRFID() {
@@ -191,7 +190,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
             if (App.CARRIER.getLocationNo() != null)
                 text2.setText(App.CARRIER.getLocationNo() + "");
             if (App.CARRIER.getTrayNo() != null)
-                text2.setText(App.CARRIER.getTrayNo() + "");
+                text3.setText(App.CARRIER.getTrayNo() + "");
         }
     }
 
@@ -464,9 +463,13 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 if (position != 0) {
-                    if (item.getVatNo().equals("")&&item.getProduct_no().equals("")&&item.getSelNo().equals("")){
+                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
-                        cb.setVisibility(View.INVISIBLE);
+                        if (cb.getVisibility()!=View.INVISIBLE)
+                            cb.setVisibility(View.INVISIBLE);
+                    }else {
+                        if (cb.getVisibility()!=View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
                     }
                     if (cb.isChecked()) {
                         if (!dataKey.contains(item.getVatNo()))
