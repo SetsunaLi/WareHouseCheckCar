@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
@@ -42,14 +42,19 @@ import butterknife.OnClick;
 public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
 
     private final String TAG = "CheckCarrierFragment";
-    @Bind(R.id.text1)
-    TextView text1;
-    @Bind(R.id.text2)
-    TextView text2;
+    /*  @Bind(R.id.text1)
+      TextView text1;
+      @Bind(R.id.text2)
+      TextView text2;*/
     @Bind(R.id.relativelayout)
     LinearLayout relativelayout;
     @Bind(R.id.button2)
     Button button2;
+    @Bind(R.id.edittext1)
+    EditText edittext1;
+    @Bind(R.id.edittext2)
+    EditText edittext2;
+
 
     private CheckCarrierFragment() {
     }
@@ -132,7 +137,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                             }
                         }
                         String EPC = (String) msg.obj;
-                        EPC=EPC.replaceAll(" ", "");
+                        EPC = EPC.replaceAll(" ", "");
                        /* if (EPC.startsWith("31")) {
                             EPC.replaceAll(" ", "");
                         }*/
@@ -176,8 +181,8 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                         if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
                                 (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
                             App.CARRIER = response;
-                            text2.setText(response.getLocationNo() + "");
-                            text1.setText(response.getTrayNo() + "");
+                            edittext2.setText(response.getLocationNo() + "");
+                            edittext1.setText(response.getTrayNo() + "");
                         }
                         break;
                 }

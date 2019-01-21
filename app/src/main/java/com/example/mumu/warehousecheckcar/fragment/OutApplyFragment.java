@@ -152,7 +152,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.apply_item_layout_1, null);
-        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 //    主页返回执行
@@ -659,7 +658,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                             for (int i = 1; i < myList.size(); i++) {
                                 View view = llm.findViewByPosition(i);
                                 CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                c.setChecked(isChecked);
+                                if (c.getVisibility()==View.VISIBLE)
+                                    c.setChecked(isChecked);
                             }
                         } else {
                             String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();

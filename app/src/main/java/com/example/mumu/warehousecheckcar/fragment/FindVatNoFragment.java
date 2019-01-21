@@ -9,71 +9,30 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by mumu on 2018/11/19.
+ * Created by mumu on 2019/1/21.
  */
 
-public class HomeFragment extends Fragment {
-
-   /* @Bind(R.id.iv)
-    ImageView iv;
-    @Bind(R.id.tv1)
-    TextView tv1;
-    @Bind(R.id.tv2)
-    TextView tv2;
-    @Bind(R.id.ll1)
-    LinearLayout ll1;
-    @Bind(R.id.tv3)
-    TextView tv3;
-    @Bind(R.id.ll2)
-    LinearLayout ll2;
-    @Bind(R.id.tv4)
-    TextView tv4;
-    @Bind(R.id.ll3)
-    LinearLayout ll3;
-    @Bind(R.id.tv5)
-    TextView tv5;
-    @Bind(R.id.ll4)
-    LinearLayout ll4;
-    @Bind(R.id.tv6)
-    TextView tv6;
-    @Bind(R.id.ll5)
-    LinearLayout ll5;
-*/
-
-    private static HomeFragment fragment;
-    private HomeFragment(){    }
-    public static HomeFragment newInstance(){
+public class FindVatNoFragment extends Fragment {
+    private static FindVatNoFragment fragment;
+    private FindVatNoFragment(){    }
+    public static FindVatNoFragment newInstance(){
         if (fragment==null);
-        fragment=new HomeFragment();
+        fragment=new FindVatNoFragment();
         return fragment;
     }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_layout, container, false);
+        View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
         ButterKnife.bind(this, view);
-//        initView();
         return view;
     }
-
-  /*  private void initView() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日  HH:mm:ss");
-        Date date=new Date(System.currentTimeMillis());
-        tv3.setText(""+simpleDateFormat.format(date));
-    }*/
 
     //右上角列表R.menu.main2
     @Override
@@ -91,10 +50,6 @@ public class HomeFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //    主页返回执行
-    public void onBackPressed() {
     }
 
     @Override

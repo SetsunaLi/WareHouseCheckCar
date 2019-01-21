@@ -26,15 +26,21 @@
                 android:text="托盘编号："
                 style="@style/text_style1"
                 android:textSize="28sp"/>
-
-            <TextView
+                <EditText
+                    android:id="@+id/edittext1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    style="@style/text_style1"/>
+            <!--<TextView
                 android:id="@+id/text1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text=""
-                style="@style/text_style1"/>
+                style="@style/text_style1"/>-->
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,14 +57,21 @@
                 android:text="库位编号："
                 style="@style/text_style1"
                 android:textSize="28sp"/>
-            <TextView
+            <EditText
+                android:id="@+id/edittext2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                style="@style/text_style1"/>
+           <!-- <TextView
                 android:id="@+id/text2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text=""
-                style="@style/text_style1"/>
+                style="@style/text_style1"/>-->
         </LinearLayout>
     </LinearLayout>
 

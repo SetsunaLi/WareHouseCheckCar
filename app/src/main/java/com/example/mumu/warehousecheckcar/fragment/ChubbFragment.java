@@ -133,7 +133,6 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.chubb_item, null);
-        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 
@@ -453,7 +452,8 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                             for (int i = 1; i < myList.size(); i++) {
                                 View view = llm.findViewByPosition(i);
                                 CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                c.setChecked(isChecked);
+                                if (c.getVisibility()==View.VISIBLE)
+                                    c.setChecked(isChecked);
                             }
                         } else {
                             if (isChecked) {

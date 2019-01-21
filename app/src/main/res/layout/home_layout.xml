@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:weightSum="5">
 
-    <ScrollView
+   <!-- <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
@@ -152,14 +152,14 @@
 <View android:layout_width="match_parent"
         android:layout_height="3dp"
     android:background="@drawable/side_nav_bar"
-    />
+    />-->
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/home_margin"
         android:layout_marginTop="9dp"
-        android:layout_weight="2"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <LinearLayout
@@ -183,21 +183,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
-                android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/check_l"
                 android:onClick="cheClick"
                 android:text="@string/btn_check" />
 
-            <Button
-                style="@style/DashboardButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/home_button_margin2"
-                android:layout_weight="1"
-                android:drawableTop="@mipmap/chubb_l"
-                android:onClick="setClick"
-                android:text="@string/btn_chubb" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -222,12 +213,29 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
-                android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/individuality2_l"
                 android:onClick="inClick2"
                 android:text="@string/btn_individuality2" />
 
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/chubb_l"
+                android:onClick="setClick"
+                android:text="@string/btn_chubb" />
             <Button
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
@@ -237,6 +245,32 @@
                 android:drawableTop="@mipmap/individuality3_l"
                 android:onClick="inClick3"
                 android:text="@string/btn_individuality3" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/find_l"
+                android:onClick="findClick"
+                android:text="@string/btn_finding" />
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/setting_l"
+                android:onClick="settingClick"
+                android:text="@string/btn_setting" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

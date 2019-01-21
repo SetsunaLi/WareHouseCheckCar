@@ -538,6 +538,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             for (int i = 1; i < myList.size(); i++) {
                                 View view = ms.findViewByPosition(i);
                                 CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
+                                if (c.getVisibility()==View.VISIBLE)
                                 c.setChecked(isChecked);
                             }
                         } else {

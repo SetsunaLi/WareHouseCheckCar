@@ -189,7 +189,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_item_layout, null);
-        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 
@@ -524,7 +523,8 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                             for (int i = 1; i < myList.size(); i++) {
                                 View view = ms.findViewByPosition(i);
                                 CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                c.setChecked(isChecked);
+                                if (c.getVisibility()==View.VISIBLE)
+                                    c.setChecked(isChecked);
                             }
                         } else {
                             if (isChecked) {
