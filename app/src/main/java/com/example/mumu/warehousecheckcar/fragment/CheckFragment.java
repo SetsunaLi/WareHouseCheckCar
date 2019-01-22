@@ -133,6 +133,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         keyValue = new HashMap<>();
         dataKEY = new ArrayList<>();
         text1.setText(0 + "");
+
         if (App.CARRIER != null) {
             if (App.CARRIER.getLocationNo() != null)
                 text2.setText(App.CARRIER.getLocationNo() + "");
@@ -178,7 +179,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.check_item, null);
-        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
+//        ((CheckBox) view.findViewById(R.id.checkbox1)).setVisibility(View.INVISIBLE);
         mAdapter.setHeader(view);
     }
 
@@ -194,7 +195,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
             text1.setText(0 + "");
             final String json = JSON.toJSONString(App.CARRIER);
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
@@ -205,8 +206,10 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     }
 
                     @Override
-                    public void onResponse(JSONArray jsonArray) {
-                       try{
+                    public void onResponse(JSONObject jsonObject) {
+                        try{
+                            if (jsonObject.get("data")!=null && jsonObject.getIntValue("status")==1){
+                            JSONArray jsonArray =jsonObject.getJSONArray("data");
                             List<Inventory> response;
                             response = jsonArray.toJavaList(Inventory.class);
                             if (response != null && response.size() != 0) {
@@ -228,7 +231,11 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             } else {
                                 Toast.makeText(getActivity(), "该仓位没有库存！", Toast.LENGTH_SHORT).show();
                             }
-                       }catch (Exception e){
+                            }else {
+                                Toast.makeText(getActivity(), "至少需要输入一个有效库位信息！", Toast.LENGTH_SHORT).show();
+                                getActivity().onBackPressed();
+                            }
+                        }catch (Exception e){
 
                        }
                     }
@@ -266,7 +273,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         clearData();
         myList.clear();
         CHECK_DETAIL_LIST.clear();
-        App.CARRIER = null;
+//        App.CARRIER = null;
     }
 
     long currenttime = 0;

@@ -22,5 +22,8 @@
     <color name="colorDialogTitleBG">#0078ff</color>
     <color name="colorDialogButtonYes1">#489eff</color>
     <color name="colorDataNoText">#ffff4c</color>
+    <color name="colorEditNoTextSelect">#90a0cd</color>
+    <color name="colorEditNoBgSelect">#151c32</color>
+
 
 </resources>

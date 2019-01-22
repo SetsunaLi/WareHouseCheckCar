@@ -157,6 +157,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
 
+
     }
 
     private void initRFID() {
@@ -185,12 +186,19 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
     @Override
     public void onResume() {
         super.onResume();
+        text1.setText(0 + "");
         if (App.CARRIER != null) {
             if (App.CARRIER.getLocationNo() != null)
                 text2.setText(App.CARRIER.getLocationNo() + "");
             if (App.CARRIER.getTrayNo() != null)
                 text3.setText(App.CARRIER.getTrayNo() + "");
         }
+        /*if (App.CARRIER != null) {
+            if (App.CARRIER.getLocationNo() != null)
+                text2.setText(App.CARRIER.getLocationNo() + "");
+            if (App.CARRIER.getTrayNo() != null)
+                text3.setText(App.CARRIER.getTrayNo() + "");
+        }*/
     }
 
     //右上角列表R.menu.main2
@@ -219,7 +227,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         clearData();
         myList.clear();
         INPUT_DETAIL_LIST.clear();
-        App.CARRIER=null;
+//        App.CARRIER=null;
 
     }
 

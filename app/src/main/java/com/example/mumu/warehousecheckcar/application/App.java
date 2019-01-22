@@ -52,7 +52,7 @@ public class App extends Application {
 //    public static List<InCheckDetail> OUT_APPLY=new ArrayList<>();
     public static List<Inventory> OUT_APPLY_DETAIL=new ArrayList<>();
 //    盘点库位缓存
-    public static Carrier CARRIER;
+    public static Carrier CARRIER=new Carrier();
 //    盘点明细列表缓存
     public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
 

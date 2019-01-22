@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +79,53 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         sound = new Sound(getActivity());
         getActivity().setTitle("上架");
         button2.setText("确认库位");
+
+        edittext1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+                Log.i("onTextChanged","onTextChanged");
+                String trayNo=charSequence.toString();
+                App.CARRIER.setTrayNo(trayNo);
+                App.CARRIER.setTrayEPC("");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        edittext2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+                Log.i("onTextChanged","onTextChanged");
+                String locationNo=charSequence.toString();
+                App.CARRIER.setLocationNo(locationNo);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        if (App.CARRIER == null)
+            App.CARRIER =new Carrier();
+        /*App.CARRIER.setLocationNo("查布区");
+        App.CARRIER.setTrayNo("TP0002");*/
+        if (App.CARRIER.getLocationNo()!=null&&!App.CARRIER.getLocationNo().equals(""))
+            edittext2.setText(App.CARRIER.getLocationNo());
+        if (App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))
+            edittext1.setText(App.CARRIER.getTrayNo());
         initRFID();
         return view;
     }
@@ -102,7 +151,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        App.CARRIER = null;
+//        App.CARRIER = null;
         disRFID();
     }
 
@@ -110,8 +159,9 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
-                (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {
+        /*if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
+                (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {*/
+        if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
             Fragment fragment = PutawayFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -174,12 +224,18 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                         break;
                     case 0x01:
                         Carrier response = (Carrier) msg.obj;
-                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
+                        /*if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
                                 (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
                             App.CARRIER = response;
                             edittext2.setText(response.getLocationNo() + "");
                             edittext1.setText(response.getTrayNo() + "");
+                        }*/
+                        if (response!=null&&response.getTrayNo()!=null&&!response.getTrayNo().equals("")) {
+                            App.CARRIER.setTrayNo(response.getTrayNo());
+                            edittext1.setText(response.getTrayNo() + "");
                         }
+                        if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
+                            App.CARRIER .setTrayEPC(response.getTrayEPC());
                         break;
                 }
             } catch (Exception e) {

@@ -3,5 +3,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg2">
+    <com.example.mumu.warehousecheckcar.view.FixedEditText
+        android:id="@+id/fixeedittext1"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_margin="30dp"
+        style="@style/edit_style2"
+        android:hint="请输入缸号"/>
 
 </LinearLayout>

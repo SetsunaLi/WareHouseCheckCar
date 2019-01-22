@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.view.FixedEditText;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -20,17 +22,24 @@ import butterknife.ButterKnife;
 
 public class FindVatNoFragment extends Fragment {
     private static FindVatNoFragment fragment;
-    private FindVatNoFragment(){    }
-    public static FindVatNoFragment newInstance(){
-        if (fragment==null);
-        fragment=new FindVatNoFragment();
+    @Bind(R.id.fixeedittext1)
+    FixedEditText fixeedittext1;
+
+    private FindVatNoFragment() {
+    }
+
+    public static FindVatNoFragment newInstance() {
+        if (fragment == null) ;
+        fragment = new FindVatNoFragment();
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
         ButterKnife.bind(this, view);
+        fixeedittext1.setFixedText("缸号：");
         return view;
     }
 
