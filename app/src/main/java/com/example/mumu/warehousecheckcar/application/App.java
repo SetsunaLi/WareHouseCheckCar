@@ -50,9 +50,9 @@ public class App extends Application {
     public static List<OutCheckDetail> OUTDETAIL_LIST=new ArrayList<>();
 //出库申请单
 //    public static List<InCheckDetail> OUT_APPLY=new ArrayList<>();
-    public static List<Inventory> OUT_APPLY_DETAIL=new ArrayList<>();
+//    public static List<Inventory> OUT_APPLY_DETAIL=new ArrayList<>();
 //    盘点库位缓存
-    public static Carrier CARRIER=new Carrier();
+    public static Carrier CARRIER;
 //    盘点明细列表缓存
     public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
 

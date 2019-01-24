@@ -126,11 +126,11 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 break;
             case Config.IP_KEY:
                 setEditTextPre(systemIP);
-                App.IP=systemIP.getText();
+//                App.IP=systemIP.getText();
                 break;
             case Config.PORT_KEY:
                 setEditTextPre(systemPort);
-                App.PORT=systemIP.getText();
+//                App.PORT=systemIP.getText();
                 break;
             case Config.DEVICE_NUMBER_KEY:
                 setEditTextPre(deviceNumber);

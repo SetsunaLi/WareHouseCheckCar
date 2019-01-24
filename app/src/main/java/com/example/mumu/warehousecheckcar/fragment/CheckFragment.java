@@ -222,6 +222,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                             obj.setCountIn(1);
                                             myList.add(obj);
                                             keyValue.put(obj.getVatNo(), myList.size() - 1);
+                                            dataKEY.add(obj.getVatNo());
                                         }
                                         obj.setFlag(0);//默认为0//0为盘亏
                                         dataList.add(obj);
@@ -334,6 +335,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                         response.setFlag(1);
                                                         myList.add(response);
                                                         keyValue.put(response.getVatNo(), myList.size() - 1);
+                                                        dataKEY.add(response.getVatNo());
                                                     }
                                                 }
                                             }
@@ -508,22 +510,44 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         public void convert(RecyclerHolder holder, final Inventory item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (Inventory i: myList){
+                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                    dataKEY.add(i.getVatNo());
+                                }
+                            }else {
+                                dataKEY.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!dataKEY.contains(item.getVatNo()))
+                                    dataKEY.add(item.getVatNo());
+                            } else {
+                                if (dataKEY.contains(item.getVatNo()))
+                                    dataKEY.remove(item.getVatNo());
+                            }
+                        }
+                    }
+                });
                 if (position != 0) {
-                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
+                    if ((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals("")){
                         cb.setChecked(false);
                         if (cb.getVisibility()!=View.INVISIBLE)
                             cb.setVisibility(View.INVISIBLE);
                     }else {
                         if (cb.getVisibility()!=View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
+                        if (dataKEY.contains(item.getEpc()))
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
                     }
-                    if (cb.isChecked()) {
-                        if (!dataKEY.contains(item.getVatNo()))
-                            dataKEY.add(item.getVatNo());
-                    } else {
-                        if (dataKEY.contains(item.getVatNo()))
-                            dataKEY.remove(item.getVatNo());
-                    }
+
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getFlag() == 1)
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
@@ -538,27 +562,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     holder.setText(R.id.item7, item.getCountProfit() + "");
                     holder.setText(R.id.item8, item.getCountIn() - item.getCountReal() + "");
                 }
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = ms.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                c.setChecked(isChecked);
-                            }
-                        } else {
-                            if (isChecked) {
-                                if (!dataKEY.contains(item.getVatNo()))
-                                    dataKEY.add(item.getVatNo());
-                            } else {
-                                if (dataKEY.contains(item.getVatNo()))
-                                    dataKEY.remove(item.getVatNo());
-                            }
-                        }
-                    }
-                });
             }
         }
     }

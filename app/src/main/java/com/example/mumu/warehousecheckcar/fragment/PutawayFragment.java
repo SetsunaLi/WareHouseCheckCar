@@ -277,6 +277,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                                                         response.setWeightall(response.getWeight());
                                                         myList.add(response);
                                                         keyValue.put(key, myList.size() - 1);
+                                                        dataKey.add(response.getVatNo());
                                                     } else {
                                                         int index = keyValue.get(key);
                                                         myList.get(index).addCount();
@@ -469,6 +470,30 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         public void convert(RecyclerHolder holder, final Input item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (Input i: myList){
+                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                        dataKey.add(i.getVatNo());
+                                }
+                            }else {
+                                dataKey.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!dataKey.contains(item.getVatNo()))
+                                    dataKey.add(item.getVatNo());
+                            } else {
+                                if (dataKey.contains(item.getVatNo()))
+                                    dataKey.remove(item.getVatNo());
+                            }
+                        }
+                    }
+                });
                 if (position != 0) {
                     if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
@@ -477,13 +502,10 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     }else {
                         if (cb.getVisibility()!=View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
-                    }
-                    if (cb.isChecked()) {
-                        if (!dataKey.contains(item.getVatNo()))
-                            dataKey.add(item.getVatNo());
-                    } else {
                         if (dataKey.contains(item.getVatNo()))
-                            dataKey.remove(item.getVatNo());
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (this.position == position) {
@@ -498,27 +520,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     holder.setText(R.id.item5, item.getCount() + "");
                     holder.setText(R.id.item6, item.getWeightall() + "");
                 }
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = llm.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                    c.setChecked(isChecked);
-                            }
-                        } else {
-                            if (isChecked) {
-                                if (!dataKey.contains(item.getVatNo()))
-                                    dataKey.add(item.getVatNo());
-                            } else {
-                                if (dataKey.contains(item.getVatNo()))
-                                    dataKey.remove(item.getVatNo());
-                            }
-                        }
-                    }
-                });
+
             }
         }
     }

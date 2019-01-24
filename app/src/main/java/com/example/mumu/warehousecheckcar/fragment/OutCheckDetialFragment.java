@@ -84,13 +84,17 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
         }
         Collections.sort(myList, new Comparator<OutCheckDetail>() {
             @Override
-            public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
-                String aFab = outCheckDetail.getFabRool();
-                if (aFab == null||aFab.equals(""))
+            public int compare(OutCheckDetail obj1, OutCheckDetail obj2) {
+                String aFab = obj1.getFabRool();
+                String bFab = obj2.getFabRool();
+                if (aFab == null)
                     return -1;
-                String bFab = t1.getFabRool();
-                if (bFab == null||bFab.equals(""))
+                if (bFab == null)
                     return 1;
+                if (aFab.equals(""))
+                    return 1;
+                if (bFab.equals(""))
+                    return -1;
                 if (aFab != null && bFab != null) {
                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                         return 1;
@@ -142,13 +146,17 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
                     case 0x09:
                         Collections.sort(myList, new Comparator<OutCheckDetail>() {
                             @Override
-                            public int compare(OutCheckDetail outCheckDetail, OutCheckDetail t1) {
-                                String aFab = outCheckDetail.getFabRool();
+                            public int compare(OutCheckDetail obj1, OutCheckDetail obj2) {
+                                String aFab = obj1.getFabRool();
+                                String bFab = obj2.getFabRool();
                                 if (aFab == null)
                                     return -1;
-                                String bFab = t1.getFabRool();
                                 if (bFab == null)
                                     return 1;
+                                if (aFab.equals(""))
+                                    return 1;
+                                if (bFab.equals(""))
+                                    return -1;
                                 if (aFab != null && bFab != null) {
                                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                                         return 1;

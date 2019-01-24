@@ -263,6 +263,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         myList.add(op);
                                         String key = op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo();
                                         keyValue.put(key, myList.size() - 1);
+                                        DATA_KEY.put(key,new ArrayList<String>());
 //                                }
                                         dataList.add(op);
                                     }
@@ -395,10 +396,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         if (position != 0) {
             mAdapter.select(position);
             mAdapter.notifyDataSetChanged();
-
             Output obj = myList.get(position);
             String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
             KEY = key;
+            if (!DATA_KEY.containsKey(key))
+                DATA_KEY.put(key,new ArrayList<String>());
             OUTPUT_DETAIL_LIST.clear();
             for (Output obj2 : dataList) {
                 if ((obj2.getOutp_id() + obj2.getVatNo() + obj2.getProduct_no() + obj2.getSelNo()).equals(key)) {
@@ -565,7 +567,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
     @Override
     public void comeBackListener() {
         mAdapter.notifyDataSetChanged();
-
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
@@ -596,7 +597,34 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         @Override
         public void convert(RecyclerHolder holder, final Output item, final int position) {
             if (item != null) {
+                final String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (Output i: myList){
+                                    if (i.getOutp_id()!=null&&!i.getOutp_id().equals("")) {
+                                        String key=i.getOutp_id() + i.getVatNo() + i.getProduct_no() + i.getSelNo();
+                                        DATA_KEY.put(key,new ArrayList<String>());
+                                    }
+                                }
+                            }else {
+                                DATA_KEY.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!DATA_KEY.containsKey(key))
+                                    DATA_KEY.put(key, new ArrayList<String>());
+                            } else {
+                                if (DATA_KEY.containsKey(key))
+                                    DATA_KEY.remove(key);
+                            }
+                        }
+                    }
+                });
                 if (position != 0) {
                     if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
@@ -605,18 +633,10 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     }else {
                         if (cb.getVisibility()!=View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
-                    }
-                    String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
-                    if (item.getCountOut() == 0)
-                        cb.setChecked(false);
-                    if (DATA_KEY.containsKey(key))
-                        cb.setChecked(true);
-                    if (cb.isChecked()) {
-                        if (!DATA_KEY.containsKey(key))
-                            DATA_KEY.put(key, new ArrayList<String>());
-                    } else {
                         if (DATA_KEY.containsKey(key))
-                            DATA_KEY.remove(key);
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getCount() == item.getCountOut())
@@ -651,28 +671,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     }
 
                 }
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = llm.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                    c.setChecked(isChecked);
-                            }
-                        } else {
-                            String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
-                            if (isChecked) {
-                                if (!DATA_KEY.containsKey(key))
-                                    DATA_KEY.put(key, new ArrayList<String>());
-                            } else {
-                                if (DATA_KEY.containsKey(key))
-                                    DATA_KEY.remove(key);
-                            }
-                        }
-                    }
-                });
+
             }
         }
     }

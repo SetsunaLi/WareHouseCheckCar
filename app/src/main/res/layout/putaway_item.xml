@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:checked="true"
+            android:checked="false"
             />
         <View style="@style/view_item_mid" />
 

@@ -81,13 +81,17 @@ public class OutApplyDetailFragment extends Fragment{
         }
         Collections.sort(myList, new Comparator<OutputDetail>() {
             @Override
-            public int compare(OutputDetail t0, OutputDetail t1) {
-                String aFab = t0.getFabRool();
-                if (aFab == null || aFab.equals(""))
+            public int compare(OutputDetail obj1, OutputDetail obj2) {
+                String aFab = obj1.getFabRool();
+                String bFab = obj2.getFabRool();
+                if (aFab == null)
                     return -1;
-                String bFab = t1.getFabRool();
-                if (bFab == null || bFab.equals(""))
+                if (bFab == null)
                     return 1;
+                if (aFab.equals(""))
+                    return 1;
+                if (bFab.equals(""))
+                    return -1;
                 if (aFab != null && bFab != null) {
                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                         return 1;
@@ -197,16 +201,55 @@ public class OutApplyDetailFragment extends Fragment{
         public void convert(RecyclerHolder holder, final OutputDetail item, final int position) {
             if (item != null) {
                 final CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
-                if (position != 0) {
-                    if (dataKey.contains(item.getFabRool()))
-                        cb.setChecked(true);
-                    if (cb.isChecked()) {
-                        if (!dataKey.contains(item.getFabRool()))
-                            dataKey.add(item.getFabRool());
-                    } else {
-                        if (dataKey.contains(item.getFabRool()))
-                            dataKey.remove(item.getFabRool());
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (OutputDetail i: myList){
+                                if (!((i.getFabRool()+"").equals("")&&(i.getEpc()+"").equals("")&&(i.getWeight()+"").equals(""))){
+                                    if (dataKey.size()<COUNT)
+                                         dataKey.add(i.getFabRool());
+                                    else
+                                        Toast.makeText(getActivity(),"已选布匹超出申请数量！",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            }else {
+                                dataKey.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!dataKey.contains(item.getFabRool())) {
+                                    if (dataKey.size()<COUNT) {
+                                        dataKey.add(item.getFabRool());
+                                    }else {
+                                        cb.setChecked(false);
+                                        Toast.makeText(getActivity(),"已选布匹超出申请数量！",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataKey.contains(item.getFabRool()))
+                                    dataKey.remove(item.getFabRool());
+                            }
+                        }
                     }
+                });
+                if (position != 0) {
+                    if (((item.getFabRool() + "").equals("") && (item.getEpc() + "").equals("") && (item.getWeight() + "").equals(""))) {
+                        cb.setChecked(false);
+                        if (cb.getVisibility() != View.INVISIBLE)
+                            cb.setVisibility(View.INVISIBLE);
+                    } else {
+                        if (cb.getVisibility() != View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
+                        if (dataKey.contains(item.getFabRool()))
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
+                    }
+
+
                     //（默认为0；0为默认状态，1为实盘扫码出库状态，2为非正常申请单扫码，3默认超出配货值第一个开始为3）
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getFlag() == 0) {//亏
@@ -229,33 +272,7 @@ public class OutApplyDetailFragment extends Fragment{
                     holder.setText(R.id.item3, item.getWeight_in() + "");
                     holder.setText(R.id.item4, item.getWeight() + "");
                 }
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = llm.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                    c.setChecked(isChecked);
-                            }
-                        } else {
-                            if (isChecked) {
-                                if (!dataKey.contains(item.getFabRool())) {
-                                    if (dataKey.size()<COUNT) {
-                                        dataKey.add(item.getFabRool());
-                                    }else {
-                                        cb.setChecked(false);
-                                        Toast.makeText(getActivity(),"已选布匹超出申请数量！",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            } else {
-                                if (dataKey.contains(item.getFabRool()))
-                                    dataKey.remove(item.getFabRool());
-                            }
-                        }
-                    }
-                });
+
             }
         }
     }

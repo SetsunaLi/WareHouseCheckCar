@@ -72,13 +72,17 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
 
         Collections.sort(myList, new Comparator<Input>() {
             @Override
-            public int compare(Input t0, Input t1) {
-                String aFab = t0.getFabRool();
-                if (aFab == null||aFab.equals(""))
+            public int compare(Input obj1, Input obj2) {
+                String aFab = obj1.getFabRool();
+                String bFab = obj2.getFabRool();
+                if (aFab == null)
                     return -1;
-                String bFab = t1.getFabRool();
-                if (bFab == null||bFab.equals(""))
+                if (bFab == null)
                     return 1;
+                if (aFab.equals(""))
+                    return 1;
+                if (bFab.equals(""))
+                    return -1;
                 if (aFab != null && bFab != null) {
                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                         return 1;

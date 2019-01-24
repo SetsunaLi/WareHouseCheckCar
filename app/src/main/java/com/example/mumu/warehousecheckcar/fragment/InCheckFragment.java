@@ -266,6 +266,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                                                     ocd.setCount(1);
                                                                     ocd.setWeightall(ocd.getWeight());
                                                                     myList.add(ocd);
+                                                                    dataKEY.add(ocd.getEpc());
                                                                     strIndex.put(key, myList.size() - 1);
 
                                                                 } else {
@@ -482,7 +483,30 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
         public void convert(RecyclerHolder holder, final InCheckDetail item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
-
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (InCheckDetail i: myList){
+                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                        dataKEY.add(i.getVatNo());
+                                }
+                            }else {
+                                dataKEY.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!dataKEY.contains(item.getVatNo()))
+                                    dataKEY.add(item.getVatNo());
+                            } else {
+                                if (dataKEY.contains(item.getVatNo()))
+                                    dataKEY.remove(item.getVatNo());
+                            }
+                        }
+                    }
+                });
                 if (position != 0) {
                     if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
@@ -491,13 +515,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     }else {
                         if (cb.getVisibility()!=View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
-                    }
-                    if (cb.isChecked()) {
-                        if (!dataKEY.contains(item.getVatNo()))
-                            dataKEY.add(item.getVatNo());
-                    } else {
-                        if (dataKEY.contains(item.getVatNo()))
-                            dataKEY.remove(item.getVatNo());
+                        if (dataKEY.contains(item.getEpc()))
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
                     }
                 LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                 if (index == position) {
@@ -511,27 +532,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                 holder.setText(R.id.item5, item.getCount() + "");
                 holder.setText(R.id.item6, "" + String.valueOf(item.getWeightall()) + "KG");
                 }
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = ms.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                    c.setChecked(isChecked);
-                            }
-                        } else {
-                            if (isChecked) {
-                                if (!dataKEY.contains(item.getVatNo()))
-                                    dataKEY.add(item.getVatNo());
-                            } else {
-                                if (dataKEY.contains(item.getVatNo()))
-                                    dataKEY.remove(item.getVatNo());
-                            }
-                        }
-                    }
-                });
+
             }
         }
     }

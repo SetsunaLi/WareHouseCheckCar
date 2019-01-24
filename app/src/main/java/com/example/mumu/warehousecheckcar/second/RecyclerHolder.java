@@ -23,15 +23,15 @@ public class RecyclerHolder extends RecyclerView.ViewHolder implements View.OnCl
     MyItemOnClickListener mListener;
     MyOnTouchListener myTouchListener;
 
-    public RecyclerHolder(View itemView) {
+    public  RecyclerHolder(View itemView) {
         super(itemView);
         //一般不会超过8个吧
-        this.mViews = new SparseArray<>(8);
+        this.mViews = new SparseArray<>(255);
     }
     public RecyclerHolder(View itemView,MyItemOnClickListener mListener, MyOnTouchListener myTouchListener) {
         super(itemView);
         //一般不会超过8个吧
-        this.mViews = new SparseArray<>(12);
+        this.mViews = new SparseArray<>(255);
         this.mListener=mListener;
         this.myTouchListener=myTouchListener;
         itemView.setOnClickListener(this);

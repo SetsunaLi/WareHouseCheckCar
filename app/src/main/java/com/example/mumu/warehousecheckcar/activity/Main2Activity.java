@@ -44,6 +44,7 @@ import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
+import com.example.mumu.warehousecheckcar.fragment.TextFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
@@ -105,11 +106,11 @@ public class Main2Activity extends AppCompatActivity
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-       /* App.IP="http://47.106.157.255";
+        App.IP="http://47.106.157.255";
 //        App.IP="http://192.168.1.125";
-        App.PORT="80";*/
-        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
-        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
+        App.PORT="80";
+//        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
+//        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
         App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), false);
         App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
@@ -165,7 +166,6 @@ public class Main2Activity extends AppCompatActivity
     private void init2D() {
         try {
             boolean flag1=RFID_2DHander.getInstance().connect2D();
-
         } catch (Exception e) {
             Log.w(TAG, "2D模块异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -203,6 +203,7 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 7://寻货待开发
                 fragment = FindVatNoFragment.newInstance();
+//                fragment=new TextFragment();
                 break;
             case 8:
                 fragment = SettingFragment.newInstance();
@@ -455,8 +456,26 @@ public class Main2Activity extends AppCompatActivity
         ButterKnife.unbind(this);
         disConnectRFID();
         disConnect2D();
+        clearAllData();
     }
 
+    private void clearAllData(){
+        App.APPLY_NO="";
+        App.carNo="";
+        App.SYSTEM_VERSION="";
+        App.IP="";
+        App.PORT="";
+        App.DEVICE_NO="";
+        App.CARRIER=null;
+        App.DEVICE_NO="";
+        App.IN_DETAIL_LIST.clear();
+        App.OUTDETAIL_LIST.clear();
+        App.CHECK_DETAIL_LIST.clear();
+        App.OUTPUT_DETAIL_LIST.clear();
+        App.INPUT_DETAIL_LIST.clear();
+        App.DATA_KEY.clear();
+
+    }
     private void disConnectRFID() {
         try {
 

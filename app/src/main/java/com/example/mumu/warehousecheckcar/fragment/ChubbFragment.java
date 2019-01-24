@@ -254,11 +254,15 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                                             @Override
                                             public int compare(InCheckDetail obj1, InCheckDetail obj2) {
                                                 String aFab = obj1.getFabRool();
-                                                if (aFab == null||aFab.equals(""))
-                                                    return -1;
                                                 String bFab = obj2.getFabRool();
-                                                if (bFab == null||bFab.equals(""))
+                                                if (aFab == null)
+                                                    return -1;
+                                                if (bFab == null)
                                                     return 1;
+                                                if (aFab.equals(""))
+                                                    return 1;
+                                                if (bFab.equals(""))
+                                                    return -1;
                                                 if (aFab != null && bFab != null) {
                                                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                                                         return 1;
@@ -418,43 +422,19 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
         public void convert(RecyclerHolder holder, final InCheckDetail item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
-
-                String key=item.getEpc();
-                if (position != 0) {
-                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
-                        cb.setChecked(false);
-                        if (cb.getVisibility()!=View.INVISIBLE)
-                        cb.setVisibility(View.INVISIBLE);
-                    }else {
-                        if (cb.getVisibility()!=View.VISIBLE)
-                            cb.setVisibility(View.VISIBLE);
-                    }
-                    if (cb.isChecked()) {
-                        if (!dataKey.contains(key))
-                            dataKey.add(key);
-                    } else {
-                        if (dataKey.contains(key))
-                            dataKey.remove(key);
-                    }
-//                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getVatNo() + "");
-                    holder.setText(R.id.item3, item.getProduct_no() + "");
-                    holder.setText(R.id.item4, item.getSelNo() + "");
-                    holder.setText(R.id.item5, item.getColor() + "");
-                    holder.setText(R.id.item6, item.getWeight() + "");
-                }
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = llm.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                    c.setChecked(isChecked);
+                            if (isChecked){
+                                for (InCheckDetail i: myList){
+                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                        dataKey.add(i.getEpc());
+                                }
+                            }else {
+                                dataKey.clear();
                             }
+                            mAdapter.notifyDataSetChanged();
                         } else {
                             if (isChecked) {
                                 if (!dataKey.contains(item.getEpc()))
@@ -466,6 +446,31 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                         }
                     }
                 });
+                String key=item.getEpc();
+                if (position != 0) {
+                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
+                        cb.setChecked(false);
+                        if (cb.getVisibility()!=View.INVISIBLE)
+                        cb.setVisibility(View.INVISIBLE);
+                    }else {
+                        if (cb.getVisibility()!=View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
+                        if (dataKey.contains(item.getEpc()))
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
+                    }
+
+//                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+
+                    holder.setText(R.id.item1, item.getFabRool() + "");
+                    holder.setText(R.id.item2, item.getVatNo() + "");
+                    holder.setText(R.id.item3, item.getProduct_no() + "");
+                    holder.setText(R.id.item4, item.getSelNo() + "");
+                    holder.setText(R.id.item5, item.getColor() + "");
+                    holder.setText(R.id.item6, item.getWeight() + "");
+                }
+
             }
         }
     }

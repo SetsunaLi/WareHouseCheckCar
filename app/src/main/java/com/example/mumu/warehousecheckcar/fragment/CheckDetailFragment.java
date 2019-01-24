@@ -80,11 +80,15 @@ public class CheckDetailFragment extends Fragment{
             @Override
             public int compare(Inventory obj1, Inventory obj2) {
                 String aFab = obj1.getFabRool();
-                if (aFab == null||aFab.equals(""))
-                    return -1;
                 String bFab = obj2.getFabRool();
-                if (bFab == null||bFab.equals(""))
+                if (aFab == null)
+                    return -1;
+                if (bFab == null)
                     return 1;
+                if (aFab.equals(""))
+                    return 1;
+                if (bFab.equals(""))
+                    return -1;
                 if (aFab != null && bFab != null) {
                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                         return 1;

@@ -32,7 +32,10 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    style="@style/text_style1"/>
+                    style="@style/text_style1"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
             <!--<TextView
                 android:id="@+id/text1"
                 android:layout_width="match_parent"
@@ -63,7 +66,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                style="@style/text_style1"/>
+                style="@style/text_style1"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                android:singleLine="true"/>
            <!-- <TextView
                 android:id="@+id/text2"
                 android:layout_width="match_parent"

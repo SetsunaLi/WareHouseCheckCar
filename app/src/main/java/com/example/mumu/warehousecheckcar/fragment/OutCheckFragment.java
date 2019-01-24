@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -276,6 +277,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
 //                                                                ocd.setFlag(true);
                                                                     myList.add(ocd);
                                                                     strIndex.put(key, myList.size() - 1);
+                                                                    dataKEY.add(ocd.getVatNo());
                                                                 } else {
                                                                     int index = strIndex.get(key);
                                                                     myList.get(index).addCount();
@@ -487,6 +489,30 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
         public void convert(RecyclerHolder holder, final OutCheckDetail item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (OutCheckDetail i: myList){
+                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                        dataKEY.add(i.getVatNo());
+                                }
+                            }else {
+                                dataKEY.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!dataKEY.contains(item.getVatNo()))
+                                    dataKEY.add(item.getVatNo());
+                            } else {
+                                if (dataKEY.contains(item.getVatNo()))
+                                    dataKEY.remove(item.getVatNo());
+                            }
+                        }
+                    }
+                });
                 if (position != 0) {
                     if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
@@ -495,15 +521,12 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                     }else {
                         if (cb.getVisibility()!=View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
-                    }
-                    if (cb.isChecked()) {
-                        if (!dataKEY.contains(item.getVatNo()))
-                            dataKEY.add(item.getVatNo());
-                    } else {
                         if (dataKEY.contains(item.getVatNo()))
-                            dataKEY.remove(item.getVatNo());
-                    }
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
 
+                    }
                 LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                 if (index == position) {
                     ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
@@ -516,27 +539,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                 holder.setText(R.id.item5, item.getCount() + "");
                 holder.setText(R.id.item6, "" + String.valueOf(item.getWeightall()) + "KG");
                 }
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            for (int i = 1; i < myList.size(); i++) {
-                                View view = ms.findViewByPosition(i);
-                                CheckBox c = (CheckBox) view.findViewById(R.id.checkbox1);
-                                if (c.getVisibility()==View.VISIBLE)
-                                    c.setChecked(isChecked);
-                            }
-                        } else {
-                            if (isChecked) {
-                                if (!dataKEY.contains(item.getVatNo()))
-                                    dataKEY.add(item.getVatNo());
-                            } else {
-                                if (dataKEY.contains(item.getVatNo()))
-                                    dataKEY.remove(item.getVatNo());
-                            }
-                        }
-                    }
-                });
             }
         }
     }

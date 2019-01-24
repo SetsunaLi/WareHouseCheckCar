@@ -80,13 +80,17 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         }
         Collections.sort(myList, new Comparator<InCheckDetail>() {
             @Override
-            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
-                String  aFab=inCheckDetail.getFabRool();
-                if (aFab==null||aFab.equals(""))
+            public int compare(InCheckDetail obj1, InCheckDetail obj2) {
+                String aFab = obj1.getFabRool();
+                String bFab = obj2.getFabRool();
+                if (aFab == null)
                     return -1;
-                String bFab=t1.getFabRool();
-                if (bFab==null||bFab.equals(""))
+                if (bFab == null)
                     return 1;
+                if (aFab.equals(""))
+                    return 1;
+                if (bFab.equals(""))
+                    return -1;
                 if (aFab!=null&&bFab!=null){
                     if (Integer.valueOf(aFab)>=Integer.valueOf(bFab)){
                         return 1;
@@ -165,13 +169,17 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                         }
                                         Collections.sort(myList, new Comparator<InCheckDetail>() {
                                             @Override
-                                            public int compare(InCheckDetail inCheckDetail, InCheckDetail t1) {
-                                                String aFab = inCheckDetail.getFabRool();
+                                            public int compare(InCheckDetail obj1, InCheckDetail obj2) {
+                                                String aFab = obj1.getFabRool();
+                                                String bFab = obj2.getFabRool();
                                                 if (aFab == null)
                                                     return -1;
-                                                String bFab = t1.getFabRool();
                                                 if (bFab == null)
                                                     return 1;
+                                                if (aFab.equals(""))
+                                                    return 1;
+                                                if (bFab.equals(""))
+                                                    return -1;
                                                 if (aFab != null && bFab != null) {
                                                     if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
                                                         return 1;

@@ -63,8 +63,8 @@
                     android:hint="@string/login_prassword"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
+                    android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:singleLine="true" />
 
