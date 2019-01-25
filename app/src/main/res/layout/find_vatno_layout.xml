@@ -1,14 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg2">
-    <com.example.mumu.warehousecheckcar.view.FixedEditText
-        android:id="@+id/fixeedittext1"
+    android:background="@mipmap/bg2"
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/button"
+        android:layout_width="72dip"
+        android:layout_height="72dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="18dip"
+        android:background="@drawable/button_find"/>
+<!--    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dip"
-        android:layout_margin="30dp"
-        style="@style/edit_style2"
-        android:hint="请输入缸号"/>
+        android:layout_height="match_parent">-->
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+           <!-- <com.example.mumu.warehousecheckcar.view.FixedEditText
+                android:id="@+id/fixeedittext0"
+                style="@style/edit_style2"
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
+                android:layout_marginBottom="9dip"
+                android:layout_marginLeft="18dip"
+                android:layout_marginRight="18dip"
+                android:layout_marginTop="18dip"
+                android:hint="请选择输入入库单号"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:singleLine="true" />
+-->
+            <com.example.mumu.warehousecheckcar.view.FixedEditText
+                android:id="@+id/fixeedittext1"
+                style="@style/edit_style2"
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
+                android:layout_marginBottom="9dip"
+                android:layout_marginLeft="18dip"
+                android:layout_marginRight="18dip"
+                android:layout_marginTop="9dip"
+                android:hint="请选择输入缸号"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+          <!--  <com.example.mumu.warehousecheckcar.view.FixedEditText
+                android:id="@+id/fixeedittext2"
+                style="@style/edit_style2"
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
+                android:layout_marginBottom="18dip"
+                android:layout_marginLeft="18dip"
+                android:layout_marginRight="18dip"
+                android:layout_marginTop="9dip"
+                android:hint="请选择输入布号"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                android:singleLine="true" />-->
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/table_padding">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    <!--</ScrollView>-->
+</RelativeLayout>

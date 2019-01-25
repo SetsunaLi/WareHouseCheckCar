@@ -90,6 +90,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                 Log.i("onTextChanged","onTextChanged");
                 String trayNo=charSequence.toString();
+                trayNo=trayNo.replaceAll(" ","");
                 App.CARRIER.setTrayNo(trayNo);
                 App.CARRIER.setTrayEPC("");
             }
@@ -109,6 +110,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                 Log.i("onTextChanged","onTextChanged");
                 String locationNo=charSequence.toString();
+                locationNo=locationNo.replaceAll(" ","");
                 App.CARRIER.setLocationNo(locationNo);
 
             }
