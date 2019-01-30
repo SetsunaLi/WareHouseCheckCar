@@ -107,8 +107,9 @@ public class Main2Activity extends AppCompatActivity
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
         App.IP="http://47.106.157.255";
-//        App.IP="http://192.168.1.125";
         App.PORT="80";
+//        App.IP="http://192.168.1.212";
+//        App.PORT="8080";
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
 //        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");

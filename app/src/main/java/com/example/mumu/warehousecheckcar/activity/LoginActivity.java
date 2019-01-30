@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,6 +47,8 @@ public class LoginActivity extends AppCompatActivity  {
     private UserLoginTask mAuthTask = null;
     private String unStr;
     private String pwStr;
+
+    UpdateBean updateBean = new UpdateBean();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +68,17 @@ public class LoginActivity extends AppCompatActivity  {
                 return false;
             }
         });
+        checkVersion();
     }
 
+    private void checkVersion(){
+        updateBean.setMessage("更新啦");
+        updateBean.setTitle("立即更新");
+        updateBean.setUrl("https://github.com/SetsunaLi/getNewApk/raw/master/app-debug.apk");
+//        updateBean.setVersionCode(3);
+//        这里获取版本号
+        updateBean.setVersionName("1.0.2");
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

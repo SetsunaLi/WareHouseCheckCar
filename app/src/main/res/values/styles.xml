@@ -110,7 +110,7 @@
     <style name="edit_style2">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorEditNoTextSelect</item>
-        <item name="android:textColorHint">@color/colorREAD</item>
+        <item name="android:textColorHint">@color/colorREAD</item><!---->
         <item name="android:background">@drawable/fixed_edittext_style</item>
         <item name="android:padding">15dp</item>
     </style>
