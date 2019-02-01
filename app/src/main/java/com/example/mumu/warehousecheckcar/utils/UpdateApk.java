@@ -7,15 +7,18 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.example.mumu.warehousecheckcar.activity.LoginActivity;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
+import com.example.mumu.warehousecheckcar.listener.UpdateDialogOperate;
+import com.example.mumu.warehousecheckcar.view.UpdateDialog;
 
 /**
  * Created by mumu on 2019/1/29.
  */
 
-public class Update {
+public class UpdateApk {
 
     public static int UpdateVersion(final Context context, final UpdateBean updateBean) {
         String packageName = context.getPackageName();
@@ -43,20 +46,23 @@ public class Update {
     }
 
     public static void showUpdateDialog(final Context context, final UpdateBean updateBean) {
-//        final UpdateDialog updateDialog = new UpdateDialog(context);
-//        updateDialog.setData(updateBean, true, new UpdateDialogOperate() {
-//            @Override
-//            public void executeCancel(String text) {
-//                updateDialog.cancel();
-//            }
-//
-//            @Override
-//            public void executeCommit(String text) {
+        final UpdateDialog updateDialog = new UpdateDialog(context);
+        updateDialog.setData(updateBean, true, new UpdateDialogOperate() {
+            @Override
+            public void executeCancel(String text) {
+                updateDialog.cancel();
+            }
+
+            @Override
+            public void executeCommit(String text) {
 //                downFile(updateBean.getUrl(), context);
-//                updateDialog.cancel();
-//            }
-//        });
-//        updateDialog.show();
+                updateDialog.dismiss();
+            }
+        });
+        updateDialog.show();
+        updateDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        updateDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     public static int getVersionCode(Context context) {
