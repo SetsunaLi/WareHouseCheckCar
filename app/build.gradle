@@ -52,4 +52,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation files('libs/Serialport-module.jar')
     implementation files('libs/xdl2d&RFID.jar')
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okio:okio:1.7.0'
 }
