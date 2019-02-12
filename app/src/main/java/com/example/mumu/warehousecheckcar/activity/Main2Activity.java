@@ -33,6 +33,7 @@ import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
+import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
@@ -317,7 +318,7 @@ public class Main2Activity extends AppCompatActivity
 
                 }
             } else {
-                if (fragment != null && (fragment instanceof OutCheckFragment)) {
+                if (fragment != null && (fragment instanceof OutCheckFragment||fragment instanceof ChubbUpFragment)) {
                     askForBack();
                 } else if(fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(4);

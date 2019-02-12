@@ -46,9 +46,8 @@ public class LoginActivity extends AppCompatActivity  {
     @Bind(R.id.email_login_form)
     LinearLayout emailLoginForm;
     private UserLoginTask mAuthTask = null;
-    private String unStr;
+        private String unStr;
     private String pwStr;
-
     UpdateBean updateBean = new UpdateBean();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
