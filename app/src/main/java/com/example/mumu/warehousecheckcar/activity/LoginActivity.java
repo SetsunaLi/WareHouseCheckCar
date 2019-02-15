@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity  {
         updateBean.setMessage("更新啦");
         updateBean.setTitle("立即更新");
         updateBean.setUrl("https://github.com/SetsunaLi/getNewApk/raw/master/app-debug.apk");
-        updateBean.setVersionCode(3);
+        updateBean.setVersionCode(1);
 //        这里获取版本号
         updateBean.setVersionName("1.0.2");
     }

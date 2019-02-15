@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -172,6 +173,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     }
 
     long currenttime = 0;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -236,6 +238,13 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                         }
                         if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
                             App.CARRIER .setTrayEPC(response.getTrayEPC());
+
+                        if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
+                            App.CARRIER.setLocationNo(response.getLocationNo());
+                            edittext2.setText(response.getLocationNo() + "");
+                        }
+                        if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
+                            App.CARRIER .setLocationEPC(response.getLocationEPC());
                         break;
                 }
             } catch (Exception e) {

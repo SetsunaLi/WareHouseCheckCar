@@ -569,6 +569,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void ubLoad(boolean flag) {
+
+    }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
         private Context context;
 

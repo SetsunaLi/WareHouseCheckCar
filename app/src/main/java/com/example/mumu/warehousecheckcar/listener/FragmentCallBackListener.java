@@ -8,5 +8,6 @@ import android.view.View;
 
 public interface FragmentCallBackListener {
      void comeBackListener();
+     void ubLoad(boolean flag);
 
 }

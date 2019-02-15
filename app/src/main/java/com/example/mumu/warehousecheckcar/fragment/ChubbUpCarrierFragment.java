@@ -2,7 +2,6 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +17,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
@@ -26,51 +27,46 @@ import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.entity.ChubbUp;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by mumu on 2018/12/21.
- */
+import static com.example.mumu.warehousecheckcar.application.App.CHUBB_UP_LIST;
 
-public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
-
-    private final String TAG = "CheckCarrierFragment";
-    /*  @Bind(R.id.text1)
-      TextView text1;
-      @Bind(R.id.text2)
-      TextView text2;*/
-    @Bind(R.id.relativelayout)
-    LinearLayout relativelayout;
-    @Bind(R.id.button2)
-    Button button2;
+public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiatener {
+    private static ChubbUpCarrierFragment fragment;
     @Bind(R.id.edittext1)
     EditText edittext1;
     @Bind(R.id.edittext2)
     EditText edittext2;
+    @Bind(R.id.relativelayout)
+    LinearLayout relativelayout;
+    @Bind(R.id.button2)
+    Button button2;
 
-
-    private CheckCarrierFragment() {
+    private ChubbUpCarrierFragment() {
     }
 
-    private static CheckCarrierFragment fragment;
-
-    public static CheckCarrierFragment newInstance() {
+    public static ChubbUpCarrierFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CheckCarrierFragment();
+        fragment = new ChubbUpCarrierFragment();
         return fragment;
     }
 
     private Sound sound;
+    private final String TAG = "ChubbUpCarrierFragment";
 
     @Nullable
     @Override
@@ -79,7 +75,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
 
-        getActivity().setTitle("盘点");
+        getActivity().setTitle("查布上架");
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,11 +85,13 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged","onTextChanged");
-                String trayNo=charSequence.toString();
-                trayNo=trayNo.replaceAll(" ","");
+                Log.i("onTextChanged", "onTextChanged");
+                String trayNo = charSequence.toString();
+                trayNo = trayNo.replaceAll(" ", "");
                 App.CARRIER.setTrayNo(trayNo);
                 App.CARRIER.setTrayEPC("");
+                App.CARRIER.setLocationNo("");
+                App.CARRIER.setLocationEPC("");
             }
 
             @Override
@@ -109,11 +107,13 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged","onTextChanged");
-                String locationNo=charSequence.toString();
-                locationNo=locationNo.replaceAll(" ","");
+                Log.i("onTextChanged", "onTextChanged");
+                String locationNo = charSequence.toString();
+                locationNo = locationNo.replaceAll(" ", "");
                 App.CARRIER.setLocationNo(locationNo);
-
+                App.CARRIER.setLocationEPC("");
+                App.CARRIER.setTrayNo("");
+                App.CARRIER.setTrayEPC("");
             }
 
             @Override
@@ -121,14 +121,6 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
             }
         });
-        if (App.CARRIER == null)
-            App.CARRIER =new Carrier();
-        /*App.CARRIER.setLocationNo("查布区");
-        App.CARRIER.setTrayNo("TP0002");*/
-        if (App.CARRIER.getLocationNo()!=null&&!App.CARRIER.getLocationNo().equals(""))
-            edittext2.setText(App.CARRIER.getLocationNo());
-        if (App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))
-            edittext1.setText(App.CARRIER.getTrayNo());
         initRFID();
         return view;
     }
@@ -136,10 +128,6 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     @Override
     public void onResume() {
         super.onResume();
-        /*Message msg=handler.obtainMessage();
-        msg.obj="31B5A5AF6000004000000002";
-        msg.arg1=0x00;
-        handler.sendMessage(msg);*/
     }
 
     private void initRFID() {
@@ -167,20 +155,49 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
         disRFID();
     }
 
-    protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
-
     @OnClick(R.id.button2)
     public void onViewClicked() {
-       /* if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
-                (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {*/
-        if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
-            Fragment fragment = CheckFragment.newInstance();
-            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-            transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-            transaction.show(fragment);
-            transaction.commit();
-        } else
-            Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
+        if (App.CARRIER.getLocationNo()!=null&&(!App.CARRIER.getLocationNo().equals("")||App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))&&
+        (CHUBB_UP_LIST!=null&&CHUBB_UP_LIST.size()!=0)){
+            for(ChubbUp cu:CHUBB_UP_LIST){
+                cu.setBas_location(App.CARRIER.getLocationNo()+"");
+                cu.setBas_pallet(App.CARRIER.getTrayNo()+"");
+            }
+            ArrayList<ChubbUp> list=new ArrayList<>();
+            list.addAll(CHUBB_UP_LIST);
+            final String json= JSON.toJSONString(list);
+
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/pushClothToCheckIn", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getEpc;" + e.getMessage());
+                            Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
+                            } else {
+                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+                Log.i(TAG, "");
+            }
+        }else {
+            Toast.makeText(getActivity(),"请输入库位号",Toast.LENGTH_SHORT).show();
+        }
     }
 
     long currenttime = 0;
@@ -250,8 +267,9 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                             App.CARRIER.setTrayNo(response.getTrayNo());
                             edittext1.setText(response.getTrayNo() + "");
                         }
-                        if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
-                            App.CARRIER .setTrayEPC(response.getTrayEPC());
+                        if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals("")) {
+                            App.CARRIER.setTrayEPC(response.getTrayEPC());
+                        }
 
                         if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
                             App.CARRIER.setLocationNo(response.getLocationNo());
@@ -266,7 +284,6 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
             }
         }
     };
-
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 

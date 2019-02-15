@@ -1,9 +1,11 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,11 +22,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
@@ -33,8 +39,11 @@ import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.ChubbUp;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -53,7 +62,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
+import static com.example.mumu.warehousecheckcar.application.App.CHUBB_UP_LIST;
+
+public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,FragmentCallBackListener {
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.text1)
@@ -73,18 +84,19 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
         fragment = new ChubbUpFragment();
         return fragment;
     }
-
+    private final String TAG="ChubbUpFragment";
     private RecycleAdapter mAdapter;
-    private List<Object> myList;
-    /***布号+缸号+布票号*/
-    private List<String> dataKEY;
+    private List<ChubbUp> myList;
     /**
      * 匹配逻辑
-     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+//     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     *key:epc
      * value：index
      */
     private Map<String, Integer> strIndex;
-    private List<Object> dataList;
+    /***布号+缸号+布票号*/
+    private List<String> dataKEY;
+//    private List<Object> dataList;
     private List<String> dataEPC;
     private Sound sound;
 
@@ -106,23 +118,23 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
 
     private void initData() {
         myList = new ArrayList<>();
-        myList.add(new Object());
+        myList.add(new ChubbUp());
         dataKEY=new ArrayList<>();
         strIndex = new HashMap<>();
-        dataList= new ArrayList<>();
+//        dataList= new ArrayList<>();
         dataEPC= new ArrayList<>();
     }
     private void clearData(){
         if (myList!=null) {
             myList.clear();
-            myList.add(new Object());
+            myList.add(new ChubbUp());
         }
         if (dataKEY!=null)
             dataKEY.clear();
         if (strIndex!=null)
             strIndex.clear();
-        if (dataList!=null)
-            dataList.clear();
+//        if (dataList!=null)
+//            dataList.clear();
         if (dataEPC!=null)
             dataEPC.clear();
     }
@@ -188,20 +200,53 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
 
         return super.onOptionsItemSelected(item);
     }
-
+    public void upLoad(boolean flag){
+        if (flag) {
+            for (ChubbUp obj : myList) {
+                if (dataKEY.contains(obj.getEpc()))
+                    myList.remove(obj);
+            }
+            dataKEY.clear();
+            CHUBB_UP_LIST.clear();
+            mAdapter.notifyDataSetChanged();
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        clearData();
+        myList.clear();
         disRFID();
     }
+    protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
+                clearData();
                 break;
             case R.id.button2:
+                if (dataKEY!=null){
+                    ArrayList<ChubbUp> dataList=new ArrayList<>();
+                    for (ChubbUp data:myList){
+                        if (dataKEY.contains(data.getEpc())){
+                            dataList.add(data);
+                        }
+                    }
+                    CHUBB_UP_LIST.clear();
+                    CHUBB_UP_LIST.addAll(dataList);
+                    Fragment fragment = CheckFragment.newInstance();
+                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                    transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                    transaction.show(fragment);
+                    transaction.commit();
+                }else {
+                    Toast.makeText(getActivity(),"请至少选择一条布匹上架",Toast.LENGTH_SHORT).show();
+                }
+
+//                点击上传
                 break;
         }
     }
@@ -234,6 +279,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
             }
         });
     }
+    @SuppressLint("HandlerLeak")
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -242,7 +288,41 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
                 case 0x00:
                     String epc= (String) msg.obj;
                     epc=epc.replaceAll(" ","");
+                    if (epc.startsWith("3035A537")&&!dataEPC.contains(epc)){
+                    JSONObject obj=new JSONObject();
+                    obj.put("epc",epc);
+                    final String json=obj.toJSONString();
+                    try {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getClothInCheckByEpc", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Log.i(TAG, "getEpc;" + e.getMessage());
+                                    Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
 
+                            @Override
+                            public void onResponse(JSONArray jsonArray) {
+                                try {
+                                    List<ChubbUp> arry;
+                                    arry = jsonArray.toJavaList(ChubbUp.class);
+                                    if (arry != null && arry.size() > 0) {
+                                        ChubbUp response = arry.get(0);
+                                        dataEPC.add("epc");
+
+                                    }
+                                    text1.setText(dataEPC.size() + "");
+                                    mAdapter.notifyDataSetChanged();
+                                }catch (Exception e){
+
+                                }
+                            }
+                        }, json);
+                    } catch (IOException e) {
+                        Log.i(TAG, "");
+                    }
+                }
                     break;
             }
         }
@@ -272,10 +352,24 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
 
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<Object> {
+    @Override
+    public void comeBackListener() {
+
+    }
+
+    @Override
+    public void ubLoad(boolean flag) {
+        if (flag){
+            for (ChubbUp obj:CHUBB_UP_LIST){
+                upLoad(flag);
+            }
+        }
+    }
+
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<ChubbUp> {
         private Context context;
 
-        public RecycleAdapter(RecyclerView v, Collection<Object> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<ChubbUp> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
         }
 
@@ -305,22 +399,60 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener {
             return super.getItemViewType(position);
         }
 
-        public void convert(RecyclerHolder holder, final Object item, final int position) {
+        public void convert(RecyclerHolder holder, final ChubbUp item, final int position) {
             if (item != null) {
+//                final String key=item.getEpc();
+                CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            if (isChecked){
+                                for (ChubbUp i: myList){
+                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                        dataKEY.add(i.getEpc());
+                                }
+                            }else {
+                                dataKEY.clear();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!dataKEY.contains(item.getEpc()))
+                                    dataKEY.add(item.getEpc());
+                            } else {
+                                if (dataKEY.contains(item.getEpc()))
+                                    dataKEY.remove(item.getEpc());
+                            }
+                        }
+                    }
+                });
                 if (position != 0) {
-                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    if ((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals("")){
+                        cb.setChecked(false);
+                        if (cb.getVisibility()!=View.INVISIBLE)
+                            cb.setVisibility(View.INVISIBLE);
+                    }else {
+                        if (cb.getVisibility()!=View.VISIBLE)
+                            cb.setVisibility(View.VISIBLE);
+                        if (dataKEY.contains(item.getEpc()))
+                            cb.setChecked(true);
+                        else
+                            cb.setChecked(false);
+                    }
+                  /*  LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (this.position == position)
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));*/
 
-                    /*holder.setText(R.id.item1,item.getLocation_name()+"");
-                    holder.setText(R.id.item2,item.getPallet_name()+"");
-                    holder.setText(R.id.item3,item.getPallet_name()+"");
-                    holder.setText(R.id.item4,item.getCloth_name()+"");
-                    holder.setText(R.id.item5,item.getInv_serial()+"");
-                    holder.setText(R.id.item6,item.getWeight_inv()+"");
-                    holder.setText(R.id.item7,item.getColor_name()+"");*/
+                    holder.setText(R.id.item1,item.getBas_pallet()+"");
+                    holder.setText(R.id.item2,item.getBas_location()+"");
+                    holder.setText(R.id.item3,item.getVatNo()+"");
+                    holder.setText(R.id.item4,item.getProduct_no()+"");
+                    holder.setText(R.id.item5,item.getFabRool()+"");
+                    holder.setText(R.id.item6,item.getSelNo()+"");
+                    holder.setText(R.id.item7,item.getColor()+"");
                 }
 
             }

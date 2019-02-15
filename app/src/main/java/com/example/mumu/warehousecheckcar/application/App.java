@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.annotation.ArrayRes;
 
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.entity.ChubbUp;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
@@ -64,4 +65,5 @@ public class App extends Application {
 //    public static List<String> FABROOL_LIST=new ArrayList<>();
     public static String KEY;
     public static Map<String,List<String>> DATA_KEY=new HashMap<>();
+    public static ArrayList<ChubbUp> CHUBB_UP_LIST=new ArrayList<>();
 }

@@ -25,12 +25,21 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="布号"/>
+            android:text="原库位"/>
 
         <View style="@style/view_item_mid" />
 
         <TextView
             android:id="@+id/item2"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="原托盘"/>
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item3"
             style="@style/text_item"
             android:layout_width="120dip"
             android:layout_height="match_parent"
@@ -39,44 +48,35 @@
         <View style="@style/view_item_mid" />
 
         <TextView
-            android:id="@+id/item3"
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="布票号"/>
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
             android:id="@+id/item4"
             style="@style/text_item"
             android:layout_width="120dip"
             android:layout_height="match_parent"
-            android:text="颜色"/>
+            android:text="布号"/>
 
         <View style="@style/view_item_mid" />
         <TextView
             android:id="@+id/item5"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="80dip"
             android:layout_height="match_parent"
-            android:text="色号"/>
+            android:text="布票号"/>
 
         <View style="@style/view_item_mid" />
         <TextView
             android:id="@+id/item6"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="原托盘"/>
+            android:text="色号"/>
 
         <View style="@style/view_item_mid" />
         <TextView
             android:id="@+id/item7"
             style="@style/text_item"
-            android:layout_width="120dip"
+            android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="原库位号"/>
+            android:text="颜色"/>
 
         <View style="@style/view_item_mid" />
 
