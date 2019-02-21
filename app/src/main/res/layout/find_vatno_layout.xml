@@ -4,77 +4,135 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg2"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/button"
-        android:layout_width="72dip"
-        android:layout_height="72dip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="18dip"
-        android:background="@drawable/button_find"/>
-<!--    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">-->
 
+    <!--    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- <com.example.mumu.warehousecheckcar.view.FixedEditText
+             android:id="@+id/fixeedittext0"
+             style="@style/edit_style2"
+             android:layout_width="match_parent"
+             android:layout_height="60dip"
+             android:layout_marginBottom="9dip"
+             android:layout_marginLeft="18dip"
+             android:layout_marginRight="18dip"
+             android:layout_marginTop="18dip"
+             android:hint="请选择输入入库单号"
+             android:imeOptions="actionNext"
+             android:maxLines="1"
+             android:singleLine="true" />
+-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="60dip"
+            android:layout_marginLeft="18dip"
+            android:layout_marginTop="9dip"
+            android:layout_marginRight="18dip"
+            android:layout_marginBottom="9dip"
+            android:orientation="horizontal">
 
-           <!-- <com.example.mumu.warehousecheckcar.view.FixedEditText
-                android:id="@+id/fixeedittext0"
-                style="@style/edit_style2"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:layout_marginBottom="9dip"
-                android:layout_marginLeft="18dip"
-                android:layout_marginRight="18dip"
-                android:layout_marginTop="18dip"
-                android:hint="请选择输入入库单号"
-                android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:singleLine="true" />
--->
             <com.example.mumu.warehousecheckcar.view.FixedEditText
                 android:id="@+id/fixeedittext1"
                 style="@style/edit_style2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="60dip"
-                android:layout_marginBottom="9dip"
-                android:layout_marginLeft="18dip"
-                android:layout_marginRight="18dip"
-                android:layout_marginTop="9dip"
+                android:layout_weight="1"
                 android:hint="请选择输入缸号"
                 android:imeOptions="actionDone"
                 android:maxLines="1"
                 android:singleLine="true" />
 
-          <!--  <com.example.mumu.warehousecheckcar.view.FixedEditText
-                android:id="@+id/fixeedittext2"
-                style="@style/edit_style2"
-                android:layout_width="match_parent"
-                android:layout_height="60dip"
-                android:layout_marginBottom="18dip"
-                android:layout_marginLeft="18dip"
-                android:layout_marginRight="18dip"
-                android:layout_marginTop="9dip"
-                android:hint="请选择输入布号"
-                android:imeOptions="actionDone"
-                android:maxLines="1"
-                android:singleLine="true" />-->
+            <Button
+                android:id="@+id/button"
+                android:layout_width="56dip"
+                android:layout_height="56dip"
+                android:layout_gravity="center"
+                android:layout_marginLeft="9dp"
+                android:background="@drawable/button_find" />
+        </LinearLayout>
+        <!--  <com.example.mumu.warehousecheckcar.view.FixedEditText
+              android:id="@+id/fixeedittext2"
+              style="@style/edit_style2"
+              android:layout_width="match_parent"
+              android:layout_height="60dip"
+              android:layout_marginBottom="18dip"
+              android:layout_marginLeft="18dip"
+              android:layout_marginRight="18dip"
+              android:layout_marginTop="9dip"
+              android:hint="请选择输入布号"
+              android:imeOptions="actionDone"
+              android:maxLines="1"
+              android:singleLine="true" />-->
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/table_padding">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/table_padding">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-            </HorizontalScrollView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        </HorizontalScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_style2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="扫描数量："/>
+            <TextView
+                android:id="@+id/text2"
+                style="@style/text_style2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="left|center_vertical"
+                android:text="0"
+                />
+            <TextView
+                style="@style/text_style2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查询数量："/>
+            <TextView
+                android:id="@+id/text3"
+                style="@style/text_style2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:gravity="left|center_vertical"
+                android:text="0"/>
+        </LinearLayout>
+        <View style="@style/view_item_bottom" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button1"
+                style="@style/button_style1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/home_margin"
+                android:layout_marginRight="@dimen/button_margin"
+                android:text="刷新" />
 
         </LinearLayout>
+    </LinearLayout>
+
 
     <!--</ScrollView>-->
 </RelativeLayout>

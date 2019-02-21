@@ -16,6 +16,14 @@ public class Carrier {
     /**库位EPC*/
     private String locationEPC;
 
+    public void clear(){
+        this.id=0;
+        this.trayNo="";
+        this.locationNo="";
+        this.trayEPC="";
+        this.locationEPC="";
+    }
+
     public int getId() {
         return id;
     }

@@ -243,9 +243,35 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/individuality3_l"
+                android:onClick="chubbup"
+                android:text="查布上架" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/chubb_l"
+                android:text="待开发" />
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/individuality3_l"
                 android:onClick="inClick3"
                 android:text="@string/btn_individuality3" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -54,7 +54,10 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +67,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.CHUBB_UP_LIST;
 
-public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,FragmentCallBackListener {
+public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, FragmentCallBackListener {
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.text1)
@@ -84,19 +87,20 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
         fragment = new ChubbUpFragment();
         return fragment;
     }
-    private final String TAG="ChubbUpFragment";
+
+    private final String TAG = "ChubbUpFragment";
     private RecycleAdapter mAdapter;
     private List<ChubbUp> myList;
     /**
      * 匹配逻辑
-//     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
-     *key:epc
+     * //     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * key:epc
      * value：index
      */
     private Map<String, Integer> strIndex;
     /***布号+缸号+布票号*/
     private List<String> dataKEY;
-//    private List<Object> dataList;
+    //    private List<Object> dataList;
     private List<String> dataEPC;
     private Sound sound;
 
@@ -119,25 +123,27 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
     private void initData() {
         myList = new ArrayList<>();
         myList.add(new ChubbUp());
-        dataKEY=new ArrayList<>();
+        dataKEY = new ArrayList<>();
         strIndex = new HashMap<>();
 //        dataList= new ArrayList<>();
-        dataEPC= new ArrayList<>();
+        dataEPC = new ArrayList<>();
     }
-    private void clearData(){
-        if (myList!=null) {
+
+    private void clearData() {
+        if (myList != null) {
             myList.clear();
             myList.add(new ChubbUp());
         }
-        if (dataKEY!=null)
+        if (dataKEY != null)
             dataKEY.clear();
-        if (strIndex!=null)
+        if (strIndex != null)
             strIndex.clear();
 //        if (dataList!=null)
 //            dataList.clear();
-        if (dataEPC!=null)
+        if (dataEPC != null)
             dataEPC.clear();
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -149,7 +155,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle("查布上架");
         initData();
-        mAdapter=new RecycleAdapter(recyle,myList,R.layout.chubbup_item);
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.chubbup_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
@@ -161,6 +167,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
 
         initRFID();
     }
+
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.chubbup_item, null);
         mAdapter.setHeader(view);
@@ -200,17 +207,26 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
 
         return super.onOptionsItemSelected(item);
     }
-    public void upLoad(boolean flag){
+
+    public void upLoad(boolean flag) {
         if (flag) {
-            for (ChubbUp obj : myList) {
+            Iterator<ChubbUp> iter = myList.iterator();
+            while (iter.hasNext()) {
+                ChubbUp chubbUp = iter.next();
+                if (dataKEY.contains(chubbUp.getEpc()))
+                    myList.remove(chubbUp);
+            }
+
+           /* for (ChubbUp obj : myList) {
                 if (dataKEY.contains(obj.getEpc()))
                     myList.remove(obj);
-            }
+            }*/
             dataKEY.clear();
             CHUBB_UP_LIST.clear();
             mAdapter.notifyDataSetChanged();
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -219,6 +235,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
         myList.clear();
         disRFID();
     }
+
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick({R.id.button1, R.id.button2})
@@ -226,24 +243,25 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
+                mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
-                if (dataKEY!=null){
-                    ArrayList<ChubbUp> dataList=new ArrayList<>();
-                    for (ChubbUp data:myList){
-                        if (dataKEY.contains(data.getEpc())){
+                if (dataKEY.size() > 0) {
+                    ArrayList<ChubbUp> dataList = new ArrayList<>();
+                    for (ChubbUp data : myList) {
+                        if (dataKEY.contains(data.getEpc())) {
                             dataList.add(data);
                         }
                     }
                     CHUBB_UP_LIST.clear();
                     CHUBB_UP_LIST.addAll(dataList);
-                    Fragment fragment = CheckFragment.newInstance();
+                    Fragment fragment = ChubbUpCarrierFragment.newInstance();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                     transaction.show(fragment);
                     transaction.commit();
-                }else {
-                    Toast.makeText(getActivity(),"请至少选择一条布匹上架",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "请至少选择一条布匹上架", Toast.LENGTH_SHORT).show();
                 }
 
 //                点击上传
@@ -279,50 +297,135 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
             }
         });
     }
+
+    /**
+     * 比较两个字符串的大小，按字母的ASCII码比较
+     *
+     * @param pre
+     * @param next
+     * @return
+     */
+    private static boolean isMoreThan(String pre, String next) {
+        if (null == pre || null == next || "".equals(pre) || "".equals(next)) {
+            return false;
+        }
+        char[] c_pre = pre.toCharArray();
+        char[] c_next = next.toCharArray();
+        int minSize = Math.min(c_pre.length, c_next.length);
+        for (int i = 0; i < minSize; i++) {
+            if ((int) c_pre[i] > (int) c_next[i]) {
+                return true;
+            } else if ((int) c_pre[i] < (int) c_next[i]) {
+                return false;
+            }
+        }
+        if (c_pre.length > c_next.length) {
+            return true;
+        }
+        return false;
+    }
+
+    long currenttime = 0;
     @SuppressLint("HandlerLeak")
-    private Handler handler=new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.arg1){
+            switch (msg.arg1) {
                 case 0x00:
-                    String epc= (String) msg.obj;
-                    epc=epc.replaceAll(" ","");
-                    if (epc.startsWith("3035A537")&&!dataEPC.contains(epc)){
-                    JSONObject obj=new JSONObject();
-                    obj.put("epc",epc);
-                    final String json=obj.toJSONString();
-                    try {
-                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getClothInCheckByEpc", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                            @Override
-                            public void onError(Request request, Exception e) {
-                                if (App.LOGCAT_SWITCH) {
-                                    Log.i(TAG, "getEpc;" + e.getMessage());
-                                    Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    if (App.MUSIC_SWITCH) {
+                        if (System.currentTimeMillis() - currenttime > 150) {
+                            sound.callAlarm();
+                            currenttime = System.currentTimeMillis();
+                        }
+                    }
+                    String epc = (String) msg.obj;
+                    epc = epc.replaceAll(" ", "");
+                    if (epc.startsWith("3035A537") && !dataEPC.contains(epc)) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("epc", epc);
+                        final String json = obj.toJSONString();
+                        try {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/getClothInCheckByEpc", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
+                                    if (App.LOGCAT_SWITCH) {
+                                        Log.i(TAG, "getEpc;" + e.getMessage());
+                                        Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onResponse(JSONArray jsonArray) {
-                                try {
-                                    List<ChubbUp> arry;
-                                    arry = jsonArray.toJavaList(ChubbUp.class);
-                                    if (arry != null && arry.size() > 0) {
-                                        ChubbUp response = arry.get(0);
-                                        dataEPC.add("epc");
+                                @Override
+                                public void onResponse(JSONObject object) {
+
+                                    try {
+                                        if (object.getJSONObject("data") != null) {
+                                            final JSONObject obj = object.getJSONObject("data");
+                                            ChubbUp value = obj.toJavaObject(ChubbUp.class);
+                                            if (value != null) {
+                                                if (value.getEpc() != null && !value.getEpc().equals("") && !dataEPC.contains(value.getEpc())) {
+                                                    dataEPC.add(value.getEpc());
+                                                    myList.add(value);
+                                                    Collections.sort(myList, new Comparator<ChubbUp>() {
+                                                        @Override
+                                                        public int compare(ChubbUp obj1, ChubbUp obj2) {
+                                                            String aLocation = obj1.getBas_location();
+                                                            String bLocation = obj2.getBas_location();
+                                                            String aPallet = obj1.getBas_pallet();
+                                                            String bPallet = obj2.getBas_pallet();
+                                                            String aVat = obj1.getVatNo();
+                                                            String bVat = obj2.getVatNo();
+                                                            if ((obj1.getVatNo()==null||obj1.getVatNo().equals(""))&&(obj1.getFabRool()==null||obj1.getFabRool().equals(""))
+                                                                    &&(obj1.getProduct_no()==null||obj1.getProduct_no().equals(""))&&(obj1.getSelNo()==null||obj1.getSelNo().equals(""))
+                                                                    &&(obj1.getEpc()==null||obj1.getEpc().equals(""))&&(obj1.getColor()==null||obj1.getColor().equals("")))
+                                                                return -1;
+                                                            if ((obj2.getVatNo()==null||obj2.getVatNo().equals(""))&&(obj2.getFabRool()==null||obj2.getFabRool().equals(""))
+                                                                    &&(obj2.getProduct_no()==null||obj2.getProduct_no().equals(""))&&(obj2.getSelNo()==null||obj2.getSelNo().equals(""))
+                                                                    &&(obj2.getEpc()==null||obj2.getEpc().equals(""))&&(obj2.getColor()==null||obj2.getColor().equals("")))
+                                                                return 1;
+
+                                                            if (aLocation.equals(bLocation)) {
+                                                                if (aPallet.equals(bPallet)) {
+                                                                    if (aVat.equals(bVat)) {
+                                                                        return 0;
+                                                                    } else {
+                                                                        if (isMoreThan(aVat, bVat)) {
+                                                                            return -1;
+                                                                        } else {
+                                                                            return 1;
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    if (isMoreThan(aPallet, bPallet)) {
+                                                                        return -1;
+                                                                    } else {
+                                                                        return 1;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                if (isMoreThan(aLocation, bLocation)) {
+                                                                    return -1;
+                                                                } else {
+                                                                    return 1;
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            text1.setText(dataEPC.size() + "");
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+
+                                    } catch (Exception e) {
 
                                     }
-                                    text1.setText(dataEPC.size() + "");
-                                    mAdapter.notifyDataSetChanged();
-                                }catch (Exception e){
-
                                 }
-                            }
-                        }, json);
-                    } catch (IOException e) {
-                        Log.i(TAG, "");
+                            }, json);
+                        } catch (IOException e) {
+                            Log.i(TAG, "");
+                        }
                     }
-                }
                     break;
             }
         }
@@ -335,10 +438,10 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        String epc=tag.strEPC;
-        Message msg=handler.obtainMessage();
-        msg.arg1=0x00;
-        msg.obj=epc;
+        String epc = tag.strEPC;
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x00;
+        msg.obj = epc;
         handler.sendMessage(msg);
     }
 
@@ -359,10 +462,8 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
 
     @Override
     public void ubLoad(boolean flag) {
-        if (flag){
-            for (ChubbUp obj:CHUBB_UP_LIST){
-                upLoad(flag);
-            }
+        if (flag) {
+            upLoad(flag);
         }
     }
 
@@ -407,12 +508,13 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (position == 0) {
-                            if (isChecked){
-                                for (ChubbUp i: myList){
-                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                            if (isChecked) {
+                                for (ChubbUp i : myList) {
+                                    if ((i.getVatNo() != null && i.getProduct_no() != null && i.getSelNo() != null)
+                                            && !(i.getVatNo().equals("") || i.getProduct_no().equals("") || i.getSelNo().equals("")))
                                         dataKEY.add(i.getEpc());
                                 }
-                            }else {
+                            } else {
                                 dataKEY.clear();
                             }
                             mAdapter.notifyDataSetChanged();
@@ -428,12 +530,12 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
                     }
                 });
                 if (position != 0) {
-                    if ((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals("")){
+                    if ((item.getVatNo() + "").equals("") && (item.getProduct_no() + "").equals("") && (item.getSelNo() + "").equals("")) {
                         cb.setChecked(false);
-                        if (cb.getVisibility()!=View.INVISIBLE)
+                        if (cb.getVisibility() != View.INVISIBLE)
                             cb.setVisibility(View.INVISIBLE);
-                    }else {
-                        if (cb.getVisibility()!=View.VISIBLE)
+                    } else {
+                        if (cb.getVisibility() != View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
                         if (dataKEY.contains(item.getEpc()))
                             cb.setChecked(true);
@@ -446,13 +548,13 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener ,Fr
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));*/
 
-                    holder.setText(R.id.item1,item.getBas_pallet()+"");
-                    holder.setText(R.id.item2,item.getBas_location()+"");
-                    holder.setText(R.id.item3,item.getVatNo()+"");
-                    holder.setText(R.id.item4,item.getProduct_no()+"");
-                    holder.setText(R.id.item5,item.getFabRool()+"");
-                    holder.setText(R.id.item6,item.getSelNo()+"");
-                    holder.setText(R.id.item7,item.getColor()+"");
+                    holder.setText(R.id.item1, item.getBas_location() + "");
+                    holder.setText(R.id.item2, item.getBas_pallet() + "");
+                    holder.setText(R.id.item3, item.getVatNo() + "");
+                    holder.setText(R.id.item4, item.getProduct_no() + "");
+                    holder.setText(R.id.item5, item.getFabRool() + "");
+                    holder.setText(R.id.item6, item.getSelNo() + "");
+                    holder.setText(R.id.item7, item.getColor() + "");
                 }
 
             }

@@ -1,8 +1,10 @@
 package com.example.mumu.warehousecheckcar.entity;
 
 public class ChubbUp extends Cloth {
+    private int palletId=0;
     /***原托盘号**/
     private String bas_pallet = "";
+    private int locationId=0;
     /***原库位号**/
     private String bas_location = "";
 

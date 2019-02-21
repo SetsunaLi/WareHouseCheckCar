@@ -34,6 +34,10 @@
             android:id="@+id/nav_item8"
             android:icon="@mipmap/find_s"
             android:title="Tools" />
+        <item
+            android:id="@+id/nav_item10"
+            android:icon="@mipmap/find_s"
+            android:title="Tools" />
      <!--   <item
             android:id="@+id/nav_item9"
             android:icon="@mipmap/individuality3_s"

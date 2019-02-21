@@ -516,7 +516,8 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         if (position == 0) {
                             if (isChecked){
                                 for (Inventory i: myList){
-                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                    if ((i.getVatNo()!=null&&i.getProduct_no()!=null&&i.getSelNo()!=null)
+                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals("")))
                                     dataKEY.add(i.getVatNo());
                                 }
                             }else {

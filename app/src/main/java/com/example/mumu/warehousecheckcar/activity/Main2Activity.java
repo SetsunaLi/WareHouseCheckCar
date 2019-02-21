@@ -96,8 +96,9 @@ public class Main2Activity extends AppCompatActivity
         init2D();
 //      首页
         selectItem(0);
-        comeBack=ComeBack.getInstance();
+        comeBack = ComeBack.getInstance();
     }
+
     private ComeBack comeBack;
     //    导航数组
     private String[] mOptionTitle;
@@ -108,8 +109,8 @@ public class Main2Activity extends AppCompatActivity
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-     /*   App.IP="http://47.106.157.255";
-        App.PORT="80";*/
+//        App.IP="http://47.106.157.255";
+//        App.PORT="80";
 //        App.IP="http://192.168.1.212";
 //        App.PORT="8080";
         App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
@@ -159,16 +160,17 @@ public class Main2Activity extends AppCompatActivity
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             rfidHander.registerObserver(UHFResult.getInstance());
             //返回0表示成功？
-            int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
+            int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
 //            RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
             Log.w(TAG, "RFID读写器异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
         }
     }
+
     private void init2D() {
         try {
-            boolean flag1=RFID_2DHander.getInstance().connect2D();
+            boolean flag1 = RFID_2DHander.getInstance().connect2D();
         } catch (Exception e) {
             Log.w(TAG, "2D模块异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -195,11 +197,14 @@ public class Main2Activity extends AppCompatActivity
             case 3:
                 fragment = ChubbFragment.newInstance();
                 break;
+            case 10:
+                fragment=ChubbUpFragment.newInstance();
+                break;
             case 4:
-                fragment= PutawayCarrierFragment.newInstance();
+                fragment = PutawayCarrierFragment.newInstance();
                 break;
             case 5:
-                fragment= OutApplyNoFragment.newInstance();
+                fragment = OutApplyNoFragment.newInstance();
                 break;
             case 6:
                 fragment = CheckCarrierFragment.newInstance();
@@ -236,59 +241,64 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /*
-    * 个人信息点击监听
-    * */
+     * 个人信息点击监听
+     * */
     public void mesClick(View view) {
         selectItem(1);
     }
 
     /*
-   * 盘点作业点击监听
-   * */
+     * 盘点作业点击监听
+     * */
     public void cheClick(View view) {
         selectItem(2);
     }
 
     /*
-   * 设备设置点击监听
-   * */
+     * 设备设置点击监听
+     * */
     public void setClick(View view) {
         selectItem(3);
     }
 
     /*
-   * 个性化一点击监听
-   * */
+     * 个性化一点击监听
+     * */
     public void inClick1(View view) {
         selectItem(4);
     }
 
     /*
-   * 个性化二点击监听
-   * */
+     * 个性化二点击监听
+     * */
     public void inClick2(View view) {
         selectItem(5);
     }
 
     /*
-   * 个性化三点击监听
-   * */
+     * 个性化三点击监听
+     * */
     public void inClick3(View view) {
         selectItem(6);
     }
+
     /*
-   * 个性化三点击监听
-   * */
+     * 个性化三点击监听
+     * */
     public void findClick(View view) {
         selectItem(7);
     }
+
     /*
-   * 个性化三点击监听
-   * */
+     * 个性化三点击监听
+     * */
     public void settingClick(View view) {
         selectItem(8);
     }
 
+    public void chubbup(View view) {
+        selectItem(10);
+    }
 
     //返回键监听
     @Override
@@ -300,8 +310,8 @@ public class Main2Activity extends AppCompatActivity
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
             if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof
                     OutCheckCarFragment || fragment instanceof InCheckFragment || fragment instanceof SettingFragment
-                    || fragment instanceof HomeFragment|| fragment instanceof CheckCarrierFragment
-                    ||fragment instanceof PutawayCarrierFragment || fragment instanceof OutApplyNoFragment
+                    || fragment instanceof HomeFragment || fragment instanceof CheckCarrierFragment
+                    || fragment instanceof PutawayCarrierFragment || fragment instanceof OutApplyNoFragment
             )) {
 
                 //update the selected item in the drawer and the title
@@ -321,26 +331,27 @@ public class Main2Activity extends AppCompatActivity
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
-                } else if(fragment != null && (fragment instanceof PutawayFragment)) {
+                } else if (fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(4);
-                }else if(fragment != null && (fragment instanceof OutApplyFragment)) {
+                } else if (fragment != null && (fragment instanceof OutApplyFragment)) {
                     selectItem(5);
-                }else if(fragment != null && (fragment instanceof CheckFragment)) {
+                } else if (fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(6);
-                }else if(fragment !=null&&(fragment instanceof OutApplyDetailFragment)){
+                } else if (fragment != null && (fragment instanceof OutApplyDetailFragment)) {
                     getFragmentManager().popBackStack();
-                    if (comeBack.fragmentCallBackListener!=null)
+                    if (comeBack.fragmentCallBackListener != null)
                         comeBack.fragmentCallBackListener.comeBackListener();
-                }else if (fragment instanceof ChubbUpCarrierFragment){
+                } else if (fragment instanceof ChubbUpCarrierFragment) {
                     getFragmentManager().popBackStack();
-                    if (comeBack.fragmentCallBackListener!=null)
+                    if (comeBack.fragmentCallBackListener != null)
                         comeBack.fragmentCallBackListener.ubLoad(true);
 
                 }
                     /*else if (fragment != null && (fragment instanceof OutApplyFragment)){
                     ((OutApplyFragment)fragment).onBackPressed();
                     getFragmentManager().popBackStack();
-                }*/else {
+                }*/
+                else {
                     getFragmentManager().popBackStack();
                 }
             }
@@ -467,15 +478,15 @@ public class Main2Activity extends AppCompatActivity
         clearAllData();
     }
 
-    private void clearAllData(){
-        App.APPLY_NO="";
-        App.carNo="";
-        App.SYSTEM_VERSION="";
-        App.IP="";
-        App.PORT="";
-        App.DEVICE_NO="";
-        App.CARRIER=null;
-        App.DEVICE_NO="";
+    private void clearAllData() {
+        App.APPLY_NO = "";
+        App.carNo = "";
+        App.SYSTEM_VERSION = "";
+        App.IP = "";
+        App.PORT = "";
+        App.DEVICE_NO = "";
+        App.CARRIER = null;
+        App.DEVICE_NO = "";
         App.IN_DETAIL_LIST.clear();
         App.OUTDETAIL_LIST.clear();
         App.CHECK_DETAIL_LIST.clear();
@@ -484,6 +495,7 @@ public class Main2Activity extends AppCompatActivity
         App.DATA_KEY.clear();
 
     }
+
     private void disConnectRFID() {
         try {
 
@@ -496,6 +508,7 @@ public class Main2Activity extends AppCompatActivity
 
         }
     }
+
     private void disConnect2D() {
         try {
 //            RFID_2DHander.getInstance().off_2D();

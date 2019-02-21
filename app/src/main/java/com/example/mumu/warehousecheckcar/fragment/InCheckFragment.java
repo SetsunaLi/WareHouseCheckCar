@@ -489,7 +489,8 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                         if (position == 0) {
                             if (isChecked){
                                 for (InCheckDetail i: myList){
-                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                    if ((i.getVatNo()!=null&&i.getProduct_no()!=null&&i.getSelNo()!=null)
+                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals("")))
                                         dataKEY.add(i.getVatNo());
                                 }
                             }else {

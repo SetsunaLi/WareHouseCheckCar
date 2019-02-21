@@ -8,7 +8,7 @@ import com.example.mumu.warehousecheckcar.R;
  */
 
 public enum  OptionMenu {
-    ITEM1(R.id.nav_item1,0),ITEM2(R.id.nav_item2,1),ITEM3(R.id.nav_item3,2),ITEM4(R.id.nav_item4,3)
+    ITEM1(R.id.nav_item1,0),ITEM2(R.id.nav_item2,1),ITEM3(R.id.nav_item3,2),ITEM4(R.id.nav_item4,3),ITEM11(R.id.nav_item10,10)
     ,ITEM5(R.id.nav_item5,4),ITEM6(R.id.nav_item6,5),ITEM7(R.id.nav_item7,6),ITEM8(R.id.nav_item8,7)
     ,ITEM9(R.id.nav_setting,8),ITEM10(R.id.nav_about,9);
     private int id;

@@ -395,17 +395,6 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                 }
                 final String json = JSON.toJSONString(jsocList);
                 try {
-                    /*new Thread(){
-                        @Override
-                        public void run() {
-                            super.run();
-                            try {
-                                Response response=OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh",json);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();*/
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
@@ -476,7 +465,8 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                         if (position == 0) {
                             if (isChecked){
                                 for (Input i: myList){
-                                    if (!((i.getVatNo()+"").equals("")&&(i.getProduct_no()+"").equals("")&&(i.getSelNo()+"").equals("")))
+                                    if ((i.getVatNo()!=null&&i.getProduct_no()!=null&&i.getSelNo()!=null)
+                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals("")))
                                         dataKey.add(i.getVatNo());
                                 }
                             }else {

@@ -90,8 +90,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                 trayNo = trayNo.replaceAll(" ", "");
                 App.CARRIER.setTrayNo(trayNo);
                 App.CARRIER.setTrayEPC("");
-                App.CARRIER.setLocationNo("");
-                App.CARRIER.setLocationEPC("");
+
             }
 
             @Override
@@ -112,8 +111,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                 locationNo = locationNo.replaceAll(" ", "");
                 App.CARRIER.setLocationNo(locationNo);
                 App.CARRIER.setLocationEPC("");
-                App.CARRIER.setTrayNo("");
-                App.CARRIER.setTrayEPC("");
+
             }
 
             @Override
@@ -128,6 +126,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     @Override
     public void onResume() {
         super.onResume();
+        App.CARRIER.clear();
     }
 
     private void initRFID() {
@@ -168,7 +167,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
             final String json= JSON.toJSONString(list);
 
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/pushClothToCheckIn", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushClothToCheckIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
@@ -178,12 +177,12 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                     }
 
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(BaseReturn baseReturn) {
                         try {
-                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+//                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                             if (baseReturn != null && baseReturn.getStatus() == 1) {
                                 Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-
+                                getActivity().onBackPressed();
                             } else {
                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                             }
@@ -206,7 +205,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            try {
+//            try {
                 switch (msg.arg1) {
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
@@ -244,6 +243,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                                                 msg.arg1 = 0x01;
                                                 msg.obj = response;
                                                 handler.sendMessage(msg);
+
                                             }
                                         } catch (Exception e) {
 
@@ -279,9 +279,9 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                             App.CARRIER .setLocationEPC(response.getLocationEPC());
                         break;
                 }
-            } catch (Exception e) {
+            /*} catch (Exception e) {
 
-            }
+            }*/
         }
     };
     @Override
