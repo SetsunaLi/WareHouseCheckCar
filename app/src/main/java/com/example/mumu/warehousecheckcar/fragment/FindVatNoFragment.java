@@ -1,5 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,12 +18,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
@@ -32,7 +39,9 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.rfid.rxobserver.ReaderSetting;
@@ -94,7 +103,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         ButterKnife.bind(this, view);
         initView();
         initData();
-
+        initUtil();
 
         sound = new Sound(getActivity());
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_item);
@@ -136,6 +145,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         myList = new ArrayList<>();
         myList.add(new FindVatNo());
         dataKEY = new ArrayList<>();
+        dataList=new ArrayList<>();
     }
 
     private void clearData() {
@@ -262,6 +272,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.button:
+                cancelKeyBoard(view);
                 goFind();
                 break;
             case R.id.button1:
@@ -272,8 +283,47 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 break;
         }
     }
+    private void blinkDialog() {
+        final Dialog dialog;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View blinkView = inflater.inflate(R.layout.setprower_dialog_layout, null);
+        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        SeekBar seekBar=(SeekBar)blinkView.findViewById(R.id.seekbar);
+        dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.show();
+        dialog.getWindow().setContentView(blinkView);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+    }
+    private InputMethodManager mInputMethodManager;
+    //     * 初始化必须工具
+    private void initUtil() {
+        //初始化输入法
+        mInputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+    //隐藏输入法
+    public void cancelKeyBoard(View view){
+        if (mInputMethodManager.isActive()) {
+            mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
+        }
 
+    }
     private void goFind() {
+
         String vatNo = fixeedittext1.getText().toString() + "";
 //        String vatNo="180524084.1";
         vatNo = vatNo.replaceAll(" ", "");
@@ -305,6 +355,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                                             dataKEY.add(i.getEpc());
                                     }
                                     text3.setText(dataList.size()+"");
+                                    mAdapter.notifyDataSetChanged();
                                     Toast.makeText(getActivity(), "成功查询缸号！", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getActivity(), "此缸号无库存数据！", Toast.LENGTH_SHORT).show();

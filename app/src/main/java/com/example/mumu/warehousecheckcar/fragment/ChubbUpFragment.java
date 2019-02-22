@@ -9,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +44,7 @@ import com.example.mumu.warehousecheckcar.entity.ChubbUp;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
@@ -165,6 +167,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
+        ComeBack.getInstance().setCallbackLiatener(this);
         initRFID();
     }
 
@@ -210,20 +213,21 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
 
     public void upLoad(boolean flag) {
         if (flag) {
-            Iterator<ChubbUp> iter = myList.iterator();
-            while (iter.hasNext()) {
-                ChubbUp chubbUp = iter.next();
-                if (dataKEY.contains(chubbUp.getEpc()))
-                    myList.remove(chubbUp);
-            }
-
-           /* for (ChubbUp obj : myList) {
-                if (dataKEY.contains(obj.getEpc()))
-                    myList.remove(obj);
-            }*/
-            dataKEY.clear();
-            CHUBB_UP_LIST.clear();
-            mAdapter.notifyDataSetChanged();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Iterator<ChubbUp> iter = myList.iterator();
+                    while (iter.hasNext()) {
+                        ChubbUp chubbUp = iter.next();
+                        if (dataKEY.contains(chubbUp.getEpc()))
+                            iter.remove();
+//                            myList.remove(chubbUp);
+                    }
+                    dataKEY.clear();
+                    CHUBB_UP_LIST.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
         }
     }
 
@@ -426,6 +430,8 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                             Log.i(TAG, "");
                         }
                     }
+                    break;
+                case 0x01:
                     break;
             }
         }

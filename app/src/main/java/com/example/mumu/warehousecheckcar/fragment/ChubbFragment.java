@@ -111,7 +111,7 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chubb_layout, container, false);
         ButterKnife.bind(this, view);
-
+        getActivity().setTitle("查布");
         initData();
         clearData();
         text1.setText(epcList.size() + "");

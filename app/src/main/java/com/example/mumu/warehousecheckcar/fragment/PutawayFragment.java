@@ -454,7 +454,9 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
             super(v, datas, itemLayoutId);
 
         }
-
+        //eventBus\RxJava
+        //MAP\MVVM\MVC\MVP
+        //SHARE sdk
         @Override
         public void convert(RecyclerHolder holder, final Input item, final int position) {
             if (item != null) {
