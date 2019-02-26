@@ -27,7 +27,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
@@ -39,11 +38,11 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.entity.ChubbUp;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
-import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
+import com.rfid.RFIDReaderHelper;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -52,6 +51,8 @@ import com.squareup.okhttp.Request;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -80,6 +81,8 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     TextView text3;
     @Bind(R.id.button1)
     Button button1;
+    @Bind(R.id.button2)
+    Button button2;
 
     private FindVatNoFragment() {
     }
@@ -94,6 +97,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     private List<FindVatNo> myList;
     private List<FindVatNo> dataList;
     private List<String> dataKEY;
+    private List<String> dataEpc;
     private Sound sound;
 
     @Nullable
@@ -145,7 +149,8 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         myList = new ArrayList<>();
         myList.add(new FindVatNo());
         dataKEY = new ArrayList<>();
-        dataList=new ArrayList<>();
+        dataList = new ArrayList<>();
+        dataEpc = new ArrayList<>();
     }
 
     private void clearData() {
@@ -157,16 +162,20 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             dataList.clear();
         if (dataKEY != null)
             dataKEY.clear();
+        if (dataEpc != null)
+            dataEpc.clear();
     }
 
     private void initRFID() {
         try {
             RFID_2DHander.getInstance().on_RFID();
             UHFResult.getInstance().setCallbackLiatener(this);
+            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
         } catch (Exception e) {
 
         }
     }
+    private RFIDReaderHelper rfidHander;
 
     private void disRFID() {
         try {
@@ -198,6 +207,11 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        if (rfidHander != null) {
+            int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 20);
+            if (i==0)
+                App.PROWER=20;
+        }
         clearData();
         myList.clear();
         disRFID();
@@ -231,17 +245,45 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             String epc = (String) msg.obj;
             epc = epc.replaceAll(" ", "");
             if (dataKEY.contains(epc)) {
+
                 if (System.currentTimeMillis() - currenttime > 150) {
                     sound.callAlarm();
                     currenttime = System.currentTimeMillis();
                 }
-                for (FindVatNo findVatNo : dataList) {
-                    if (findVatNo.getEpc().equals(epc)) {
-                        myList.add(findVatNo);
+                if (!dataEpc.contains(epc)) {
+                    dataEpc.add(epc);
+                    for (FindVatNo findVatNo : dataList) {
+                        if (findVatNo.getEpc().equals(epc)) {
+                            myList.add(findVatNo);
+                        }
                     }
+                    Collections.sort(myList, new Comparator<FindVatNo>() {
+                        @Override
+                        public int compare(FindVatNo obj1, FindVatNo obj2) {
+                            String aInv_serial = obj1.getInv_serial();
+                            String bInv_serial = obj2.getInv_serial();
+
+                            if ((obj1.getEpc()==null||obj1.getEpc().equals(""))&&(obj1.getColor_name()==null||obj1.getColor_name().equals(""))
+                                    &&(obj1.getLocation_name()==null||obj1.getLocation_name().equals(""))&&(obj1.getCloth_name()==null||obj1.getCloth_name().equals(""))
+                                    &&(obj1.getPallet_name()==null||obj1.getPallet_name().equals(""))&&(obj1.getInv_serial()==null||obj1.getInv_serial().equals("")))
+                                return -1;
+                            if ((obj2.getEpc()==null||obj2.getEpc().equals(""))&&(obj2.getColor_name()==null||obj2.getColor_name().equals(""))
+                                    &&(obj2.getLocation_name()==null||obj2.getLocation_name().equals(""))&&(obj2.getCloth_name()==null||obj2.getCloth_name().equals(""))
+                                    &&(obj2.getPallet_name()==null||obj2.getPallet_name().equals(""))&&(obj2.getInv_serial()==null||obj2.getInv_serial().equals("")))
+
+                                return 1;
+                            if (aInv_serial!=null&&bInv_serial!=null){
+                                if (Integer.valueOf(aInv_serial)>=Integer.valueOf(bInv_serial)){
+                                    return 1;
+                                }
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    });
+                    text2.setText(myList.size() - 1 + "");
+                    mAdapter.notifyDataSetChanged();
                 }
-                text2.setText(myList.size()-1+"");
-                mAdapter.notifyDataSetChanged();
             }
         }
     };
@@ -268,9 +310,9 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     }
 
-    @OnClick({R.id.button,R.id.button1})
+    @OnClick({R.id.button, R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.button:
                 cancelKeyBoard(view);
                 goFind();
@@ -278,18 +320,47 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             case R.id.button1:
                 myList.clear();
                 myList.add(new FindVatNo());
-                text2.setText(myList.size()-1+"");
+                dataEpc.clear();
+                text2.setText(myList.size() - 1 + "");
                 mAdapter.notifyDataSetChanged();
+                break;
+            case R.id.button2:
+                blinkDialog();
                 break;
         }
     }
+
     private void blinkDialog() {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.setprower_dialog_layout, null);
         Button no = (Button) blinkView.findViewById(R.id.dialog_no);
         Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        SeekBar seekBar=(SeekBar)blinkView.findViewById(R.id.seekbar);
+        SeekBar seekBar = (SeekBar) blinkView.findViewById(R.id.seekbar);
+        final  TextView textPrower=(TextView)blinkView.findViewById(R.id.textprower);
+        textPrower.setText(App.PROWER+"dbm");
+        seekBar.setProgress(App.PROWER);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textPrower.setText(progress+"dbm");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.i("onStopTrackingTouch","onStopTrackingTouch");
+                int prower=seekBar.getProgress();
+                if (rfidHander != null) {
+                    int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) prower);
+                    if (i==0)
+                        App.PROWER=prower;
+                }
+            }
+        });
         dialog = new AlertDialog.Builder(getActivity()).create();
         dialog.show();
         dialog.getWindow().setContentView(blinkView);
@@ -309,19 +380,23 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             }
         });
     }
+
     private InputMethodManager mInputMethodManager;
+
     //     * 初始化必须工具
     private void initUtil() {
         //初始化输入法
-        mInputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
+
     //隐藏输入法
-    public void cancelKeyBoard(View view){
+    public void cancelKeyBoard(View view) {
         if (mInputMethodManager.isActive()) {
             mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
         }
 
     }
+
     private void goFind() {
 
         String vatNo = fixeedittext1.getText().toString() + "";
@@ -354,7 +429,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                                         if (i != null && i.getEpc() != null && !i.getEpc().equals(""))
                                             dataKEY.add(i.getEpc());
                                     }
-                                    text3.setText(dataList.size()+"");
+                                    text3.setText(dataList.size() + "");
                                     mAdapter.notifyDataSetChanged();
                                     Toast.makeText(getActivity(), "成功查询缸号！", Toast.LENGTH_SHORT).show();
                                 } else {
@@ -373,6 +448,10 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 e.printStackTrace();
             }
         }
+    }
+
+    @OnClick(R.id.button2)
+    public void onViewClicked() {
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<FindVatNo> {
