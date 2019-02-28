@@ -172,6 +172,8 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         }
     };
 
+
+
     @Override
     public void callback(byte[] bytes) {
         Message msg = handler.obtainMessage();

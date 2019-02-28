@@ -90,6 +90,7 @@ public class UpdateApk {
         progressDialog.setTitle("正在下载");
         progressDialog.setMessage("请稍等.......");
         progressDialog.setProgress(0);
+//      拖动条不能拖拽
         progressDialog.setCancelable(false);
         progressDialog.show();
 

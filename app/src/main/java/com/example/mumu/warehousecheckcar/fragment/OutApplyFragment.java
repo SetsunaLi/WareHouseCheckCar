@@ -439,6 +439,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         String key1 = data.getOutp_id() + data.getVatNo() + data.getProduct_no() + data.getSelNo();
                                         isData = true;
                                         epcList.add(EPC);
+                                        if (myList.get(keyValue.get(key1)).getCount()<myList.get(keyValue.get(key1)).getList().size())
                                         myList.get(keyValue.get(key1)).addCount();
                                         detail.setFlag(1);
                                         /*if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
@@ -574,6 +575,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     }
 
+//    Listview Adapter(ArrayList)
+    //getView(0
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
         private Context context;
 
