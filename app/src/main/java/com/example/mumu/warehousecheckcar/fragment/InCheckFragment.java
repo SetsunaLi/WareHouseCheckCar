@@ -33,13 +33,12 @@ import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
-import com.example.mumu.warehousecheckcar.activity.Main2Activity;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
@@ -60,7 +59,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.IN_DETAIL_LIST;
-import static com.example.mumu.warehousecheckcar.application.App.carNo;
 
 /**
  * Created by mumu on 2018/12/9.
@@ -79,6 +77,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
 
 
     private static InCheckFragment fragment;
+    @Bind(R.id.text2)
+    TextView text2;
+    @Bind(R.id.text3)
+    TextView text3;
 
     private InCheckFragment() {
     }
@@ -135,6 +137,12 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
+        if (App.CARRIER == null) {
+            if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
+                text2.setText(App.CARRIER.getLocationNo());
+            if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
+                text3.setText(App.CARRIER.getTrayNo());
+        }
         initView();
         initRFID();
         return view;
@@ -232,82 +240,70 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                             }
                         }
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (EPC.startsWith("3035A537")&&!dataEPC.contains(EPC)) {
+                        if (EPC.startsWith("3035A537") && !dataEPC.contains(EPC)) {
 //                        查询
                             JSONObject epc = new JSONObject();
                             epc.put("epc", EPC);
                             final String json = epc.toJSONString();
 //                           final String json=JSON.toJSONString(EPC);
-                                    try {
-                                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
-                                            @Override
-                                            public void onError(Request request, Exception e) {
-                                                if (App.LOGCAT_SWITCH) {
-                                                    Log.i(TAG, "getEpc;" + e.getMessage());
-                                                    Toast.makeText(getActivity(), "获取epc信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                }
-                                            }
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getEpc;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取epc信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
 
-                                            @Override
-                                            public void onResponse(ArrayList<InCheckDetail> response) {
-                                               try{
-                                                    if (response != null && response.size() != 0) {
-                                                        InCheckDetail ocd = response.get(0);
-                                                        if (ocd != null) {
-                                                            ocd.setCarNo(App.carNo);
-                                                            if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
-                                                                dataEPC.add(ocd.getEpc());
-                                                                dataList.add(ocd);
+                                    @Override
+                                    public void onResponse(ArrayList<InCheckDetail> response) {
+                                        try {
+                                            if (response != null && response.size() != 0) {
+                                                InCheckDetail ocd = response.get(0);
+                                                if (ocd != null) {
+                                                    if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
+                                                        ocd.setCarrier(App.CARRIER);
+                                                        dataEPC.add(ocd.getEpc());
+                                                        dataList.add(ocd);
                                                           /*  String key = ocd.getVatNo() + ocd.getProduct_no()
                                                                     + ocd.getSelNo() + ocd.getColor() + "";*/
-                                                                String key = ocd.getVatNo() + "";
+                                                        String key = ocd.getVatNo() + "";
 
-                                                                if (!strIndex.containsKey(key)) {//当前没有
-                                                                    ocd.setCount(1);
-                                                                    ocd.setWeightall(ocd.getWeight());
-                                                                    myList.add(ocd);
-                                                                    dataKEY.add(ocd.getEpc());
-                                                                    strIndex.put(key, myList.size() - 1);
+                                                        if (!strIndex.containsKey(key)) {//当前没有
+                                                            ocd.setCount(1);
+                                                            ocd.setWeightall(ocd.getWeight());
+                                                            myList.add(ocd);
+                                                            dataKEY.add(ocd.getEpc());
+                                                            strIndex.put(key, myList.size() - 1);
 
-                                                                } else {
-                                                                    int index = strIndex.get(key);
-                                                                    myList.get(index).addCount();
-                                                                    myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), ocd.getWeight()));
-                                                                }
-                                                            }
+                                                        } else {
+                                                            int index = strIndex.get(key);
+                                                            myList.get(index).addCount();
+                                                            myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), ocd.getWeight()));
                                                         }
                                                     }
-                                                    text1.setText("" + (dataList.size()));
-                                                    mAdapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                            text1.setText("" + (dataList.size()));
+                                            mAdapter.notifyDataSetChanged();
                                               /*  Message msg = handler.obtainMessage();
                                                 msg.arg1 = 0x04;
                                                 handler.sendMessage(msg);*/
-                                               } catch (Exception e) {
-                                                   e.printStackTrace();
-                                               }
-                                            }
-                                        }, json);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+                                }, json);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         break;
-                  /*  case 0x02:
-                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                        clearData();
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                    case 0x03:
-                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                        break;
-                    case 0x04:
-                        text1.setText("" + (dataList.size()));
-                        mAdapter.notifyDataSetChanged();
-                        break;*/
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
@@ -358,43 +354,44 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     }
                 }
                 final String json = JSON.toJSONString(list);
-                        Response response = null;
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/inDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "inDetail;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                                @Override
-                                public void onResponse(String response) {
-                                    try{
-                                        if (response.equals("1")) {
-                                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                            clearData();
-                                            mAdapter.notifyDataSetChanged();
+                Response response = null;
+                try {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/inDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            if (App.LOGCAT_SWITCH) {
+                                Log.i(TAG, "inDetail;" + e.getMessage());
+                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                if (response.equals("1")) {
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    clearData();
+                                    mAdapter.notifyDataSetChanged();
                                        /* Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x02;
                                         handler.sendMessage(msg);*/
-                                        } else {
-                                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     /*    Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x03;
                                         handler.sendMessage(msg);*/
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
                                 }
-                            }, json);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }catch (Exception e){
-                            e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
+                    }, json);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 dialog.dismiss();
             }
         });
@@ -438,7 +435,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
             IN_DETAIL_LIST.clear();
 //            IN_DETAIL_LIST.add(new InCheckDetail());//增加一个为头部
             for (InCheckDetail obj : dataList) {
-                if (obj!=null&&obj.getVatNo()!=null&&obj.getVatNo().equals(key)) {
+                if (obj != null && obj.getVatNo() != null && obj.getVatNo().equals(key)) {
                     IN_DETAIL_LIST.add(obj);
                 }
             }
@@ -487,13 +484,13 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (position == 0) {
-                            if (isChecked){
-                                for (InCheckDetail i: myList){
-                                    if ((i.getVatNo()!=null&&i.getProduct_no()!=null&&i.getSelNo()!=null)
-                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals("")))
+                            if (isChecked) {
+                                for (InCheckDetail i : myList) {
+                                    if ((i.getVatNo() != null && i.getProduct_no() != null && i.getSelNo() != null)
+                                            && !(i.getVatNo().equals("") || i.getProduct_no().equals("") || i.getSelNo().equals("")))
                                         dataKEY.add(i.getVatNo());
                                 }
-                            }else {
+                            } else {
                                 dataKEY.clear();
                             }
                             mAdapter.notifyDataSetChanged();
@@ -509,29 +506,29 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     }
                 });
                 if (position != 0) {
-                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
+                    if (((item.getVatNo() + "").equals("") && (item.getProduct_no() + "").equals("") && (item.getSelNo() + "").equals(""))) {
                         cb.setChecked(false);
-                        if (cb.getVisibility()!=View.INVISIBLE)
+                        if (cb.getVisibility() != View.INVISIBLE)
                             cb.setVisibility(View.INVISIBLE);
-                    }else {
-                        if (cb.getVisibility()!=View.VISIBLE)
+                    } else {
+                        if (cb.getVisibility() != View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
                         if (dataKEY.contains(item.getEpc()))
                             cb.setChecked(true);
                         else
                             cb.setChecked(false);
                     }
-                LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                if (index == position) {
-                    ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                } else
-                    ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                holder.setText(R.id.item1, item.getProduct_no() + "");
-                holder.setText(R.id.item2, item.getVatNo() + "");
-                holder.setText(R.id.item3, item.getColor() + "");
-                holder.setText(R.id.item4, item.getSelNo() + "");
-                holder.setText(R.id.item5, item.getCount() + "");
-                holder.setText(R.id.item6, "" + String.valueOf(item.getWeightall()) + "KG");
+                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    if (index == position) {
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                    } else
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    holder.setText(R.id.item1, item.getProduct_no() + "");
+                    holder.setText(R.id.item2, item.getVatNo() + "");
+                    holder.setText(R.id.item3, item.getColor() + "");
+                    holder.setText(R.id.item4, item.getSelNo() + "");
+                    holder.setText(R.id.item5, item.getCount() + "");
+                    holder.setText(R.id.item6, "" + String.valueOf(item.getWeightall()) + "KG");
                 }
 
             }

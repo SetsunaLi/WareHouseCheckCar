@@ -38,25 +38,27 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
-    @Bind(R.id.edittext1)
-    EditText edittext1;
-    @Bind(R.id.edittext2)
-    EditText edittext2;
+public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLiatener {
+    private final String TAG = "CarPutawayCarrierFragment";
+
     @Bind(R.id.relativelayout)
     LinearLayout relativelayout;
     @Bind(R.id.button2)
     Button button2;
-    private final String TAG = "InCheckCarrierFragment";
+    @Bind(R.id.edittext1)
+    EditText edittext1;
+    @Bind(R.id.edittext2)
+    EditText edittext2;
 
-    private InCheckCarrierFragment() {
+
+    private CarPutawayCarrierFragment() {
     }
 
-    private static InCheckCarrierFragment fragment;
+    private static CarPutawayCarrierFragment fragment;
 
-    public static InCheckCarrierFragment newInstance() {
+    public static CarPutawayCarrierFragment newInstance() {
         if (fragment == null) ;
-        fragment = new InCheckCarrierFragment();
+        fragment = new CarPutawayCarrierFragment();
         return fragment;
     }
 
@@ -65,11 +67,11 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
+        View view = inflater.inflate(R.layout.car_putaway_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
 
-        getActivity().setTitle("入库校验");
+        getActivity().setTitle("叉车上架");
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,9 +81,9 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged", "onTextChanged");
-                String trayNo = charSequence.toString();
-                trayNo = trayNo.replaceAll(" ", "");
+                Log.i("onTextChanged","onTextChanged");
+                String trayNo=charSequence.toString();
+                trayNo=trayNo.replaceAll(" ","");
                 App.CARRIER.setTrayNo(trayNo);
                 App.CARRIER.setTrayEPC("");
             }
@@ -99,9 +101,9 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged", "onTextChanged");
-                String locationNo = charSequence.toString();
-                locationNo = locationNo.replaceAll(" ", "");
+                Log.i("onTextChanged","onTextChanged");
+                String locationNo=charSequence.toString();
+                locationNo=locationNo.replaceAll(" ","");
                 App.CARRIER.setLocationNo(locationNo);
 
             }
@@ -112,18 +114,13 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
             }
         });
         if (App.CARRIER == null)
-            App.CARRIER = new Carrier();
-        if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
+            App.CARRIER =new Carrier();
+        if (App.CARRIER.getLocationNo()!=null&&!App.CARRIER.getLocationNo().equals(""))
             edittext2.setText(App.CARRIER.getLocationNo());
-        if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
+        if (App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))
             edittext1.setText(App.CARRIER.getTrayNo());
         initRFID();
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void initRFID() {
@@ -155,7 +152,7 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
     @OnClick(R.id.button2)
     public void onViewClicked() {
         if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
-            Fragment fragment = InCheckFragment.newInstance();
+            Fragment fragment = CarPutawayFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);
@@ -170,66 +167,71 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
-                            currenttime = System.currentTimeMillis();
+            try {
+                switch (msg.arg1) {
+                    case 0x00:
+                        if (App.MUSIC_SWITCH) {
+                            if (System.currentTimeMillis() - currenttime > 150) {
+                                sound.callAlarm();
+                                currenttime = System.currentTimeMillis();
+                            }
                         }
-                    }
-                    String EPC = (String) msg.obj;
-                    EPC = EPC.replaceAll(" ", "");
-                    if (EPC.startsWith("31B5A5AF")) {
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onResponse(Carrier response) {
-                                    try {
-                                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
-                                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
-                                            Message msg = handler.obtainMessage();
-                                            msg.arg1 = 0x01;
-                                            msg.obj = response;
-                                            handler.sendMessage(msg);
+                        String EPC = (String) msg.obj;
+                        EPC = EPC.replaceAll(" ", "");
+                        if (EPC.startsWith("31B5A5AF")) {
+                            JSONObject epc = new JSONObject();
+                            epc.put("epc", EPC);
+                            final String json = epc.toJSONString();
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+                                    @SuppressLint("LongLogTag")
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getInventory;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
-                                    } catch (Exception e) {
-
                                     }
-                                }
-                            }, json);
-                        } catch (IOException e) {
 
+                                    @Override
+                                    public void onResponse(Carrier response) {
+                                        try {
+                                            if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
+                                                    (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
+                                                Message msg = handler.obtainMessage();
+                                                msg.arg1 = 0x01;
+                                                msg.obj = response;
+                                                handler.sendMessage(msg);
+                                            }
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
+                                }, json);
+                            } catch (IOException e) {
+
+                            }
                         }
-                    }
-                    break;
-                case 0x01:
-                    Carrier response = (Carrier) msg.obj;
-                    if (response!=null&&response.getTrayNo()!=null&&!response.getTrayNo().equals("")) {
-                        App.CARRIER.setTrayNo(response.getTrayNo());
-                        edittext1.setText(response.getTrayNo() + "");
-                    }
-                    if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
-                        App.CARRIER .setTrayEPC(response.getTrayEPC());
+                        break;
+                    case 0x01:
+                        Carrier response = (Carrier) msg.obj;
+                        if (response!=null&&response.getTrayNo()!=null&&!response.getTrayNo().equals("")) {
+                            App.CARRIER.setTrayNo(response.getTrayNo());
+                            edittext1.setText(response.getTrayNo() + "");
+                        }
+                        if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
+                            App.CARRIER .setTrayEPC(response.getTrayEPC());
 
-                    if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
-                        App.CARRIER.setLocationNo(response.getLocationNo());
-                        edittext2.setText(response.getLocationNo() + "");
-                    }
-                    if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
-                        App.CARRIER .setLocationEPC(response.getLocationEPC());
-                    break;
+                        if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
+                            App.CARRIER.setLocationNo(response.getLocationNo());
+                            edittext2.setText(response.getLocationNo() + "");
+                        }
+                        if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
+                            App.CARRIER .setLocationEPC(response.getLocationEPC());
+                        break;
+                }
+            } catch (Exception e) {
+
             }
         }
     };
@@ -242,10 +244,9 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
         Message msg = handler.obtainMessage();
-        msg.what = 0x00;
+        msg.arg1 = 0x00;
         msg.obj = tag.strEPC;
         handler.sendMessage(msg);
-
     }
 
     @Override

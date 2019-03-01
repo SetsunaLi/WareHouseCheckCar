@@ -8,8 +8,8 @@ import java.util.Date;
  */
 
 public class InCheckDetail {
-    /**车牌号*/
-    private String carNo;
+    private Carrier carrier;
+
     /**
      * EPC码
      */
@@ -47,6 +47,14 @@ public class InCheckDetail {
     private String device;
     private boolean flag=false;
     private int type=1;
+
+    public Carrier getCarrier() {
+        return carrier;
+    }
+
+    public void setCarrier(Carrier carrier) {
+        this.carrier = carrier;
+    }
 
     public boolean isFlag() {
         return flag;
@@ -87,13 +95,7 @@ public class InCheckDetail {
         count=0;
     }
 
-    public String getCarNo() {
-        return carNo;
-    }
 
-    public void setCarNo(String carNo) {
-        this.carNo = carNo;
-    }
 
     public String getEpc() {
         return epc;

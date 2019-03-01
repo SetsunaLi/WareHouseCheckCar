@@ -37,7 +37,7 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
-import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
@@ -188,7 +188,7 @@ public class Main2Activity extends AppCompatActivity
                 fragment = HomeFragment.newInstance();
                 break;
             case 1:
-                fragment = InCheckFragment.newInstance();
+                fragment = InCheckCarrierFragment.newInstance();
                 break;
             case 2:
                 fragment = OutCheckCarFragment.newInstance();
@@ -308,7 +308,7 @@ public class Main2Activity extends AppCompatActivity
         } else {
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
             if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof
-                    OutCheckCarFragment || fragment instanceof InCheckFragment || fragment instanceof SettingFragment
+                    OutCheckCarFragment || fragment instanceof InCheckCarrierFragment || fragment instanceof SettingFragment
                     || fragment instanceof HomeFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof PutawayCarrierFragment || fragment instanceof OutApplyNoFragment
             )) {
