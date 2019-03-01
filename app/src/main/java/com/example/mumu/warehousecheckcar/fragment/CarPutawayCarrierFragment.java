@@ -115,10 +115,8 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
         });
         if (App.CARRIER == null)
             App.CARRIER =new Carrier();
-        if (App.CARRIER.getLocationNo()!=null&&!App.CARRIER.getLocationNo().equals(""))
-            edittext2.setText(App.CARRIER.getLocationNo());
-        if (App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))
-            edittext1.setText(App.CARRIER.getTrayNo());
+        else
+            App.CARRIER.clear();
         initRFID();
         return view;
     }
