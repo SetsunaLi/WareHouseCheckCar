@@ -175,8 +175,8 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:drawableTop="@mipmap/message_l"
                 android:layout_weight="1"
-                android:onClick="mesClick"
-                android:text="@string/btn_message" />
+                android:onClick="click1"
+                android:text="@string/btn_click1" />
 
             <Button
                 style="@style/DashboardButton"
@@ -185,8 +185,8 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/check_l"
-                android:onClick="cheClick"
-                android:text="@string/btn_check" />
+                android:onClick="click2"
+                android:text="@string/btn_click2" />
 
 
         </LinearLayout>
@@ -205,37 +205,63 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/individuality1_l"
-                android:onClick="inClick1"
-                android:text="@string/btn_individuality1" />
+                android:onClick="click3"
+                android:text="@string/btn_click3" />
 
             <Button
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/chubb_l"
+                android:onClick="click4"
+                android:text="@string/btn_click4" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/individuality3_l"
+                android:onClick="click5"
+                android:text="@string/btn_click5" />
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/chubb_l"
+                android:onClick="click6"
+                android:text="@string/btn_click6" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/individuality2_l"
-                android:onClick="inClick2"
-                android:text="@string/btn_individuality2" />
-
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/home_button_margin1"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                style="@style/DashboardButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/home_button_margin2"
-                android:layout_weight="1"
-                android:drawableTop="@mipmap/chubb_l"
-                android:onClick="setClick"
-                android:text="@string/btn_chubb" />
+                android:text="@string/btn_click7"
+                android:onClick="click7"/>
             <Button
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
@@ -243,33 +269,8 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/individuality3_l"
-                android:onClick="chubbup"
-                android:text="查布上架" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/home_button_margin1"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                style="@style/DashboardButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/home_button_margin2"
-                android:layout_weight="1"
-                android:drawableTop="@mipmap/chubb_l"
-                android:text="待开发" />
-            <Button
-                style="@style/DashboardButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/home_button_margin2"
-                android:layout_weight="1"
-                android:drawableTop="@mipmap/individuality3_l"
-                android:onClick="inClick3"
-                android:text="@string/btn_individuality3" />
+                android:onClick="click8"
+                android:text="@string/btn_click8" />
         </LinearLayout>
 
         <LinearLayout
@@ -286,8 +287,8 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/find_l"
-                android:onClick="findClick"
-                android:text="@string/btn_finding" />
+                android:onClick="click9"
+                android:text="@string/btn_click9" />
             <Button
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
@@ -295,8 +296,8 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/setting_l"
-                android:onClick="settingClick"
-                android:text="@string/btn_setting" />
+                android:onClick="click10"
+                android:text="@string/btn_click10" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

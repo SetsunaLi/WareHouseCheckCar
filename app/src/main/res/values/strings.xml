@@ -22,14 +22,16 @@
     <string name="options_online_time">00:00&#8195;</string>
     <string name="options_work">仓库管理员&#8195;</string>
     <string name="options_status">在线&#8195;</string>
-    <string name="btn_message">入库检验</string>
-    <string name="btn_check">出库校验</string>
-    <string name="btn_chubb">查布</string>
-    <string name="btn_individuality1">上架</string>
-    <string name="btn_individuality2">出库</string>
-    <string name="btn_individuality3">盘点</string>
-    <string name="btn_finding">寻货</string>
-    <string name="btn_setting">系统设置</string>
+    <string name="btn_click1">入库检验</string>
+    <string name="btn_click2">出库校验</string>
+    <string name="btn_click3">上架</string>
+    <string name="btn_click4">叉车上架</string>
+    <string name="btn_click5">查布</string>
+    <string name="btn_click6">查布上架</string>
+    <string name="btn_click7">出库</string>
+    <string name="btn_click8">盘点</string>
+    <string name="btn_click9">寻找布匹</string>
+    <string name="btn_click10">系统设置</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
 
@@ -51,13 +53,14 @@
         <item>主页</item>
         <item>入库检验</item>
         <item>出库校验</item>
+        <item>上架</item>
+        <item>叉车上架</item>
         <item>查布</item>
         <item>查布上架</item>
-        <item>上架</item>
         <item>出库</item>
         <item>盘点</item>
-        <item>寻货</item>
-        <item>设备管理</item>
+        <item>寻找布匹</item>
+        <item>系统设置</item>
         <item>关于</item>
     </string-array>
 

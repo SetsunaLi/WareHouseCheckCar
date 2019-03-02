@@ -207,7 +207,10 @@ public class CarPutawayFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                上传数据
-                ArrayList<Input> jsocList = new ArrayList<>();
+                ArrayList<InCheckDetail> jsocList = new ArrayList<>();
+                for (int i=1;i<myList.size()-1;i++){
+                    jsocList.add(myList.get(i));
+                }
                 final String json = JSON.toJSONString(jsocList);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {

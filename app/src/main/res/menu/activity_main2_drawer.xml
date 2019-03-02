@@ -16,23 +16,27 @@
             android:title="Slideshow" />
         <item
             android:id="@+id/nav_item4"
-            android:icon="@mipmap/chubb_s"
-            android:title="Tools" />
-        <item
-            android:id="@+id/nav_item5"
             android:icon="@mipmap/individuality1_s"
             android:title="Tools" />
         <item
-            android:id="@+id/nav_item6"
-            android:icon="@mipmap/individuality2_s"
+            android:id="@+id/nav_item5"
+            android:icon="@mipmap/chubb_s"
             android:title="Tools" />
         <item
-            android:id="@+id/nav_item7"
+            android:id="@+id/nav_item6"
             android:icon="@mipmap/individuality3_s"
             android:title="Tools" />
         <item
+            android:id="@+id/nav_item7"
+            android:icon="@mipmap/chubb_s"
+            android:title="Tools" />
+        <item
             android:id="@+id/nav_item8"
-            android:icon="@mipmap/find_s"
+            android:icon="@mipmap/individuality2_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item9"
+            android:icon="@mipmap/individuality3_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item10"

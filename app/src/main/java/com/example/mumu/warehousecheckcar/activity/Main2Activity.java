@@ -30,6 +30,7 @@ import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CarPutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
@@ -194,29 +195,29 @@ public class Main2Activity extends AppCompatActivity
                 fragment = OutCheckCarFragment.newInstance();
                 break;
             case 3:
-                fragment = ChubbFragment.newInstance();
-                break;
-            case 10:
-                fragment=ChubbUpFragment.newInstance();
-                break;
-            case 4:
                 fragment = PutawayCarrierFragment.newInstance();
                 break;
+            case 4:
+                fragment = CarPutawayCarrierFragment.newInstance();
+                break;
             case 5:
-                fragment = OutApplyNoFragment.newInstance();
+                fragment = ChubbFragment.newInstance();
                 break;
             case 6:
-                fragment = CheckCarrierFragment.newInstance();
+                fragment = ChubbUpFragment.newInstance();
                 break;
             case 7://寻货待开发
-                fragment = FindVatNoFragment.newInstance();
-//                fragment=new TextFragment();
+                fragment = OutApplyNoFragment.newInstance();
                 break;
             case 8:
-                fragment = SettingFragment.newInstance();
+                fragment = CheckCarrierFragment.newInstance();
                 break;
             case 9:
-                fragment = AboutFragment.newInstance();
+                fragment = FindVatNoFragment.newInstance();
+//                fragment = AboutFragment.newInstance();
+                break;
+            case 10:
+                fragment = SettingFragment.newInstance();
                 break;
             default:
                 fragment = HomeFragment.newInstance();
@@ -231,7 +232,6 @@ public class Main2Activity extends AppCompatActivity
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         }
-
 //        设置列表点击状态
         navigationView.getMenu().findItem(OptionMenu.values()[position].getId()).setChecked(true);
 //        关闭抽屉
@@ -240,62 +240,72 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /*
-     * 个人信息点击监听
+     * 入库校验
      * */
-    public void mesClick(View view) {
+    public void click1(View view) {
         selectItem(1);
     }
 
     /*
-     * 盘点作业点击监听
+     * 出库校验
      * */
-    public void cheClick(View view) {
+    public void click2(View view) {
         selectItem(2);
     }
 
     /*
-     * 设备设置点击监听
+     * 上架
      * */
-    public void setClick(View view) {
+    public void click3(View view) {
         selectItem(3);
     }
 
     /*
-     * 个性化一点击监听
+     * 叉车上架
      * */
-    public void inClick1(View view) {
+    public void click4(View view) {
         selectItem(4);
     }
 
     /*
-     * 个性化二点击监听
+     * 查布
      * */
-    public void inClick2(View view) {
+    public void click5(View view) {
         selectItem(5);
     }
 
     /*
-     * 个性化三点击监听
+     * 查布上架
      * */
-    public void inClick3(View view) {
+    public void click6(View view) {
         selectItem(6);
     }
 
     /*
-     * 个性化三点击监听
+     * 出库
      * */
-    public void findClick(View view) {
+    public void click7(View view) {
         selectItem(7);
     }
 
     /*
-     * 个性化三点击监听
+     * 盘点
      * */
-    public void settingClick(View view) {
+    public void click8(View view) {
         selectItem(8);
     }
 
-    public void chubbup(View view) {
+    /**
+     * 寻布
+     */
+    public void click9(View view) {
+        selectItem(9);
+    }
+
+    /**
+     * 系统
+     */
+    public void click10(View view) {
         selectItem(10);
     }
 
