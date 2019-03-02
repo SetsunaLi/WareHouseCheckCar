@@ -3,65 +3,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg2">
-
-    <RelativeLayout
-        android:id="@+id/relativelayout"
+    <ImageButton
+        android:id="@+id/imgbutton"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        android:background="@mipmap/bg8">
+        android:layout_height="60dip"
+        android:layout_margin="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        style="@style/view_border"
+        android:src="@mipmap/plus_circle"
+        android:scaleType="center"
+        />
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_weight="3">
+       <android.support.v7.widget.RecyclerView
+           android:id="@+id/recyle"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+   </RelativeLayout>
 
-        <TextView
-            style="@style/text_style2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/edittext_title"
-            android:textColor="@color/colorWhite" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="50dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/editNO"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/edit_text_style"
-                android:ems="10"
-                android:inputType="text"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:singleLine="true"
-                android:textColor="@color/colorWhite" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3">
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="280dip"
-        android:layout_height="150dip"
-        android:layout_centerInParent="true"
-        style="@style/button_style2"
-        android:text="@string/button_scnner"/>
-
-    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -78,3 +40,83 @@
             android:text="@string/button_find" />
     </LinearLayout>
 </LinearLayout>
+   <!-- <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@mipmap/bg2">
+
+<RelativeLayout
+    android:id="@+id/relativelayout"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="15dp"
+    android:background="@mipmap/bg8">
+
+    <TextView
+        style="@style/text_style2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/edittext_title"
+        android:textColor="@color/colorWhite" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="50dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editNO"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/edit_text_style"
+            android:ems="10"
+            android:inputType="text"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="3">
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="280dip"
+        android:layout_height="150dip"
+        android:layout_centerInParent="true"
+        style="@style/button_style2"
+        android:text="@string/button_scnner"/>
+
+</RelativeLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="7"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/button_style1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/button_margin"
+        android:layout_marginRight="@dimen/home_margin"
+        android:text="@string/button_find" />
+</LinearLayout>
+</LinearLayout>-->

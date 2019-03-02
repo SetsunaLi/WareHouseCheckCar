@@ -179,6 +179,12 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     private void disRFID() {
         try {
+            if (rfidHander != null) {
+                int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 20);
+                if (i==0)
+                    App.PROWER=20;
+            }
+
             RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
 
@@ -207,11 +213,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (rfidHander != null) {
-            int i=rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 20);
-            if (i==0)
-                App.PROWER=20;
-        }
+
         clearData();
         myList.clear();
         disRFID();

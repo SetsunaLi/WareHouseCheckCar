@@ -214,13 +214,12 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 9:
                 fragment = FindVatNoFragment.newInstance();
-//                fragment = AboutFragment.newInstance();
                 break;
             case 10:
                 fragment = SettingFragment.newInstance();
                 break;
             default:
-                fragment = HomeFragment.newInstance();
+                fragment = AboutFragment.newInstance();
                 break;
         }
         FragmentManager fragmentManager = getFragmentManager();
@@ -317,11 +316,12 @@ public class Main2Activity extends AppCompatActivity
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof
-                    OutCheckCarFragment || fragment instanceof InCheckCarrierFragment || fragment instanceof SettingFragment
-                    || fragment instanceof HomeFragment || fragment instanceof CheckCarrierFragment
-                    || fragment instanceof PutawayCarrierFragment || fragment instanceof OutApplyNoFragment
-            )) {
+            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment
+                    || fragment instanceof InCheckCarrierFragment || fragment instanceof OutCheckCarFragment
+                    || fragment instanceof PutawayCarrierFragment || fragment instanceof CarPutawayCarrierFragment
+                    || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
+                    || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
+                    || fragment instanceof FindVatNoFragment)) {
 
                 //update the selected item in the drawer and the title
 //            mDrawerList.setItemChecked(0, true);
@@ -341,11 +341,11 @@ public class Main2Activity extends AppCompatActivity
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
                 } else if (fragment != null && (fragment instanceof PutawayFragment)) {
-                    selectItem(4);
+                    selectItem(3);
                 } else if (fragment != null && (fragment instanceof OutApplyFragment)) {
-                    selectItem(5);
+                    selectItem(7);
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
-                    selectItem(6);
+                    selectItem(8);
                 } else if (fragment != null && (fragment instanceof OutApplyDetailFragment)) {
                     getFragmentManager().popBackStack();
                     if (comeBack.fragmentCallBackListener != null)

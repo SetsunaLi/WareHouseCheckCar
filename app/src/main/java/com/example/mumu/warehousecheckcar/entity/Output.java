@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class Output implements Cloneable {
+    /***/
     /***id*/
     private String outp_id;
     /***布号*/

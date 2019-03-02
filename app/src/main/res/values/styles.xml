@@ -142,6 +142,10 @@
         <item name="android:background">@color/colorTableLine</item>
     </style>
 
+    <style name="view_border">
+        <item name="android:background">@drawable/view_dash_border</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
