@@ -24,8 +24,7 @@ import java.util.Map;
 public class App extends Application {
     public  static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     public static final String TAG_RETURN_FRAGMENT = "TitleFragment";
-//    申请单号缓存
-    public static String APPLY_NO="";
+
 //    车牌号缓存
     public static String carNo="";
 //系统版本
@@ -63,6 +62,8 @@ public class App extends Application {
     public static List<Input> INPUT_DETAIL_LIST=new ArrayList<>();
 //布票号缓存
 //    public static List<String> FABROOL_LIST=new ArrayList<>();
+//    申请单号缓存
+public static String APPLY_NO="";
     public static String KEY;
     public static Map<String,List<String>> DATA_KEY=new HashMap<>();
     public static ArrayList<ChubbUp> CHUBB_UP_LIST=new ArrayList<>();

@@ -145,6 +145,8 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
         }
         initView();
         initRFID();
+        text2.setText(App.CARRIER.getLocationNo());
+        text3.setText(App.CARRIER.getTrayNo());
         return view;
     }
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
@@ -31,6 +32,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -40,6 +42,7 @@ import com.squareup.okhttp.Request;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,7 +71,7 @@ public class CarPutawayFragment extends Fragment {
         fragment = new CarPutawayFragment();
         return fragment;
     }
-    private ArrayList<InCheckDetail> myList;
+    private ArrayList<Cloth> myList;
     private RecycleAdapter mAdapter;
     @Nullable
     @Override
@@ -101,10 +104,10 @@ public class CarPutawayFragment extends Fragment {
     }
     private void initData(){
         myList=new ArrayList<>();
-        myList.add(new InCheckDetail());
+        myList.add(new Cloth());
     }
     private void setAdaperHeader() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.in_check_item_layout, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.car_putaway_item, null);
         mAdapter.setHeader(view);
     }
     @Override
@@ -117,13 +120,13 @@ public class CarPutawayFragment extends Fragment {
     }
 
     private void downLoading() {
-        String traNo = App.CARRIER.getTrayNo();
+        String pallet = App.CARRIER.getTrayNo();
         JSONObject obj = new JSONObject();
-        obj.put("traNo", traNo);
+        obj.put("pallet", pallet);
         final String json = obj.toJSONString();
 //        接口
         try {
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/getClothFromInvSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @SuppressLint("LongLogTag")
                 @Override
                 public void onError(Request request, Exception e) {
@@ -134,14 +137,16 @@ public class CarPutawayFragment extends Fragment {
                 }
 
                 @Override
-                public void onResponse(Carrier response) {
+                public void onResponse(JSONObject jsonObject) {
                     try {
-                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
-                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
-                            Message msg = handler.obtainMessage();
-                            msg.arg1 = 0x00;
-                            msg.obj = response;
-                            handler.sendMessage(msg);
+                        if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            List<Cloth> response;
+                            response=jsonArray.toJavaList(Cloth.class);
+                            if (response != null && response.size() != 0) {
+                                myList.addAll(response);
+                                mAdapter.notifyDataSetChanged();
+                            }
                         }
                     } catch (Exception e) {
 
@@ -158,26 +163,6 @@ public class CarPutawayFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
-
-
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            try {
-                switch (msg.arg1) {
-                    case 0x00:
-
-                        break;
-
-                }
-            } catch (Exception e) {
-
-            }
-        }
-    };
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
@@ -207,13 +192,17 @@ public class CarPutawayFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                上传数据
-                ArrayList<InCheckDetail> jsocList = new ArrayList<>();
+                ArrayList<Cloth> jsocList = new ArrayList<>();
                 for (int i=1;i<myList.size()-1;i++){
                     jsocList.add(myList.get(i));
                 }
-                final String json = JSON.toJSONString(jsocList);
+                JSONObject obj = new JSONObject();
+                obj.put("data ", jsocList);
+                obj.put("carrier",App.CARRIER);
+                final String json = JSON.toJSONString(obj);
+
                 try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/pushClothToCcPalletTransfer", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
                             if (App.LOGCAT_SWITCH) {
@@ -247,7 +236,7 @@ public class CarPutawayFragment extends Fragment {
         });
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<Cloth> {
         private Context context;
 
         public void setContext(Context context) {
@@ -258,7 +247,7 @@ public class CarPutawayFragment extends Fragment {
             super.setHeader(mHeaderView);
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<InCheckDetail> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<Cloth> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
@@ -273,7 +262,7 @@ public class CarPutawayFragment extends Fragment {
         }
 
         @Override
-        public void convert(RecyclerHolder holder, final InCheckDetail item, final int position) {
+        public void convert(RecyclerHolder holder, final Cloth item, final int position) {
             if (item != null) {
                 if (position != 0) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
@@ -281,14 +270,12 @@ public class CarPutawayFragment extends Fragment {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     } else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    holder.setText(R.id.item1, item.getProduct_no() + "");
+                    holder.setText(R.id.item1, item.getClothNum() + "");
                     holder.setText(R.id.item2, item.getVatNo() + "");
                     holder.setText(R.id.item3, item.getColor() + "");
-                    holder.setText(R.id.item4, item.getSelNo() + "");
-                    holder.setText(R.id.item5, item.getCount() + "");
-                    holder.setText(R.id.item6, "" + String.valueOf(item.getWeightall()) + "KG");
+                    holder.setText(R.id.item4, item.getFabRool() + "");
+                    holder.setText(R.id.item5, "" + String.valueOf(item.getWeight()) + "KG");
                 }
-
             }
         }
     }

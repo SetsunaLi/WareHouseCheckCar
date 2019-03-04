@@ -41,6 +41,7 @@ import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyFragment;
+import com.example.mumu.warehousecheckcar.fragment.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
@@ -52,6 +53,8 @@ import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.rfid.RFIDReaderHelper;
+
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -316,7 +319,7 @@ public class Main2Activity extends AppCompatActivity
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment
+            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment|| fragment instanceof HomeFragment
                     || fragment instanceof InCheckCarrierFragment || fragment instanceof OutCheckCarFragment
                     || fragment instanceof PutawayCarrierFragment || fragment instanceof CarPutawayCarrierFragment
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
@@ -342,7 +345,7 @@ public class Main2Activity extends AppCompatActivity
                     askForBack();
                 } else if (fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(3);
-                } else if (fragment != null && (fragment instanceof OutApplyFragment)) {
+                } else if (fragment != null && (fragment instanceof OutApplyNewFragment)) {
                     selectItem(7);
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(8);
@@ -366,7 +369,15 @@ public class Main2Activity extends AppCompatActivity
             }
         }
     }
-
+    private HashMap<String,OutApplyNewFragment.OutputFlag> dataList;
+    public HashMap getOutApplyDataList(){
+        if(dataList!=null)
+            return dataList;
+        return new HashMap();
+    }
+    public void setOutApplyDataList(HashMap<String,OutApplyNewFragment.OutputFlag> dataList){
+        this.dataList=dataList;
+    }
     public void showProgress(final boolean show) {
 /*
         loginButton.setEnabled(show?false:true);
@@ -499,7 +510,7 @@ public class Main2Activity extends AppCompatActivity
         App.IN_DETAIL_LIST.clear();
         App.OUTDETAIL_LIST.clear();
         App.CHECK_DETAIL_LIST.clear();
-        App.OUTPUT_DETAIL_LIST.clear();
+//        App.OUTPUT_DETAIL_LIST.clear();
         App.INPUT_DETAIL_LIST.clear();
         App.DATA_KEY.clear();
 

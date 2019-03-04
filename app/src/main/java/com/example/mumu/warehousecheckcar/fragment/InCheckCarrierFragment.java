@@ -91,6 +91,8 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
             }
         });
+        edittext2.setText("临时入库区");
+
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -113,10 +115,9 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
         });
         if (App.CARRIER == null)
             App.CARRIER = new Carrier();
-        if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
-            edittext2.setText(App.CARRIER.getLocationNo());
-        if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
-            edittext1.setText(App.CARRIER.getTrayNo());
+        else
+            App.CARRIER.clear();
+        App.CARRIER.setLocationNo("临时入库区");
         initRFID();
         return view;
     }
@@ -200,7 +201,7 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
                                         if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
                                                 (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
                                             Message msg = handler.obtainMessage();
-                                            msg.arg1 = 0x01;
+                                            msg.what = 0x01;
                                             msg.obj = response;
                                             handler.sendMessage(msg);
                                         }

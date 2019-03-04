@@ -57,6 +57,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     EditText edittext1;
     @Bind(R.id.edittext2)
     EditText edittext2;
+    @Bind(R.id.button1)
+    Button button1;
 
     private PutawayCarrierFragment() {
     }
@@ -75,7 +77,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        和盘点Check布局一样
-        View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
+        View view = inflater.inflate(R.layout.putaway_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
         getActivity().setTitle("上架");
@@ -89,8 +91,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged","onTextChanged");
-                String trayNo=charSequence.toString();
+                Log.i("onTextChanged", "onTextChanged");
+                String trayNo = charSequence.toString();
                 App.CARRIER.setTrayNo(trayNo);
                 App.CARRIER.setTrayEPC("");
             }
@@ -108,9 +110,10 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged","onTextChanged");
-                String locationNo=charSequence.toString();
+                Log.i("onTextChanged", "onTextChanged");
+                String locationNo = charSequence.toString();
                 App.CARRIER.setLocationNo(locationNo);
+                App.CARRIER.setLocationEPC("");
 
             }
 
@@ -120,12 +123,12 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
             }
         });
         if (App.CARRIER == null)
-            App.CARRIER =new Carrier();
+            App.CARRIER = new Carrier();
         /*App.CARRIER.setLocationNo("查布区");
         App.CARRIER.setTrayNo("TP0002");*/
-        if (App.CARRIER.getLocationNo()!=null&&!App.CARRIER.getLocationNo().equals(""))
+        if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
             edittext2.setText(App.CARRIER.getLocationNo());
-        if (App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))
+        if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
             edittext1.setText(App.CARRIER.getTrayNo());
         initRFID();
         return view;
@@ -158,18 +161,25 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
-    @OnClick(R.id.button2)
-    public void onViewClicked() {
-        /*if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
-                (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {*/
-        if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
-            Fragment fragment = PutawayFragment.newInstance();
-            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-            transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-            transaction.show(fragment);
-            transaction.commit();
-        } else
-            Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
+    @OnClick({R.id.button2, R.id.button1})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.button2:
+                if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+                    Fragment fragment = PutawayFragment.newInstance();
+                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                    transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                    transaction.show(fragment);
+                    transaction.commit();
+                } else
+                    Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.button1:
+                App.CARRIER.clear();
+                App.CARRIER.setLocationNo("临时入库区");
+                edittext2.setText("临时入库区");
+                break;
+        }
     }
 
     long currenttime = 0;
@@ -232,19 +242,19 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                             edittext2.setText(response.getLocationNo() + "");
                             edittext1.setText(response.getTrayNo() + "");
                         }*/
-                        if (response!=null&&response.getTrayNo()!=null&&!response.getTrayNo().equals("")) {
+                        if (response != null && response.getTrayNo() != null && !response.getTrayNo().equals("")) {
                             App.CARRIER.setTrayNo(response.getTrayNo());
                             edittext1.setText(response.getTrayNo() + "");
                         }
-                        if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
-                            App.CARRIER .setTrayEPC(response.getTrayEPC());
+                        if (response != null && response.getTrayEPC() != null && !response.getTrayEPC().equals(""))
+                            App.CARRIER.setTrayEPC(response.getTrayEPC());
 
-                        if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
+                        if (response != null && response.getLocationNo() != null && !response.getLocationNo().equals("")) {
                             App.CARRIER.setLocationNo(response.getLocationNo());
                             edittext2.setText(response.getLocationNo() + "");
                         }
-                        if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
-                            App.CARRIER .setLocationEPC(response.getLocationEPC());
+                        if (response != null && response.getLocationEPC() != null && !response.getLocationEPC().equals(""))
+                            App.CARRIER.setLocationEPC(response.getLocationEPC());
                         break;
                 }
             } catch (Exception e) {
@@ -275,4 +285,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onOperationTagCallBack(RXOperationTag tag) {
 
     }
+
+
 }

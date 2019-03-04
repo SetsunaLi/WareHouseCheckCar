@@ -3,10 +3,12 @@ package com.example.mumu.warehousecheckcar.entity;
 import java.util.Date;
 
 public class Cloth {
+    /**布号*/
+    private String clothNum;
     private String carNo = "";
     /***缸号*/
     private String vatNo = "";
-    /***布号*/
+    /***生产单号*/
     private String product_no = "";
     /***色号（色号指的都是销售色号）*/
     private String selNo = "";
@@ -25,7 +27,13 @@ public class Cloth {
     private String epc = "";
     /**设备号（请求的时候默认为空，上传的时候会带参）*/
     private String device;
+    public String getClothNum() {
+        return clothNum;
+    }
 
+    public void setClothNum(String clothNum) {
+        this.clothNum = clothNum;
+    }
     public String getCarNo() {
         return carNo;
     }

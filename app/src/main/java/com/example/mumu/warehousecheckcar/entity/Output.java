@@ -1,13 +1,15 @@
 package com.example.mumu.warehousecheckcar.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mumu on 2019/1/3.
  */
 
-public class Output implements Cloneable {
-    /***/
+public class Output implements Cloneable, Serializable {
+    /**申请单号*/
+    private String applyNo;
     /***id*/
     private String outp_id;
     /***布号*/
@@ -22,20 +24,28 @@ public class Output implements Cloneable {
     private double weightall=0;
     /**设备号*/
     private String device;
-    /***配货数量*/
+    /***申请数量*/
     private int countOut;
-    /***实盘数量（这个可以不用管）*/
+    /***扫描数量（这个可以不用管）*/
     private int count=0;
-    /***盘盈数量（这个可以不用管）*/
+    /***配货数量（这个可以不用管）*/
     private int countProfit;
     /***盘亏数量（这个可以不用管）*/
     private int countLosses;
-    /**勾选状态（默认选中；这个可以不用管）*/
-    private boolean status=true;
+    /**头*/
+    private boolean status=false;
     /***出库申请单缸号列表*/
     private List<OutputDetail> list;
     /***标志位,0为正常，2为非正常申请单扫码*/
     private int flag=0;
+
+    public String getApplyNo() {
+        return applyNo;
+    }
+
+    public void setApplyNo(String applyNo) {
+        this.applyNo = applyNo;
+    }
 
     public String getOutp_id() {
         return outp_id;

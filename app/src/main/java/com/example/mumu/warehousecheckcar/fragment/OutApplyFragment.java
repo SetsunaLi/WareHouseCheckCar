@@ -135,21 +135,6 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.apply_item_layout_1, null);
         mAdapter.setHeader(view);

@@ -1,6 +1,8 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -139,6 +141,14 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.setId(0);
+        mAdapter.select(0);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
@@ -173,9 +183,16 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
             case R.id.imgbutton:
                 myList.add("");
                 mAdapter.select(myList.size()-1);
+                mAdapter.setId(myList.size()-1);
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
+                Fragment fragment = OutApplyNewFragment.newInstance();
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("NO",myList);
+                fragment.setArguments(bundle);
+                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 break;
         }
     }
@@ -213,10 +230,10 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
 
         @Override
         public void convert(RecyclerHolder holder, final String item, final int position) {
-            FixedEditText editNo=(FixedEditText)holder.getView(R.id.fixeedittext1);
+            final FixedEditText editNo=(FixedEditText)holder.getView(R.id.fixeedittext1);
             editNo.setTag(position);
 //            editNo.setFixedText("申请单号：");
-            editNo.setText(item);
+            editNo.setText(myList.get((Integer) editNo.getTag()));
             if (position==this.position){
                 editNo.setFocusable(true);//设置输入框可聚集
                 editNo.setFocusableInTouchMode(true);//设置触摸聚焦
@@ -229,8 +246,10 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
             editNo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    FixedEditText fe=(FixedEditText)view;
-                    setId((int)fe.getTag());
+                    if (b) {
+                        FixedEditText fe = (FixedEditText) view;
+                        setId((int) fe.getTag());
+                    }
                 }
             });
             editNo.addTextChangedListener(new TextWatcher() {
@@ -242,7 +261,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                     Log.i("onTextChanged","onTextChanged");
-                   myList.set(position,charSequence.toString());
+                   myList.set((int)editNo.getTag(),charSequence.toString());
                 }
 
                 @Override
