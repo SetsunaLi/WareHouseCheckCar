@@ -1,3 +1,4 @@
+/*
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.AlertDialog;
@@ -66,9 +67,10 @@ import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
 import static com.example.mumu.warehousecheckcar.application.App.KEY;
 import static com.example.mumu.warehousecheckcar.application.App.OUTPUT_DETAIL_LIST;
 
-/**
+*
  * Created by mumu on 2018/12/8.
- */
+
+
 
 public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, BasePullUpRecyclerAdapter.OnItemClickListener
 ,FragmentCallBackListener{
@@ -96,10 +98,11 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 
     private RecycleAdapter mAdapter;
     private List<Output> myList;
-    /**
+*
      * 匹配机制应该是item分组字段
      * key:缸号、布号、色号
-     */
+
+
     private Map<String, Integer> keyValue;
     private List<Output> dataList;
     //    private List<String> dataKey;
@@ -231,7 +234,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 //                        Toast.makeText(getActivity(), "无法获取申请单信息请返回重试！", Toast.LENGTH_SHORT).show();
                     }
 
-                    /**这里应该要大改*/
+*这里应该要大改
+
                     @Override
                     public void onResponse(JSONArray json) {
                         try {
@@ -427,11 +431,12 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                                         if (myList.get(keyValue.get(key1)).getCount()<myList.get(keyValue.get(key1)).getList().size())
                                         myList.get(keyValue.get(key1)).addCount();
                                         detail.setFlag(1);
-                                        /*if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
+if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).getCountOut()) {
                                             detail.setFlag(3);//超出配货单量
                                         } else {
                                             detail.setFlag(1);//正常配货
-                                        }*/
+                                        }
+
                                         data.setWeightall(ArithUtil.add(data.getWeightall(), detail.getWeight()));
                                         text1.setText(epcList.size() + "");
                                         mAdapter.notifyDataSetChanged();
@@ -669,3 +674,4 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
         }
     }
 }
+*/

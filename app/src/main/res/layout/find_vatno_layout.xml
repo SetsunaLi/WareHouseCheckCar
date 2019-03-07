@@ -141,6 +141,16 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="85dip"
+        android:layout_marginTop="70dip"
+        android:layout_marginBottom="95dip"
+        android:background="@drawable/fuzzy_padding"
+        ></ListView>
 
     <!--</ScrollView>-->
 </RelativeLayout>

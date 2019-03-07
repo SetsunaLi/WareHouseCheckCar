@@ -14,8 +14,12 @@
         android:descendantFocusability="blocksDescendants"
         >
 
-        <View style="@style/view_line" />
-
+        <View
+            android:layout_width="50dip"
+            android:layout_height="3dp"
+            android:background="@drawable/view_dash_line"
+            android:layerType="software"
+    />
         <TextView
             android:id="@+id/text1"
             style="@style/text_style2"

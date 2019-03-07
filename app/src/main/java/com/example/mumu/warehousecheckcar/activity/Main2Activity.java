@@ -40,7 +40,6 @@ import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyDetailFragment;
-import com.example.mumu.warehousecheckcar.fragment.OutApplyFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutCheckCarFragment;
@@ -350,6 +349,7 @@ public class Main2Activity extends AppCompatActivity
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(8);
                 } else if (fragment != null && (fragment instanceof OutApplyDetailFragment)) {
+                    setOutApplyDataList(((OutApplyDetailFragment) fragment).getList());
                     getFragmentManager().popBackStack();
                     if (comeBack.fragmentCallBackListener != null)
                         comeBack.fragmentCallBackListener.comeBackListener();
@@ -369,14 +369,15 @@ public class Main2Activity extends AppCompatActivity
             }
         }
     }
-    private HashMap<String,OutApplyNewFragment.OutputFlag> dataList;
+    private HashMap<String,OutApplyNewFragment.OutputFlag> dataList =new HashMap<>();
     public HashMap getOutApplyDataList(){
         if(dataList!=null)
             return dataList;
         return new HashMap();
     }
     public void setOutApplyDataList(HashMap<String,OutApplyNewFragment.OutputFlag> dataList){
-        this.dataList=dataList;
+        this.dataList.clear();
+        this.dataList.putAll(dataList);
     }
     public void showProgress(final boolean show) {
 /*
@@ -512,7 +513,7 @@ public class Main2Activity extends AppCompatActivity
         App.CHECK_DETAIL_LIST.clear();
 //        App.OUTPUT_DETAIL_LIST.clear();
         App.INPUT_DETAIL_LIST.clear();
-        App.DATA_KEY.clear();
+//        App.DATA_KEY.clear();
 
     }
 

@@ -42,7 +42,7 @@
             style="@style/text_style2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="申请数量："/>
+            android:text="申请单数量："/>
         <TextView
             android:id="@+id/text2"
             style="@style/text_style2"

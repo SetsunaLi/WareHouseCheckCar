@@ -59,7 +59,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
 
 /**
  * Created by mumu on 2019/1/14.

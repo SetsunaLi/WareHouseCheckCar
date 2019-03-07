@@ -49,7 +49,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
 
 /**
  * Created by mumu on 2018/12/8.
@@ -192,9 +191,9 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                 bundle.putSerializable("NO",myList);
                 fragment.setArguments(bundle);
                 getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+    getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 break;
-        }
+}
     }
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;

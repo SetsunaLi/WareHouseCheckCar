@@ -38,10 +38,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.example.mumu.warehousecheckcar.R.id.recyle;
-import static com.example.mumu.warehousecheckcar.application.App.DATA_KEY;
-import static com.example.mumu.warehousecheckcar.application.App.KEY;
-
 /**
  * Created by mumu on 2018/12/21.
  */
@@ -114,19 +110,21 @@ public class OutApplyDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         load();
+        text1.setText(myList.size()-1+"");
+        text2.setText(oldData.getVatNo()+"");
         mAdapter.notifyDataSetChanged();
     }
 
     public void load() {
         oldData = (Output) getArguments().getSerializable("dataList");
         dataList = (HashMap<String, OutApplyNewFragment.OutputFlag>) getArguments().getSerializable("epcList");
-        int pei = 0;
-        for (OutputDetail i : myList) {
+     /*   int pei = 0;
+        for (OutputDetail i : oldData.getList()) {
             if (dataList.get(i.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
                 pei++;
             }
-        }
-        oldData.setCountProfit(pei);
+        }*/
+        oldData.setCountProfit(0);
         myList.addAll(oldData.getList());
         Collections.sort(myList, new Comparator<OutputDetail>() {
             @Override
@@ -171,11 +169,15 @@ public class OutApplyDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public HashMap getList() {
+        return dataList;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        ((Main2Activity)getActivity()).setOutApplyDataList(dataList);
+//        ((Main2Activity)getActivity()).setOutApplyDataList(dataList);
         myList.clear();
 //        App.OUTPUT_DETAIL_LIST.clear();
     }
@@ -206,9 +208,9 @@ public class OutApplyDetailFragment extends Fragment {
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (position == 0) {
                             if (isChecked) {
-                                for (int i=1;i<myList.size();i++) {
+                                for (int i = 1; i < myList.size(); i++) {
                                     if (oldData.getCountProfit() < oldData.getCountOut()) {
-                                        if (dataList.get(myList.get(i).getEpc()).isFind()&&dataList.get(myList.get(i).getEpc()).getApplyNo().equals("")) {
+                                        if (dataList.get(myList.get(i).getEpc()).isFind() && dataList.get(myList.get(i).getEpc()).getApplyNo().equals("")) {
                                             dataList.get(myList.get(i).getEpc()).setApplyNo(oldData.getApplyNo());
                                             oldData.setCountProfit(oldData.getCountProfit() + 1);
                                         }
@@ -217,28 +219,32 @@ public class OutApplyDetailFragment extends Fragment {
                                 }
                             } else {
                                 oldData.setCountProfit(0);
-                                for (OutputDetail i : myList) {
-                                    if (dataList.get(i.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
-                                        dataList.get(i.getEpc()).setApplyNo("");
+                                for (int i=1;i<myList.size();i++){
+                                    if (dataList.get(myList.get(i).getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                                        dataList.get(myList.get(i).getEpc()).setApplyNo("");
                                     }
                                 }
                             }
                             mAdapter.notifyDataSetChanged();
                         } else {
                             if (isChecked) {
-                                if (dataList.get(item.getEpc()).isFind()) {
-                                    if (oldData.getCountProfit() < oldData.getCountOut()) {
-                                        dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo());
-                                        oldData.setCountProfit(oldData.getCountProfit() + 1);
-                                    } else {
-                                        cb.setChecked(false);
-                                        Toast.makeText(getActivity(), "已选布匹超出申请数量！", Toast.LENGTH_SHORT).show();
+                                    if (dataList.get(item.getEpc()).isFind()) {
+                                        if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
+                                            if (oldData.getCountProfit() < oldData.getCountOut()) {
+                                                dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo());
+                                                oldData.setCountProfit(oldData.getCountProfit() + 1);
+                                            } else {
+                                                cb.setChecked(false);
+                                                Toast.makeText(getActivity(), "已选布匹超出申请数量！", Toast.LENGTH_SHORT).show();
+                                            }
                                     }
                                 }
 
                             } else {
-                                dataList.get(item.getEpc()).setApplyNo("");
-                                oldData.setCountProfit(oldData.getCountProfit() - 1);
+                                if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                                    dataList.get(item.getEpc()).setApplyNo("");
+                                    oldData.setCountProfit(oldData.getCountProfit() - 1);
+                                }
                             }
 
                         }
@@ -247,14 +253,15 @@ public class OutApplyDetailFragment extends Fragment {
                 if (position != 0) {
                     if (((item.getFabRool() + "").equals("") && (item.getEpc() + "").equals("") && (item.getWeight() + "").equals(""))) {
                         cb.setChecked(false);
-                        if (cb.isEnabled() !=false)
+                        if (cb.isEnabled() != false)
                             cb.setEnabled(false);
                     } else {
-                        if (dataList.get(item.getEpc()).isFind()) {
-                            if (cb.isEnabled() !=true)
+                        if (dataList.get(item.getEpc()).isFind() &&
+                                (dataList.get(item.getEpc()).getApplyNo().equals("") || dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))) {
+                            if (cb.isEnabled() != true)
                                 cb.setEnabled(true);
-                        }else {
-                            if (cb.isEnabled() !=false)
+                        } else {
+                            if (cb.isEnabled() != false)
                                 cb.setEnabled(false);
                         }
                         if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))
@@ -267,7 +274,7 @@ public class OutApplyDetailFragment extends Fragment {
                     if (!dataList.get(item.getEpc()).isFind()) {//亏
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                         cb.setEnabled(false);
-                    } else{
+                    } else {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                         cb.setEnabled(true);
                     }

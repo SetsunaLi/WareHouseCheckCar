@@ -20,24 +20,38 @@ public class Output implements Cloneable, Serializable {
     private String selNo;
     /***颜色*/
     private String color;
-    /**总重量（手持机扫描时候计算，这个可以不用管）*/
-    private double weightall=0;
     /**设备号*/
     private String device;
     /***申请数量*/
     private int countOut;
+    /****/
+    private int countLosses=0;
+
     /***扫描数量（这个可以不用管）*/
     private int count=0;
+    /**扫描总重量（手持机扫描时候计算，这个可以不用管）*/
+    private double weightall=0;
+
+
     /***配货数量（这个可以不用管）*/
-    private int countProfit;
-    /***盘亏数量（这个可以不用管）*/
-    private int countLosses;
+    private int countProfit=0;
+    /**配货总重量（手持机扫描时候计算，这个可以不用管）*/
+    private double weightPei=0;
+
     /**头*/
     private boolean status=false;
     /***出库申请单缸号列表*/
     private List<OutputDetail> list;
     /***标志位,0为正常，2为非正常申请单扫码*/
     private int flag=0;
+
+    public double getWeightPei() {
+        return weightPei;
+    }
+
+    public void setWeightPei(double weightPei) {
+        this.weightPei = weightPei;
+    }
 
     public String getApplyNo() {
         return applyNo;

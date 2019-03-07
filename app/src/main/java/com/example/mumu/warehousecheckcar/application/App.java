@@ -65,6 +65,5 @@ public class App extends Application {
 //    申请单号缓存
 public static String APPLY_NO="";
     public static String KEY;
-    public static Map<String,List<String>> DATA_KEY=new HashMap<>();
     public static ArrayList<ChubbUp> CHUBB_UP_LIST=new ArrayList<>();
 }

@@ -146,6 +146,7 @@ public class CarPutawayFragment extends Fragment {
                             if (response != null && response.size() != 0) {
                                 myList.addAll(response);
                                 mAdapter.notifyDataSetChanged();
+                                text1.setText(myList.size()-1);
                             }
                         }
                     } catch (Exception e) {
@@ -193,11 +194,11 @@ public class CarPutawayFragment extends Fragment {
             public void onClick(View view) {
 //                上传数据
                 ArrayList<Cloth> jsocList = new ArrayList<>();
-                for (int i=1;i<myList.size()-1;i++){
+                for (int i=1;i<myList.size();i++){
                     jsocList.add(myList.get(i));
                 }
                 JSONObject obj = new JSONObject();
-                obj.put("data ", jsocList);
+                obj.put("data", jsocList);
                 obj.put("carrier",App.CARRIER);
                 final String json = JSON.toJSONString(obj);
 
