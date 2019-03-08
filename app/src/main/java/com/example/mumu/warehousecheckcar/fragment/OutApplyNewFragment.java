@@ -382,12 +382,14 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
                                 for (OutputDetail od : op.getList()) {
                                     if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo)) {
+                                        od.setFlag(1);
                                         newList.add(od);
                                     }
                                 }
                                 if (newList.size() > 0) {
                                     Output obj = (Output) op.clone();
                                     obj.setDevice(App.DEVICE_NO);
+                                    obj.setFlag(1);
                                     obj.setList(newList);
                                     jsocList.add(obj);
                                 }

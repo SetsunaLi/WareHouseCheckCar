@@ -34,6 +34,8 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+import com.xdl2d.scanner.TDScannerHelper;
+import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.CHUBB_UP_LIST;
 
-public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiatener , RXCallback {
     private static ChubbUpCarrierFragment fragment;
     @Bind(R.id.edittext1)
     EditText edittext1;
@@ -119,6 +121,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
 
             }
         });
+        init2D();
         initRFID();
         return view;
     }
@@ -145,12 +148,38 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
 
         }
     }
+    private TDScannerHelper scannerHander;
+
+    private void init2D() {
+        try {
+            boolean flag2 = RFID_2DHander.getInstance().on_2D();
+//            boolean flag1=RFID_2DHander.getInstance().connect2D();
+            scannerHander = RFID_2DHander.getInstance().getTDScanner();
+            scannerHander.regist2DCodeData(this);
+            if (!flag2)
+                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+            RFID_2DHander.getInstance().off_2D();
+//            RFID_2DHander.getInstance().disConnect2D();
+
+        } catch (Exception e) {
+
+        }
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
 //        App.CARRIER = null;
+        disConnect2D();
         disRFID();
     }
 
@@ -278,6 +307,11 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                         if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
                             App.CARRIER .setLocationEPC(response.getLocationEPC());
                         break;
+                    case 0x02:
+                        String location= (String) msg.obj;
+                        location=location.replaceAll(" ","");
+                        edittext2.setText(location);
+                        break;
                 }
             /*} catch (Exception e) {
 
@@ -305,5 +339,14 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
 
+    }
+
+    @Override
+    public void callback(byte[] bytes) {
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x02;
+        msg.obj = new String(bytes);
+
+        handler.sendMessage(msg);
     }
 }

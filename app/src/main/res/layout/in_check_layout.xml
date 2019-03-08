@@ -39,7 +39,7 @@
             android:gravity="left|center_vertical"
             android:text="10"/>
     </LinearLayout>
-    <View style="@style/view_item_bottom" />
+ <!--   <View style="@style/view_item_bottom" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="left|center_vertical"/>
-    </LinearLayout>
+    </LinearLayout>-->
     <View style="@style/view_item_bottom" />
     <LinearLayout
         android:layout_width="match_parent"

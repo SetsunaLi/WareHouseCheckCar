@@ -77,10 +77,10 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
 
 
     private static InCheckFragment fragment;
-    @Bind(R.id.text2)
+  /*  @Bind(R.id.text2)
     TextView text2;
     @Bind(R.id.text3)
-    TextView text3;
+    TextView text3;*/
 
     private InCheckFragment() {
     }
@@ -137,16 +137,16 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
-        if (App.CARRIER == null) {
+       /* if (App.CARRIER == null) {
             if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
                 text2.setText(App.CARRIER.getLocationNo());
             if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
                 text3.setText(App.CARRIER.getTrayNo());
-        }
+        }*/
         initView();
         initRFID();
-        text2.setText(App.CARRIER.getLocationNo());
-        text3.setText(App.CARRIER.getTrayNo());
+      /*  text2.setText(App.CARRIER.getLocationNo());
+        text3.setText(App.CARRIER.getTrayNo());*/
         return view;
     }
 
@@ -265,7 +265,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                                 InCheckDetail ocd = response.get(0);
                                                 if (ocd != null) {
                                                     if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
-                                                        ocd.setCarrier(App.CARRIER);
+//                                                        ocd.setCarrier(App.CARRIER);
                                                         dataEPC.add(ocd.getEpc());
                                                         dataList.add(ocd);
                                                           /*  String key = ocd.getVatNo() + ocd.getProduct_no()

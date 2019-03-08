@@ -145,8 +145,8 @@ public class CarPutawayFragment extends Fragment {
                             response=jsonArray.toJavaList(Cloth.class);
                             if (response != null && response.size() != 0) {
                                 myList.addAll(response);
+                                text1.setText(myList.size()-1+"");
                                 mAdapter.notifyDataSetChanged();
-                                text1.setText(myList.size()-1);
                             }
                         }
                     } catch (Exception e) {

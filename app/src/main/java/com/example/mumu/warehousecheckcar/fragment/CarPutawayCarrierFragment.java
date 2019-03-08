@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,8 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+import com.xdl2d.scanner.TDScannerHelper;
+import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 
@@ -38,7 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLiatener, RXCallback {
     private final String TAG = "CarPutawayCarrierFragment";
 
     @Bind(R.id.relativelayout)
@@ -117,6 +120,7 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
             App.CARRIER =new Carrier();
         else
             App.CARRIER.clear();
+        init2D();
         initRFID();
         return view;
     }
@@ -137,11 +141,35 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
         }
     }
+    private TDScannerHelper scannerHander;
 
+    private void init2D() {
+        try {
+            boolean flag2 = RFID_2DHander.getInstance().on_2D();
+//            boolean flag1=RFID_2DHander.getInstance().connect2D();
+            scannerHander = RFID_2DHander.getInstance().getTDScanner();
+            scannerHander.regist2DCodeData(this);
+            if (!flag2)
+                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+            RFID_2DHander.getInstance().off_2D();
+//            RFID_2DHander.getInstance().disConnect2D();
+
+        } catch (Exception e) {
+
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        disConnect2D();
         disRFID();
     }
 
@@ -151,10 +179,8 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     public void onViewClicked() {
         if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
             Fragment fragment = CarPutawayFragment.newInstance();
-            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-            transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-            transaction.show(fragment);
-            transaction.commit();
+            getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         } else
             Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
     }
@@ -227,6 +253,11 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                         if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
                             App.CARRIER .setLocationEPC(response.getLocationEPC());
                         break;
+                    case 0x02:
+                        String location= (String) msg.obj;
+                        location=location.replaceAll(" ","");
+                        edittext2.setText(location);
+                        break;
                 }
             } catch (Exception e) {
 
@@ -255,5 +286,13 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
 
+    }
+
+    @Override
+    public void callback(byte[] bytes) {
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x02;
+        msg.obj = new String(bytes);
+        handler.sendMessage(msg);
     }
 }

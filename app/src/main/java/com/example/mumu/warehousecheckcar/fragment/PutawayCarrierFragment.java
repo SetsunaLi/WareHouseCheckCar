@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,8 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+import com.xdl2d.scanner.TDScannerHelper;
+import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 
@@ -42,7 +45,7 @@ import butterknife.OnClick;
  * Created by mumu on 2019/1/4.
  */
 
-public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiatener, RXCallback {
 
     private final String TAG = "CheckCarrierFragment";
     /*  @Bind(R.id.text1)
@@ -131,6 +134,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
             edittext1.setText(App.CARRIER.getTrayNo());
         initRFID();
+        init2D();
         return view;
     }
 
@@ -151,11 +155,38 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         }
     }
 
+    private TDScannerHelper scannerHander;
+
+    private void init2D() {
+        try {
+            boolean flag2 = RFID_2DHander.getInstance().on_2D();
+//            boolean flag1=RFID_2DHander.getInstance().connect2D();
+            scannerHander = RFID_2DHander.getInstance().getTDScanner();
+            scannerHander.regist2DCodeData(this);
+            if (!flag2)
+                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+            RFID_2DHander.getInstance().off_2D();
+//            RFID_2DHander.getInstance().disConnect2D();
+
+        } catch (Exception e) {
+
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
 //        App.CARRIER = null;
+        disConnect2D();
         disRFID();
     }
 
@@ -167,10 +198,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
             case R.id.button2:
                 if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
                     Fragment fragment = PutawayFragment.newInstance();
-                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-                    transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-                    transaction.show(fragment);
-                    transaction.commit();
+                    getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 } else
                     Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
                 break;
@@ -256,6 +285,11 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                         if (response != null && response.getLocationEPC() != null && !response.getLocationEPC().equals(""))
                             App.CARRIER.setLocationEPC(response.getLocationEPC());
                         break;
+                    case 0x02:
+                        String location= (String) msg.obj;
+                        location=location.replaceAll(" ","");
+                        edittext2.setText(location);
+                        break;
                 }
             } catch (Exception e) {
 
@@ -286,5 +320,13 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
     }
 
+    //
+    @Override
+    public void callback(byte[] bytes) {
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x02;
+        msg.obj = new String(bytes);
 
+        handler.sendMessage(msg);
+    }
 }

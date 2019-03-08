@@ -91,7 +91,7 @@
             android:layout_width="80dip"
             android:layout_height="match_parent"
             android:text="盘亏"
-            android:textColor="@color/colorDataNoText"/>
+            android:textColor="@color/colorREAD"/>
 
     </LinearLayout>
 

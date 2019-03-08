@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
 import com.example.mumu.warehousecheckcar.fragment.CarPutawayCarrierFragment;
+import com.example.mumu.warehousecheckcar.fragment.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
@@ -39,6 +41,7 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
+import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyNoFragment;
@@ -111,12 +114,12 @@ public class Main2Activity extends AppCompatActivity
         mOptionTitle = getResources().getStringArray(R.array.options_array);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-//        App.IP="http://47.106.157.255";
-//        App.PORT="80";
+        App.IP="http://47.106.157.255";
+        App.PORT="80";
 //        App.IP="http://192.168.1.212";
 //        App.PORT="8080";
-        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
-        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
+//        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
+//        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
         App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), false);
         App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
@@ -191,7 +194,7 @@ public class Main2Activity extends AppCompatActivity
                 fragment = HomeFragment.newInstance();
                 break;
             case 1:
-                fragment = InCheckCarrierFragment.newInstance();
+                fragment = InCheckFragment.newInstance();
                 break;
             case 2:
                 fragment = OutCheckCarFragment.newInstance();
@@ -344,6 +347,8 @@ public class Main2Activity extends AppCompatActivity
                     askForBack();
                 } else if (fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(3);
+                } else if (fragment != null && (fragment instanceof CarPutawayFragment)) {
+                    selectItem(4);
                 } else if (fragment != null && (fragment instanceof OutApplyNewFragment)) {
                     selectItem(7);
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
@@ -481,6 +486,16 @@ public class Main2Activity extends AppCompatActivity
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

@@ -383,8 +383,11 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button:
-                if (listview.getVisibility() == View.GONE)
-                    listview.setVisibility(View.VISIBLE);
+                if (listview.getVisibility() != View.GONE)
+                    listview.setVisibility(View.GONE);
+//                fixeedittext1.clearFocus();
+                fixeedittext1.setCursorVisible(false);
+//                viewHolder.editText.setFocusable(false);//设置输入框不可聚集
                 cancelKeyBoard(view);
                 goFind();
                 break;
@@ -393,6 +396,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 myList.add(new FindVatNo());
                 dataEpc.clear();
                 text2.setText(myList.size() - 1 + "");
+
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:

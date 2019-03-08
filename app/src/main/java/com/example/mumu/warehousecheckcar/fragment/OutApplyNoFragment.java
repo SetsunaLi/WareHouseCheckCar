@@ -80,6 +80,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private InputMethodManager mInputMethodManager;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         getActivity().setTitle("出库");
         sound = new Sound(getActivity());
         init2D();
-        myList=new ArrayList<>();
+        myList = new ArrayList<>();
         myList.add("");
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_applyno_item);
         mAdapter.setContext(getActivity());
@@ -102,6 +103,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         initUtil();
         return view;
     }
+
     //    *
 //     * 初始化必须工具
 //
@@ -115,6 +117,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         str = str.trim();
         return str;
     }
+
     private void init2D() {
         try {
             boolean flag2 = RFID_2DHander.getInstance().on_2D();
@@ -162,9 +165,9 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             sound.callAlarm();
-            String No= (String) msg.obj;
-            int id=mAdapter.getId();
-            myList.set(id,No);
+            String No = (String) msg.obj;
+            int id = mAdapter.getId();
+            myList.set(id, No);
             mAdapter.notifyDataSetChanged();
         }
     };
@@ -181,20 +184,21 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
         switch (view.getId()) {
             case R.id.imgbutton:
                 myList.add("");
-                mAdapter.select(myList.size()-1);
-                mAdapter.setId(myList.size()-1);
+                mAdapter.select(myList.size() - 1);
+                mAdapter.setId(myList.size() - 1);
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
                 Fragment fragment = OutApplyNewFragment.newInstance();
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("NO",myList);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("NO", myList);
                 fragment.setArguments(bundle);
                 getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 break;
-}
+        }
     }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;
 
@@ -206,20 +210,24 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
             super.setHeader(mHeaderView);
         }
 
-         private int position = -255;
+        private int position = -255;
 
         public void select(int position) {
-                this.position = position;
+            this.position = position;
         }
-        public int  getPosition(){
+
+        public int getPosition() {
             return position;
         }
-        private int id=-255;
-        public int getId(){
+
+        private int id = -255;
+
+        public int getId() {
             return id;
         }
-        public void  setId(int id){
-            this.id=id;
+
+        public void setId(int id) {
+            this.id = id;
         }
 
         public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
@@ -229,11 +237,11 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
 
         @Override
         public void convert(RecyclerHolder holder, final String item, final int position) {
-            final FixedEditText editNo=(FixedEditText)holder.getView(R.id.fixeedittext1);
+            final FixedEditText editNo = (FixedEditText) holder.getView(R.id.fixeedittext1);
             editNo.setTag(position);
 //            editNo.setFixedText("申请单号：");
             editNo.setText(myList.get((Integer) editNo.getTag()));
-            if (position==this.position){
+            if (position == this.position) {
                 editNo.setFocusable(true);//设置输入框可聚集
                 editNo.setFocusableInTouchMode(true);//设置触摸聚焦
                 editNo.requestFocus();//请求焦点
@@ -259,8 +267,8 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                    Log.i("onTextChanged","onTextChanged");
-                   myList.set((int)editNo.getTag(),charSequence.toString());
+                    Log.i("onTextChanged", "onTextChanged");
+                    myList.set((int) editNo.getTag(), charSequence.toString());
                 }
 
                 @Override
