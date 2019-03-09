@@ -110,8 +110,8 @@ public class OutApplyDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         load();
-        text1.setText(myList.size()-1+"");
-        text2.setText(oldData.getVatNo()+"");
+        text1.setText(myList.size() - 1 + "");
+        text2.setText(oldData.getVatNo() + "");
         mAdapter.notifyDataSetChanged();
     }
 
@@ -202,32 +202,33 @@ public class OutApplyDetailFragment extends Fragment {
         @Override
         public void convert(RecyclerHolder holder, final OutputDetail item, final int position) {
             if (item != null) {
-                final CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if (position == 0) {
-                            if (isChecked) {
-                                for (int i = 1; i < myList.size(); i++) {
-                                    if (oldData.getCountProfit() < oldData.getCountOut()) {
-                                        if (dataList.get(myList.get(i).getEpc()).isFind() && dataList.get(myList.get(i).getEpc()).getApplyNo().equals("")) {
-                                            dataList.get(myList.get(i).getEpc()).setApplyNo(oldData.getApplyNo());
-                                            oldData.setCountProfit(oldData.getCountProfit() + 1);
+                if (oldData.getFlag() != 2) {
+                    final CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                            if (position == 0) {
+                                if (isChecked) {
+                                    for (int i = 1; i < myList.size(); i++) {
+                                        if (oldData.getCountProfit() < oldData.getCountOut()) {
+                                            if (dataList.get(myList.get(i).getEpc()).isFind() && dataList.get(myList.get(i).getEpc()).getApplyNo().equals("")) {
+                                                dataList.get(myList.get(i).getEpc()).setApplyNo(oldData.getApplyNo());
+                                                oldData.setCountProfit(oldData.getCountProfit() + 1);
+                                            }
+                                        } else
+                                            break;
+                                    }
+                                } else {
+                                    oldData.setCountProfit(0);
+                                    for (int i = 1; i < myList.size(); i++) {
+                                        if (dataList.get(myList.get(i).getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                                            dataList.get(myList.get(i).getEpc()).setApplyNo("");
                                         }
-                                    } else
-                                        break;
-                                }
-                            } else {
-                                oldData.setCountProfit(0);
-                                for (int i=1;i<myList.size();i++){
-                                    if (dataList.get(myList.get(i).getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
-                                        dataList.get(myList.get(i).getEpc()).setApplyNo("");
                                     }
                                 }
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            if (isChecked) {
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                if (isChecked) {
                                     if (dataList.get(item.getEpc()).isFind()) {
                                         if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
                                             if (oldData.getCountProfit() < oldData.getCountOut()) {
@@ -237,54 +238,65 @@ public class OutApplyDetailFragment extends Fragment {
                                                 cb.setChecked(false);
                                                 Toast.makeText(getActivity(), "已选布匹超出申请数量！", Toast.LENGTH_SHORT).show();
                                             }
+                                        }
+                                    }
+
+                                } else {
+                                    if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                                        dataList.get(item.getEpc()).setApplyNo("");
+                                        oldData.setCountProfit(oldData.getCountProfit() - 1);
                                     }
                                 }
 
-                            } else {
-                                if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
-                                    dataList.get(item.getEpc()).setApplyNo("");
-                                    oldData.setCountProfit(oldData.getCountProfit() - 1);
-                                }
                             }
-
                         }
-                    }
-                });
-                if (position != 0) {
-                    if (((item.getFabRool() + "").equals("") && (item.getEpc() + "").equals("") && (item.getWeight() + "").equals(""))) {
-                        cb.setChecked(false);
-                        if (cb.isEnabled() != false)
-                            cb.setEnabled(false);
-                    } else {
-                        if (dataList.get(item.getEpc()).isFind() &&
-                                (dataList.get(item.getEpc()).getApplyNo().equals("") || dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))) {
-                            if (cb.isEnabled() != true)
-                                cb.setEnabled(true);
-                        } else {
+                    });
+                    if (position != 0) {
+                        if (((item.getFabRool() + "").equals("") && (item.getEpc() + "").equals("") && (item.getWeight() + "").equals(""))) {
+                            cb.setChecked(false);
                             if (cb.isEnabled() != false)
                                 cb.setEnabled(false);
+                        } else {
+                            if (dataList.get(item.getEpc()).isFind() &&
+                                    (dataList.get(item.getEpc()).getApplyNo().equals("") || dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))) {
+                                if (cb.isEnabled() != true)
+                                    cb.setEnabled(true);
+                            } else {
+                                if (cb.isEnabled() != false)
+                                    cb.setEnabled(false);
+                            }
+                            if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))
+                                cb.setChecked(true);
+                            else
+                                cb.setChecked(false);
                         }
-                        if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))
-                            cb.setChecked(true);
-                        else
-                            cb.setChecked(false);
+
+                        LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                        if (!dataList.get(item.getEpc()).isFind()) {//亏
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                            cb.setEnabled(false);
+                        } else {
+                            ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                            cb.setEnabled(true);
+                        }
+
+                        holder.setText(R.id.item1, item.getFabRool() + "");
+                        holder.setText(R.id.item2, oldData.getProduct_no() + "");
+                        holder.setText(R.id.item3, item.getWeight_in() + "");
+                        holder.setText(R.id.item4, item.getWeight() + "");
                     }
 
-                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (!dataList.get(item.getEpc()).isFind()) {//亏
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                }else {
+                    if (position != 0) {
+                        final CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                         cb.setEnabled(false);
-                    } else {
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                        cb.setEnabled(true);
+                        cb.setChecked(false);
+                        holder.setText(R.id.item1, item.getFabRool() + "");
+                        holder.setText(R.id.item2, oldData.getProduct_no() + "");
+                        holder.setText(R.id.item3, item.getWeight_in() + "");
+                        holder.setText(R.id.item4, item.getWeight() + "");
                     }
-
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, oldData.getProduct_no() + "");
-                    holder.setText(R.id.item3, item.getWeight_in() + "");
-                    holder.setText(R.id.item4, item.getWeight() + "");
                 }
-
             }
         }
     }

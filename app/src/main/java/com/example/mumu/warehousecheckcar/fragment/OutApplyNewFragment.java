@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
@@ -92,6 +93,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private HashMap<String, OutputFlag> epcKeyList;
     private ArrayList<Output> myList;
     private Map<String, List<String>> dataKey;
+    private ArrayList<String> epcList;
+    private HashMap<String ,Integer>getEpcKey;
 
     //    private ArrayList<Output> dataList;
     private ArrayList<String> dateNo;
@@ -130,6 +133,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //        dataList = new ArrayList<>();
         dateNo = new ArrayList<>();
         dataKey = new HashMap<>();
+        epcList=new ArrayList<>();
+        getEpcKey=new HashMap<>();
     }
 
     public void clearData() {
@@ -137,6 +142,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         myList.clear();
         dateNo.clear();
         dataKey.clear();
+        epcList.clear();
+        getEpcKey.clear();
     }
 
     @Override
@@ -270,6 +277,78 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             }
                             text1.setText(count + "");
                             mAdapter.notifyDataSetChanged();
+                        }
+                    }else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC)&&!epcList.contains(EPC)){
+                        JSONObject epc = new JSONObject();
+                        epc.put("epc", EPC);
+                        final String json = epc.toJSONString();
+                        if (!epcList.contains(EPC)) {
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getEpc;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onResponse(JSONArray jsonArray) {
+                                        try {
+                                            List<Inventory> arry;
+                                            arry = jsonArray.toJavaList(Inventory.class);
+                                            if (arry != null && arry.size() > 0) {
+                                                Inventory response = arry.get(0);
+                                                if (!epcList.contains(response.getEpc())) {
+                                                    epcList.add(response.getEpc());
+                                                    if (response != null) {
+                                                        epcList.add(response.getEpc());
+                                                        OutputDetail detail = new OutputDetail();
+                                                        detail.setEpc(response.getEpc() + "");
+                                                        detail.setFabRool(response.getFabRool() + "");
+                                                        detail.setWeight(response.getWeight());
+                                                        detail.setWeight_in(response.getWeight_in());
+                                                        detail.setOperator(response.getOperator() + "");
+                                                        detail.setOperatingTime(response.getOperatingTime());
+                                                        detail.setFlag(2);
+                                                        String key2 = "" + response.getVatNo() + response.getProduct_no() + response.getSelNo();
+                                                        if (!getEpcKey.containsKey(key2)) {
+                                                            Output data = new Output();
+                                                            data.setApplyNo("bug");
+                                                            data.setProduct_no(response.getProduct_no() + "");
+                                                            data.setVatNo(response.getVatNo() + "");
+                                                            data.setSelNo(response.getSelNo() + "");
+                                                            data.setColor(response.getColor() + "");
+                                                            data.setCountOut(0);
+                                                            data.setCount(1);
+                                                            data.setCountProfit(1);
+                                                            data.setCountLosses(0);
+                                                            data.setFlag(2);
+                                                            data.setOutp_id("");
+                                                            data.setWeightall(response.getWeight());
+                                                            List<OutputDetail> list = new ArrayList<OutputDetail>();
+                                                            list.add(detail);
+                                                            data.setList(list);
+                                                            myList.add(data);
+                                                            getEpcKey.put(key2, myList.size() - 1);
+                                                        } else {
+                                                            myList.get(getEpcKey.get(key2)).addCount();
+                                                            myList.get(getEpcKey.get(key2)).setWeightall(ArithUtil.add(myList.get(getEpcKey.get(key2)).getWeightall(), response.getWeight()));
+                                                            myList.get(getEpcKey.get(key2)).getList().add(detail);
+                                                        }
+                                                    }
+                                                }
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, json);
+                            } catch (IOException e) {
+                                Log.i(TAG, "");
+                            }
                         }
                     }
                     break;
@@ -444,9 +523,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
         Output obj = myList.get(position);
-        String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
+     /*   String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
         KEY = key;
-        APPLY_NO = obj.getApplyNo();
+        APPLY_NO = obj.getApplyNo();*/
         Fragment fragment = OutApplyDetailFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putSerializable("dataList", obj);
@@ -583,9 +662,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     view.setVisibility(View.GONE);
                 }
 
+
                 if (((item.getVatNo() + "").equals("") && (item.getProduct_no() + "").equals("") && (item.getSelNo() + "").equals(""))) {
-                    cb.setChecked(false);
-                    if (!cb.isEnabled())
+                    if (cb.isEnabled())
                         cb.setEnabled(false);
                     cb.setChecked(false);
                 } else {
@@ -602,6 +681,12 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    if (item.getFlag()==2){
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+                        if (cb.isEnabled())
+                            cb.setEnabled(false);
+                        cb.setChecked(false);
+                    }
                     holder.setText(R.id.item1, item.getProduct_no() + "");
                     holder.setText(R.id.item2, item.getSelNo() + "");
                     holder.setText(R.id.item3, item.getColor() + "");

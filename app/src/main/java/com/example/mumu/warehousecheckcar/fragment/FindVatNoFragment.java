@@ -385,9 +385,10 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             case R.id.button:
                 if (listview.getVisibility() != View.GONE)
                     listview.setVisibility(View.GONE);
-//                fixeedittext1.clearFocus();
-                fixeedittext1.setCursorVisible(false);
-//                viewHolder.editText.setFocusable(false);//设置输入框不可聚集
+                fixeedittext1.clearFocus();
+//                fixeedittext1.setCursorVisible(false);
+//                fixeedittext1.setFocusable(false);//设置输入框不可聚集
+//                fixeedittext1.setFocusable(true);//设置输入框不可聚集
                 cancelKeyBoard(view);
                 goFind();
                 break;
