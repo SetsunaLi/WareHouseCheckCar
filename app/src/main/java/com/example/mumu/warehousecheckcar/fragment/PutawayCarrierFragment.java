@@ -75,7 +75,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     }
 
     private Sound sound;
-
+    private boolean flagRFID=false;
+    private boolean flag2D=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,7 +109,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
             }
 
             @Override
@@ -125,6 +125,38 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
             }
         });
+        edittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    if (!flagRFID){
+                        initRFID();
+                        flagRFID=true;
+                    }
+                }else {
+                    if (flagRFID){
+                        disRFID();
+                        flagRFID=false;
+                    }
+                }
+            }
+        });
+        edittext2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    if (!flag2D){
+                        init2D();
+                        flag2D=true;
+                    }
+                }else {
+                    if (flag2D){
+                        disConnect2D();
+                        flag2D=false;
+                    }
+                }
+            }
+        });
         if (App.CARRIER == null)
             App.CARRIER = new Carrier();
         /*App.CARRIER.setLocationNo("查布区");
@@ -133,8 +165,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
             edittext2.setText(App.CARRIER.getLocationNo());
         if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
             edittext1.setText(App.CARRIER.getTrayNo());
-        initRFID();
-        init2D();
+//        initRFID();
+//        init2D();
         return view;
     }
 
@@ -186,8 +218,16 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         super.onDestroyView();
         ButterKnife.unbind(this);
 //        App.CARRIER = null;
-        disConnect2D();
-        disRFID();
+//        disConnect2D();
+//        disRFID();
+        if (flagRFID){
+            disRFID();
+            flagRFID=false;
+        }
+        if (flag2D){
+            disConnect2D();
+            flag2D=false;
+        }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -200,6 +240,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                     Fragment fragment = PutawayFragment.newInstance();
                     getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+
                 } else
                     Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
                 break;
@@ -286,6 +327,12 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                             App.CARRIER.setLocationEPC(response.getLocationEPC());
                         break;
                     case 0x02:
+                        if (App.MUSIC_SWITCH) {
+                            if (System.currentTimeMillis() - currenttime > 150) {
+                                sound.callAlarm();
+                                currenttime = System.currentTimeMillis();
+                            }
+                        }
                         String location= (String) msg.obj;
                         location=location.replaceAll(" ","");
                         edittext2.setText(location);

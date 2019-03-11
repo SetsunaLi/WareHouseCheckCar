@@ -151,12 +151,13 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         super.onResume();
         ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("NO");
         fatherNoList.clear();
-        fatherNoList.addAll(list);
-        Iterator<String> iter = fatherNoList.iterator();
+        Iterator<String> iter = list.iterator();
         while (iter.hasNext()) {
             String str = iter.next();
-            if (str == null || str.equals(""))
-                iter.remove();
+            str=str.replaceAll(" ","");
+            if (str != null && !str.equals("")&&!fatherNoList.contains(str))
+                fatherNoList.add(str);
+
         }
         text1.setText(0 + "");
         text2.setText(fatherNoList.size() + "");

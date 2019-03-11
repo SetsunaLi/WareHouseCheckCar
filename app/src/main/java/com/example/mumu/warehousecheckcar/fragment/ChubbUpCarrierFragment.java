@@ -69,7 +69,8 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
 
     private Sound sound;
     private final String TAG = "ChubbUpCarrierFragment";
-
+    private boolean flagRFID=false;
+    private boolean flag2D=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -121,8 +122,40 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
 
             }
         });
-        init2D();
-        initRFID();
+        edittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    if (!flagRFID){
+                        initRFID();
+                        flagRFID=true;
+                    }
+                }else {
+                    if (flagRFID){
+                        disRFID();
+                        flagRFID=false;
+                    }
+                }
+            }
+        });
+        edittext2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    if (!flag2D){
+                        init2D();
+                        flag2D=true;
+                    }
+                }else {
+                    if (flag2D){
+                        disConnect2D();
+                        flag2D=false;
+                    }
+                }
+            }
+        });
+//        init2D();
+//        initRFID();
         return view;
     }
 
@@ -178,9 +211,17 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        if (flagRFID){
+            disRFID();
+            flagRFID=false;
+        }
+        if (flag2D){
+            disConnect2D();
+            flag2D=false;
+        }
 //        App.CARRIER = null;
-        disConnect2D();
-        disRFID();
+//        disConnect2D();
+//        disRFID();
     }
 
     @OnClick(R.id.button2)
@@ -308,6 +349,12 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                             App.CARRIER .setLocationEPC(response.getLocationEPC());
                         break;
                     case 0x02:
+                        if (App.MUSIC_SWITCH) {
+                            if (System.currentTimeMillis() - currenttime > 150) {
+                                sound.callAlarm();
+                                currenttime = System.currentTimeMillis();
+                            }
+                        }
                         String location= (String) msg.obj;
                         location=location.replaceAll(" ","");
                         edittext2.setText(location);
