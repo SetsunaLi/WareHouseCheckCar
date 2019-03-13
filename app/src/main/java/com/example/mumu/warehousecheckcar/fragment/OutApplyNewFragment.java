@@ -463,6 +463,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 for (OutputDetail od : op.getList()) {
                                     if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo)) {
                                         od.setFlag(1);
+                                        od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
                                         newList.add(od);
                                     }
                                 }

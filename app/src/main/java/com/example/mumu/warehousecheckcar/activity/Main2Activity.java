@@ -116,7 +116,7 @@ public class Main2Activity extends AppCompatActivity
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
         App.IP="http://47.106.157.255";
         App.PORT="80";
-//        App.IP="http://192.168.1.212";
+//        App.IP="http://120.79.56.119";
 //        App.PORT="8080";
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
 //        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");

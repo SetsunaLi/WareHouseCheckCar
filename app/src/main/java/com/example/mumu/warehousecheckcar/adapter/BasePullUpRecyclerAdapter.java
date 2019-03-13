@@ -83,6 +83,7 @@ public abstract class BasePullUpRecyclerAdapter<T> extends BRecyclerAdapter<T> {
 
     @Override
     public void onBindViewHolder(RecyclerHolder holder, int position) {
+        holder.setIsRecyclable(false);
         if (position == getItemCount() - 1) {
             //因为已经在footerview写死了，所以这里就不用再去设置
             //没有数据的时候也不显示footer

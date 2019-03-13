@@ -8,23 +8,26 @@
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="50dip"
-        android:descendantFocusability="blocksDescendants"
+        android:descendantFocusability="beforeDescendants"
+        android:fastScrollEnabled="false"
         android:orientation="horizontal">
+
         <CheckBox
             android:id="@+id/checkbox1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:checked="false"
-            />
+            android:checked="false" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             android:id="@+id/item1"
             style="@style/text_item"
             android:layout_width="60dip"
             android:layout_height="match_parent"
             android:text="布票号"
-            android:textColor="@color/colorDataYesText"/>
+            android:textColor="@color/colorDataYesText" />
 
         <View style="@style/view_item_mid" />
 
@@ -52,6 +55,19 @@
             android:layout_width="90dip"
             android:layout_height="match_parent"
             android:text="库存重量" />
+
+        <View style="@style/view_item_mid" />
+
+        <EditText
+            android:id="@+id/edittext1"
+            style="@style/edit_style3"
+            android:layout_width="90dip"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:inputType="number|numberDecimal"
+            android:focusableInTouchMode="true"
+            android:text="出库重量" />
+
         <View style="@style/view_item_mid" />
     </LinearLayout>
 

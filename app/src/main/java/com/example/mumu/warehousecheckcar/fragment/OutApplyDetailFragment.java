@@ -6,14 +6,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +32,7 @@ import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.view.FixedEditText;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +48,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2018/12/21.
  */
 
-public class OutApplyDetailFragment extends Fragment {
+public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener {
     private static OutApplyDetailFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -80,6 +86,7 @@ public class OutApplyDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
+        initUtil();
         initData();
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_put_detail_item);
         mAdapter.setContext(getActivity());
@@ -89,6 +96,7 @@ public class OutApplyDetailFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(this);
 
       /*  if (App.OUTPUT_DETAIL_LIST.size() > 0) {
             text2.setText(App.OUTPUT_DETAIL_LIST.get(0).getVatNo() + "");
@@ -101,6 +109,16 @@ public class OutApplyDetailFragment extends Fragment {
         return view;
     }
 
+    private InputMethodManager mInputMethodManager;
+
+
+    //    *
+//     * 初始化必须工具
+//
+    private void initUtil() {
+        //初始化输入法
+        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.out_put_detail_item, null);
         mAdapter.setHeader(view);
@@ -182,6 +200,12 @@ public class OutApplyDetailFragment extends Fragment {
 //        App.OUTPUT_DETAIL_LIST.clear();
     }
 
+    @Override
+    public void onItemClick(View view, Object data, int position) {
+//        mAdapter.select(position);
+//        mAdapter.notifyDataSetChanged();
+    }
+
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<OutputDetail> {
         private Context context;
@@ -198,7 +222,10 @@ public class OutApplyDetailFragment extends Fragment {
             super(v, datas, itemLayoutId);
 
         }
-
+        private int position;
+        public void select(int i){
+            this.position=i;
+        }
         @Override
         public void convert(RecyclerHolder holder, final OutputDetail item, final int position) {
             if (item != null) {
@@ -279,11 +306,55 @@ public class OutApplyDetailFragment extends Fragment {
                             ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                             cb.setEnabled(true);
                         }
+                        final EditText editText=(EditText)holder.getView(R.id.edittext1);
+                        editText.setEnabled(true);
+                        editText.setText(dataList.get(item.getEpc()).getWeight()+"");
+                        editText.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                try {
+                                    String weight=s.toString();
+                                    weight=weight.replaceAll(" ","");
+                                    if (weight!=null&&!weight.equals("")) {
+                                        double a = Double.parseDouble(weight);
+                                        if (dataList.containsKey(item.getEpc()))
+                                            dataList.get(item.getEpc()).setWeight(a);
+                                    }
+                                }catch (Exception e){
+                                    editText.setText(item.getWeight()+"");
+                                }
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                            }
+                        });
+                       /* editText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                v.setFocusable(true);//设置输入框可聚集
+                                v.setFocusableInTouchMode(true);//设置触摸聚焦
+                                v.requestFocus();//请求焦点
+                                v.findFocus();//获取焦点
+                                ((EditText)v).setCursorVisible(true);
+                                ((EditText)v).setSelection( ((EditText)v).getText().length());
+                                mInputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED);// 显示输入法
+                            }
+                        });*/
 
                         holder.setText(R.id.item1, item.getFabRool() + "");
                         holder.setText(R.id.item2, oldData.getProduct_no() + "");
                         holder.setText(R.id.item3, item.getWeight_in() + "");
                         holder.setText(R.id.item4, item.getWeight() + "");
+                    }else {
+                        EditText editText=(EditText)holder.getView(R.id.edittext1);
+                        editText.setEnabled(false);
                     }
 
                 }else {
@@ -295,6 +366,9 @@ public class OutApplyDetailFragment extends Fragment {
                         holder.setText(R.id.item2, oldData.getProduct_no() + "");
                         holder.setText(R.id.item3, item.getWeight_in() + "");
                         holder.setText(R.id.item4, item.getWeight() + "");
+                    }else {
+                        EditText editText=(EditText)holder.getView(R.id.edittext1);
+                        editText.setEnabled(false);
                     }
                 }
             }

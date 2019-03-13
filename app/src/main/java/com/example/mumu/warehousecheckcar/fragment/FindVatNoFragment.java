@@ -145,35 +145,38 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final String vat = s.toString();
-                OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + vat, new OkHttpClientManager.ResultCallback<JSONArray>() {
-                    @Override
-                    public void onError(Request request, Exception e) {
-
-                    }
-
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            List<String> arry;
-                            arry = response.toJavaList(String.class);
-                            if (arry != null && arry.size() > 0) {
-                                vatList.clear();
-                                vatList.addAll(arry);
-                                textAdapter.setList(vatList);
-                                textAdapter.notifyDataSetChanged();
-                                if (!vatFlag) {
-                                    if (listview.getVisibility() == View.GONE)
-                                        listview.setVisibility(View.VISIBLE);
-                                } else {
-                                    vatFlag = false;
-                                }
-                            }
-                        } catch (Exception e) {
+                 String vat = s.toString();
+                vat=vat.replaceAll(" ","");
+                if(vat!=null&&!vat.equals("")) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + vat, new OkHttpClientManager.ResultCallback<JSONArray>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
 
                         }
-                    }
-                });
+
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
+                                List<String> arry;
+                                arry = response.toJavaList(String.class);
+                                if (arry != null && arry.size() > 0) {
+                                    vatList.clear();
+                                    vatList.addAll(arry);
+                                    textAdapter.setList(vatList);
+                                    textAdapter.notifyDataSetChanged();
+                                    if (!vatFlag) {
+                                        if (listview.getVisibility() == View.GONE)
+                                            listview.setVisibility(View.VISIBLE);
+                                    } else {
+                                        vatFlag = false;
+                                    }
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+                }
 
             }
 

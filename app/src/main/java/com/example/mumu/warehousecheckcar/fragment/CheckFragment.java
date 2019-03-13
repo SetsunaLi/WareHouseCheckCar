@@ -562,7 +562,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     holder.setText(R.id.item5, item.getCountIn() + "");
                     holder.setText(R.id.item6, item.getCountReal() + "");
                     holder.setText(R.id.item7, item.getCountProfit() + "");
-                    holder.setText(R.id.item8, item.getCountIn() - item.getCountReal() + item.getCountLosses()+"");
+                    holder.setText(R.id.item8, item.getCountIn() - item.getCountReal() + item.getCountProfit()+"");
                 }
             }
         }

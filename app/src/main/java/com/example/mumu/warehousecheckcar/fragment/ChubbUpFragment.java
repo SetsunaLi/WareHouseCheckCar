@@ -213,6 +213,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
 
     public void upLoad(boolean flag) {
         if (flag) {
+            initRFID();
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -250,7 +251,8 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
-                if (dataKEY.size() > 0) {
+//                if (dataKEY.size() > 0) {
+                disRFID();
                     ArrayList<ChubbUp> dataList = new ArrayList<>();
                     for (ChubbUp data : myList) {
                         if (dataKEY.contains(data.getEpc())) {
@@ -264,9 +266,9 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                     transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                     transaction.show(fragment);
                     transaction.commit();
-                } else {
-                    Toast.makeText(getActivity(), "请至少选择一条布匹上架", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    Toast.makeText(getActivity(), "请至少选择一条布匹上架", Toast.LENGTH_SHORT).show();
+//                }
 
 //                点击上传
                 break;

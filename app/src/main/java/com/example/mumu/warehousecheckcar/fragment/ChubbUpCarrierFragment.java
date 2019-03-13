@@ -211,14 +211,17 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (flagRFID){
+       /* if (flagRFID){
             disRFID();
             flagRFID=false;
-        }
+        }*/
+
         if (flag2D){
             disConnect2D();
             flag2D=false;
         }
+        RFID_2DHander.getInstance().on_RFID();
+
 //        App.CARRIER = null;
 //        disConnect2D();
 //        disRFID();

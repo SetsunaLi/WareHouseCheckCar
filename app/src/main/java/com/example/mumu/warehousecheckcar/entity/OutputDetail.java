@@ -15,12 +15,22 @@ public class OutputDetail {
     private double weight;
     /**入库重量*/
     private double weight_in;
+    /**出库重量*/
+    private double weight_out;
     /**操作人*/
     private String operator;
     /**操作时间*/
     private Date operatingTime;
     /**标志位（默认为0；0为默认状态，1为实盘扫码出库状态，2为非正常申请单扫码，3默认超出配货值第一个开始为3）*/
     private int flag=0;
+
+    public double getWeight_out() {
+        return weight_out;
+    }
+
+    public void setWeight_out(double weight_out) {
+        this.weight_out = weight_out;
+    }
 
     public String getEpc() {
         return epc;

@@ -114,6 +114,12 @@
         <item name="android:background">@drawable/fixed_edittext_style</item>
         <item name="android:padding">15dp</item>
     </style>
+    <style name="edit_style3">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorREAD</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
     <style name="dialog_content_text">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorDialogContent</item>
