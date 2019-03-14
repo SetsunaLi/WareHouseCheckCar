@@ -67,7 +67,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.CHUBB_UP_LIST;
 
 public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, FragmentCallBackListener {
     @Bind(R.id.recyle)
@@ -225,7 +224,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
 //                            myList.remove(chubbUp);
                     }
                     dataKEY.clear();
-                    CHUBB_UP_LIST.clear();
+//                    CHUBB_UP_LIST.clear();
                     mAdapter.notifyDataSetChanged();
                 }
             });
@@ -253,19 +252,24 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
             case R.id.button2:
 //                if (dataKEY.size() > 0) {
                 disRFID();
-                    ArrayList<ChubbUp> dataList = new ArrayList<>();
-                    for (ChubbUp data : myList) {
-                        if (dataKEY.contains(data.getEpc())) {
-                            dataList.add(data);
-                        }
+                ArrayList<ChubbUp> dataList = new ArrayList<>();
+                for (ChubbUp data : myList) {
+                    if (dataKEY.contains(data.getEpc())) {
+                        dataList.add(data);
                     }
-                    CHUBB_UP_LIST.clear();
-                    CHUBB_UP_LIST.addAll(dataList);
-                    Fragment fragment = ChubbUpCarrierFragment.newInstance();
-                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-                    transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-                    transaction.show(fragment);
-                    transaction.commit();
+                }
+
+
+//                    CHUBB_UP_LIST.clear();
+//                    CHUBB_UP_LIST.addAll(dataList);
+                Fragment fragment = ChubbUpCarrierFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("dataList", dataList);
+                fragment.setArguments(bundle);
+                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                transaction.show(fragment);
+                transaction.commit();
 //                } else {
 //                    Toast.makeText(getActivity(), "请至少选择一条布匹上架", Toast.LENGTH_SHORT).show();
 //                }
@@ -381,13 +385,13 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                                                             String bPallet = obj2.getBas_pallet();
                                                             String aVat = obj1.getVatNo();
                                                             String bVat = obj2.getVatNo();
-                                                            if ((obj1.getVatNo()==null||obj1.getVatNo().equals(""))&&(obj1.getFabRool()==null||obj1.getFabRool().equals(""))
-                                                                    &&(obj1.getProduct_no()==null||obj1.getProduct_no().equals(""))&&(obj1.getSelNo()==null||obj1.getSelNo().equals(""))
-                                                                    &&(obj1.getEpc()==null||obj1.getEpc().equals(""))&&(obj1.getColor()==null||obj1.getColor().equals("")))
+                                                            if ((obj1.getVatNo() == null || obj1.getVatNo().equals("")) && (obj1.getFabRool() == null || obj1.getFabRool().equals(""))
+                                                                    && (obj1.getProduct_no() == null || obj1.getProduct_no().equals("")) && (obj1.getSelNo() == null || obj1.getSelNo().equals(""))
+                                                                    && (obj1.getEpc() == null || obj1.getEpc().equals("")) && (obj1.getColor() == null || obj1.getColor().equals("")))
                                                                 return -1;
-                                                            if ((obj2.getVatNo()==null||obj2.getVatNo().equals(""))&&(obj2.getFabRool()==null||obj2.getFabRool().equals(""))
-                                                                    &&(obj2.getProduct_no()==null||obj2.getProduct_no().equals(""))&&(obj2.getSelNo()==null||obj2.getSelNo().equals(""))
-                                                                    &&(obj2.getEpc()==null||obj2.getEpc().equals(""))&&(obj2.getColor()==null||obj2.getColor().equals("")))
+                                                            if ((obj2.getVatNo() == null || obj2.getVatNo().equals("")) && (obj2.getFabRool() == null || obj2.getFabRool().equals(""))
+                                                                    && (obj2.getProduct_no() == null || obj2.getProduct_no().equals("")) && (obj2.getSelNo() == null || obj2.getSelNo().equals(""))
+                                                                    && (obj2.getEpc() == null || obj2.getEpc().equals("")) && (obj2.getColor() == null || obj2.getColor().equals("")))
                                                                 return 1;
 
                                                             if (aLocation.equals(bLocation)) {

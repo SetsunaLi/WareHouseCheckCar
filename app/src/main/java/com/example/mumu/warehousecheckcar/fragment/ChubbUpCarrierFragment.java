@@ -45,8 +45,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.CHUBB_UP_LIST;
-
 public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiatener , RXCallback {
     private static ChubbUpCarrierFragment fragment;
     @Bind(R.id.edittext1)
@@ -229,14 +227,15 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
+        ArrayList<ChubbUp> list=( ArrayList<ChubbUp>) getArguments().getSerializable("dataList");
         if (App.CARRIER.getLocationNo()!=null&&(!App.CARRIER.getLocationNo().equals("")||App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))&&
-        (CHUBB_UP_LIST!=null&&CHUBB_UP_LIST.size()!=0)){
-            for(ChubbUp cu:CHUBB_UP_LIST){
+        (list!=null&&list.size()!=0)){
+            for(ChubbUp cu:list){
                 cu.setBas_location(App.CARRIER.getLocationNo()+"");
                 cu.setBas_pallet(App.CARRIER.getTrayNo()+"");
             }
-            ArrayList<ChubbUp> list=new ArrayList<>();
-            list.addAll(CHUBB_UP_LIST);
+//            ArrayList<ChubbUp> list=new ArrayList<>();
+//            list.addAll(CHUBB_UP_LIST);
             final String json= JSON.toJSONString(list);
 
             try {

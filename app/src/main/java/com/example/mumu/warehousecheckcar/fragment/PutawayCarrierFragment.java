@@ -115,6 +115,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                 Log.i("onTextChanged", "onTextChanged");
                 String locationNo = charSequence.toString();
+                locationNo=locationNo.replaceAll(" ","");
                 App.CARRIER.setLocationNo(locationNo);
                 App.CARRIER.setLocationEPC("");
 

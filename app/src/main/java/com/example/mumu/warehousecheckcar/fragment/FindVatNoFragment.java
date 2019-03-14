@@ -28,6 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -46,7 +47,6 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
-import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.rfid.RFIDReaderHelper;
@@ -78,8 +78,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     FixedEditText fixeedittext0;
     @Bind(R.id.fixeedittext2)
     FixedEditText fixeedittext2;*/
-    @Bind(R.id.recyle)
-    RecyclerView recyle;
+
     @Bind(R.id.button)
     Button button;
     @Bind(R.id.text2)
@@ -92,6 +91,12 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     Button button2;
     @Bind(R.id.listview)
     ListView listview;
+    @Bind(R.id.recyle)
+    RecyclerView recyle;
+    @Bind(R.id.scrollView)
+    HorizontalScrollView scrollView;
+    @Bind(R.id.layout1)
+    LinearLayout layout1;
 
     private FindVatNoFragment() {
     }
@@ -110,6 +115,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     private List<String> dataEpc;
     private ArrayList<String> vatList;
     private Sound sound;
+    private boolean isLookFlag=false;
 
     @Nullable
     @Override
@@ -145,9 +151,9 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                 String vat = s.toString();
-                vat=vat.replaceAll(" ","");
-                if(vat!=null&&!vat.equals("")) {
+                String vat = s.toString();
+                vat = vat.replaceAll(" ", "");
+                if (vat != null && !vat.equals("")) {
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + vat, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
@@ -165,7 +171,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                                     textAdapter.setList(vatList);
                                     textAdapter.notifyDataSetChanged();
                                     if (!vatFlag) {
-                                        if (listview.getVisibility() == View.GONE)
+                                        if (listview.getVisibility() == View.GONE&&isLookFlag)
                                             listview.setVisibility(View.VISIBLE);
                                     } else {
                                         vatFlag = false;
@@ -185,6 +191,12 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
             }
         });
+        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                isLookFlag=hasFocus;
+            }
+        });
         initRFID();
         return view;
     }
@@ -193,6 +205,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 //        fixeedittext0.setFixedText("入库单号：");
         fixeedittext1.setFixedText("缸号：");
 //        fixeedittext2.setFixedText("布号：");
+
         fixeedittext1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -382,7 +395,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     }
 
-    @OnClick({R.id.button, R.id.button1, R.id.button2})
+    @OnClick({R.id.button, R.id.button1, R.id.button2, R.id.layout1, R.id.recyle, R.id.scrollView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button:
@@ -406,6 +419,17 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             case R.id.button2:
                 blinkDialog();
                 break;
+            default:
+                if (listview.getVisibility() != View.GONE)
+                    listview.setVisibility(View.GONE);
+                break;
+           /* case R.id.layout1:
+
+                break;
+            case R.id.recyle:
+                if (listview.getVisibility() != View.GONE)
+                    listview.setVisibility(View.GONE);
+                break;*/
         }
     }
 
@@ -537,6 +561,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         if (listview.getVisibility() == View.VISIBLE)
             listview.setVisibility(View.GONE);
         vatFlag = true;
+        onViewClicked(button);
     }
 
     class MyAdapter extends ArrayAdapter {

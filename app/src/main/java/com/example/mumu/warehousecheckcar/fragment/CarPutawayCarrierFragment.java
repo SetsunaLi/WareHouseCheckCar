@@ -109,7 +109,7 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                 String locationNo=charSequence.toString();
                 locationNo=locationNo.replaceAll(" ","");
                 App.CARRIER.setLocationNo(locationNo);
-
+                App.CARRIER.setLocationEPC("");
             }
 
             @Override

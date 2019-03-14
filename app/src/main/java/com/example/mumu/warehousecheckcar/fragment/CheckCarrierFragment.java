@@ -31,6 +31,8 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+import com.xdl2d.scanner.TDScannerHelper;
+import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 
@@ -42,7 +44,7 @@ import butterknife.OnClick;
  * Created by mumu on 2018/12/21.
  */
 
-public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatener , RXCallback {
 
     private final String TAG = "CheckCarrierFragment";
     /*  @Bind(R.id.text1)
@@ -71,7 +73,8 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     }
 
     private Sound sound;
-
+    private boolean flagRFID=false;
+    private boolean flag2D=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,12 +116,44 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                 String locationNo=charSequence.toString();
                 locationNo=locationNo.replaceAll(" ","");
                 App.CARRIER.setLocationNo(locationNo);
-
+                App.CARRIER.setLocationEPC("");
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+        edittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    if (!flagRFID){
+                        initRFID();
+                        flagRFID=true;
+                    }
+                }else {
+                    if (flagRFID){
+                        disRFID();
+                        flagRFID=false;
+                    }
+                }
+            }
+        });
+        edittext2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    if (!flag2D){
+                        init2D();
+                        flag2D=true;
+                    }
+                }else {
+                    if (flag2D){
+                        disConnect2D();
+                        flag2D=false;
+                    }
+                }
             }
         });
         if (App.CARRIER == null)
@@ -129,7 +164,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
             edittext2.setText(App.CARRIER.getLocationNo());
         if (App.CARRIER.getTrayNo()!=null&&!App.CARRIER.getTrayNo().equals(""))
             edittext1.setText(App.CARRIER.getTrayNo());
-        initRFID();
+//        initRFID();
         return view;
     }
 
@@ -158,13 +193,44 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
 
         }
     }
+    private TDScannerHelper scannerHander;
 
+    private void init2D() {
+        try {
+            boolean flag2 = RFID_2DHander.getInstance().on_2D();
+//            boolean flag1=RFID_2DHander.getInstance().connect2D();
+            scannerHander = RFID_2DHander.getInstance().getTDScanner();
+            scannerHander.regist2DCodeData(this);
+            if (!flag2)
+                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+            RFID_2DHander.getInstance().off_2D();
+//            RFID_2DHander.getInstance().disConnect2D();
+
+        } catch (Exception e) {
+
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
 //        App.CARRIER = null;
-        disRFID();
+        if (flagRFID){
+            disRFID();
+            flagRFID=false;
+        }
+        if (flag2D){
+            disConnect2D();
+            flag2D=false;
+        }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -174,6 +240,10 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
        /* if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
                 (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {*/
         if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
+            if (flag2D){
+                disConnect2D();
+                flag2D=false;
+            }
             Fragment fragment = CheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -260,6 +330,17 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                         if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
                             App.CARRIER .setLocationEPC(response.getLocationEPC());
                         break;
+                        case 0x02:
+                        if (App.MUSIC_SWITCH) {
+                            if (System.currentTimeMillis() - currenttime > 150) {
+                                sound.callAlarm();
+                                currenttime = System.currentTimeMillis();
+                            }
+                        }
+                        String location= (String) msg.obj;
+                        location=location.replaceAll(" ","");
+                        edittext2.setText(location);
+                        break;
                 }
             } catch (Exception e) {
 
@@ -288,5 +369,14 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
 
+    }
+
+    @Override
+    public void callback(byte[] bytes) {
+        Message msg = handler.obtainMessage();
+        msg.arg1 = 0x02;
+        msg.obj = new String(bytes);
+
+        handler.sendMessage(msg);
     }
 }
