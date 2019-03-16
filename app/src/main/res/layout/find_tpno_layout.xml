@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayouta
+        <LinearLayout
             android:id="@+id/layout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,7 +32,7 @@
                     android:layout_width="0dp"
                     android:layout_height="60dip"
                     android:layout_weight="1"
-                    android:hint="请输入缸号"
+                    android:hint="请输入托盘号"
                     android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -66,7 +66,7 @@
             <HorizontalScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="340dp"
+                android:layout_height="370dp"
                 android:background="@drawable/table_padding">
 
                 <android.support.v7.widget.RecyclerView
@@ -146,7 +146,7 @@
                     android:text="功率" />
 
             </LinearLayout>
-        </LinearLayouta>
+        </LinearLayout>
     </ScrollView>
 
     <ListView

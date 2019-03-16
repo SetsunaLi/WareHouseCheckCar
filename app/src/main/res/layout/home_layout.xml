@@ -153,18 +153,20 @@
         android:layout_height="3dp"
     android:background="@drawable/side_nav_bar"
     />-->
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/home_margin"
         android:layout_marginTop="9dp"
-        android:layout_weight="5"
+        android:layout_marginBottom="9dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="90dp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -193,7 +195,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="90dp"
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -222,7 +224,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="90dp"
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -248,7 +250,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="90dp"
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -275,11 +277,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="90dp"
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
             android:orientation="horizontal">
-
             <Button
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
@@ -295,9 +296,38 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/setting_l"
+                android:drawableTop="@mipmap/find_l"
                 android:onClick="click10"
                 android:text="@string/btn_click10" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="18dp"
+            >
+
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/find_l"
+                android:onClick="click11"
+                android:text="@string/btn_click11" />
+            <Button
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/setting_l"
+                android:onClick="click12"
+                android:text="@string/btn_click12" />
+        </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

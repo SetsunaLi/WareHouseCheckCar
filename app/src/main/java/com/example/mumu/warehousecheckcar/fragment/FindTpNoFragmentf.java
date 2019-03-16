@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -46,7 +47,6 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.FindVatNo;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.rfid.RFIDReaderHelper;
@@ -66,65 +66,58 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by mumu on 2019/1/21.
- */
-
-public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, AdapterView.OnItemClickListener {
-    private static FindVatNoFragment fragment;
+public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, AdapterView.OnItemClickListener{
+    private static FindTpNoFragmentf fragment;
     @Bind(R.id.fixeedittext1)
     FixedEditText fixeedittext1;
-    /*@Bind(R.id.fixeedittext0)
-    FixedEditText fixeedittext0;
-    @Bind(R.id.fixeedittext2)
-    FixedEditText fixeedittext2;*/
-
+    @Bind(R.id.buttonAdd)
+    Button buttonAdd;
     @Bind(R.id.button)
     Button button;
-    @Bind(R.id.text2)
-    TextView text2;
-    @Bind(R.id.text3)
-    TextView text3;
-    @Bind(R.id.button1)
-    Button button1;
-    @Bind(R.id.button2)
-    Button button2;
-    @Bind(R.id.listview)
-    ListView listview;
+    @Bind(R.id.layout2)
+    LinearLayout layout2;
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.scrollView)
     HorizontalScrollView scrollView;
+    @Bind(R.id.text2)
+    TextView text2;
+    @Bind(R.id.text3)
+    TextView text3;
+    @Bind(R.id.button0)
+    Button button0;
+    @Bind(R.id.button1)
+    Button button1;
+    @Bind(R.id.button2)
+    Button button2;
     @Bind(R.id.layout1)
     LinearLayout layout1;
-    @Bind(R.id.buttonAdd)
-    Button buttonAdd;
-    @Bind(R.id.layout2)
-    LinearLayout layout2;
+    @Bind(R.id.listview)
+    ListView listview;
 
-    private FindVatNoFragment() {
+    private FindTpNoFragmentf() {
     }
 
-    public static FindVatNoFragment newInstance() {
+    public static FindTpNoFragmentf newInstance() {
         if (fragment == null) ;
-        fragment = new FindVatNoFragment();
+        fragment = new FindTpNoFragmentf();
         return fragment;
     }
 
     private RecycleAdapter mAdapter;
     private MyAdapter textAdapter;
-//    显示布匹
-    private List<FindVatNo> myList;
-//    查询的布匹
-    private List<FindVatNo> dataList;
-//    查询获取epc
+    //    显示布匹
+    private List<TP> myList;
+    //    查询的布匹
+    private List<TP> dataList;
+    //    查询获取epc
     private List<String> dataKEY;
-//    扫描epc
+    //    扫描epc
     private List<String> dataEpc;
-//    查询的缸号
+    //    查询的托盘号
     private ArrayList<String> findList;
 
-//     模糊查询缸号
+    //     模糊查询托盘号
     private ArrayList<String> vatList;
     private Sound sound;
     private boolean isLookFlag = false;
@@ -132,14 +125,14 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
+        View view = inflater.inflate(R.layout.find_tpno_layout, container, false);
         ButterKnife.bind(this, view);
         initView();
         initData();
         initUtil();
 
         sound = new Sound(getActivity());
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_item);
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_tp_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
@@ -163,37 +156,52 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String vat = s.toString();
-                vat = vat.replaceAll(" ", "");
-                if (vat != null && !vat.equals("")) {
-                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + vat, new OkHttpClientManager.ResultCallback<JSONArray>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-
-                        }
-
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            try {
-                                List<String> arry;
-                                arry = response.toJavaList(String.class);
-                                if (arry != null && arry.size() > 0) {
-                                    vatList.clear();
-                                    vatList.addAll(arry);
-                                    textAdapter.setList(vatList);
-                                    textAdapter.notifyDataSetChanged();
-                                    if (!vatFlag) {
-                                        if (listview.getVisibility() == View.GONE && isLookFlag)
-                                            listview.setVisibility(View.VISIBLE);
-                                    } else {
-                                        vatFlag = false;
-                                    }
+                String pallet = s.toString();
+                pallet = pallet.replaceAll(" ", "");
+                if (pallet != null && !pallet.equals("")) {
+                    JSONObject object = new JSONObject();
+                    object.put("pallet", pallet);
+                    final String json = object.toJSONString();
+                    try {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getEpcListByPallet", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Toast.makeText(getActivity(), "托盘号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            } catch (Exception e) {
-
                             }
-                        }
-                    });
+
+                            @Override
+                            public void onResponse(JSONObject jsonObject) {
+                                try {
+                                    if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        List<TP> response;
+                                        response = jsonArray.toJavaList(TP.class);
+                                        if (response != null && response.size() != 0) {
+                                            vatList.clear();
+                                            for(TP TP:response){
+                                                if (!vatList.contains(TP.getPallet_name()))
+                                                    vatList.add(TP.getPallet_name());
+                                            }
+                                            textAdapter.notifyDataSetChanged();
+                                            if (!vatFlag) {
+                                                if (listview.getVisibility() == View.GONE && isLookFlag)
+                                                    listview.setVisibility(View.VISIBLE);
+                                            } else {
+                                                vatFlag = false;
+                                            }
+                                        }
+
+                                    }
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        }, json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -215,7 +223,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     private void initView() {
 //        fixeedittext0.setFixedText("入库单号：");
-        fixeedittext1.setFixedText("缸号:");
+        fixeedittext1.setFixedText("托盘号:");
 //        fixeedittext2.setFixedText("布号：");
 
         fixeedittext1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -231,13 +239,13 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     }
 
     private void setAdaperHeader() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.find_item, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.find_tp_item, null);
         mAdapter.setHeader(view);
     }
 
     private void initData() {
         myList = new ArrayList<>();
-        myList.add(new FindVatNo());
+        myList.add(new TP());
         dataKEY = new ArrayList<>();
         dataList = new ArrayList<>();
         dataEpc = new ArrayList<>();
@@ -248,7 +256,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     private void clearData() {
         if (myList != null) {
             myList.clear();
-            myList.add(new FindVatNo());
+            myList.add(new TP());
         }
         if (dataList != null)
             dataList.clear();
@@ -319,18 +327,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     @Override
     public void onItemClick(View view, Object data, int position) {
         if (position != 0) {
-           /* if (mAdapter.getPosition() == position) {
-                dataKEY.clear();
-                for (FindVatNo i : myList) {
-                    if (i != null && i.getEpc() != null && !i.getEpc().equals(""))
-                        dataKEY.add(i.getEpc());
-                }
-            } else {
-                if (myList.get(position) != null && myList.get(position).getEpc() != null && !myList.get(position).getEpc().equals("")) {
-                    dataKEY.clear();
-                    dataKEY.add(myList.get(position).getEpc());
-                }
-            }*/
             mAdapter.selectItem(position);
             mAdapter.notifyDataSetChanged();
         }
@@ -351,35 +347,11 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 }
                 if (!dataEpc.contains(epc)) {
                     dataEpc.add(epc);
-                    for (FindVatNo findVatNo : dataList) {
-                        if (findVatNo.getEpc().equals(epc)) {
+                    for (TP findVatNo : dataList) {
+                        if (findVatNo.getPallet_epc().equals(epc)) {
                             myList.add(findVatNo);
                         }
                     }
-                    Collections.sort(myList, new Comparator<FindVatNo>() {
-                        @Override
-                        public int compare(FindVatNo obj1, FindVatNo obj2) {
-                            String aInv_serial = obj1.getInv_serial();
-                            String bInv_serial = obj2.getInv_serial();
-
-                            if ((obj1.getEpc() == null || obj1.getEpc().equals("")) && (obj1.getColor_name() == null || obj1.getColor_name().equals(""))
-                                    && (obj1.getLocation_name() == null || obj1.getLocation_name().equals("")) && (obj1.getCloth_name() == null || obj1.getCloth_name().equals(""))
-                                    && (obj1.getPallet_name() == null || obj1.getPallet_name().equals("")) && (obj1.getInv_serial() == null || obj1.getInv_serial().equals("")))
-                                return -1;
-                            if ((obj2.getEpc() == null || obj2.getEpc().equals("")) && (obj2.getColor_name() == null || obj2.getColor_name().equals(""))
-                                    && (obj2.getLocation_name() == null || obj2.getLocation_name().equals("")) && (obj2.getCloth_name() == null || obj2.getCloth_name().equals(""))
-                                    && (obj2.getPallet_name() == null || obj2.getPallet_name().equals("")) && (obj2.getInv_serial() == null || obj2.getInv_serial().equals("")))
-
-                                return 1;
-                            if (aInv_serial != null && bInv_serial != null) {
-                                if (Integer.valueOf(aInv_serial) >= Integer.valueOf(bInv_serial)) {
-                                    return 1;
-                                }
-                                return -1;
-                            }
-                            return 0;
-                        }
-                    });
                     text2.setText(myList.size() - 1 + "");
                     mAdapter.notifyDataSetChanged();
                 }
@@ -410,7 +382,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     }
 
     @OnClick({R.id.button, R.id.button1, R.id.button2, R.id.layout1,
-            R.id.button0,R.id.buttonAdd, R.id.recyle, R.id.scrollView})
+            R.id.button0, R.id.buttonAdd, R.id.recyle, R.id.scrollView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button:
@@ -420,7 +392,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 cancelKeyBoard(view);
                 if (myList != null) {
                     myList.clear();
-                    myList.add(new FindVatNo());
+                    myList.add(new TP());
                 }
                 if (dataList != null)
                     dataList.clear();
@@ -440,7 +412,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 break;
             case R.id.button1:
                 myList.clear();
-                myList.add(new FindVatNo());
+                myList.add(new TP());
                 dataEpc.clear();
                 text2.setText(myList.size() - 1 + "");
                 mAdapter.notifyDataSetChanged();
@@ -456,30 +428,23 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 if (listview.getVisibility() != View.GONE)
                     listview.setVisibility(View.GONE);
                 break;
-           /* case R.id.layout1:
-
-                break;
-            case R.id.recyle:
-                if (listview.getVisibility() != View.GONE)
-                    listview.setVisibility(View.GONE);
-                break;*/
         }
     }
-    private void addView(){
+
+    private void addView() {
         String vatNo = fixeedittext1.getText().toString() + "";
         vatNo = vatNo.replaceAll(" ", "");
         if (!findList.contains(vatNo)) {
             findList.add(vatNo);
-            TextView textView=new TextView(getActivity());
+            TextView textView = new TextView(getActivity());
             textView.setText(vatNo);
             textView.setTextColor(getResources().getColor(R.color.colorAboutText));
             textView.setTextSize(20);
             textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
-            textView.setId(findList.size()-1);
+            textView.setId(findList.size() - 1);
             layout2.addView(textView);
         }
         fixeedittext1.setText("");
-
     }
 
     private void blinkDialog() {
@@ -550,18 +515,18 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     }
 
     private void goFind() {
-        if (findList.size()!=0) {
-            for (String vatNo:findList) {
-                if (vatNo != null && !vatNo.equals("")) {
+        if (findList.size() != 0) {
+            for (String pallet : findList) {
+                if (pallet != null && !pallet.equals("")) {
                     JSONObject object = new JSONObject();
-                    object.put("vatNo", vatNo);
+                    object.put("pallet", pallet);
                     final String json = object.toJSONString();
                     try {
-                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventoryByVatNo", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getEpcListByPallet", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override
                             public void onError(Request request, Exception e) {
                                 if (App.LOGCAT_SWITCH) {
-                                    Toast.makeText(getActivity(), "缸号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "托盘号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
 
@@ -570,23 +535,21 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                                 try {
                                     if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
                                         JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                        List<FindVatNo> response;
-                                        response = jsonArray.toJavaList(FindVatNo.class);
+                                        List<TP> response;
+                                        response = jsonArray.toJavaList(TP.class);
                                         if (response != null && response.size() != 0) {
-//                                            clearData();
                                             dataList.addAll(response);
-                                            for (FindVatNo i : response) {
-                                                if (i != null && i.getEpc() != null && !i.getEpc().equals("")&&!dataKEY.contains(i.getEpc()))
-                                                    dataKEY.add(i.getEpc());
+                                            for (TP i : response) {
+                                                if (!dataKEY.contains(i.getPallet_epc()))
+                                                    dataKEY.add(i.getPallet_epc());
                                             }
                                             text3.setText(dataList.size() + "");
-                                            mAdapter.notifyDataSetChanged();
-                                            Toast.makeText(getActivity(), "成功查询缸号！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "成功查询托盘号！", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            Toast.makeText(getActivity(), "此缸号无库存数据！", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "此托盘号无库存数据！", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
-                                        Toast.makeText(getActivity(), "查无此缸号！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "查无此托盘号！", Toast.LENGTH_SHORT).show();
 //                                getActivity().onBackPressed();
                                     }
                                 } catch (Exception e) {
@@ -669,10 +632,10 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         }
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<FindVatNo> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<TP> {
         private Context context;
 
-        public RecycleAdapter(RecyclerView v, Collection<FindVatNo> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<TP> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
         }
 
@@ -702,7 +665,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             return super.getItemViewType(position);
         }
 
-        public void convert(RecyclerHolder holder, final FindVatNo item, final int position) {
+        public void convert(RecyclerHolder holder, final TP item, final int position) {
             if (item != null) {
                 if (position != 0) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
@@ -710,17 +673,31 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-
-                    holder.setText(R.id.item1, item.getLocation_name() + "");
-                    holder.setText(R.id.item2, item.getPallet_name() + "");
-                    holder.setText(R.id.item4, item.getCloth_name() + "");
-                    holder.setText(R.id.item5, item.getInv_serial() + "");
-                    holder.setText(R.id.item6, item.getWeight_inv() + "");
-                    holder.setText(R.id.item7, item.getColor_name() + "");
-                    holder.setText(R.id.item8, item.getEpc() + "");
+                    holder.setText(R.id.item1,item.getPallet_name());
+                    holder.setText(R.id.item2,item.getPallet_epc());
                 }
-
             }
         }
     }
+   static class TP{
+        private String pallet_epc="";
+        private String pallet_name="";
+
+        public String getPallet_epc() {
+            return pallet_epc;
+        }
+
+        public void setPallet_epc(String pallet_epc) {
+            this.pallet_epc = pallet_epc;
+        }
+
+        public String getPallet_name() {
+            return pallet_name;
+        }
+
+        public void setPallet_name(String pallet_name) {
+            this.pallet_name = pallet_name;
+        }
+    }
+
 }

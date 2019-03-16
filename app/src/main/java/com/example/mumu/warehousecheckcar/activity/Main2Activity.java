@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
+import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
@@ -117,6 +118,8 @@ public class Main2Activity extends AppCompatActivity
         App.IP="http://47.106.157.255";
         App.PORT="80";
 //        App.IP="http://120.79.56.119";
+//        App.PORT="8080";
+//        App.IP="http://192.168.1.231";
 //        App.PORT="8080";
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
 //        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
@@ -221,6 +224,12 @@ public class Main2Activity extends AppCompatActivity
                 fragment = FindVatNoFragment.newInstance();
                 break;
             case 10:
+                fragment = FindTpNoFragmentf.newInstance();
+                break;
+            case 11:
+//                待开发
+                break;
+            case 12:
                 fragment = SettingFragment.newInstance();
                 break;
             default:
@@ -307,11 +316,24 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /**
-     * 系统
+     * 寻托盘
      */
     public void click10(View view) {
         selectItem(10);
     }
+    /**
+     * 待开发
+     */
+    public void click11(View view) {
+        selectItem(11);
+    }
+    /**
+     * 系统
+     */
+    public void click12(View view) {
+        selectItem(12);
+    }
+
 
     //返回键监听
     @Override

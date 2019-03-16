@@ -27,32 +27,6 @@ import butterknife.ButterKnife;
 
 public class HomeFragment extends Fragment {
 
-   /* @Bind(R.id.iv)
-    ImageView iv;
-    @Bind(R.id.tv1)
-    TextView tv1;
-    @Bind(R.id.tv2)
-    TextView tv2;
-    @Bind(R.id.ll1)
-    LinearLayout ll1;
-    @Bind(R.id.tv3)
-    TextView tv3;
-    @Bind(R.id.ll2)
-    LinearLayout ll2;
-    @Bind(R.id.tv4)
-    TextView tv4;
-    @Bind(R.id.ll3)
-    LinearLayout ll3;
-    @Bind(R.id.tv5)
-    TextView tv5;
-    @Bind(R.id.ll4)
-    LinearLayout ll4;
-    @Bind(R.id.tv6)
-    TextView tv6;
-    @Bind(R.id.ll5)
-    LinearLayout ll5;
-*/
-
     private static HomeFragment fragment;
     private HomeFragment(){    }
     public static HomeFragment newInstance(){
