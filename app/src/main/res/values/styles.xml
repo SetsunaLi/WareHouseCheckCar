@@ -82,6 +82,12 @@
         <item name="android:textSize">26sp</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="text_style3">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
     <!--首页信息-->
     <style name="text_style2">
         <item name="android:textColor">@color/colorHomeButton2</item>

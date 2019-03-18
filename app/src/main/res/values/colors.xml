@@ -5,6 +5,7 @@
     <color name="colorAccent">#B98563</color>
     <color name="colorZERO">#00000000</color>
 
+    <color name="blue">#0000ff</color><!--蓝色 -->
     <color name="colorREAD">#FF4081</color>
     <color name="colorStyle">#252A2F</color>
     <color name="colorWhite">#ffffff</color>

@@ -67,6 +67,12 @@
         <item>系统设置</item>
         <item>关于</item>
     </string-array>
+    <!--导航栏的选项名称-->
+    <string-array name="change_cause_array">
+        <item>库龄久</item>
+        <item>染厂重量差异</item>
+        <item>剪布调整</item>
+    </string-array>
 
     <!--Setting-->
     <string name="user_managment_group">用户管理</string>

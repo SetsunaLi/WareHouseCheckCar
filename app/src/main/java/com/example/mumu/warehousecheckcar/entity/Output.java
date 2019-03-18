@@ -72,6 +72,9 @@ public class Output implements Cloneable, Serializable {
     public void addCount(){
         count++;
     }
+    public void addCountProfit(){
+        countProfit++;
+    }
 
     public int getFlag() {
         return flag;

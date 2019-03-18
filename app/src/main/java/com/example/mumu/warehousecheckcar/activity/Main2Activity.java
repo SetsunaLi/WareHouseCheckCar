@@ -52,6 +52,7 @@ import com.example.mumu.warehousecheckcar.fragment.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.fragment.TextFragment;
+import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
@@ -115,10 +116,10 @@ public class Main2Activity extends AppCompatActivity
         mOptionTitle = getResources().getStringArray(R.array.options_array);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-        App.IP="http://47.106.157.255";
-        App.PORT="80";
-//        App.IP="http://120.79.56.119";
-//        App.PORT="8080";
+//        App.IP="http://47.106.157.255";
+//        App.PORT="80";
+        App.IP = "http://120.79.56.119";
+        App.PORT = "8080";
 //        App.IP="http://192.168.1.231";
 //        App.PORT="8080";
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
@@ -227,6 +228,7 @@ public class Main2Activity extends AppCompatActivity
                 fragment = FindTpNoFragmentf.newInstance();
                 break;
             case 11:
+                fragment = WeightChangeFragment.newInstance();
 //                待开发
                 break;
             case 12:
@@ -321,12 +323,14 @@ public class Main2Activity extends AppCompatActivity
     public void click10(View view) {
         selectItem(10);
     }
+
     /**
      * 待开发
      */
     public void click11(View view) {
         selectItem(11);
     }
+
     /**
      * 系统
      */
@@ -343,13 +347,16 @@ public class Main2Activity extends AppCompatActivity
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment|| fragment instanceof HomeFragment
+            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment || fragment instanceof HomeFragment
                     || fragment instanceof InCheckCarrierFragment || fragment instanceof OutCheckCarFragment
                     || fragment instanceof PutawayCarrierFragment || fragment instanceof CarPutawayCarrierFragment
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
-                    || fragment instanceof FindVatNoFragment)) {
-
+                    || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf)
+                    || fragment instanceof WeightChangeFragment) {
+                if (fragment instanceof HomeFragment) {
+                    askForOut();
+                }
                 //update the selected item in the drawer and the title
 //            mDrawerList.setItemChecked(0, true);
                 selectItem(0);
@@ -358,12 +365,7 @@ public class Main2Activity extends AppCompatActivity
                 //{@link BaseReceiverActivity # onBackPressed should be called by the fragment when the processing is done}
                 //super.onBackPressed();
 
-                if (fragment instanceof HomeFragment) {
 
-                    askForOut();
-                } else {
-
-                }
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
@@ -396,16 +398,20 @@ public class Main2Activity extends AppCompatActivity
             }
         }
     }
-    private HashMap<String,OutApplyNewFragment.OutputFlag> dataList =new HashMap<>();
-    public HashMap getOutApplyDataList(){
-        if(dataList!=null)
+
+    private HashMap<String, OutApplyNewFragment.OutputFlag> dataList = new HashMap<>();
+
+    public HashMap getOutApplyDataList() {
+        if (dataList != null)
             return dataList;
         return new HashMap();
     }
-    public void setOutApplyDataList(HashMap<String,OutApplyNewFragment.OutputFlag> dataList){
+
+    public void setOutApplyDataList(HashMap<String, OutApplyNewFragment.OutputFlag> dataList) {
         this.dataList.clear();
         this.dataList.putAll(dataList);
     }
+
     public void showProgress(final boolean show) {
 /*
         loginButton.setEnabled(show?false:true);

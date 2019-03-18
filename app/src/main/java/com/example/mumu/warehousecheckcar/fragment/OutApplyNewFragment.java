@@ -89,14 +89,23 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         return fragment;
     }
 
+    /*** 申请单号*/
     private ArrayList<String> fatherNoList;
+    /***    epc，记录匹配是否扫描到、匹配申请单号和出库重量等信息*/
     private HashMap<String, OutputFlag> epcKeyList;
+    /***    显示列表*/
     private ArrayList<Output> myList;
+    /***    主表，根据申请单号，字段组成key判断是否上传*/
     private Map<String, List<String>> dataKey;
+    /***    所有扫描的epc总集，避免多次查询*/
     private ArrayList<String> epcList;
-    private HashMap<String ,Integer>getEpcKey;
+    /***     key：字段组成，记录非单号查询到的数据，并且记录插入myList的位置*/
+    private HashMap<String, Integer> getEpcKey;
+    /***    缸号，是否自动匹配缸号*/
+    private HashMap<String, Boolean> vatKey;
 
-    //    private ArrayList<Output> dataList;
+//    private ArrayList<Output> dataList;
+     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
 
     private RecycleAdapter mAdapter;
@@ -133,8 +142,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //        dataList = new ArrayList<>();
         dateNo = new ArrayList<>();
         dataKey = new HashMap<>();
-        epcList=new ArrayList<>();
-        getEpcKey=new HashMap<>();
+        epcList = new ArrayList<>();
+        getEpcKey = new HashMap<>();
+        vatKey = new HashMap<>();
     }
 
     public void clearData() {
@@ -144,6 +154,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         dataKey.clear();
         epcList.clear();
         getEpcKey.clear();
+        vatKey.clear();
     }
 
     @Override
@@ -154,8 +165,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         Iterator<String> iter = list.iterator();
         while (iter.hasNext()) {
             String str = iter.next();
-            str=str.replaceAll(" ","");
-            if (str != null && !str.equals("")&&!fatherNoList.contains(str))
+            str = str.replaceAll(" ", "");
+            if (str != null && !str.equals("") && !fatherNoList.contains(str))
                 fatherNoList.add(str);
 
         }
@@ -190,6 +201,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                     dateNo.add(response.get(0).getApplyNo());
                                     response.get(0).setStatus(true);
                                     for (Output output : response) {
+                                        if (vatKey.containsKey(output.getVatNo())){
+                                            vatKey.put(output.getVatNo(),false);
+                                        }else {
+                                            vatKey.put(output.getVatNo(),true);
+                                        }
                                         for (OutputDetail outputDetail : output.getList()) {
                                             if (!epcKeyList.containsKey(outputDetail.getEpc())) {
                                                 epcKeyList.put(outputDetail.getEpc() + "", new OutputFlag(false, "", true, outputDetail.getWeight()));
@@ -267,6 +283,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                     if (od.getEpc().equals(EPC)) {
                                         i.setCount(i.getCount() + 1);
                                         i.setWeightall(ArithUtil.add(i.getWeightall(), epcKeyList.get(EPC).getWeight()));
+//                                        自动配货
+                                        if (vatKey.get(i.getVatNo())&&i.getCountProfit()<i.getCountOut()) {
+                                            epcKeyList.get(EPC).setApplyNo(i.getApplyNo());
+                                            i.addCountProfit();
+                                        }
                                         break;
                                     }
                                 }
@@ -279,7 +300,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             text1.setText(count + "");
                             mAdapter.notifyDataSetChanged();
                         }
-                    }else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC)&&!epcList.contains(EPC)){
+                    } else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC) && !epcList.contains(EPC)) {
                         JSONObject epc = new JSONObject();
                         epc.put("epc", EPC);
                         final String json = epc.toJSONString();
@@ -477,7 +498,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             }
                         }
                     }
-                    if(jsocList.size()>0) {
+                    if (jsocList.size() > 0) {
                         final String json = JSON.toJSONString(jsocList);
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
@@ -517,6 +538,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
             }
         });
     }
+
     private void blinkDialog2(boolean flag) {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -525,9 +547,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
         if (flag)
-        text.setText("上传成功");
+            text.setText("上传成功");
         else
-        text.setText("上传失败");
+            text.setText("上传失败");
 
         dialog = new AlertDialog.Builder(getActivity()).create();
         dialog.show();
@@ -714,7 +736,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    if (item.getFlag()==2){
+                    if (item.getFlag() == 2) {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                         if (cb.isEnabled())
                             cb.setEnabled(false);
