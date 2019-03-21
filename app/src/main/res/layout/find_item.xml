@@ -13,14 +13,14 @@
 
 
 
-        <!--<TextView
+        <TextView
             android:id="@+id/item3"
             style="@style/text_item"
             android:layout_width="120dip"
             android:layout_height="match_parent"
             android:text="缸号" />
 
-        <View style="@style/view_item_mid" />-->
+        <View style="@style/view_item_mid" />
 
         <TextView
             android:id="@+id/item4"
@@ -30,6 +30,7 @@
             android:text="布号" />
 
         <View style="@style/view_item_mid" />
+
 
         <TextView
             android:id="@+id/item5"

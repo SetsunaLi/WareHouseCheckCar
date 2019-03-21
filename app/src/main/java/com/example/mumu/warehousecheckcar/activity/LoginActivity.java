@@ -69,7 +69,8 @@ public class LoginActivity extends AppCompatActivity  {
             }
         });
         checkVersion();
-        UpdateApk.UpdateVersion(this,updateBean);
+        /**更新版本入口*/
+//        UpdateApk.UpdateVersion(this,updateBean);
     }
 
     private void checkVersion(){

@@ -578,7 +578,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
         Output obj = myList.get(position);
-     /*   String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
+     /*   String key = obj.getOutp_id() + obj.getVat_no() + obj.getProduct_no() + obj.getSelNo();
         KEY = key;
         APPLY_NO = obj.getApplyNo();*/
         Fragment fragment = OutApplyDetailFragment.newInstance();

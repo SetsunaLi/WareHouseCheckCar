@@ -35,6 +35,7 @@ import com.example.mumu.warehousecheckcar.fragment.CarPutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
@@ -92,6 +93,7 @@ public class Main2Activity extends AppCompatActivity
         });*/
 //       左上角按钮
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbar.bringToFront();
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -116,12 +118,14 @@ public class Main2Activity extends AppCompatActivity
         mOptionTitle = getResources().getStringArray(R.array.options_array);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-//        App.IP="http://47.106.157.255";
-//        App.PORT="80";
-        App.IP = "http://120.79.56.119";
-        App.PORT = "8080";
-//        App.IP="http://192.168.1.231";
-//        App.PORT="8080";
+      /*  App.IP="http://47.106.157.255";
+        App.PORT="80";*/
+//        App.IP = "http://120.79.56.119";
+//        App.PORT = "8080";
+       /* App.IP="http://192.168.1.231";
+        App.PORT="8080";*/
+           App.IP="http://192.168.1.110";
+        App.PORT="80";
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
 //        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
@@ -232,6 +236,14 @@ public class Main2Activity extends AppCompatActivity
 //                待开发
                 break;
             case 12:
+                fragment = ChubbExceptionFragment.newInstance();
+//                待开发
+                break;
+            case 13:
+//                fragment = WeightChangeFragment.newInstance();
+//                待开发
+                break;
+            case 14:
                 fragment = SettingFragment.newInstance();
                 break;
             default:
@@ -325,17 +337,30 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /**
-     * 待开发
+     * 修改重量
      */
     public void click11(View view) {
         selectItem(11);
     }
 
     /**
-     * 系统
+     * 查布异常
      */
     public void click12(View view) {
         selectItem(12);
+    }
+    /**
+     * 待开发
+     */
+    public void click13(View view) {
+        selectItem(13);
+    }
+
+    /**
+     * 系统
+     */
+    public void click14(View view) {
+        selectItem(14);
     }
 
 
@@ -353,7 +378,7 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf)
-                    || fragment instanceof WeightChangeFragment) {
+                    || fragment instanceof WeightChangeFragment|| fragment instanceof ChubbExceptionFragment) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
                 }

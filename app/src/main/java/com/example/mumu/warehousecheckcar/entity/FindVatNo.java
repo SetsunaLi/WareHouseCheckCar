@@ -7,6 +7,8 @@ package com.example.mumu.warehousecheckcar.entity;
 public class FindVatNo {
     /***布号*/
     private String cloth_name;
+    /***缸号*/
+    private String vat_no;
     /***布票号*/
     private String inv_serial;
     /***仓位号*/
@@ -74,5 +76,13 @@ public class FindVatNo {
 
     public void setPallet_name(String pallet_name) {
         this.pallet_name = pallet_name;
+    }
+
+    public String getVat_no() {
+        return vat_no;
+    }
+
+    public void setVat_no(String vat_no) {
+        this.vat_no = vat_no;
     }
 }

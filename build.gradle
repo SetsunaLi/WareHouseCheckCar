@@ -3,11 +3,11 @@
 buildscript {
     repositories {
         jcenter()
-        google()
-
+//        google()
         maven { url "https://jitpack.io" }//maven仓库
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        google()//阿里云maven仓库
+        google()
+//        google()//阿里云maven仓库
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -20,9 +20,11 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        google()
+//        google()
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-
+        maven{ url 'https://maven.aliyun.com/repository/google'}
+        google()
+//        maven {url 'https://dl.bintray.com/jetbrains/anko'}
     }
 }
 

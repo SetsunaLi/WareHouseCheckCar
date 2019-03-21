@@ -99,7 +99,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.setOnItemClickListener(this);
 
       /*  if (App.OUTPUT_DETAIL_LIST.size() > 0) {
-            text2.setText(App.OUTPUT_DETAIL_LIST.get(0).getVatNo() + "");
+            text2.setText(App.OUTPUT_DETAIL_LIST.get(0).getVat_no() + "");
             int i = 0;
             for (OutputDetail od : App.OUTPUT_DETAIL_LIST.get(0).getList())
                 if (od.getFlag() != 0)

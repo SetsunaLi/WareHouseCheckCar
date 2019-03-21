@@ -96,7 +96,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
     private List<InCheckDetail> myList;
     /**
      * 匹配逻辑
-     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * key：response.getVat_no()+response.getProduct_no()+response.getSelNo()+response.getColor()
      * value：index
      */
     private Map<String, Integer> strIndex;
@@ -105,7 +105,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
     private List<String> dataEPC;
     /**
      * 匹配逻辑
-     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * key：response.getVat_no()+response.getProduct_no()+response.getSelNo()+response.getColor()
      * value：index
      */
     private List<String> dataKEY;
@@ -268,7 +268,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
 //                                                        ocd.setCarrier(App.CARRIER);
                                                         dataEPC.add(ocd.getEpc());
                                                         dataList.add(ocd);
-                                                          /*  String key = ocd.getVatNo() + ocd.getProduct_no()
+                                                          /*  String key = ocd.getVat_no() + ocd.getProduct_no()
                                                                     + ocd.getSelNo() + ocd.getColor() + "";*/
                                                         String key = ocd.getVatNo() + "";
 

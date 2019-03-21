@@ -244,13 +244,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                             if (response != null && response.size() != 0) {
                                 clearData();
                                 for (Output op : response) {
-                                    if (op != null && op.getVatNo() != null) {
-//                                if (keyValue.containsKey(op.getVatNo())) {//里面有
+                                    if (op != null && op.getVat_no() != null) {
+//                                if (keyValue.containsKey(op.getVat_no())) {//里面有
 //                                        目前应该不会重复
 //                                        如果是重复的话在这里加载进myList的list里面
 //                                } else {//里面没有
                                         myList.add(op);
-                                        String key = op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo();
+                                        String key = op.getOutp_id() + op.getVat_no() + op.getProduct_no() + op.getSelNo();
                                         keyValue.put(key, myList.size() - 1);
                                         DATA_KEY.put(key,new ArrayList<String>());
 //                                }
@@ -325,7 +325,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
 //                上传数据
                 ArrayList<Output> jsocList = new ArrayList<>();
                 for (Output obj : dataList) {
-                    String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
+                    String key = obj.getOutp_id() + obj.getVat_no() + obj.getProduct_no() + obj.getSelNo();
                     if (key != null && DATA_KEY.containsKey(key)) {
                         obj.setDevice(App.DEVICE_NO);
                         Output obj2 = (Output) obj.clone();
@@ -386,13 +386,13 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
             mAdapter.select(position);
             mAdapter.notifyDataSetChanged();
             Output obj = myList.get(position);
-            String key = obj.getOutp_id() + obj.getVatNo() + obj.getProduct_no() + obj.getSelNo();
+            String key = obj.getOutp_id() + obj.getVat_no() + obj.getProduct_no() + obj.getSelNo();
             KEY = key;
             if (!DATA_KEY.containsKey(key))
                 DATA_KEY.put(key,new ArrayList<String>());
             OUTPUT_DETAIL_LIST.clear();
             for (Output obj2 : dataList) {
-                if ((obj2.getOutp_id() + obj2.getVatNo() + obj2.getProduct_no() + obj2.getSelNo()).equals(key)) {
+                if ((obj2.getOutp_id() + obj2.getVat_no() + obj2.getProduct_no() + obj2.getSelNo()).equals(key)) {
                     OUTPUT_DETAIL_LIST.add(obj2);
                 }
             }
@@ -425,7 +425,7 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                             if (detailList != null && detailList.size() != 0) {
                                 for (OutputDetail detail : detailList) {
                                     if (detail != null && detail.getEpc() != null && detail.getEpc().equals(EPC)) {//判断成功//实盘
-                                        String key1 = data.getOutp_id() + data.getVatNo() + data.getProduct_no() + data.getSelNo();
+                                        String key1 = data.getOutp_id() + data.getVat_no() + data.getProduct_no() + data.getSelNo();
                                         isData = true;
                                         epcList.add(EPC);
                                         if (myList.get(keyValue.get(key1)).getCount()<myList.get(keyValue.get(key1)).getList().size())
@@ -476,11 +476,11 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
                                                         detail.setOperator(response.getOperator() + "");
                                                         detail.setOperatingTime(response.getOperatingTime());
                                                         detail.setFlag(2);
-                                                        String key2 = "" + response.getVatNo() + response.getProduct_no() + response.getSelNo();
+                                                        String key2 = "" + response.getVat_no() + response.getProduct_no() + response.getSelNo();
                                                         if (!keyValue.containsKey(key2)) {
                                                             Output data = new Output();
                                                             data.setProduct_no(response.getProduct_no() + "");
-                                                            data.setVatNo(response.getVatNo() + "");
+                                                            data.setVat_no(response.getVat_no() + "");
                                                             data.setSelNo(response.getSelNo() + "");
                                                             data.setColor(response.getColor() + "");
                                                             data.setCountOut(0);
@@ -500,7 +500,7 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
                                                             myList.get(keyValue.get(key2)).addCount();
                                                             myList.get(keyValue.get(key2)).setWeightall(ArithUtil.add(myList.get(keyValue.get(key2)).getWeightall(), response.getWeight()));
                                                             for (Output op : dataList) {
-                                                                if ((op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
+                                                                if ((op.getOutp_id() + op.getVat_no() + op.getProduct_no() + op.getSelNo()).equals(key2)) {
                                                                     boolean isIn = false;
                                                                     for (OutputDetail od : op.getList()) {
                                                                         if (od.getEpc().equals(detail.getEpc()))
@@ -595,7 +595,7 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
         @Override
         public void convert(RecyclerHolder holder, final Output item, final int position) {
             if (item != null) {
-                final String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
+                final String key = item.getOutp_id() + item.getVat_no() + item.getProduct_no() + item.getSelNo();
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -604,7 +604,7 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
                             if (isChecked){
                                 for (Output i: myList){
                                     if (i.getOutp_id()!=null&&!i.getOutp_id().equals("")) {
-                                        String key=i.getOutp_id() + i.getVatNo() + i.getProduct_no() + i.getSelNo();
+                                        String key=i.getOutp_id() + i.getVat_no() + i.getProduct_no() + i.getSelNo();
                                         DATA_KEY.put(key,new ArrayList<String>());
                                     }
                                 }
@@ -624,7 +624,7 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
                     }
                 });
                 if (position != 0) {
-                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
+                    if (((item.getVat_no()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
                         if (cb.getVisibility()!=View.INVISIBLE)
                             cb.setVisibility(View.INVISIBLE);
@@ -648,7 +648,7 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
                     holder.setText(R.id.item1, item.getProduct_no() + "");
                     holder.setText(R.id.item2, item.getSelNo() + "");
                     holder.setText(R.id.item3, item.getColor() + "");
-                    holder.setText(R.id.item4, item.getVatNo() + "");
+                    holder.setText(R.id.item4, item.getVat_no() + "");
                     holder.setText(R.id.item5, item.getCountOut() + "");
                     holder.setText(R.id.item9, item.getCount() + "");
                     holder.setText(R.id.item7, item.getWeightall() + "");

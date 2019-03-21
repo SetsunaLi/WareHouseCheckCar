@@ -94,7 +94,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
     private List<ChubbUp> myList;
     /**
      * 匹配逻辑
-     * //     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * //     * key：response.getVat_no()+response.getProduct_no()+response.getSelNo()+response.getColor()
      * key:epc
      * value：index
      */

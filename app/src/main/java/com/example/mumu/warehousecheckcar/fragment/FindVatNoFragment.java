@@ -713,6 +713,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
                     holder.setText(R.id.item1, item.getLocation_name() + "");
                     holder.setText(R.id.item2, item.getPallet_name() + "");
+                    holder.setText(R.id.item3, item.getVat_no() + "");
                     holder.setText(R.id.item4, item.getCloth_name() + "");
                     holder.setText(R.id.item5, item.getInv_serial() + "");
                     holder.setText(R.id.item6, item.getWeight_inv() + "");

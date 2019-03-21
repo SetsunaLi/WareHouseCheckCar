@@ -1,7 +1,9 @@
 package com.example.mumu.warehousecheckcar.entity;
 
 public class CheckWeight extends Inventory {
+    /**修改重量*/
     private double weightChange;
+    /**原因*/
     private String cause;
 
     public String getCause() {

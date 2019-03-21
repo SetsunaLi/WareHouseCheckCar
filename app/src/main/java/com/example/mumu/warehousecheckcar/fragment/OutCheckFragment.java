@@ -99,7 +99,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
     private List<OutCheckDetail> myList;
     /**
      * 匹配逻辑
-     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * key：response.getVat_no()+response.getProduct_no()+response.getSelNo()+response.getColor()
      * value：index
      */
     private Map<String, Integer> strIndex;
@@ -108,7 +108,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
     private List<String> dataEPC;
     /**
      * 匹配逻辑
-     * key：response.getVatNo()+response.getProduct_no()+response.getSelNo()+response.getColor()
+     * key：response.getVat_no()+response.getProduct_no()+response.getSelNo()+response.getColor()
      * value：index
      */
     private List<String> dataKEY;
@@ -267,7 +267,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                                                             if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {
                                                                 dataEPC.add(ocd.getEpc());
                                                                 dataList.add(ocd);
-                                                           /* String key = ocd.getVatNo() + ocd.getProduct_no()
+                                                           /* String key = ocd.getVat_no() + ocd.getProduct_no()
                                                                     + ocd.getSelNo() + ocd.getColor() + "";*/
                                                                 String key = ocd.getVatNo() + "";
                                                                 if (!strIndex.containsKey(key)) {//当前没有

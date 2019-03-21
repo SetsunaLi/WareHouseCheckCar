@@ -239,11 +239,11 @@ public class TextFragment extends Fragment {
 
 
                     /*if (cb.isChecked()) {
-                        if (!dataKEY.contains(item.getVatNo()))
-                            dataKEY.add(item.getVatNo());
+                        if (!dataKEY.contains(item.getVat_no()))
+                            dataKEY.add(item.getVat_no());
                     } else {
-                        if (dataKEY.contains(item.getVatNo()))
-                            dataKEY.remove(item.getVatNo());
+                        if (dataKEY.contains(item.getVat_no()))
+                            dataKEY.remove(item.getVat_no());
                     }*/
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getFlag() == 1)

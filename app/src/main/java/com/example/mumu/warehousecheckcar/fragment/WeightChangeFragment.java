@@ -1,6 +1,8 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
@@ -31,13 +35,19 @@ import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.CheckWeight;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.Output;
+import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -81,39 +91,44 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
     private Sound sound;
     private CheckWeight cloth;
     private double weight;
-    private String [] array;
+    private int id=2;
+    private String[] array;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.weight_change_layout, container, false);
         ButterKnife.bind(this, view);
+        getActivity().setTitle("调整库存重量");
         sound = new Sound(getActivity());
-        array=getResources().getStringArray(R.array.change_cause_array);
+        array = getResources().getStringArray(R.array.change_cause_array);
         edittext1.setFocusable(false);
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    String str=s.toString();
-                    str=str.replaceAll(" ","");
-                    if (str!=null&&!str.equals("")) {
+                    String str = s.toString();
+                    str = str.replaceAll(" ", "");
+                    if (str != null && !str.equals("")) {
                         weight = Double.parseDouble(str);
                         cloth.setWeightChange(weight);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     edittext2.setText("");
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
             }
         });
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),R.layout.adapter_mytopactionbar_spinner,array){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.adapter_mytopactionbar_spinner, array) {
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 if (convertView == null) {
@@ -130,8 +145,8 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (cloth!=null)
-                    cloth.setCause(array[position]);
+                if (cloth != null)
+                    cloth.setCause(position+1+"");
             }
 
             @Override
@@ -160,13 +175,14 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
 
         }
     }
+
     long currenttime = 0;
     @SuppressLint("HandlerLeak")
-    Handler handler=new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
@@ -174,8 +190,8 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                             currenttime = System.currentTimeMillis();
                         }
                     }
-                    String EPC= (String) msg.obj;
-                    EPC=EPC.replaceAll(" ","");
+                    String EPC = (String) msg.obj;
+                    EPC = EPC.replaceAll(" ", "");
                     if (EPC.startsWith("3035A537")) {
                         JSONObject epc = new JSONObject();
                         epc.put("epc", EPC);
@@ -197,11 +213,13 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                                         arry = jsonArray.toJavaList(CheckWeight.class);
                                         if (arry != null && arry.size() > 0) {
                                             cloth = arry.get(0);
-                                            text1.setText("布号:"+cloth.getProduct_no());
-                                            text2.setText("销售色号:"+cloth.getSelNo());
-                                            text3.setText("缸号:"+cloth.getVatNo());
-                                            text4.setText("布票号:"+cloth.getFabRool());
-                                            edittext1.setText(cloth.getWeight()+"");
+                                            if (cloth != null)
+                                                cloth.setCause(id+1+"");
+                                            text1.setText("布号:" + cloth.getProduct_no());
+                                            text2.setText("销售色号:" + cloth.getSelNo());
+                                            text3.setText("缸号:" + cloth.getVatNo());
+                                            text4.setText("布票号:" + cloth.getFabRool());
+                                            edittext1.setText(cloth.getWeight() + "");
                                             edittext2.setText("");
                                         }
 
@@ -218,6 +236,7 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
             }
         }
     };
+
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
@@ -250,5 +269,104 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
+        blinkDialog();
+    }
+
+    private void blinkDialog() {
+        final Dialog dialog;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View blinkView = inflater.inflate(R.layout.dialog_weight_change, null);
+        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        TextView text1 = (TextView) blinkView.findViewById(R.id.dialog_text1);
+        TextView text2 = (TextView) blinkView.findViewById(R.id.dialog_text2);
+        TextView text3 = (TextView) blinkView.findViewById(R.id.dialog_text3);
+        text1.setText("修改前库存重量:" + cloth.getWeight() + "KG");
+        text2.setText("修改后库存重量:" + cloth.getWeightChange() + "KG");
+        text3.setText("修改的重量差异:" + ArithUtil.sub(cloth.getWeightChange(), cloth.getWeight()) + "KG");
+        dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.show();
+        dialog.getWindow().setContentView(blinkView);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String json = JSON.toJSONString(cloth);
+                try {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/inv_sum/change_weight_inv", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            if (App.LOGCAT_SWITCH) {
+                                Log.i(TAG, "postInventory;" + e.getMessage());
+                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    blinkDialog2(true);
+                                } else {
+                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                    blinkDialog2(false);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, json);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void blinkDialog2(boolean flag) {
+        final Dialog dialog;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+        if (flag)
+            text.setText("上传成功");
+        else
+            text.setText("上传失败");
+
+        dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.show();
+        dialog.getWindow().setContentView(blinkView);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
 }

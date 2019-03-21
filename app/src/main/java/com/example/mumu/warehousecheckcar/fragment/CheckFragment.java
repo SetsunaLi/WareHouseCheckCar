@@ -222,7 +222,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                 obj.setCountIn(1);
                                                 myList.add(obj);
                                                 keyValue.put(obj.getVatNo(), myList.size() - 1);
-//                                            dataKEY.add(obj.getVatNo());
+//                                            dataKEY.add(obj.getVat_no());
                                             }
                                             obj.setFlag(0);//默认为0//0为盘亏
                                             dataList.add(obj);
@@ -336,7 +336,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                     response.setFlag(1);
                                                     myList.add(response);
                                                     keyValue.put(response.getVatNo(), myList.size() - 1);
-//                                                        dataKEY.add(response.getVatNo());
+//                                                        dataKEY.add(response.getVat_no());
                                                 }
                                             }
                                         }
