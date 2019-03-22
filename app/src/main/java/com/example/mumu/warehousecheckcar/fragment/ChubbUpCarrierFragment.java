@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -234,40 +235,68 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                 cu.setBas_location(App.CARRIER.getLocationNo()+"");
                 cu.setBas_pallet(App.CARRIER.getTrayNo()+"");
             }
-//            ArrayList<ChubbUp> list=new ArrayList<>();
-//            list.addAll(CHUBB_UP_LIST);
             final String json= JSON.toJSONString(list);
-
+            final String CARRIER = JSON.toJSONString(App.CARRIER);
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushClothToCheckIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
-                    public void onResponse(BaseReturn baseReturn) {
+                    public void onResponse(JSONObject response) {
                         try {
-//                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                             if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                getActivity().onBackPressed();
+                                pushing(json);
                             } else {
-                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();
                             }
+
                         } catch (Exception e) {
-                            e.printStackTrace();
+
                         }
                     }
-                }, json);
+                }, CARRIER);
             } catch (IOException e) {
-                Log.i(TAG, "");
+                e.printStackTrace();
             }
+
         }else {
             Toast.makeText(getActivity(),"请输入库位号",Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void pushing(String json){
+        try {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushClothToCheckIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    if (App.LOGCAT_SWITCH) {
+                        Log.i(TAG, "getEpc;" + e.getMessage());
+                        Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onResponse(BaseReturn baseReturn) {
+                    try {
+//                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                        if (baseReturn != null && baseReturn.getStatus() == 1) {
+                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        } else {
+                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, json);
+        } catch (IOException e) {
+            Log.i(TAG, "");
         }
     }
 

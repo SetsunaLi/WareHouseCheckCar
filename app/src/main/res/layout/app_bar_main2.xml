@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:text="小龙女" />
+                android:text="@string/options_username" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 

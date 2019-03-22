@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
@@ -27,6 +28,7 @@ import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -219,9 +221,37 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     @OnClick(R.id.button2)
     public void onViewClicked() {
         if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
-            Fragment fragment = CarPutawayFragment.newInstance();
-            getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+            final String json = JSON.toJSONString(App.CARRIER);
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
+                                Fragment fragment = CarPutawayFragment.newInstance();
+                                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                            } else {
+                                Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();
+                            }
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else
             Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
     }
