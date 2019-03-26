@@ -194,7 +194,7 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                 }
                 final String json = JSON.toJSONString(jsocList);
                 try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushErrorStateCloth", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
                             if (App.LOGCAT_SWITCH) {
@@ -210,8 +210,6 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                                     blinkDialog2(true);
-                                    clearData();
-                                    mAdapter.notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);

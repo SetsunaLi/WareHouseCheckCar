@@ -171,22 +171,23 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button1"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
-                android:drawableTop="@mipmap/message_l"
                 android:layout_weight="1"
                 android:onClick="click1"
                 android:text="@string/btn_click1" />
 
             <Button
+                android:id="@+id/button2"
+
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/check_l"
                 android:onClick="click2"
                 android:text="@string/btn_click2" />
 
@@ -201,22 +202,22 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button3"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/individuality1_l"
                 android:onClick="click3"
                 android:text="@string/btn_click3" />
 
             <Button
+                android:id="@+id/button4"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/chubb_l"
                 android:onClick="click4"
                 android:text="@string/btn_click4" />
 
@@ -230,21 +231,21 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button5"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/individuality3_l"
                 android:onClick="click5"
                 android:text="@string/btn_click5" />
             <Button
+                android:id="@+id/button6"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/chubb_l"
                 android:onClick="click6"
                 android:text="@string/btn_click6" />
         </LinearLayout>
@@ -256,21 +257,21 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button7"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/individuality2_l"
                 android:text="@string/btn_click7"
                 android:onClick="click7"/>
             <Button
+                android:id="@+id/button8"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/individuality3_l"
                 android:onClick="click8"
                 android:text="@string/btn_click8" />
         </LinearLayout>
@@ -282,21 +283,21 @@
             android:layout_weight="1"
             android:orientation="horizontal">
             <Button
+                android:id="@+id/button9"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/find_l"
                 android:onClick="click9"
                 android:text="@string/btn_click9" />
             <Button
+                android:id="@+id/button10"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/find_l"
                 android:onClick="click10"
                 android:text="@string/btn_click10" />
         </LinearLayout>
@@ -307,21 +308,21 @@
             android:layout_weight="1"
             android:orientation="horizontal">
             <Button
+                android:id="@+id/button11"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/find_l"
                 android:onClick="click11"
                 android:text="@string/btn_click11" />
             <Button
+                android:id="@+id/button12"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/find_l"
                 android:onClick="click12"
                 android:text="@string/btn_click12" />
         </LinearLayout>
@@ -335,21 +336,21 @@
             >
 
             <Button
+                android:id="@+id/button13"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/find_l"
                 android:onClick="click13"
                 android:text="@string/btn_click13" />
             <Button
+                android:id="@+id/button14"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
-                android:drawableTop="@mipmap/setting_l"
                 android:onClick="click14"
                 android:text="@string/btn_click14" />
         </LinearLayout>

@@ -15,7 +15,7 @@
     <string name="login_prassword">密码</string>
     <string name="login">登录</string>
     <!--主页-->
-    <string name="options_username">小龙女</string>
+    <string name="options_username">龙的传人</string>
     <string name="options_welcome">亿锋公司欢迎您！</string>
     <string name="options_id">YF-0000&#8195;</string>
     <string name="options_login_time">2018/11/20&#8196;12:02&#8195;</string>
@@ -139,12 +139,13 @@
     <string name="moto_solutions">RIDKO Technologies</string>
     <string name="app_version_title">Application Version</string>
     <string name="colon">:</string>
-    <string name="app_version">19.3.22-10</string>
+    <string name="app_version">19.3.26-17</string>
     <string name="system_version">系统版本</string>
     <string name="device_number_title">Device Number</string>
     <string name="device_number">JiaQian_01</string>
     <string name="system_sled">System Sled</string>
-    <string name="copyright_info">Copyright © 2018</string>
+    <string name="copyright_info">Copyright © 2019</string>
+    <!--<string name="app_version_name">龙的传人</string>-->
 
     <!--check-->
     <string name="button_start">开始</string>

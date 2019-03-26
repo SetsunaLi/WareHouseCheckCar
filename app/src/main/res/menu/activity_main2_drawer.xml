@@ -8,55 +8,55 @@
             android:title="Home" />
         <item
             android:id="@+id/nav_item2"
-            android:icon="@mipmap/message_s"
+            android:icon="@mipmap/click1_s"
             android:title="Gallery" />
         <item
             android:id="@+id/nav_item3"
-            android:icon="@mipmap/check_s"
+            android:icon="@mipmap/click2_s"
             android:title="Slideshow" />
         <item
             android:id="@+id/nav_item4"
-            android:icon="@mipmap/individuality1_s"
+            android:icon="@mipmap/click3_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item5"
-            android:icon="@mipmap/chubb_s"
+            android:icon="@mipmap/click4_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item6"
-            android:icon="@mipmap/individuality3_s"
+            android:icon="@mipmap/click5_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item7"
-            android:icon="@mipmap/chubb_s"
+            android:icon="@mipmap/click6_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item8"
-            android:icon="@mipmap/individuality2_s"
+            android:icon="@mipmap/click7_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item9"
-            android:icon="@mipmap/individuality3_s"
+            android:icon="@mipmap/click8_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item10"
-            android:icon="@mipmap/find_s"
+            android:icon="@mipmap/click9_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item11"
-            android:icon="@mipmap/find_s"
+            android:icon="@mipmap/click10_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item12"
-            android:icon="@mipmap/find_s"
+            android:icon="@mipmap/click11_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item13"
-            android:icon="@mipmap/find_s"
+            android:icon="@mipmap/click12_s"
             android:title="Tools" />
         <item
             android:id="@+id/nav_item14"
-            android:icon="@mipmap/find_s"
+            android:icon="@mipmap/click12_s"
             android:title="Tools" />
      <!--   <item
             android:id="@+id/nav_item9"
