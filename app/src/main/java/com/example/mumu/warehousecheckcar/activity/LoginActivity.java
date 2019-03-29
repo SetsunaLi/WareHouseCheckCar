@@ -5,9 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,9 +23,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.UpdateApk;
+import com.google.gson.Gson;
+import com.squareup.okhttp.Response;
+
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,9 +83,22 @@ public class LoginActivity extends AppCompatActivity  {
                 return false;
             }
         });
+        initDate();
         checkVersion();
         /**更新版本入口*/
 //        UpdateApk.UpdateVersion(this,updateBean);
+    }
+    private void initDate() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
+        App.IP="http://192.168.1.110";
+        App.PORT="80";
+        App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
+        App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), false);
+        App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
+        if (App.PROWER == 0)
+            App.PROWER = 20;
+        App.LOGCAT_SWITCH = sp.getBoolean(getResources().getString(R.string.logcat_ket), false);
     }
 
     private void checkVersion(){
@@ -180,12 +208,31 @@ public class LoginActivity extends AppCompatActivity  {
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
+          /*  try {
                 // Simulate network access.
                 Thread.sleep(3000);
+               *//* OkHttpClientManager.Param[] param=new OkHttpClientManager.Param[1];
+                param[0]=new OkHttpClientManager.Param("username",mUserName);
+                param[1]=new OkHttpClientManager.Param("password",mPassword);
+                Response response=OkHttpClientManager.post(App.IP+":"+App.PORT+"/shYf/sh/android/login",param);*//*
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("username",mUserName);
+                jsonObject.put("password",mPassword);
+                String json=jsonObject.toString();
+                Response response= OkHttpClientManager.postJsonAsyn(App.IP+":"+App.PORT+"/shYf/sh/android/login",json);
+                final String string = response.body().string();
+                User user=JSON.parseObject(string,User.class);
+                User userSys=User.newInstance();
+                userSys.setUser(user);
             } catch (InterruptedException e) {
                 return false;
-            }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }*/
           /*  if (unStr==null&&pwStr==null)
                 return false;*/
 //            登录请求在此，相当于异步后台动作
