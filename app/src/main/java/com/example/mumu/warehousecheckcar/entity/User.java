@@ -1,36 +1,81 @@
 package com.example.mumu.warehousecheckcar.entity;
 
 public class User {
-    /**用户ID*/
-    private int id=0;
-    /**用户名*/
-    private String username="";
-    /**密码*/
-    private String password="";
+    /**
+     * 用户ID
+     */
+    private int id = -1;
+    /**
+     * 用户名
+     */
+    private String username = "";
+    /**
+     * 信息
+     */
+    private String msg = "";
+    /**
+     * Code
+     */
+    private int code = -1;
+    /**
+     * 密码
+     */
+    private String password = "";
 
     private static User user;
-    public static User newInstance(){
-        if (user==null)
-            user=new User();
+
+    public static User newInstance() {
+        if (user == null)
+            user = new User();
         return user;
     }
-    public void setUser(User user){
-        setId(user.getId());
-        setUsername(user.getUsername());
-        setPassword(user.getPassword());
-    }
-    public void setUser(int id, String username,String password){
+
+    /**
+     * 成功
+     */
+    public void setUser(int id, String username, String msg, int code) {
         setId(id);
         setUsername(username);
-        setPassword(password);
+        setMsg(msg);
+        setCode(code);
     }
-    public void clearUser(){
-        setId(0);
+
+    /**
+     * 失败
+     */
+    public void setUser(String msg, int code) {
+        setMsg(msg);
+        setCode(code);
+        setId(-1);
+        setUsername("");
+    }
+
+    public void clearUser() {
+        setId(-1);
         setUsername("");
         setPassword("");
+        setMsg("");
+        setCode(-1);
     }
-    private User(){
 
+    private User() {
+
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
     public int getId() {
         return id;

@@ -9,13 +9,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@mipmap/loard_bg2">
 
+    <View
+        android:id="@+id/mid"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"
+        />
+
     <!-- Login progress -->
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/mid"
+        android:layout_marginTop="28dp"
         android:layout_centerInParent="true"
         android:visibility="invisible"
         />
@@ -24,8 +32,8 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/login_progress"
-        android:layout_marginBottom="8dp"
+        android:layout_above="@+id/mid"
+        android:layout_marginBottom="-38dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
 
@@ -70,6 +78,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
             <Button
                 android:id="@+id/login_button"
                 style="@style/button_login_style1"
@@ -78,6 +87,26 @@
                 android:text="@string/login"
                 android:textStyle="bold"
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <CheckBox
+                    android:id="@+id/checkbox1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="记住密码"/>
+                <CheckBox
+                    android:id="@+id/checkbox2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:text="自动登录"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
 import com.example.mumu.warehousecheckcar.fragment.CarPutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CarPutawayFragment;
@@ -94,7 +95,8 @@ public class Main2Activity extends AppCompatActivity
         });*/
 //       左上角按钮
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setSubtitle("操作人:"+getResources().getString(R.string.options_username));
+        User user=User.newInstance();
+        toolbar.setSubtitle("操作人:"+ user.getUsername());
 //        toolbar.bringToFront();
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -149,13 +151,14 @@ public class Main2Activity extends AppCompatActivity
     NavigationView navigationView;
 
     private void initView() {
+        User user=User.newInstance();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 //        导航头部
         ImageView iv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView);
         iv.setImageBitmap(CutToBitmap.changeToBitmap(getResources(), iv, R.mipmap.user_head));
         TextView tv1 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView1);
-        tv1.setText(getResources().getString(R.string.options_username));
+        tv1.setText(user.getUsername());
         TextView tv2 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView2);
         tv2.setText(getResources().getString(R.string.options_welcome));
 //      导航列表(枚举)
@@ -576,8 +579,8 @@ public class Main2Activity extends AppCompatActivity
         App.APPLY_NO = "";
         App.carNo = "";
         App.SYSTEM_VERSION = "";
-        App.IP = "";
-        App.PORT = "";
+       /* App.IP = "";
+        App.PORT = "";*/
         App.DEVICE_NO = "";
         App.CARRIER = null;
         App.DEVICE_NO = "";
