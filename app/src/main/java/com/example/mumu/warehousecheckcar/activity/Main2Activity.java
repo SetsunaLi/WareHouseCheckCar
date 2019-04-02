@@ -122,10 +122,12 @@ public class Main2Activity extends AppCompatActivity
         mOptionTitle = getResources().getStringArray(R.array.options_array);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-        App.IP="http://47.106.157.255";
-        App.PORT="80";
-//        App.IP = "http://120.79.56.119";
-//        App.PORT = "8080";
+ /*       App.IP="http://47.106.157.255";
+        App.PORT="80";*/
+/*        App.IP = "http://120.79.56.119";
+        App.PORT = "8080";*/
+        App.IP = "http://192.168.1.164";
+        App.PORT = "80";
 //        App.IP="http://192.168.1.231";
 //        App.PORT="8080";
         /*   App.IP="http://192.168.1.110";

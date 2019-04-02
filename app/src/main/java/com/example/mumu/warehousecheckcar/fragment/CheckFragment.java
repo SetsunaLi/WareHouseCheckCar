@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -408,6 +409,9 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         jsocList.add(obj);
                     }
                 }
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("data",jsocList);
+                jsonObject.put("user",User.newInstance());
                 final String json = JSON.toJSONString(jsocList);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
