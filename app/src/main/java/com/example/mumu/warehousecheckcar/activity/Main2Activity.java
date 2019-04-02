@@ -43,6 +43,7 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
+import com.example.mumu.warehousecheckcar.fragment.ForwardingMsgFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
@@ -206,49 +207,60 @@ public class Main2Activity extends AppCompatActivity
         Fragment fragment = null;
         switch (position) {
             case 0:
+//                主页
                 fragment = HomeFragment.newInstance();
                 break;
             case 1:
+//                入库校验
                 fragment = InCheckFragment.newInstance();
                 break;
             case 2:
+//                出库校验
                 fragment = OutCheckCarFragment.newInstance();
                 break;
             case 3:
+//                上架
                 fragment = PutawayCarrierFragment.newInstance();
                 break;
             case 4:
+//                叉车上架
                 fragment = CarPutawayCarrierFragment.newInstance();
                 break;
             case 5:
+//                查布
                 fragment = ChubbFragment.newInstance();
                 break;
             case 6:
+//                查布上架
                 fragment = ChubbUpFragment.newInstance();
                 break;
-            case 7://寻货待开发
+            case 7:
+                //出库申请
                 fragment = OutApplyNoFragment.newInstance();
                 break;
             case 8:
+//                盘点
                 fragment = CheckCarrierFragment.newInstance();
                 break;
             case 9:
+//                寻缸
                 fragment = FindVatNoFragment.newInstance();
                 break;
             case 10:
+//                寻托盘
                 fragment = FindTpNoFragmentf.newInstance();
                 break;
             case 11:
+//                重量修改
                 fragment = WeightChangeFragment.newInstance();
-//                待开发
                 break;
             case 12:
+//                查布异常
                 fragment = ChubbExceptionFragment.newInstance();
-//                待开发
                 break;
             case 13:
-//                fragment = WeightChangeFragment.newInstance();
-//                待开发
+//              发运
+                fragment = ForwardingMsgFragment.newInstance();
                 break;
             case 14:
                 fragment = SettingFragment.newInstance();
@@ -384,8 +396,9 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof PutawayCarrierFragment || fragment instanceof CarPutawayCarrierFragment
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
-                    || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf)
-                    || fragment instanceof WeightChangeFragment|| fragment instanceof ChubbExceptionFragment) {
+                    || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
+                    || fragment instanceof WeightChangeFragment|| fragment instanceof ChubbExceptionFragment
+                    || fragment instanceof ForwardingMsgFragment)) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
                 }

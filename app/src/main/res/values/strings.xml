@@ -34,7 +34,7 @@
     <string name="btn_click10">寻找托盘</string>
     <string name="btn_click11">调整库存重量</string>
     <string name="btn_click12">查布异常</string>
-    <string name="btn_click13">待开发</string>
+    <string name="btn_click13">付运表发运</string>
     <string name="btn_click14">系统设置</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
@@ -67,7 +67,7 @@
         <item>寻找托盘</item>
         <item>调整库存重量</item>
         <item>查布异常</item>
-        <item>待开发</item>
+        <item>付运表发运</item>
         <item>系统设置</item>
         <item>关于</item>
     </string-array>
