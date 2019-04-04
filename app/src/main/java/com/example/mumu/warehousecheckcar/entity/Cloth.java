@@ -22,7 +22,7 @@ public class Cloth {
     private Double weight_in = 0.0;
     /**操作人*/
     private String operator = "";
-    private String count = "";
+//    private String count = "";
     /**布匹EPC码*/
     private String epc = "";
     /**设备号（请求的时候默认为空，上传的时候会带参）*/
@@ -106,13 +106,13 @@ public class Cloth {
         this.operator = operator;
     }
 
-    public String getCount() {
+   /* public String getCount() {
         return count;
     }
 
     public void setCount(String count) {
         this.count = count;
-    }
+    }*/
 
     public String getEpc() {
         return epc;

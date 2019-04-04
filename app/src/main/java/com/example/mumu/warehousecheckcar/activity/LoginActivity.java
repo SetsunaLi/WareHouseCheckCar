@@ -91,10 +91,10 @@ public class LoginActivity extends AppCompatActivity {
     private void initDate() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-        /*App.IP = "http://192.168.1.164";
-        App.PORT = "80";*/
-        App.IP="http://47.106.157.255";
-        App.PORT="80";
+        App.IP = "http://192.168.1.109";
+        App.PORT = "80";
+        /*App.IP="http://47.106.157.255";
+        App.PORT="80";*/
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
         App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), false);
       /*  App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);

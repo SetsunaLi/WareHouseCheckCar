@@ -13,15 +13,18 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
+
         <com.example.mumu.warehousecheckcar.view.FixedEditText
             android:id="@+id/fixeedittext1"
             style="@style/edit_style2"
             android:layout_width="match_parent"
             android:layout_height="60dip"
+            android:layout_marginTop="18dp"
             android:hint="请输入车牌号"
             android:imeOptions="actionNext"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:inputType="text"/>
 
         <com.example.mumu.warehousecheckcar.view.FixedEditText
             android:id="@+id/fixeedittext2"
@@ -32,7 +35,8 @@
             android:hint="请输入司机姓名"
             android:imeOptions="actionNext"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:inputType="textPhonetic"/>
 
         <com.example.mumu.warehousecheckcar.view.FixedEditText
             android:id="@+id/fixeedittext3"
@@ -43,7 +47,8 @@
             android:hint="请输入司机电话"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:inputType="number"/>
 
     </LinearLayout>
     <LinearLayout
