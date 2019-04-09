@@ -41,6 +41,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -499,7 +500,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         }
                     }
                     if (jsocList.size() > 0) {
-                        final String json = JSON.toJSONString(jsocList);
+//                        final String json = JSON.toJSONString(jsocList);
+                        JSONObject jsonObject=new JSONObject();
+                        jsonObject.put("userId", User.newInstance().getId());
+                        jsonObject.put("data",jsocList);
+                        final String json = jsonObject.toJSONString();
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                                 @Override

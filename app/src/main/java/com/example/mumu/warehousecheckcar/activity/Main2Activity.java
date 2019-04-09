@@ -127,7 +127,7 @@ public class Main2Activity extends AppCompatActivity
         App.PORT="80";*/
     /*    App.IP = "http://120.79.56.119";
         App.PORT = "8080";*/
-      /*  App.IP = "http://192.168.1.164";
+    /*    App.IP = "http://192.168.1.109";
         App.PORT = "80";*/
 //        App.IP="http://192.168.1.231";
 //        App.PORT="8080";
