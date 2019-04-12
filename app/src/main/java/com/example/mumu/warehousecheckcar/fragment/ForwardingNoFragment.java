@@ -2,8 +2,11 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +57,8 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
     @Bind(R.id.button2)
     Button button2;
 
-    private  ForwardingMsgFragment.CarMsg carMsg;
+    private ForwardingMsgFragment.CarMsg carMsg;
+
     private ForwardingNoFragment() {
     }
 
@@ -63,11 +67,14 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         fragment = new ForwardingNoFragment();
         return fragment;
     }
+
     private TDScannerHelper scannerHander;
+    private boolean scannerFlag=true;
     private Sound sound;
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private InputMethodManager mInputMethodManager;
+
     //    这里加载视图
     @Nullable
     @Override
@@ -92,7 +99,7 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         return view;
     }
 
-//     初始化必须工具
+    //     初始化必须工具
     private void initUtil() {
         //初始化输入法
         mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -107,7 +114,6 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
     private void init2D() {
         try {
             boolean flag2 = RFID_2DHander.getInstance().on_2D();
-//            boolean flag1=RFID_2DHander.getInstance().connect2D();
             scannerHander = RFID_2DHander.getInstance().getTDScanner();
             scannerHander.regist2DCodeData(this);
             if (!flag2)
@@ -121,18 +127,21 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
     private void disConnect2D() {
         try {
             RFID_2DHander.getInstance().off_2D();
-//            RFID_2DHander.getInstance().disConnect2D();
 
         } catch (Exception e) {
 
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        text1.setText(carMsg.getCarNo()+"");
-        if (carMsg.getCarName()!=null)
-            text2.setText(carMsg.getCarName()+"");
+        text1.setText(carMsg.getCarNo() + "");
+        if (carMsg.getCarName() != null)
+            text2.setText(carMsg.getCarName() + "");
+        mAdapter.setId(0);
+        mAdapter.select(0);
+        mAdapter.notifyDataSetChanged();
 
     }
 
@@ -141,17 +150,27 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         switch (eventBusMsg.getStatus()) {
             case 0x00:
                 ForwardingMsgFragment.CarMsg carMsg = (ForwardingMsgFragment.CarMsg) eventBusMsg.getPositionObj(0);
-                if (carMsg!=null)
-                    this.carMsg=carMsg;
+                if (carMsg != null)
+                    this.carMsg = carMsg;
+                else {
+                    this.carMsg = new ForwardingMsgFragment.CarMsg("", "", "");
+                    Toast.makeText(getActivity(), "车牌号为空！", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case 0xff:
+                if (!scannerFlag)
+                init2D();
                 break;
         }
     }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
+        if (scannerFlag)
         disConnect2D();
     }
 
@@ -160,7 +179,9 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
+
     @OnClick({R.id.imgbutton, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -171,17 +192,39 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
-                EventBus.getDefault().postSticky(new EventBusMsg(0x01,carMsg,myList));
+                if (scannerFlag)
+                    disConnect2D();
+                scannerFlag=false;
+                EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList));
                 Fragment fragment = ForwardingFragment.newInstance();
+         /*       *//*直接清掉再加载，没有返回层*//*
                 getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();*/
+                /*直接加载在最上层，有返回层*/
+                getActivity().getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).show(fragment).commit();
                 break;
         }
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            sound.callAlarm();
+            String No = (String) msg.obj;
+            int id = mAdapter.getId();
+            myList.set(id, No);
+            mAdapter.notifyDataSetChanged();
+        }
+    };
+
     @Override
     public void callback(byte[] bytes) {
-
+        Message msg = handler.obtainMessage();
+        msg.obj = new String(bytes);
+        handler.sendMessage(msg);
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {

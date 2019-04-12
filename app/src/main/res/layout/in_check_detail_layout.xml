@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="left|center_vertical"
-            android:text="10"/>
+            android:text=""/>
         <TextView
             style="@style/text_style2"
             android:layout_width="wrap_content"

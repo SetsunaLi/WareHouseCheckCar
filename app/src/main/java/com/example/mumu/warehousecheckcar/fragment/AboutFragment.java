@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.application.App;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,6 +71,7 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.about_layout, container, false);
         ButterKnife.bind(this, view);
+        resetVersionDetail();
         return view;
     }
 
@@ -113,9 +115,9 @@ public class AboutFragment extends Fragment {
      */
     public void resetVersionDetail() {
         if (radioVersion != null)
-            radioVersion.setText("");
+            radioVersion.setText(App.DEVICE_NO);
         if (moduleVersion != null)
-            moduleVersion.setText("");
+            moduleVersion.setText(App.IP);
     }
     @Override
     public void onDestroyView() {

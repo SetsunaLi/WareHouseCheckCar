@@ -35,7 +35,9 @@
     <string name="btn_click11">调整库存重量</string>
     <string name="btn_click12">查布异常</string>
     <string name="btn_click13">付运表发运</string>
-    <string name="btn_click14">系统设置</string>
+    <string name="btn_click14">剪布上架</string>
+    <string name="btn_click15">待开发</string>
+    <string name="btn_click16">系统设置</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
 
@@ -68,6 +70,8 @@
         <item>调整库存重量</item>
         <item>查布异常</item>
         <item>付运表发运</item>
+        <item>剪布上架</item>
+        <item>待开发</item>
         <item>系统设置</item>
         <item>关于</item>
     </string-array>
@@ -107,7 +111,7 @@
     <string name="system_managment_title">系统</string>
     <string name="system_version_key">version_key</string>
     <string name="system_version_summary">20181215</string>
-    <string name="system_version_title">系统版本</string>
+    <string name="system_version_title">系统配置</string>
     <string name="system_ip_key">ip_key</string>
     <string name="system_ip_summary">http://47.107.112.133</string>
     <string name="system_ip_title">系统IP</string>

@@ -56,13 +56,16 @@
             android:title="Tools" />
         <item
             android:id="@+id/nav_item14"
-            android:icon="@mipmap/click12_s"
+            android:icon="@mipmap/click13_s"
             android:title="Tools" />
-     <!--   <item
-            android:id="@+id/nav_item9"
-            android:icon="@mipmap/individuality3_s"
-            android:title="Tools" />-->
-
+        <item
+            android:id="@+id/nav_item15"
+            android:icon="@mipmap/click14_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item16"
+            android:icon="@mipmap/wait_s"
+            android:title="Tools" />
     </group>
 
     <item android:title="Communicate">

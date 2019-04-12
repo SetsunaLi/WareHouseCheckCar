@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@mipmap/bg2">
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,26 +20,6 @@
 
     </LinearLayout>
     <View style="@style/view_item_bottom" />
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/text_style2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回数据为空："/>
-        <TextView
-            android:id="@+id/text3"
-            style="@style/text_style2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:gravity="left|center_vertical"
-            android:text="0"/>
-      />
-    </LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,16 +35,48 @@
             style="@style/text_style2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
+            android:layout_weight="5"
             android:gravity="left|center_vertical"
             android:text=""/>
         <TextView
             style="@style/text_style2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="车牌号："/>
+            android:text="申请单数量："/>
         <TextView
             android:id="@+id/text2"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical"/>
+    </LinearLayout>
+    <View style="@style/view_item_bottom" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车牌号："/>
+        <TextView
+            android:id="@+id/text3"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical"
+            android:text="10"/>
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="司机："/>
+        <TextView
+            android:id="@+id/text4"
             style="@style/text_style2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,6 +90,7 @@
         android:layout_weight="1.5"
         android:gravity="center"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/button1"
             style="@style/button_style1"
@@ -85,6 +99,7 @@
             android:layout_marginLeft="@dimen/home_margin"
             android:layout_marginRight="@dimen/button_margin"
             android:text="刷新" />
+
         <Button
             android:id="@+id/button2"
             style="@style/button_style1"
@@ -93,14 +108,5 @@
             android:layout_marginLeft="@dimen/button_margin"
             android:layout_marginRight="@dimen/button_margin"
             android:text="确定" />
-       <!-- <Button
-            android:id="@+id/button3"
-            style="@style/button_style1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="@dimen/button_margin"
-            android:layout_marginRight="@dimen/button_margin"
-            android:text="完成" />-->
-
     </LinearLayout>
 </LinearLayout>

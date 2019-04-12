@@ -74,7 +74,7 @@ public class ForwardingMsgFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGetMessage(EventBusMsg message) {
+    public void getEventMsg(EventBusMsg message) {
 
     }
     @Override

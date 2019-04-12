@@ -27,6 +27,17 @@ public class Cloth {
     private String epc = "";
     /**设备号（请求的时候默认为空，上传的时候会带参）*/
     private String device;
+
+   /* public Cloth(String clothNum, String vatNo, String selNo, String color, String fabRool, Double weight, String epc) {
+        this.clothNum = clothNum;
+        this.vatNo = vatNo;
+        this.selNo = selNo;
+        this.color = color;
+        this.fabRool = fabRool;
+        this.weight = weight;
+        this.epc = epc;
+    }*/
+
     public String getClothNum() {
         return clothNum;
     }

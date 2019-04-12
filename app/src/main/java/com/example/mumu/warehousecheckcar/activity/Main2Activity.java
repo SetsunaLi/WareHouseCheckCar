@@ -129,8 +129,6 @@ public class Main2Activity extends AppCompatActivity
         App.PORT = "8080";*/
     /*    App.IP = "http://192.168.1.109";
         App.PORT = "80";*/
-//        App.IP="http://192.168.1.231";
-//        App.PORT="8080";
         /*   App.IP="http://192.168.1.110";
         App.PORT="80";*/
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
@@ -263,6 +261,12 @@ public class Main2Activity extends AppCompatActivity
                 fragment = ForwardingMsgFragment.newInstance();
                 break;
             case 14:
+//                剪布上架
+                break;
+            case 15:
+//                待开发
+                break;
+            case 16:
                 fragment = SettingFragment.newInstance();
                 break;
             default:
@@ -369,18 +373,33 @@ public class Main2Activity extends AppCompatActivity
         selectItem(12);
     }
     /**
-     * 待开发
+     * 发运
      */
     public void click13(View view) {
         selectItem(13);
     }
 
     /**
-     * 系统
+     * 剪布上架
      */
     public void click14(View view) {
         selectItem(14);
     }
+    /**
+     * 待开发
+     */
+    public void click15(View view) {
+        selectItem(15);
+    }
+
+    /**
+     * 系统
+     */
+    public void click16(View view) {
+        selectItem(16);
+    }
+
+
 
 
     //返回键监听
