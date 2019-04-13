@@ -37,6 +37,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
@@ -192,7 +193,10 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                     }
 
                 }
-                final String json = JSON.toJSONString(jsocList);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("data",jsocList);
+                jsonObject.put("userId", User.newInstance().getId());
+                final String json = JSON.toJSONString(jsonObject);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushErrorStateCloth", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override

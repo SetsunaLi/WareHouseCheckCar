@@ -411,8 +411,8 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 }
                 JSONObject jsonObject=new JSONObject();
                 jsonObject.put("data",jsocList);
-                jsonObject.put("user",User.newInstance());
-                final String json = JSON.toJSONString(jsocList);
+                jsonObject.put("userId",User.newInstance().getId());
+                final String json = JSON.toJSONString(jsonObject);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
                         @Override

@@ -41,6 +41,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -364,7 +365,10 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                         jsocList.add(obj);
                     }
                 }
-                final String json = JSON.toJSONString(jsocList);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("data",jsocList);
+                jsonObject.put("userId", User.newInstance().getId());
+                final String json = JSON.toJSONString(jsonObject);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushCheck", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override

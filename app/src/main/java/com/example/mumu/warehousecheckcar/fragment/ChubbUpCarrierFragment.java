@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.ChubbUp;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -235,7 +236,10 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                 cu.setBas_location(App.CARRIER.getLocationNo()+"");
                 cu.setBas_pallet(App.CARRIER.getTrayNo()+"");
             }
-            final String json= JSON.toJSONString(list);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("data",list);
+            jsonObject.put("userId", User.newInstance().getId());
+            final String json= JSON.toJSONString(jsonObject);
             final String CARRIER = JSON.toJSONString(App.CARRIER);
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {

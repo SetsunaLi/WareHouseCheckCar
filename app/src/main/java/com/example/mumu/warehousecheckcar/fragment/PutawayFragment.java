@@ -41,6 +41,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.entity.Output;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
@@ -340,7 +341,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     INPUT_DETAIL_LIST.add(obj);
                 }
             }
-            Fragment fragment = PutawayDetailFragment.newInstance();
+            Fragment fragment = ForwardingDetailFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);
@@ -393,7 +394,10 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                         jsocList.add(obj);
                     }
                 }
-                final String json = JSON.toJSONString(jsocList);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("userId", User.newInstance().getId());
+                jsonObject.put("data",jsocList);
+                final String json = JSON.toJSONString(jsonObject);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override

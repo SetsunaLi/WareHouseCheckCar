@@ -35,6 +35,7 @@ import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.Input;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.squareup.okhttp.Request;
 
@@ -200,6 +201,7 @@ public class CarPutawayFragment extends Fragment {
                 JSONObject obj = new JSONObject();
                 obj.put("data", jsocList);
                 obj.put("carrier",App.CARRIER);
+                obj.put("userId", User.newInstance().getId());
                 final String json = JSON.toJSONString(obj);
 
                 try {

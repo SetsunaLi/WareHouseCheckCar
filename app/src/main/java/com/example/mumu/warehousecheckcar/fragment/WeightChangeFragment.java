@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.entity.CheckWeight;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -299,8 +300,10 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final String json = JSON.toJSONString(cloth);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("data",cloth);
+                jsonObject.put("userId", User.newInstance().getId());
+                final String json = JSON.toJSONString(jsonObject);
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/inv_sum/change_weight_inv", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
