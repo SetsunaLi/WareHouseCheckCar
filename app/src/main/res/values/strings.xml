@@ -169,12 +169,14 @@
         <item>0KG</item>
         <item>0.2KG</item>
         <item>0.3KG</item>
+        <item>0.5KG</item>
     </string-array>
     <!--纸管重-->
     <string-array name="change_paper_array">
         <item>0KG</item>
         <item>0.6KG</item>
         <item>0.8KG</item>
+        <item>1KG</item>
         <item>1.2KG</item>
     </string-array>
 

@@ -79,8 +79,6 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
     Button button2;
     private final String TAG = "ChubbFragment";
 
-    private ChubbFragment() {
-    }
 
     public static ChubbFragment newInstance() {
         if (fragment == null) ;

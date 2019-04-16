@@ -49,8 +49,6 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
     Button button2;
     private final String TAG = "InCheckCarrierFragment";
 
-    private InCheckCarrierFragment() {
-    }
 
     private static InCheckCarrierFragment fragment;
 

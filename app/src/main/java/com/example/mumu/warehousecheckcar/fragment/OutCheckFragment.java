@@ -86,8 +86,6 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
     @Bind(R.id.text3)
     TextView text3;*/
 
-    private OutCheckFragment() {
-    }
 
     private final String TAG = "OutCheckFragment";
 

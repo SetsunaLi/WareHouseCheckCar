@@ -36,8 +36,7 @@ public class ForwardingMsgFragment extends Fragment {
     @Bind(R.id.button1)
     Button button1;
 
-    private ForwardingMsgFragment() {
-    }
+
 
     public static ForwardingMsgFragment newInstance() {
         if (fragment == null) ;

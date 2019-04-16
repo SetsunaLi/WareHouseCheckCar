@@ -62,8 +62,6 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     private HashMap<String, OutApplyNewFragment.OutputFlag> dataList;
     private RecycleAdapter mAdapter;
 
-    private OutApplyDetailFragment() {
-    }
 
     public static OutApplyDetailFragment newInstance() {
         if (fragment == null) ;

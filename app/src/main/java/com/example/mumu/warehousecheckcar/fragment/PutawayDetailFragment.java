@@ -44,8 +44,7 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
     @Bind(R.id.text2)
     TextView text2;
 
-    private PutawayDetailFragment() {
-    }
+
 
     public static PutawayDetailFragment newInstance() {
         if (fragment == null) ;

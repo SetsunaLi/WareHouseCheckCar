@@ -59,8 +59,7 @@ public class HomeFragment extends Fragment {
     @Bind(R.id.button14)
     Button button14;
 
-    private HomeFragment() {
-    }
+
 
     public static HomeFragment newInstance() {
         if (fragment == null) ;

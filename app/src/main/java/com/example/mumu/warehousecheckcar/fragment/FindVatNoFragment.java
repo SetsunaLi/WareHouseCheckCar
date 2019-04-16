@@ -102,8 +102,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     @Bind(R.id.layout2)
     LinearLayout layout2;
 
-    private FindVatNoFragment() {
-    }
 
     public static FindVatNoFragment newInstance() {
         if (fragment == null) ;

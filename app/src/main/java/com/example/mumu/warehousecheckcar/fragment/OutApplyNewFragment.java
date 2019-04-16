@@ -81,8 +81,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     Button button2;
 
 
-    private OutApplyNewFragment() {
-    }
+
 
     public static OutApplyNewFragment newInstance() {
         if (fragment == null) ;

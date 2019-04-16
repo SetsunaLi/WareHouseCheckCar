@@ -59,8 +59,7 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
 
     private ForwardingMsgFragment.CarMsg carMsg;
 
-    private ForwardingNoFragment() {
-    }
+
 
     public static ForwardingNoFragment newInstance() {
         if (fragment == null) ;

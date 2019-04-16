@@ -83,8 +83,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
     @Bind(R.id.button2)
     Button button2;
 
-    private PutawayFragment() {
-    }
+
 
     public static PutawayFragment newInstance() {
         if (fragment == null) ;

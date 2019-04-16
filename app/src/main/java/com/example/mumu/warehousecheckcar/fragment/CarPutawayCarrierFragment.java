@@ -56,8 +56,7 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     EditText edittext2;
 
 
-    private CarPutawayCarrierFragment() {
-    }
+
 
     private static CarPutawayCarrierFragment fragment;
 

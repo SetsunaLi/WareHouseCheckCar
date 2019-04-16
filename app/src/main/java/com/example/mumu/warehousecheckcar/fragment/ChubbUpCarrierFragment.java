@@ -58,8 +58,6 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     @Bind(R.id.button2)
     Button button2;
 
-    private ChubbUpCarrierFragment() {
-    }
 
     public static ChubbUpCarrierFragment newInstance() {
         if (fragment == null) ;

@@ -80,8 +80,6 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
 
     private static ChubbUpFragment fragment;
 
-    private ChubbUpFragment() {
-    }
 
     public static ChubbUpFragment newInstance() {
         if (fragment == null) ;

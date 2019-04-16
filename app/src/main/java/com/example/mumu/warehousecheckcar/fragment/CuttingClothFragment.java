@@ -50,9 +50,9 @@ public class CuttingClothFragment extends Fragment implements RXCallback{
     private final String TAG = "CuttingClothFragment";
 
     private static CuttingClothFragment fragment;
-    @Bind(R.id.spinner)
-    Spinner spinner;
     @Bind(R.id.spinner1)
+    Spinner spinner;
+    @Bind(R.id.spinner2)
     Spinner spinner1;
     @Bind(R.id.edittext2)
     EditText edittext2;
@@ -68,10 +68,6 @@ public class CuttingClothFragment extends Fragment implements RXCallback{
     private Sound sound;
     private boolean flagRFID = false;
     private boolean flag2D = false;
-
-    private CuttingClothFragment() {
-
-    }
 
     public static CuttingClothFragment newInstance() {
         if (fragment == null) ;
