@@ -101,6 +101,8 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     Button buttonAdd;
     @Bind(R.id.layout2)
     LinearLayout layout2;
+    @Bind(R.id.text4)
+    TextView text4;
 
 
     public static FindVatNoFragment newInstance() {
@@ -111,18 +113,18 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     private RecycleAdapter mAdapter;
     private MyAdapter textAdapter;
-//    显示布匹
+    //    显示布匹
     private List<FindVatNo> myList;
-//    查询的布匹
+    //    查询的布匹
     private List<FindVatNo> dataList;
-//    查询获取epc
+    //    查询获取epc
     private List<String> dataKEY;
-//    扫描epc
+    //    扫描epc
     private List<String> dataEpc;
-//    查询的缸号
+    //    查询的缸号
     private ArrayList<String> findList;
 
-//     模糊查询缸号
+    //     模糊查询缸号
     private ArrayList<String> vatList;
     private Sound sound;
     private boolean isLookFlag = false;
@@ -406,9 +408,9 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public void onOperationTagCallBack(RXOperationTag tag) {
 
     }
-
+    private int erpCount=0;
     @OnClick({R.id.button, R.id.button1, R.id.button2, R.id.layout1,
-            R.id.button0,R.id.buttonAdd, R.id.recyle, R.id.scrollView})
+            R.id.button0, R.id.buttonAdd, R.id.recyle, R.id.scrollView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button:
@@ -427,6 +429,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 if (dataEpc != null)
                     dataEpc.clear();
                 addView();
+                erpCount=0;
                 goFind();
                 break;
             case R.id.button0:
@@ -463,17 +466,20 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 break;*/
         }
     }
-    private void addView(){
+
+    private void addView() {
         String vatNo = fixeedittext1.getText().toString() + "";
         vatNo = vatNo.replaceAll(" ", "");
         if (!findList.contains(vatNo)) {
             findList.add(vatNo);
-            TextView textView=new TextView(getActivity());
+            TextView textView = new TextView(getActivity());
             textView.setText(vatNo);
             textView.setTextColor(getResources().getColor(R.color.colorAboutText));
             textView.setTextSize(20);
             textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
-            textView.setId(findList.size()-1);
+            textView.setId(findList.size() - 1);
+            textView.setWidth(0);
+
             layout2.addView(textView);
         }
         fixeedittext1.setText("");
@@ -548,8 +554,8 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     }
 
     private void goFind() {
-        if (findList.size()!=0) {
-            for (String vatNo:findList) {
+        if (findList.size() != 0) {
+            for (String vatNo : findList) {
                 if (vatNo != null && !vatNo.equals("")) {
                     JSONObject object = new JSONObject();
                     object.put("vatNo", vatNo);
@@ -574,7 +580,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 //                                            clearData();
                                             dataList.addAll(response);
                                             for (FindVatNo i : response) {
-                                                if (i != null && i.getEpc() != null && !i.getEpc().equals("")&&!dataKEY.contains(i.getEpc()))
+                                                if (i != null && i.getEpc() != null && !i.getEpc().equals("") && !dataKEY.contains(i.getEpc()))
                                                     dataKEY.add(i.getEpc());
                                             }
                                             text3.setText(dataList.size() + "");
@@ -586,6 +592,29 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                                     } else {
                                         Toast.makeText(getActivity(), "查无此缸号！", Toast.LENGTH_SHORT).show();
 //                                getActivity().onBackPressed();
+                                    }
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        }, json);
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getErpSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Toast.makeText(getActivity(), "缸号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onResponse(JSONObject jsonObject) {
+                                try {
+                                    if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
+                                        int count = jsonObject.getJSONObject("data").getInteger("sum");
+                                        erpCount=count+erpCount;
+                                        text4.setText(erpCount+"");
+                                    } else {
+                                        Toast.makeText(getActivity(), "ERP查询失败", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (Exception e) {
 
@@ -720,6 +749,20 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 }
 
             }
+        }
+    }
+
+    class VatNoFlag {
+        private String vatNo;
+        private int count;
+
+        public VatNoFlag(String vatNo) {
+            this.vatNo = vatNo;
+        }
+
+        public VatNoFlag(String vatNo, int count) {
+            this.vatNo = vatNo;
+            this.count = count;
         }
     }
 }
