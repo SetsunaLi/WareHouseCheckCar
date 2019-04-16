@@ -163,6 +163,21 @@
     <string name="action_settings">退出登录</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!--cuttingCloth-->
+    <!--空加-->
+    <string-array name="change_Empty_array">
+        <item>0KG</item>
+        <item>0.2KG</item>
+        <item>0.3KG</item>
+    </string-array>
+    <!--纸管重-->
+    <string-array name="change_paper_array">
+        <item>0KG</item>
+        <item>0.6KG</item>
+        <item>0.8KG</item>
+        <item>1.2KG</item>
+    </string-array>
+
 
 
 </resources>

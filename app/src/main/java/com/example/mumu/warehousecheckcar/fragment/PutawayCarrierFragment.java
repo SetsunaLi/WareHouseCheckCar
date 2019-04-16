@@ -317,7 +317,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                                             Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
-
                                     @Override
                                     public void onResponse(Carrier response) {
                                         try {
