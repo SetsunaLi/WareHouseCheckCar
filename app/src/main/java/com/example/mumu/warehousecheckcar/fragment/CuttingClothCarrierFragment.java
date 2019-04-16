@@ -27,8 +27,10 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.UHF.Sound;
 import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
@@ -75,9 +77,6 @@ public class CuttingClothCarrierFragment extends Fragment implements BRecyclerAd
     @Bind(R.id.button2)
     Button button2;
 
-    private CuttingClothCarrierFragment() {
-
-    }
 
     public static CuttingClothCarrierFragment newInstance() {
         if (fragment == null) ;
@@ -112,11 +111,8 @@ public class CuttingClothCarrierFragment extends Fragment implements BRecyclerAd
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
 
-        Message msg = handler.obtainMessage();
-        msg.arg1 = 0x00;
-        msg.obj = "3035A5370000060008867993";
-        handler.sendMessage(msg);
         EventBus.getDefault().register(this);
+        initRFID();
         return view;
     }
     private Cut cut;
@@ -151,7 +147,22 @@ public class CuttingClothCarrierFragment extends Fragment implements BRecyclerAd
         if (epcList != null)
             epcList.clear();
     }
+    private void initRFID() {
+        try {
+            RFID_2DHander.getInstance().on_RFID();
+            UHFResult.getInstance().setCallbackLiatener(this);
+        } catch (Exception e) {
 
+        }
+    }
+
+    private void disRFID() {
+        try {
+            RFID_2DHander.getInstance().off_RFID();
+        } catch (Exception e) {
+
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -172,7 +183,8 @@ public class CuttingClothCarrierFragment extends Fragment implements BRecyclerAd
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-
+        disRFID();
+        clear();
     }
 
     @OnClick({R.id.button1, R.id.button2})

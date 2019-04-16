@@ -61,8 +61,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     EditText edittext2;
 
 
-    private CheckCarrierFragment() {
-    }
+
 
     private static CheckCarrierFragment fragment;
 

@@ -59,9 +59,6 @@ public class OutCheckDetialFragment extends Fragment implements BRecyclerAdapter
     private List<OutCheckDetail> dataList;
     private RecycleAdapter mAdapter;
 
-    private OutCheckDetialFragment() {
-    }
-
     public static OutCheckDetialFragment newInstance() {
         if (fragment == null) ;
         fragment = new OutCheckDetialFragment();

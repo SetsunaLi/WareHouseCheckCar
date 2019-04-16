@@ -95,8 +95,6 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
     @Bind(R.id.listview)
     ListView listview;
 
-    private FindTpNoFragmentf() {
-    }
 
     public static FindTpNoFragmentf newInstance() {
         if (fragment == null) ;

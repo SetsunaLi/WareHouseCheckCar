@@ -78,9 +78,6 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
     @Bind(R.id.button2)
     Button button2;
 
-    private WeightChangeFragment() {
-    }
-
     private static WeightChangeFragment fragment;
 
     public static WeightChangeFragment newInstance() {

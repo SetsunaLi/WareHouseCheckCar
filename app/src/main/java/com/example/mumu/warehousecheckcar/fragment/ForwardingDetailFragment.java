@@ -51,8 +51,6 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
     @Bind(R.id.text2)
     TextView text2;
 
-    private ForwardingDetailFragment() {
-    }
 
     public static ForwardingDetailFragment newInstance() {
         if (fragment == null) ;

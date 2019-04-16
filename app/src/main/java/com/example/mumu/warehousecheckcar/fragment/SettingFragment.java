@@ -39,8 +39,7 @@ import static com.example.mumu.warehousecheckcar.application.App.PROWER;
 
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, UHFCallbackLiatener
 ,Preference.OnPreferenceClickListener{
-    private SettingFragment() {
-    }
+
 
     private static SettingFragment fragment;
 

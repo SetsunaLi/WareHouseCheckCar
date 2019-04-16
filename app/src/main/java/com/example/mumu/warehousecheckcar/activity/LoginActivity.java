@@ -89,10 +89,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initDate() {
+        App.IP = "http://47.106.157.255";
+        App.PORT = "80";
    /*     App.IP = "http://192.168.1.109";
         App.PORT = "80";*/
-        App.IP="http://192.168.1.146";
-        App.PORT="8080";
+//        App.IP="http://192.168.1.146";
+//        App.PORT="8080";
       /*  App.IP="http://192.168.1.146";
         App.PORT="8080";*/
     }
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                 checkbox2.setChecked(upFlag);
                 password.setText(word + "");
             }
-            if(upFlag&&!name.equals("")&&!word.equals(""))
+            if (upFlag && !name.equals("") && !word.equals(""))
                 onViewClicked(loginButton);
         }
     }
@@ -333,10 +335,10 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             } else {
                 User user = User.newInstance();
-                if (user.getMsg()==null||user.getMsg().equals(""))
-                Toast.makeText(LoginActivity.this, "无法请求服务器，请检查网络！", Toast.LENGTH_SHORT).show();
+                if (user.getMsg() == null || user.getMsg().equals(""))
+                    Toast.makeText(LoginActivity.this, "无法请求服务器，请检查网络！", Toast.LENGTH_SHORT).show();
                 else
-                Toast.makeText(LoginActivity.this, user.getMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, user.getMsg(), Toast.LENGTH_SHORT).show();
                 password.setError(getString(R.string.error_incorrect_password));
                 loginProgress.requestFocus();
             }

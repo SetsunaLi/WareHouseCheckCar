@@ -68,8 +68,7 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
     @Bind(R.id.button2)
     Button button2;
 
-    private ChubbExceptionFragment() {
-    }
+
 
     public static ChubbExceptionFragment newInstance() {
         if (fragment == null) ;

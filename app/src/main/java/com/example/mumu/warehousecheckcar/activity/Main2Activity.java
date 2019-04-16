@@ -192,7 +192,6 @@ public class Main2Activity extends AppCompatActivity
     private void init2D() {
         try {
             boolean flag1 = RFID_2DHander.getInstance().connect2D();
-
         } catch (Exception e) {
             Log.w(TAG, "2D模块异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();

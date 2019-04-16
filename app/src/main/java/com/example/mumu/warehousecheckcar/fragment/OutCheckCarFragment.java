@@ -42,7 +42,6 @@ public class OutCheckCarFragment extends Fragment {
 
 
     private static OutCheckCarFragment fragment;
-    private OutCheckCarFragment(){    }
     public static OutCheckCarFragment newInstance(){
         if (fragment==null);
         fragment=new OutCheckCarFragment();

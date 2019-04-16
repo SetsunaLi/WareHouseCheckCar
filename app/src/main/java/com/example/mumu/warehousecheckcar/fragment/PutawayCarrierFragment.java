@@ -65,8 +65,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     @Bind(R.id.button1)
     Button button1;
 
-    private PutawayCarrierFragment() {
-    }
 
     private static PutawayCarrierFragment fragment;
 

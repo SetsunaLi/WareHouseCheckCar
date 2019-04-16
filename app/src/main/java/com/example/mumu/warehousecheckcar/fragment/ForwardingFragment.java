@@ -82,8 +82,7 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     @Bind(R.id.button2)
     Button button2;
 
-    private ForwardingFragment() {
-    }
+
 
     public static ForwardingFragment newInstance() {
         if (fragment == null) ;

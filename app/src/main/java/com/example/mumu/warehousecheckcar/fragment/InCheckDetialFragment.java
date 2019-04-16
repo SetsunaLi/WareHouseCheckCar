@@ -56,8 +56,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
     private List<InCheckDetail> dataList;
     private RecycleAdapter mAdapter;
 
-    private InCheckDetialFragment() {
-    }
+
 
     public static InCheckDetialFragment newInstance() {
         if (fragment == null) ;

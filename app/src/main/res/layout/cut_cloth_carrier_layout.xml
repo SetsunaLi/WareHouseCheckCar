@@ -41,7 +41,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     style="@style/text_style1"
-                    android:id="@+id/spinner"/>
+                    android:id="@+id/spinner1"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     style="@style/text_style1"
-                    android:id="@+id/spinner1"/>
+                    android:id="@+id/spinner2"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

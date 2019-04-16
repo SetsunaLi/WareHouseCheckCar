@@ -84,8 +84,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     @Bind(R.id.text3)
     TextView text3;
 
-    private CheckFragment() {
-    }
+
 
     public static CheckFragment newInstance() {
         if (fragment == null) ;

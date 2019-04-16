@@ -53,8 +53,6 @@ public class CheckDetailFragment extends Fragment{
     @Bind(R.id.text4)
     TextView text4;
 
-    private CheckDetailFragment() {
-    }
 
     public static CheckDetailFragment newInstance() {
         if (fragment == null) ;

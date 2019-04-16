@@ -54,7 +54,6 @@ public class AboutFragment extends Fragment {
     TextView copyRight;
     
     private static AboutFragment fragment;
-    private AboutFragment(){    }
     public static AboutFragment newInstance(){
         if (fragment==null);
         fragment=new AboutFragment();

@@ -82,8 +82,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
     @Bind(R.id.text3)
     TextView text3;*/
 
-    private InCheckFragment() {
-    }
+
 
     public static InCheckFragment newInstance() {
         if (fragment == null) ;

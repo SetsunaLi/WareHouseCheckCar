@@ -62,8 +62,6 @@ public class CarPutawayFragment extends Fragment {
     @Bind(R.id.button2)
     Button button2;
 
-    private CarPutawayFragment() {
-    }
 
     private static CarPutawayFragment fragment;
 
