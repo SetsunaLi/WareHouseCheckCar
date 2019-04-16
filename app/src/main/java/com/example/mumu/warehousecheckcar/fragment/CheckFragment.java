@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -205,7 +206,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         }
                         Toast.makeText(getActivity(), "获取库位信息失败！", Toast.LENGTH_SHORT).show();
                     }
-
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         try {
@@ -280,6 +280,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     }
 
     long currenttime = 0;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -314,6 +315,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                         arry = jsonArray.toJavaList(Inventory.class);
                                         if (arry != null && arry.size() > 0) {
                                             Inventory response = arry.get(0);
+
                                             if (response != null && !epcList.contains(response.getEpc())) {
                                                 epcList.add(response.getEpc());
                                                 boolean isData = false;
