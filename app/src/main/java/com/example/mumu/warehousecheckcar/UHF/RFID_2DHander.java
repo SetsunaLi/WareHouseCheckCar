@@ -29,7 +29,7 @@ public class RFID_2DHander {
     private RFIDReaderHelper rfidReaderHelper;
     private TDScannerHelper mScanner;
     private ModuleConnector connectRFID;
-    private ModuleConnector Connector2D;
+    private TDScannerConnector Connector2D;
 
     /**
      * RFID模块上电
@@ -85,6 +85,7 @@ public class RFID_2DHander {
             rfidReaderHelper = RFIDReaderHelper.getDefaultHelper();
         return rfidReaderHelper;
     }
+
     /**2D模块上电*/
     public boolean on_2D(){
         return ModuleManager.newInstance().setScanStatus(true);
@@ -111,7 +112,9 @@ public class RFID_2DHander {
      */
     public boolean disConnect2D(){
         if (Connector2D != null&&Connector2D.isConnected()) {
+            mScanner.unRegisterObservers();
             Connector2D.disConnect();
+            ModuleManager.newInstance().release();
             return true;
         }
         return false;
@@ -121,8 +124,9 @@ public class RFID_2DHander {
      * 获取2D控制器
      */
     public TDScannerHelper getTDScanner() {
-        if (mScanner == null)
+   /*     if (mScanner == null)
             mScanner = TDScannerHelper.getDefaultHelper();
-        return mScanner;
+        return mScanner;*/
+        return TDScannerHelper.getDefaultHelper();
     }
 }

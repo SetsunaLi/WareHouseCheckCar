@@ -190,11 +190,61 @@ public class Main2Activity extends AppCompatActivity
     private void init2D() {
         try {
             boolean flag1 = RFID_2DHander.getInstance().connect2D();
+
         } catch (Exception e) {
             Log.w(TAG, "2D模块异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
         }
     }
+    private void disConnectRFID() {
+        try {
+
+            RFID_2DHander.getInstance().off_RFID();
+            if (rfidHander != null)
+                rfidHander.unRegisterObserver(UHFResult.getInstance());
+            RFID_2DHander.getInstance().disConnectReader();
+            RFID_2DHander.getInstance().releaseRFID();
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+//            RFID_2DHander.getInstance().off_2D();
+            RFID_2DHander.getInstance().disConnect2D();
+
+        } catch (Exception e) {
+
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+        disConnectRFID();
+        disConnect2D();
+        clearAllData();
+    }
+
+    private void clearAllData() {
+        App.APPLY_NO = "";
+        App.carNo = "";
+        App.SYSTEM_VERSION = "";
+       /* App.IP = "";
+        App.PORT = "";*/
+        App.DEVICE_NO = "";
+        App.CARRIER = null;
+        App.DEVICE_NO = "";
+        App.IN_DETAIL_LIST.clear();
+        App.OUTDETAIL_LIST.clear();
+        App.CHECK_DETAIL_LIST.clear();
+//        App.OUTPUT_DETAIL_LIST.clear();
+        App.INPUT_DETAIL_LIST.clear();
+//        App.DATA_KEY.clear();
+
+    }
+
 
 
     //Tag to identify the currently displayed fragment
@@ -265,6 +315,7 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 15:
 //                待开发
+//                fragment= new TextFragment();
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();
@@ -600,54 +651,6 @@ public class Main2Activity extends AppCompatActivity
         getSupportActionBar().setTitle(mTitle);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-        disConnectRFID();
-        disConnect2D();
-        clearAllData();
-    }
 
-    private void clearAllData() {
-        App.APPLY_NO = "";
-        App.carNo = "";
-        App.SYSTEM_VERSION = "";
-       /* App.IP = "";
-        App.PORT = "";*/
-        App.DEVICE_NO = "";
-        App.CARRIER = null;
-        App.DEVICE_NO = "";
-        App.IN_DETAIL_LIST.clear();
-        App.OUTDETAIL_LIST.clear();
-        App.CHECK_DETAIL_LIST.clear();
-//        App.OUTPUT_DETAIL_LIST.clear();
-        App.INPUT_DETAIL_LIST.clear();
-//        App.DATA_KEY.clear();
-
-    }
-
-    private void disConnectRFID() {
-        try {
-
-            RFID_2DHander.getInstance().off_RFID();
-            if (rfidHander != null)
-                rfidHander.unRegisterObserver(UHFResult.getInstance());
-            RFID_2DHander.getInstance().disConnectReader();
-            RFID_2DHander.getInstance().releaseRFID();
-        } catch (Exception e) {
-
-        }
-    }
-
-    private void disConnect2D() {
-        try {
-//            RFID_2DHander.getInstance().off_2D();
-            RFID_2DHander.getInstance().disConnect2D();
-
-        } catch (Exception e) {
-
-        }
-    }
 
 }

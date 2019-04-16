@@ -154,7 +154,6 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        RFID_2DHander.getInstance().off_2D();
         disConnect2D();
     }
 
