@@ -378,9 +378,10 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
         }
 
         @Override
-        public void convert(RecyclerHolder holder, final Inventory item, final int position) {
+        public void convert(RecyclerHolder holder, Inventory item, final int position) {
             if (item != null) {
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+               final String key=item.getEpc();
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -388,7 +389,7 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                             if (isChecked){
                                 for (Inventory i: myList){
                                     if ((i.getVatNo()!=null&&i.getProduct_no()!=null&&i.getSelNo()!=null)
-                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals("")))
+                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals(""))&&!dataKey.contains(i.getEpc()))
                                         dataKey.add(i.getEpc());
                                 }
                             }else {
@@ -397,16 +398,15 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                             mAdapter.notifyDataSetChanged();
                         } else {
                             if (isChecked) {
-                                if (!dataKey.contains(item.getEpc()))
-                                    dataKey.add(item.getEpc());
+                                if (!dataKey.contains(key))
+                                    dataKey.add(key);
                             } else {
-                                if (dataKey.contains(item.getEpc()))
-                                    dataKey.remove(item.getEpc());
+                                if (dataKey.contains(key))
+                                    dataKey.remove(key);
                             }
                         }
                     }
                 });
-                String key=item.getEpc();
                 if (position != 0) {
                     if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
                         cb.setChecked(false);
@@ -415,7 +415,7 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                     }else {
                         if (cb.getVisibility()!=View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
-                        if (dataKey.contains(item.getEpc()))
+                        if (dataKey.contains(key))
                             cb.setChecked(true);
                         else
                             cb.setChecked(false);
