@@ -35,7 +35,7 @@
     <string name="btn_click11">调整库存重量</string>
     <string name="btn_click12">查布异常</string>
     <string name="btn_click13">付运表发运</string>
-    <string name="btn_click14">剪布上架</string>
+    <string name="btn_click14">办布上架</string>
     <string name="btn_click15">待开发</string>
     <string name="btn_click16">系统设置</string>
     <string name="btn_yes">确认</string>
@@ -70,7 +70,7 @@
         <item>调整库存重量</item>
         <item>查布异常</item>
         <item>付运表发运</item>
-        <item>剪布上架</item>
+        <item>办布上架</item>
         <item>待开发</item>
         <item>系统设置</item>
         <item>关于</item>
@@ -143,7 +143,7 @@
     <string name="moto_solutions">RIDKO Technologies</string>
     <string name="app_version_title">Application Version</string>
     <string name="colon">:</string>
-    <string name="app_version">19.04.17-10</string>
+    <string name="app_version">19.04.17-15</string>
     <string name="system_version">系统版本</string>
     <string name="device_number_title">Device Number</string>
     <string name="device_number">JiaQian_01</string>

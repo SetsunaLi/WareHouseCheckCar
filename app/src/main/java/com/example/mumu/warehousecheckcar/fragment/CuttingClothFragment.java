@@ -80,6 +80,7 @@ public class CuttingClothFragment extends Fragment implements RXCallback{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cut_cloth_carrier_layout, container, false);
         ButterKnife.bind(this, view);
+        getActivity().setTitle("办布上架");
         sound = new Sound(getActivity());
          cloth = new Cut();
         initSpinner();
