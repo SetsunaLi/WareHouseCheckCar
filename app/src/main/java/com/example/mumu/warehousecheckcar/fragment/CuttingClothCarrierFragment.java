@@ -146,6 +146,8 @@ public class CuttingClothCarrierFragment extends Fragment implements BRecyclerAd
             dataKEY.clear();
         if (epcList != null)
             epcList.clear();
+        if (dataList!=null)
+            dataList.clear();
     }
     private void initRFID() {
         try {

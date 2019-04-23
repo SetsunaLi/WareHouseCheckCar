@@ -217,6 +217,8 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         clearData();
         downLoadData();
         text2.setText(fatherNoList.size() + "");
+        text3.setText(carMsg.getCarNo()+"");
+        text4.setText(carMsg.getCarName()+"");
     }
 
     private void downLoadData() {

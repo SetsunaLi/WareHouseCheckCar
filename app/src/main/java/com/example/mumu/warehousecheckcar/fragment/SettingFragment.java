@@ -66,9 +66,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         systemVersion = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_version_key));
 //        setEditTextPre(systemVersion,App.SYSTEM_VERSION);
         systemIP = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_ip_key));
-//        setEditTextPre(systemIP,App.IP);
+        setEditTextPre(systemIP,App.IP);
         systemPort = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_port_key));
-//        setEditTextPre(systemPort,App.PORT);
+        setEditTextPre(systemPort,App.PORT);
         deviceNumber = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_device_number_key));
 //        setEditTextPre(deviceNumber,App.DEVICE_NO);
         music = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.system_music_key));
