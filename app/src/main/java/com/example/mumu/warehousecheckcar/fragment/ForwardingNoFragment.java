@@ -1,8 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.UHF.Sound;
-import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;

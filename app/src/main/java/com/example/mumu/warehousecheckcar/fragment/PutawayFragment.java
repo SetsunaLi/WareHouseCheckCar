@@ -30,17 +30,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.UHF.Sound;
-import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.UHF.UHFResult;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Input;
-import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -48,7 +46,6 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -340,7 +337,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     INPUT_DETAIL_LIST.add(obj);
                 }
             }
-            Fragment fragment = ForwardingDetailFragment.newInstance();
+            Fragment fragment = PutawayDetailFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);

@@ -24,16 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.UHF.Sound;
-import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
@@ -62,9 +60,6 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.example.mumu.warehousecheckcar.application.App.APPLY_NO;
-import static com.example.mumu.warehousecheckcar.application.App.KEY;
 
 public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener {
     private final String TAG = "OutApplyNewFragment";

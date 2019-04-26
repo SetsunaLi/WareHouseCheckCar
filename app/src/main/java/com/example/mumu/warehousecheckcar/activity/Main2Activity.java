@@ -26,9 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.entity.User;
@@ -41,7 +40,6 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
-import com.example.mumu.warehousecheckcar.fragment.CuttingClothCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CuttingClothFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
@@ -57,10 +55,8 @@ import com.example.mumu.warehousecheckcar.fragment.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.PutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
-import com.example.mumu.warehousecheckcar.fragment.TextFragment;
 import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
-import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.rfid.RFIDReaderHelper;
 
@@ -98,8 +94,8 @@ public class Main2Activity extends AppCompatActivity
         });*/
 //       左上角按钮
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        User user=User.newInstance();
-        toolbar.setSubtitle("操作人:"+ user.getUsername());
+        User user = User.newInstance();
+        toolbar.setSubtitle("操作人:" + user.getUsername());
 //        toolbar.bringToFront();
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -114,6 +110,7 @@ public class Main2Activity extends AppCompatActivity
 //      首页
         selectItem(0);
         comeBack = ComeBack.getInstance();
+
     }
 
     private ComeBack comeBack;
@@ -156,7 +153,7 @@ public class Main2Activity extends AppCompatActivity
     NavigationView navigationView;
 
     private void initView() {
-        User user=User.newInstance();
+        User user = User.newInstance();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 //        导航头部
@@ -199,6 +196,7 @@ public class Main2Activity extends AppCompatActivity
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
         }
     }
+
     private void disConnectRFID() {
         try {
 
@@ -221,6 +219,7 @@ public class Main2Activity extends AppCompatActivity
 
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -228,6 +227,8 @@ public class Main2Activity extends AppCompatActivity
         disConnectRFID();
         disConnect2D();
         clearAllData();
+//        if (SK_UHFHander.getInstance() != null)
+//            SK_UHFHander.getInstance().disConnectRFID();
     }
 
     private void clearAllData() {
@@ -247,7 +248,6 @@ public class Main2Activity extends AppCompatActivity
 //        App.DATA_KEY.clear();
 
     }
-
 
 
     //Tag to identify the currently displayed fragment
@@ -427,6 +427,7 @@ public class Main2Activity extends AppCompatActivity
     public void click12(View view) {
         selectItem(12);
     }
+
     /**
      * 发运
      */
@@ -440,6 +441,7 @@ public class Main2Activity extends AppCompatActivity
     public void click14(View view) {
         selectItem(14);
     }
+
     /**
      * 待开发
      */
@@ -453,8 +455,6 @@ public class Main2Activity extends AppCompatActivity
     public void click16(View view) {
         selectItem(16);
     }
-
-
 
 
     //返回键监听
@@ -471,7 +471,7 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
-                    || fragment instanceof WeightChangeFragment|| fragment instanceof ChubbExceptionFragment
+                    || fragment instanceof WeightChangeFragment || fragment instanceof ChubbExceptionFragment
                     || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothFragment)) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
@@ -614,7 +614,7 @@ public class Main2Activity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent=new Intent(Main2Activity.this,LoginActivity.class);
+            Intent intent = new Intent(Main2Activity.this, LoginActivity.class);
             startActivity(intent);
             finish();
             return true;
@@ -639,22 +639,11 @@ public class Main2Activity extends AppCompatActivity
     }
 
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
     }
-
 
 
 }

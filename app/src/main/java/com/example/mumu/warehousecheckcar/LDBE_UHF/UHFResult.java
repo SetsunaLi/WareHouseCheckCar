@@ -1,7 +1,4 @@
-package com.example.mumu.warehousecheckcar.UHF;
-
-import android.os.Message;
-import android.util.Log;
+package com.example.mumu.warehousecheckcar.LDBE_UHF;
 
 import com.rfid.rxobserver.RXObserver;
 import com.rfid.rxobserver.ReaderSetting;

@@ -29,15 +29,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.UHF.Sound;
-import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -81,7 +80,6 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
     TextView text2;
     @Bind(R.id.text3)
     TextView text3;*/
-
 
 
     public static InCheckFragment newInstance() {

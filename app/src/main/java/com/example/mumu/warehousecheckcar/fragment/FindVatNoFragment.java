@@ -38,10 +38,10 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.UHF.Sound;
-import com.example.mumu.warehousecheckcar.UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
@@ -602,7 +602,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                             @Override
                             public void onError(Request request, Exception e) {
                                 if (App.LOGCAT_SWITCH) {
-                                    Toast.makeText(getActivity(), "缸号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "缸号查询失败m！" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
 
