@@ -154,7 +154,7 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String pallet = s.toString();
                 pallet = pallet.replaceAll(" ", "");
-                if (pallet != null && !pallet.equals("")) {
+                if (pallet != null && !pallet.equals("")&&pallet.length()>=3) {
                     JSONObject object = new JSONObject();
                     object.put("pallet", pallet);
                     final String json = object.toJSONString();
@@ -197,6 +197,14 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
                         }, json);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                }else if (pallet.length()<3){
+                    if (vatList.size()>0) {
+                        vatList.clear();
+                        textAdapter.setList(vatList);
+                        textAdapter.notifyDataSetChanged();
+                        if (listview.getVisibility() != View.GONE)
+                            listview.setVisibility(View.GONE);
                     }
                 }
 
@@ -396,6 +404,7 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
                     dataKEY.clear();
                 if (dataEpc != null)
                     dataEpc.clear();
+                mAdapter.notifyDataSetChanged();
                 addView();
                 goFind();
                 break;

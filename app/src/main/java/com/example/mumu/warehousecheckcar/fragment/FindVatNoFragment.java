@@ -165,7 +165,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String vat = s.toString();
                 vat = vat.replaceAll(" ", "");
-                if (vat != null && !vat.equals("")) {
+                if (vat != null && !vat.equals("")&&vat.length()>=4) {
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + vat, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
@@ -194,6 +194,14 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                             }
                         }
                     });
+                }else if (vat.length()<4){
+                    if (vatList.size()>0) {
+                        vatList.clear();
+                        textAdapter.setList(vatList);
+                        textAdapter.notifyDataSetChanged();
+                        if (listview.getVisibility() != View.GONE)
+                            listview.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -428,6 +436,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                     dataKEY.clear();
                 if (dataEpc != null)
                     dataEpc.clear();
+                mAdapter.notifyDataSetChanged();
                 addView();
                 erpCount=0;
                 goFind();
