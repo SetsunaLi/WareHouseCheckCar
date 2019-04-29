@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-        checkVersion();
+//        checkVersion();
         /**更新版本入口*/
 //        UpdateApk.UpdateVersion(this,updateBean);
     }
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         App.IP = "http://47.106.157.255";
         App.PORT = "80";
 //        App.IP = "http://192.168.1.109";
-//        App.PORT = "8080";
+//        App.PORT = "80";
 //        App.IP="http://192.168.1.146";
 //        App.PORT="8080";
       /*  App.IP="http://192.168.1.146";
@@ -335,9 +335,17 @@ public class LoginActivity extends AppCompatActivity {
 //                return false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                User user = User.newInstance();
+                user.setUser("解析异常", 0xff);
                 return false;
             } catch (IOException e) {
                 e.printStackTrace();
+                User user = User.newInstance();
+                user.setUser("网络异常，请检查网络！", 0xff);
+                return false;
+            }catch (Exception e){
+                User user = User.newInstance();
+                user.setUser("链接超时，请检查网络！", 0xff);
                 return false;
             }
         }
