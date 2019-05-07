@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.UHF.RFID_2DHander;
-import com.module.interaction.ModuleConnector;
-import com.module.interaction.RXTXListener;
 import com.nativec.tools.ModuleManager;
 import com.xdl2d.scanner.TDScannerConnector;
 import com.xdl2d.scanner.TDScannerHelper;

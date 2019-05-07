@@ -1,4 +1,4 @@
-package com.example.mumu.warehousecheckcar.UHF;
+package com.example.mumu.warehousecheckcar.LDBE_UHF;
 
 import com.module.interaction.ModuleConnector;
 import com.nativec.tools.ModuleManager;
