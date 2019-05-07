@@ -152,22 +152,27 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         vatKey.clear();
     }
 
+    private boolean flag=true;
     @Override
     public void onResume() {
         super.onResume();
-        ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("NO");
-        fatherNoList.clear();
-        Iterator<String> iter = list.iterator();
-        while (iter.hasNext()) {
-            String str = iter.next();
-            str = str.replaceAll(" ", "");
-            if (str != null && !str.equals("") && !fatherNoList.contains(str))
-                fatherNoList.add(str);
+        if (flag) {
+            flag=false;
+            ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("NO");
+            fatherNoList.clear();
+            Iterator<String> iter = list.iterator();
+            while (iter.hasNext()) {
+                String str = iter.next();
+                str = str.replaceAll(" ", "");
+                if (str != null && !str.equals("") && !fatherNoList.contains(str))
+                    fatherNoList.add(str);
 
+            }
+
+            text1.setText(0 + "");
+            text2.setText(fatherNoList.size() + "");
+            downLoadData();
         }
-        text1.setText(0 + "");
-        text2.setText(fatherNoList.size() + "");
-        downLoadData();
     }
 
     public void downLoadData() {

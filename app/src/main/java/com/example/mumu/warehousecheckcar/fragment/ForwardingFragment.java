@@ -211,14 +211,18 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
             }
     }
 
+   private  boolean flag=true;
     @Override
     public void onResume() {
         super.onResume();
-        clearData();
-        downLoadData();
-        text2.setText(fatherNoList.size() + "");
-        text3.setText(carMsg.getCarNo()+"");
-        text4.setText(carMsg.getCarName()+"");
+        if (flag) {
+            flag=false;
+            clearData();
+            downLoadData();
+            text2.setText(fatherNoList.size() + "");
+            text3.setText(carMsg.getCarNo() + "");
+            text4.setText(carMsg.getCarName() + "");
+        }
     }
 
     private void downLoadData() {
