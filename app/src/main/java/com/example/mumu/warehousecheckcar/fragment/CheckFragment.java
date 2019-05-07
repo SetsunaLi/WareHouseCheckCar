@@ -123,6 +123,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         recyle.setAdapter(mAdapter);
 
         initRFID();
+        downLoadData();
         return view;
     }
 
@@ -141,7 +142,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
             if (App.CARRIER.getTrayNo() != null)
                 text3.setText(App.CARRIER.getTrayNo() + "");
         }
-
     }
 
     private void clearData() {
@@ -185,9 +185,14 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        downLoadData();
     }
 
     private void downLoadData() {
@@ -213,12 +218,14 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                 List<Inventory> response;
                                 response = jsonArray.toJavaList(Inventory.class);
                                 if (response != null && response.size() != 0) {
-                                    clearData();
+//                                    clearData();
                                     for (Inventory obj : response) {
                                         if (obj != null && obj.getVatNo() != null) {
                                             if (keyValue.containsKey(obj.getVatNo())) {//里面有
                                                 myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
                                             } else {//里面没有
+                                                if (!dataKEY.contains(obj.getVatNo()))
+                                                dataKEY.add(obj.getVatNo());
                                                 obj.setCountIn(1);
                                                 myList.add(obj);
                                                 keyValue.put(obj.getVatNo(), myList.size() - 1);
@@ -314,8 +321,9 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                         arry = jsonArray.toJavaList(Inventory.class);
                                         if (arry != null && arry.size() > 0) {
                                             Inventory response = arry.get(0);
-
                                             if (response != null && !epcList.contains(response.getEpc())) {
+                                                if (!dataKEY.contains(response.getVatNo()))
+                                                    dataKEY.add(response.getVatNo());
                                                 epcList.add(response.getEpc());
                                                 boolean isData = false;
                                                 for (Inventory obj : dataList) {
