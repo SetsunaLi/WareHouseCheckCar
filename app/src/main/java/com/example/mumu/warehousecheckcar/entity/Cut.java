@@ -2,10 +2,10 @@ package com.example.mumu.warehousecheckcar.entity;
 
 public class Cut extends Inventory{
     /**空加*/
-    private    double blank_add;
+    private    double blank_add=0;
 
     /**纸卷重*/
-    private    double weight_papertube;
+    private    double weight_papertube=0;
 
     public  double getBlank_add() {
         return blank_add;

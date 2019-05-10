@@ -18,7 +18,7 @@
             android:layout_weight="1"
             android:background="@mipmap/bg_layout"
             android:orientation="vertical">
-            <LinearLayout
+           <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -67,7 +67,7 @@
                     android:singleLine="true"
                     style="@style/text_style1"
                     android:id="@+id/spinner2"/>
-            </LinearLayout>
+            </LinearLayout>-->
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
