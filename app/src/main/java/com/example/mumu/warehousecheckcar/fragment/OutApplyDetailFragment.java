@@ -145,6 +145,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         Collections.sort(myList, new Comparator<OutputDetail>() {
             @Override
             public int compare(OutputDetail obj1, OutputDetail obj2) {
+                if (obj1.getEpc()==null||obj1.getEpc().equals(""))
+                    return -1;
+                if (obj2.getEpc()==null||obj2.getEpc().equals(""))
+                    return 1;
              if (dataList.containsKey(obj1.getEpc())&&dataList.containsKey(obj2.getEpc())) {
                  if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
                      if (!dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {

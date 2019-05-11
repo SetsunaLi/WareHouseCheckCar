@@ -288,8 +288,13 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (!returnWhere)
-        EventBus.getDefault().post(new EventBusMsg(0xff));
+        if (!returnWhere){
+            EventBus.getDefault().postSticky(new EventBusMsg(0x00,carMsg));
+            Fragment fragment=ForwardingNoFragment.newInstance();
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+        }
+//        EventBus.getDefault().post(new EventBusMsg(0xff));
         EventBus.getDefault().unregister(this);
         disRFID();
         clearData();

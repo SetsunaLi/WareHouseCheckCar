@@ -1,6 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,6 +35,7 @@ import com.xdl2d.scanner.callback.RXCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -141,7 +145,7 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
 
     }
 
-    @Subscribe(sticky = true)
+    @Subscribe(sticky = true ,threadMode = ThreadMode.MAIN)
     public void getEventMsg(EventBusMsg eventBusMsg) {
         switch (eventBusMsg.getStatus()) {
             case 0x00:
@@ -153,10 +157,10 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
                     Toast.makeText(getActivity(), "车牌号为空！", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case 0xff:
+          /*  case 0xff:
                 if (!scannerFlag)
                 init2D();
-                break;
+                break;*/
         }
     }
 
@@ -168,13 +172,10 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         EventBus.getDefault().unregister(this);
         if (scannerFlag)
         disConnect2D();
+
+
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
@@ -191,15 +192,19 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
                 if (scannerFlag)
                     disConnect2D();
                 scannerFlag=false;
+                mAdapter.select(-255);
+                mAdapter.notifyDataSetChanged();
+
                 EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList));
                 Fragment fragment = ForwardingFragment.newInstance();
-         /*       *//*直接清掉再加载，没有返回层*//*
+//                直接清掉再加载，没有返回层
                 getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();*/
-                /*直接加载在最上层，有返回层*/
-                getActivity().getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).show(fragment).commit();
+                        .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+//                直接加载在最上层，有返回层
+//                getActivity().getFragmentManager().beginTransaction()
+//                        .add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).show(fragment).commit();
+
                 break;
         }
     }
@@ -260,11 +265,11 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         }
 
         @Override
-        public void convert(RecyclerHolder holder, final String item, final int position) {
+        public void convert(RecyclerHolder holder,  String item, final int position) {
             final FixedEditText editNo = (FixedEditText) holder.getView(R.id.fixeedittext1);
             editNo.setTag(position);
 //            editNo.setFixedText("申请单号：");
-            editNo.setText(myList.get((Integer) editNo.getTag()));
+            editNo.setText(item);
             if (position == this.position) {
                 editNo.setFocusable(true);//设置输入框可聚集
                 editNo.setFocusableInTouchMode(true);//设置触摸聚焦
@@ -280,6 +285,9 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
                     if (b) {
                         FixedEditText fe = (FixedEditText) view;
                         setId((int) fe.getTag());
+//                        mAdapter.notifyDataSetChanged();
+                    }else {
+//                        mAdapter.notifyDataSetChanged();
                     }
                 }
             });
@@ -293,6 +301,7 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
                 public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                     Log.i("onTextChanged", "onTextChanged");
                     myList.set((int) editNo.getTag(), charSequence.toString());
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override

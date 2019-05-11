@@ -95,7 +95,7 @@ public class ForwardingMsgFragment extends Fragment {
             EventBus.getDefault().postSticky(new EventBusMsg(0x00,new CarMsg(carNo,name,phoneNo)));
             Fragment fragment = ForwardingNoFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-            transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+            transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);
             transaction.commit();
         }else

@@ -111,6 +111,11 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
         Collections.sort(myList, new Comparator<Forwarding>() {
             @Override
             public int compare(Forwarding obj1, Forwarding obj2) {
+                if (obj1.getEpc()==null||obj1.getEpc().equals(""))
+                    return -1;
+                if (obj2.getEpc()==null||obj2.getEpc().equals(""))
+                    return 1;
+
                 if (dataList.containsKey(obj1.getEpc())&&dataList.containsKey(obj2.getEpc())) {
                     if (dataList.get(obj1.getEpc()).isStatus()) {
                         if (!dataList.get(obj2.getEpc()).isStatus()) {
