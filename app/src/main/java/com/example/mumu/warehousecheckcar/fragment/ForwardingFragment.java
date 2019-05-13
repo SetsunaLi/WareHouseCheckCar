@@ -193,6 +193,7 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                     break;
                 case 0xfe:
                     epcKeyList.clear();
+                    epcKeyList= (HashMap<String, ForwardingFlag>) ((HashMap<String, ForwardingFlag>) msg.getPositionObj(0)).clone();
                     epcKeyList.putAll((HashMap<String, ForwardingFlag>) msg.getPositionObj(0));
                     for (ForwardingList forwardingList : myList) {
                         forwardingList.setMatchCount(0);

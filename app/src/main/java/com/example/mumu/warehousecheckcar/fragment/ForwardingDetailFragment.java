@@ -92,7 +92,8 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                 case 0x02:
                     myList.addAll((List<Forwarding>) msg.getPositionObj(0));
 //                    fatherNoList.clear();
-                    dataList = (HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1);
+                    dataList= (HashMap<String, ForwardingFragment.ForwardingFlag>) ( (HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1)).clone();
+                    dataList.putAll((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1));
                     break;
             }
     }
@@ -175,7 +176,9 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        EventBus.getDefault().post(new EventBusMsg(0xfe,dataList));
+        HashMap<String, ForwardingFragment.ForwardingFlag> msg=new HashMap<>();
+        msg.putAll(dataList);
+        EventBus.getDefault().post(new EventBusMsg(0xfe,msg));
         EventBus.getDefault().unregister(this);
         myList.clear();
         dataList.clear();
@@ -247,14 +250,14 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                         if (cb.isEnabled() != false)
                             cb.setEnabled(false);
                     } else {
-                        if (dataList.get(item.getEpc()).isFind()) {
+                        if (dataList.containsKey(item.getEpc())&&dataList.get(item.getEpc()).isFind()) {
                             if (!cb.isEnabled())
                                 cb.setEnabled(true);
                         } else {
                             if (cb.isEnabled())
                                 cb.setEnabled(false);
                         }
-                        if (dataList.get(item.getEpc()).isStatus())
+                        if (dataList.containsKey(item.getEpc())&&dataList.get(item.getEpc()).isStatus())
                             cb.setChecked(true);
                         else
                             cb.setChecked(false);

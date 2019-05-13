@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 2
-        versionName "19.05.10"
+        versionName "19.05.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }

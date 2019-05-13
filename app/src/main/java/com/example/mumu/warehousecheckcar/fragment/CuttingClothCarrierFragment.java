@@ -122,6 +122,7 @@ public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
             }
 
         });
+        edittext2.setText(getResources().getString(R.string.cut_carroer));
         return view;
     }
 
@@ -270,7 +271,7 @@ public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
                   @Override
                   public void onError(Request request, Exception e) {
                       if (App.LOGCAT_SWITCH) {
-                           Log.i(TAG, "getInventory;" + e.getMessage());
+                          Log.i(TAG, "getInventory;" + e.getMessage());
                           Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                       }
                   }
@@ -282,7 +283,7 @@ public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
                               Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
                               Fragment fragment = CuttingClothFragment.newInstance();
                               getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                              getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                              getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
 //                              EventBus.getDefault().postSticky(new EventBusMsg(0x03,cloth));
                           } else {
                               Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();

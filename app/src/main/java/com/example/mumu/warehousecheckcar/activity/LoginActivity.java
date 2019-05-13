@@ -89,12 +89,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initDate() {
-//        App.IP = "http://47.106.157.255";
-//        App.PORT = "80";
-        App.IP = "http://192.168.1.109";
+        App.IP = "http://47.106.157.255";
         App.PORT = "80";
+//        App.IP = "http://192.168.1.109";
+//        App.PORT = "80";
 //        App.IP="http://192.168.1.146";
-//        App.PORT="8080";
+//        App.PORT="8082";
       /*  App.IP="http://192.168.1.146";
         App.PORT="8080";*/
     }
