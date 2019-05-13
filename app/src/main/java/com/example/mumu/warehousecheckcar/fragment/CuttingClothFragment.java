@@ -207,13 +207,13 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
-            /*    clear();
+                clear();
                 text1.setText(epcList.size() + "");
-                mAdapter.notifyDataSetChanged();*/
-                Message msg = handler.obtainMessage();
+                mAdapter.notifyDataSetChanged();
+            /*    Message msg = handler.obtainMessage();
                 msg.arg1 = 0x00;
                 msg.obj = "3035A53700001D0009159702";
-                handler.sendMessage(msg);
+                handler.sendMessage(msg);*/
                 break;
             case R.id.button2:
                 if (dataKEY != null && dataKEY.size() > 0) {
