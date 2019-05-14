@@ -258,20 +258,18 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                                 }
 
                                 @Override
-                                public void onResponse(JSONArray jsonArray) {
-                                        List<Cut> arry;
-                                    arry = jsonArray.toJavaList(Cut.class);
-                                    if (arry != null && arry.size() > 0) {
-                                        Cut response = arry.get(0);
-                                        if (response != null && !epcList.contains(response.getEpc())) {
-                                            response.setWeight(ArithUtil.sub(response.getWeight_in(), ArithUtil.add(response.getBlank_add(), response.getWeight_papertube())));
-                                            epcList.add(response.getEpc());
-                                            myList.add(response);
+                                public void onResponse(JSONArray jsonArray ) {
+                                    if (jsonArray!=null&&jsonArray.size()>0){
+                                        Cut cut=jsonArray.getObject(0,Cut.class);
+                                            if (cut != null && !epcList.contains(cut.getEpc())) {
+                                                cut.setWeight(ArithUtil.sub(cut.getWeight_in(), ArithUtil.add(cut.getBlank_add(), cut.getWeight_papertube())));
+                                                epcList.add(cut.getEpc());
+                                                myList.add(cut);
 //                                            dataList.add(response);
-                                        }
+                                            }
+                                        text1.setText(epcList.size() + "");
+                                        mAdapter.notifyDataSetChanged();
                                     }
-                                    text1.setText(epcList.size() + "");
-                                    mAdapter.notifyDataSetChanged();
                                 }
                             }, json);
                         } catch (IOException e) {
