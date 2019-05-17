@@ -210,9 +210,9 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                 clear();
                 text1.setText(epcList.size() + "");
                 mAdapter.notifyDataSetChanged();
-            /*    Message msg = handler.obtainMessage();
+               /* Message msg = handler.obtainMessage();
                 msg.arg1 = 0x00;
-                msg.obj = "3035A53700001D0009159702";
+                msg.obj = "3035A5370000040008085736";
                 handler.sendMessage(msg);*/
                 break;
             case R.id.button2:
@@ -247,8 +247,8 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                         epc.put("epc", EPC);
                         final String json = epc.toJSONString();
                         try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-//                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/getCutEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+//                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/getCutEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
@@ -588,8 +588,8 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                 }else {
                     EditText editText1 = (EditText) holder.getView(R.id.edittext1);
                     editText1.setEnabled(false);
-                    EditText editText2 = (EditText) holder.getView(R.id.edittext2);
-                    editText2.setEnabled(false);
+//                    EditText editText2 = (EditText) holder.getView(R.id.edittext2);
+//                    editText2.setEnabled(false);
                 }
             }
         }

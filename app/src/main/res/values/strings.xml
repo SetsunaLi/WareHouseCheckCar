@@ -164,7 +164,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!--cuttingCloth-->
-    <string name="cut_carroer">剪办区</string>
+    <string name="cut_carroer">剪板区</string>
     <!--空加-->
     <string-array name="change_Empty_array">
         <item>0KG</item>
