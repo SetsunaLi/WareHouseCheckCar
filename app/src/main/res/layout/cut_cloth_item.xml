@@ -22,24 +22,6 @@
         <View style="@style/view_item_mid" />
 
         <TextView
-            android:id="@+id/item1"
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="布号" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            android:id="@+id/item2"
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="颜色" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
             android:id="@+id/item3"
             style="@style/text_item"
             android:layout_width="120dip"
@@ -57,40 +39,47 @@
 
         <View style="@style/view_item_mid" />
 
-        <TextView
-            android:id="@+id/item5"
-            style="@style/text_item"
-            android:layout_width="120dip"
-            android:layout_height="match_parent"
-            android:text="入库重量" />
-        <View style="@style/view_item_mid" />
-
         <EditText
             android:id="@+id/edittext1"
             style="@style/edit_style3"
             android:layout_width="90dip"
             android:layout_height="match_parent"
             android:focusable="true"
-            android:inputType="number|numberDecimal"
             android:focusableInTouchMode="true"
-            android:text="纸管重" />
+            android:inputType="number|numberDecimal"
+            android:text="净实重" />
+
         <View style="@style/view_item_mid" />
 
-        <EditText
-            android:id="@+id/edittext2"
-            style="@style/edit_style3"
-            android:layout_width="90dip"
+        <TextView
+            android:id="@+id/item5"
+            style="@style/text_item"
+            android:layout_width="120dip"
             android:layout_height="match_parent"
-            android:focusable="true"
-            android:inputType="number|numberDecimal"
-            android:focusableInTouchMode="true"
-            android:text="空加" />
+            android:text="原库存重量" />
+
         <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item2"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="颜色" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item1"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="布号" />
     </LinearLayout>
+
     <View style="@style/view_item_bottom" />
 
-</LinearLayout>
-    <!--<?xml version="1.0" encoding="utf-8"?>
+</LinearLayout><!--<?xml version="1.0" encoding="utf-8"?>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="51dip"

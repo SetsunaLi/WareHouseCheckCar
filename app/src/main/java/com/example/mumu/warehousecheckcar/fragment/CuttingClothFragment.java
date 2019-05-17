@@ -247,8 +247,8 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                         epc.put("epc", EPC);
                         final String json = epc.toJSONString();
                         try {
-//                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/getCutEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+//                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/getCutEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
@@ -502,11 +502,11 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                     holder.setText(R.id.item4, item.getFabRool() + "");
                     holder.setText(R.id.item5, item.getWeight_in() + "KG");
                     final EditText editText1 = holder.getView(R.id.edittext1);
-                    final EditText editText2 = holder.getView(R.id.edittext2);
+//                    final EditText editText2 = holder.getView(R.id.edittext2);
                     editText1.setText(item.getWeight_papertube() + "");
-                    editText2.setText(item.getBlank_add() + "");
+//                    editText2.setText(item.getBlank_add() + "");
                     editText1.setEnabled(true);
-                    editText2.setEnabled(true);
+//                    editText2.setEnabled(true);
                     editText1.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -522,8 +522,8 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                                     double a = Double.parseDouble(weight);
                                     for (Cut cut : myList) {
                                         if (item.getEpc().equals(cut.getEpc())) {
-                                            cut.setWeight_papertube(a);
-                                            cut.setWeight(ArithUtil.sub(cut.getWeight_in(), ArithUtil.add(cut.getBlank_add(), cut.getWeight_papertube())));
+                                            cut.setWeight(a);
+//                                            cut.setWeight(ArithUtil.sub(cut.getWeight_in(), ArithUtil.add(cut.getBlank_add(), cut.getWeight_papertube())));
                                             break;
 
                                         }
@@ -533,7 +533,7 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                                 editText1.setText("0");
                                 for (Cut cut : myList) {
                                     if (item.getEpc().equals(cut.getEpc())) {
-                                        cut.setWeight_papertube(0);
+                                        cut.setWeight(0);
                                         break;
 
                                     }
@@ -547,7 +547,7 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                         }
                     });
 
-                    editText2.addTextChangedListener(new TextWatcher() {
+                 /*   editText2.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -584,7 +584,7 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                         public void afterTextChanged(Editable editable) {
 
                         }
-                    });
+                    });*/
                 }else {
                     EditText editText1 = (EditText) holder.getView(R.id.edittext1);
                     editText1.setEnabled(false);

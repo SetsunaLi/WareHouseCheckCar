@@ -47,7 +47,7 @@ import butterknife.OnClick;
 
 
 public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
-     public final String TAG = "CuttingClothCarrierFragment";
+     public final String TAG = "CuttingClothCarrier";
 
     private static CuttingClothCarrierFragment fragment;
    /* @Bind(R.id.spinner1)
@@ -80,7 +80,7 @@ public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cut_cloth_carrier_layout, container, false);
         ButterKnife.bind(this, view);
-        getActivity().setTitle("办布上架");
+        getActivity().setTitle(getResources().getString(R.string.btn_click14));
         sound = new Sound(getActivity());
 //         cloth = new Cut();
 //        initSpinner();
