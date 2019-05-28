@@ -41,7 +41,6 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Cut;
-import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.R;
@@ -50,10 +49,6 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,10 +59,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
-    private final String TAG = "CuttingClothFragment";
+public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
+    private final String TAG = "CuttingClothPutwayFragment";
 
-    private static CuttingClothFragment fragment;
+    private static CuttingClothPutwayFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.text1)
@@ -80,9 +75,9 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
     Button button2;
 
 
-    public static CuttingClothFragment newInstance() {
+    public static CuttingClothPutwayFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CuttingClothFragment();
+        fragment = new CuttingClothPutwayFragment();
         return fragment;
     }
 
@@ -214,6 +209,7 @@ public class CuttingClothFragment extends Fragment implements BRecyclerAdapter.O
                 msg.arg1 = 0x00;
                 msg.obj = "3035A5370000040008085736";
                 handler.sendMessage(msg);*/
+               
                 break;
             case R.id.button2:
                 if (dataKEY != null && dataKEY.size() > 0) {

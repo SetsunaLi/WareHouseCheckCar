@@ -83,7 +83,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     Button button2;
 
 
-
     public static ForwardingFragment newInstance() {
         if (fragment == null) ;
         fragment = new ForwardingFragment();
@@ -193,7 +192,7 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                     break;
                 case 0xfe:
                     epcKeyList.clear();
-                    epcKeyList= (HashMap<String, ForwardingFlag>) ((HashMap<String, ForwardingFlag>) msg.getPositionObj(0)).clone();
+                    epcKeyList = (HashMap<String, ForwardingFlag>) ((HashMap<String, ForwardingFlag>) msg.getPositionObj(0)).clone();
                     epcKeyList.putAll((HashMap<String, ForwardingFlag>) msg.getPositionObj(0));
                     for (ForwardingList forwardingList : myList) {
                         forwardingList.setMatchCount(0);
@@ -212,12 +211,13 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
             }
     }
 
-   private  boolean flag=true;
+    private boolean flag = true;
+
     @Override
     public void onResume() {
         super.onResume();
         if (flag) {
-            flag=false;
+            flag = false;
             clearData();
             downLoadData();
             text2.setText(fatherNoList.size() + "");
@@ -289,9 +289,9 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (!returnWhere){
-            EventBus.getDefault().postSticky(new EventBusMsg(0x00,carMsg));
-            Fragment fragment=ForwardingNoFragment.newInstance();
+        if (!returnWhere) {
+            EventBus.getDefault().postSticky(new EventBusMsg(0x00, carMsg));
+            Fragment fragment = ForwardingNoFragment.newInstance();
             getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         }
@@ -406,49 +406,58 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         }
     }
 
-    private boolean returnWhere=false;
-
+    private boolean returnWhere = false;
+    private AlertDialog dialog;
     private void blinkDialog2(final boolean flag) {
-        final Dialog dialog;
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        if (flag)
-            text.setText("上传成功");
-       else
-            text.setText("上传失败");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBack(flag);
-                dialog.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBack(flag);
-                dialog.dismiss();
-            }
-        });
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBack(flag);
+                    dialog.dismiss();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBack(flag);
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
+        }
     }
 
     private void onBack(boolean flag) {
         if (flag)
             if (returnWhere) {
-                Fragment fragment=ForwardingMsgFragment.newInstance();
+                Fragment fragment = ForwardingMsgFragment.newInstance();
                 getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-            }else
+            } else
                 getActivity().onBackPressed();
     }
 

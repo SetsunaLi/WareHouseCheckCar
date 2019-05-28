@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.utils.UpdateApk;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -83,14 +84,18 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-//        checkVersion();
+        checkVersion();
         /**更新版本入口*/
-//        UpdateApk.UpdateVersion(this,updateBean);
+        UpdateApk.UpdateVersion(this,updateBean);
     }
 
     private void initDate() {
-        App.IP = "http://47.106.157.255";
-        App.PORT = "80";
+//        App.IP = "http://47.106.157.255";
+//        App.PORT = "80";
+        App.IP = "http://120.79.56.119";
+        App.PORT = "8080";
+//        App.IP = "http://192.168.1.109";
+//        App.PORT = "80";
 //        App.IP="http://192.168.1.146";
 //        App.PORT="8082";
       /*  App.IP="http://192.168.1.146";
@@ -121,10 +126,10 @@ public class LoginActivity extends AppCompatActivity {
     private void checkVersion() {
         updateBean.setMessage("更新啦");
         updateBean.setTitle("立即更新");
-        updateBean.setUrl("https://github.com/SetsunaLi/getNewApk/raw/master/app-debug.apk");
-        updateBean.setVersionCode(1);
+        updateBean.setUrl("http://47.106.157.255/Android/app-debug.apk");
+        updateBean.setVersionCode(3);
 //        这里获取版本号
-        updateBean.setVersionName("1.0.2");
+        updateBean.setVersionName("19.05.18");
     }
 
     @Override
@@ -158,8 +163,8 @@ public class LoginActivity extends AppCompatActivity {
                 boolean upFlag = checkbox2.isChecked();
                 SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("username", unStr);
                 editor.putBoolean("remember", rememberFlag);
+                editor.putString("username", unStr);
                 if (rememberFlag) {
                     editor.putString("password", pwStr);
                     editor.putBoolean("up", upFlag);
@@ -321,7 +326,7 @@ public class LoginActivity extends AppCompatActivity {
                 User user = User.newInstance();
                 user.setUser("网络异常，请检查网络！", 0xff);
                 return false;
-            }catch (Exception e){
+            } catch (Exception e) {
                 User user = User.newInstance();
                 user.setUser("链接超时，请检查网络！", 0xff);
                 return false;

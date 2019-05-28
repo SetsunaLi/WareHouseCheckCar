@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/headNo"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+
+        android:descendantFocusability="blocksDescendants"
+        >
+        <View
+            android:layout_width="50dip"
+            android:layout_height="3dp"
+            android:background="@drawable/view_dash_line"
+            android:layerType="software"
+            />
+        <TextView
+            android:id="@+id/text1"
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="申请单号：" />
+
+        <View style="@style/view_line" />
+        <!-- <CheckBox
+             android:id="@+id/checkbox1"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             />-->
+
+    </LinearLayout>
+    <View style="@style/view_item_bottom" />
+    <LinearLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="horizontal"
+        android:visibility="gone"
+
+        >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:checked="false"
+            android:visibility="invisible"
+            />
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="布号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="色号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="颜色" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="120dip"
+            android:layout_height="match_parent"
+            android:text="缸号" />
+        <View style="@style/view_item_mid" />
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="重量" />
+        <View style="@style/view_item_mid" />
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="长度" />
+        <View style="@style/view_item_mid" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        style="@style/view_item_bottom"
+        android:visibility="gone"
+        />
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/checkbox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:checked="false"
+            />
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item1"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="布号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item2"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="色号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item3"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="颜色" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item4"
+            style="@style/text_item"
+            android:layout_width="120dip"
+            android:layout_height="match_parent"
+            android:text="缸号" />
+        <View style="@style/view_item_mid" />
+        <TextView
+            android:id="@+id/item5"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="重量" />
+        <View style="@style/view_item_mid" />
+        <TextView
+            android:id="@+id/item6"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="长度" />
+        <View style="@style/view_item_mid" />
+
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+</LinearLayout>

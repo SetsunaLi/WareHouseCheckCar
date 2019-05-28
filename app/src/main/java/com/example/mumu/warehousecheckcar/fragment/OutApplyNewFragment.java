@@ -76,8 +76,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     Button button2;
 
 
-
-
     public static OutApplyNewFragment newInstance() {
         if (fragment == null) ;
         fragment = new OutApplyNewFragment();
@@ -100,7 +98,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private HashMap<String, Boolean> vatKey;
 
 //    private ArrayList<Output> dataList;
-     /***    记录查询到的申请单号，没实际用途*/
+    /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
 
     private RecycleAdapter mAdapter;
@@ -152,12 +150,13 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         vatKey.clear();
     }
 
-    private boolean flag=true;
+    private boolean flag = true;
+
     @Override
     public void onResume() {
         super.onResume();
         if (flag) {
-            flag=false;
+            flag = false;
             ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("NO");
             fatherNoList.clear();
             Iterator<String> iter = list.iterator();
@@ -190,7 +189,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         }
                     }
 
-                    /**这里应该要大改*/
                     @Override
                     public void onResponse(JSONArray json) {
                         try {
@@ -201,10 +199,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                     dateNo.add(response.get(0).getApplyNo());
                                     response.get(0).setStatus(true);
                                     for (Output output : response) {
-                                        if (vatKey.containsKey(output.getVatNo())){
-                                            vatKey.put(output.getVatNo(),false);
-                                        }else {
-                                            vatKey.put(output.getVatNo(),true);
+                                        if (vatKey.containsKey(output.getVatNo())) {
+                                            vatKey.put(output.getVatNo(), false);
+                                        } else {
+                                            vatKey.put(output.getVatNo(), true);
                                         }
                                         for (OutputDetail outputDetail : output.getList()) {
                                             if (!epcKeyList.containsKey(outputDetail.getEpc())) {
@@ -284,7 +282,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                         i.setCount(i.getCount() + 1);
                                         i.setWeightall(ArithUtil.add(i.getWeightall(), epcKeyList.get(EPC).getWeight()));
 //                                        自动配货
-                                        if (vatKey.get(i.getVatNo())&&i.getCountProfit()<i.getCountOut()) {
+                                        if (vatKey.get(i.getVatNo()) && i.getCountProfit() < i.getCountOut()) {
                                             epcKeyList.get(EPC).setApplyNo(i.getApplyNo());
                                             i.addCountProfit();
                                         }
@@ -473,7 +471,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                上传数据
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+                //                上传数据
                 for (String applyNo : dataKey.keySet()) {
                     ArrayList<Output> jsocList = new ArrayList<>();
                     for (Output op : myList) {
@@ -500,9 +501,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     }
                     if (jsocList.size() > 0) {
 //                        final String json = JSON.toJSONString(jsocList);
-                        JSONObject jsonObject=new JSONObject();
+                        JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", User.newInstance().getId());
-                        jsonObject.put("data",jsocList);
+                        jsonObject.put("data", jsocList);
                         final String json = jsonObject.toJSONString();
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
@@ -520,6 +521,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                                             Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
                                             blinkDialog2(true);
                                         } else {
                                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
@@ -537,42 +539,62 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             e.printStackTrace();
                         }
                     }
+                           /* try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }*/
                 }
+
+//                    }
+//                });
                 dialog.dismiss();
             }
         });
     }
 
-    private void blinkDialog2(boolean flag) {
-        final Dialog dialog;
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        if (flag)
-            text.setText("上传成功");
-        else
-            text.setText("上传失败");
+    private AlertDialog dialog;
 
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+    private void blinkDialog2(boolean flag) {
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    dialog.hide();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
+        }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";

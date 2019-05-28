@@ -217,28 +217,28 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                             if (isChecked) {
                                 for (int i = 1; i < myList.size(); i++) {
                                     if (dataList.containsKey(myList.get(i).getEpc()))
-                                    if (dataList.get(myList.get(i).getEpc()).isFind()) {
+//                                    if (dataList.get(myList.get(i).getEpc()).isFind()) {
                                         dataList.get(myList.get(i).getEpc()).setStatus(true);
-                                    }
+//                                    }
                                 }
                             } else {
                                 for (int i = 1; i < myList.size(); i++) {
                                     if (dataList.containsKey(myList.get(i).getEpc()))
-                                        if (dataList.get(myList.get(i).getEpc()).isFind()) {
+//                                        if (dataList.get(myList.get(i).getEpc()).isFind()) {
                                             dataList.get(myList.get(i).getEpc()).setStatus(false);
-                                        }
+//                                        }
                                 }
                             }
                             mAdapter.notifyDataSetChanged();
                         } else {
                             if (isChecked) {
-                                if (dataList.get(item.getEpc()).isFind()) {
+//                                if (dataList.get(item.getEpc()).isFind()) {
                                     dataList.get(item.getEpc()).setStatus(true);
-                                }
+//                                }
                             } else {
-                                if (dataList.get(item.getEpc()).isFind()) {
+//                                if (dataList.get(item.getEpc()).isFind()) {
                                     dataList.get(item.getEpc()).setStatus(false);
-                                }
+//                                }
                             }
 
                         }
@@ -250,21 +250,25 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                         if (cb.isEnabled() != false)
                             cb.setEnabled(false);
                     } else {
-                        if (dataList.containsKey(item.getEpc())&&dataList.get(item.getEpc()).isFind()) {
+                        if (dataList.containsKey(item.getEpc())
+//                                &&dataList.get(item.getEpc()).isFind()
+                        ) {
                             if (!cb.isEnabled())
                                 cb.setEnabled(true);
                         } else {
                             if (cb.isEnabled())
                                 cb.setEnabled(false);
                         }
-                        if (dataList.containsKey(item.getEpc())&&dataList.get(item.getEpc()).isStatus())
+                        if (dataList.containsKey(item.getEpc())
+//                                &&dataList.get(item.getEpc()).isStatus()
+                        )
                             cb.setChecked(true);
                         else
                             cb.setChecked(false);
                     }
 
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (!dataList.get(item.getEpc()).isFind()) {//亏
+                    if (!dataList.get(item.getEpc()).isFind()) {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                         cb.setEnabled(false);
                     } else {

@@ -14,12 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,13 +29,9 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.Cut;
-import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -46,10 +40,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
+public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCallback{
      public final String TAG = "CuttingClothCarrier";
 
-    private static CuttingClothCarrierFragment fragment;
+    private static CuttingClothPutwayCarrierFragment fragment;
    /* @Bind(R.id.spinner1)
     Spinner spinner;
     @Bind(R.id.spinner2)
@@ -69,9 +63,9 @@ public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
 //    private boolean flagRFID = false;
     private boolean flag2D = false;
 
-    public static CuttingClothCarrierFragment newInstance() {
+    public static CuttingClothPutwayCarrierFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CuttingClothCarrierFragment();
+        fragment = new CuttingClothPutwayCarrierFragment();
         return fragment;
     }
 
@@ -281,7 +275,7 @@ public class CuttingClothCarrierFragment extends Fragment implements RXCallback{
                           BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                           if (baseReturn != null && baseReturn.getStatus() == 1) {
                               Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
-                              Fragment fragment = CuttingClothFragment.newInstance();
+                              Fragment fragment = CuttingClothPutwayFragment.newInstance();
                               getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                               getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
 //                              EventBus.getDefault().postSticky(new EventBusMsg(0x03,cloth));

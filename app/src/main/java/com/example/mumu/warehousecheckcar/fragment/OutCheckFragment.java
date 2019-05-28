@@ -233,6 +233,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                             }
                         }
                         String EPC = ((String) msg.obj).replaceAll(" ", "");
+//                        String EPC = "3035A5370000030006197548";
                         if (EPC.startsWith("3035A537")&&!dataEPC.contains(EPC)) {
 //                        查询
                             JSONObject epc = new JSONObject();
@@ -323,6 +324,9 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                 break;
             case R.id.button2:
                 blinkDialog();
+//                Message msg = handler.obtainMessage();
+//                msg.arg1 = 0x10;
+//                handler.sendMessage(msg);
                 break;
           /*  case R.id.button3:
 //                完成一车
