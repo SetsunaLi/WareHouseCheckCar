@@ -39,6 +39,8 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
+import com.example.mumu.warehousecheckcar.fragment.CutClothBarCodeFragment;
+import com.example.mumu.warehousecheckcar.fragment.CutClothScanFragment;
 import com.example.mumu.warehousecheckcar.fragment.CuttingClothCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
@@ -80,6 +82,7 @@ public class Main2Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
         ButterKnife.bind(this);
 
         //右下角按钮监听
@@ -319,6 +322,8 @@ public class Main2Activity extends AppCompatActivity
             case 15:
 //                待开发
 //                fragment= new TextFragment();
+                fragment = CutClothBarCodeFragment.newInstance();
+                //fragment = CutClothScanFragment.newInstance();
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();
