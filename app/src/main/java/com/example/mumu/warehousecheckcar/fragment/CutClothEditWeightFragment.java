@@ -122,7 +122,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         ButterKnife.unbind(this);
     }
 

@@ -15,11 +15,11 @@ import butterknife.OnClick;
 
 public class CutClothFragment extends Fragment {
 
-    private static CuttingClothPutwayCarrierFragment fragment;
+    private static CutClothFragment fragment;
 
-    public static CuttingClothPutwayCarrierFragment newInstance() {
+    public static CutClothFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CuttingClothPutwayCarrierFragment();
+        fragment = new CutClothFragment();
         return fragment;
     }
 
@@ -44,7 +44,7 @@ public class CutClothFragment extends Fragment {
         switch (view.getId()) {
             case R.id.button1:
             {
-                Fragment fragment=newInstance();
+                Fragment fragment=CutClothBarCodeFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);
@@ -53,7 +53,7 @@ public class CutClothFragment extends Fragment {
                 break;
             case R.id.button2:
             {
-                Fragment fragment=newInstance();
+                Fragment fragment=CutClothScanFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);
