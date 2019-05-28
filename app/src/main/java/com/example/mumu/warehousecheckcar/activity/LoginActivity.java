@@ -126,10 +126,10 @@ public class LoginActivity extends AppCompatActivity {
     private void checkVersion() {
         updateBean.setMessage("更新啦");
         updateBean.setTitle("立即更新");
-        updateBean.setUrl("http://47.106.157.255/Android/app-debug.apk");
-        updateBean.setVersionCode(3);
+        updateBean.setUrl("https://github.com/SetsunaLi/getNewApk/raw/master/app-debug.apk");
+        updateBean.setVersionCode(1);
 //        这里获取版本号
-        updateBean.setVersionName("19.05.18");
+        updateBean.setVersionName("1.0.2");
     }
 
     @Override
