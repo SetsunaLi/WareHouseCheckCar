@@ -39,7 +39,6 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
-import com.example.mumu.warehousecheckcar.fragment.CutClothBarCodeFragment;
 import com.example.mumu.warehousecheckcar.fragment.CutClothFragment;
 import com.example.mumu.warehousecheckcar.fragment.CuttingClothPutwayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
@@ -323,8 +322,8 @@ public class Main2Activity extends AppCompatActivity
 //                fragment= new TextFragment();
                 fragment = CutClothFragment.newInstance();
 
-//                fragment = CutClothBarCodeFragment.newInstance();
-                //fragment = CutClothScanFragment.newInstance();
+//                fragment = CutClothScanFragment.newInstance();
+                //fragment = CutClothWeightFragment.newInstance();
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();

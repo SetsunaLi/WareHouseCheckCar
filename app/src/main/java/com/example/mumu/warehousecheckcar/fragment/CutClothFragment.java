@@ -26,6 +26,7 @@ public class CutClothFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(getResources().getString(R.string.cut_os));
         View view = inflater.inflate(R.layout.cut_cloth_home_layout, container, false);
 
         ButterKnife.bind(this, view);
@@ -44,7 +45,7 @@ public class CutClothFragment extends Fragment {
         switch (view.getId()) {
             case R.id.button1:
             {
-                Fragment fragment=CutClothBarCodeFragment.newInstance();
+                Fragment fragment= CutClothScanFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);
@@ -53,7 +54,7 @@ public class CutClothFragment extends Fragment {
                 break;
             case R.id.button2:
             {
-                Fragment fragment=CutClothScanFragment.newInstance();
+                Fragment fragment= CutClothWeightFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);

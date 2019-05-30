@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
@@ -24,29 +23,25 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
+
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.BarCode;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
-
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CutClothScanFragment extends Fragment implements RXCallback {
+
+public class CutClothScanFragment extends Fragment implements RXCallback{
 
     private final String TAG = "CutClothScanFragment";
-
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
-
     private static CutClothScanFragment fragment;
     @Bind(R.id.editNO)
     EditText editNO;
-    @Bind(R.id.relativelayout)
-    RelativeLayout relativelayout;
     @Bind(R.id.button1)
     Button button1;
     @Bind(R.id.button2)
@@ -58,6 +53,7 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
         return fragment;
     }
 
+    //音频
     private Sound sound;
     private TDScannerHelper scannerHander;
     private JSONObject json;
@@ -65,9 +61,10 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.cut_cloth_scan_layout, container, false);
-        getActivity().setTitle("剪板扫描");
+        View view = inflater.inflate(R.layout.cut_cloth_barcode_layout, container, false);
+        getActivity().setTitle(getResources().getString(R.string.cut_scanner));
         sound = new Sound(getActivity());
+        json = new JSONObject();
         ButterKnife.bind(this, view);
         return view;
     }
@@ -120,32 +117,38 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
         }
     }
 
+
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+       disConnect2D();
     }
 
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
+                //扫描条形码按钮
                 init2D();
                 break;
             case R.id.button2:
-
+                //确定按钮
                 Message msg = handler.obtainMessage();
                 msg.arg1 = 0x01;
-                msg.obj = "P0001257402";
+                msg.obj = "P0001253383";
                 handler.sendMessage(msg);
 
-//                if(editNO.getText().toString() != null && !(editNO.getText().toString().equals(""))){
-//                  Message msg = handler.obtainMessage();
-//                  msg.arg1 = 0x01;
-//                  msg.obj = editNO.getText();
-//                  handler.sendMessage(msg);
-//                } else
-//                    Toast.makeText(getActivity(),"请扫描条形码",Toast.LENGTH_SHORT).show();
+                /* if(editNO.getText().toString() != null && !(editNO.getText().toString().equals(""))){
+                       Message msg = handler.obtainMessage();
+                       msg.arg1 = 0x01;
+                       msg.obj = "P0001253383";
+                       handler.sendMessage(msg);
+                   } else
+                       Toast.makeText(getActivity(),"请扫描条形码",Toast.LENGTH_SHORT).show();*/
+
 
 
                 break;
@@ -185,7 +188,7 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getApplyByOutpId;" + e.getMessage());
+                                        Log.i(TAG, "postInventory;" + e.getMessage());
                                     }
                                 }
 
@@ -196,7 +199,7 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
 
                                     jsonObject.put("barcode",response);
 
-                                    Fragment fragment = CutClothEditWeightFragment.newInstance();
+                                    Fragment fragment = CutClothDetailFragment.newInstance();
 
                                     getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
@@ -216,8 +219,10 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
         }
     };
 
+
     @Override
     public void callback(byte[] bytes) {
+        Log.i("bytes",bytes + "");
         Message msg = handler.obtainMessage();
         msg.arg1 = 0x00;
         msg.obj = new String(bytes);

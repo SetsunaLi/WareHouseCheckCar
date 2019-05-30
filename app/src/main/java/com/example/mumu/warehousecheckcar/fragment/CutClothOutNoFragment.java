@@ -64,7 +64,7 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
-        getActivity().setTitle("剪布出库");
+        getActivity().setTitle(getResources().getString(R.string.cut_out));
         sound = new Sound(getActivity());
         init2D();
         myList = new ArrayList<>();
@@ -154,7 +154,7 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
                 break;
             case R.id.button2:
                 EventBus.getDefault().postSticky(new EventBusMsg(0x04, myList));
-                Fragment fragment = CutClothOutNoFragment.newInstance();
+                Fragment fragment = CutClothOutFragment.newInstance();
        /*         Bundle bundle = new Bundle();
                 bundle.putSerializable("NO", myList);
                 fragment.setArguments(bundle);*/
@@ -245,6 +245,15 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
                 @Override
                 public void afterTextChanged(Editable editable) {
 
+                }
+            });
+            ImageButton imageButton=(ImageButton)holder.getView(R.id.imagebutton1);
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    myList.remove((Integer) editNo.getTag())
+                    myList.remove(position);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
         }

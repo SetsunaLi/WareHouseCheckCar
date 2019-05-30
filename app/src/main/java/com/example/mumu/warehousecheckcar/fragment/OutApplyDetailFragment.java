@@ -136,7 +136,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         dataList = (HashMap<String, OutApplyNewFragment.OutputFlag>) getArguments().getSerializable("epcList");
      /*   int pei = 0;
         for (OutputDetail i : oldData.getList()) {
-            if (dataList.get(i.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+            if (dataList.get(i.getEpc()).getOut_no().equals(oldData.getOut_no())) {
                 pei++;
             }
         }*/

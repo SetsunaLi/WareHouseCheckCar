@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="61dip">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="61dip"
         android:layout_gravity="center"
@@ -10,12 +10,19 @@
         <com.example.mumu.warehousecheckcar.view.FixedEditText
             android:id="@+id/fixeedittext1"
             style="@style/edit_style2"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="60dip"
-            android:layout_weight="1"
             android:hint="请输入申请单号"
             android:imeOptions="actionDone"
             android:maxLines="1"
             android:singleLine="true" />
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/imagebutton1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@mipmap/close_no"/>
+    </RelativeLayout>
 </LinearLayout>

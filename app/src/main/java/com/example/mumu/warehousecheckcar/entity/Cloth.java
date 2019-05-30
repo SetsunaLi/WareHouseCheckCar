@@ -8,7 +8,7 @@ public class Cloth {
     private String carNo = "";
     /***缸号*/
     private String vatNo = "";
-    /***生产单号*/
+    /***布号*/
     private String product_no = "";
     /***色号（色号指的都是销售色号）*/
     private String selNo = "";

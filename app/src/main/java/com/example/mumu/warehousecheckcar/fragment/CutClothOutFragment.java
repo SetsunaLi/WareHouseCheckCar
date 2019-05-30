@@ -1,5 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,8 +26,10 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.CutSample;
+import com.example.mumu.warehousecheckcar.entity.BarCode;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.squareup.okhttp.Request;
 
@@ -68,7 +73,7 @@ public class CutClothOutFragment extends Fragment {
     /**
      * 列表信息
      */
-    private ArrayList<CutSample> myList;
+    private ArrayList<BarCode> myList;
     /***    主表，根据申请单号，字段组成key判断是否上传*/
     private Map<String, List<String>> dataKey;
     /***    记录查询到的申请单号，没实际用途*/
@@ -97,7 +102,7 @@ public class CutClothOutFragment extends Fragment {
 
     private void initData() {
         myList = new ArrayList<>();
-        myList.add(new CutSample());
+        myList.add(new BarCode());
         dataKey = new HashMap<>();
         dateNo = new ArrayList<>();
         EventBus.getDefault().register(this);
@@ -106,7 +111,7 @@ public class CutClothOutFragment extends Fragment {
     private void clearData() {
         if (myList != null)
             myList.clear();
-        myList.add(new CutSample());
+        myList.add(new BarCode());
         if (dataKey != null)
             dataKey.clear();
         if (dateNo != null)
@@ -165,19 +170,19 @@ public class CutClothOutFragment extends Fragment {
                     @Override
                     public void onResponse(JSONArray json) {
                         try {
-                            List<CutSample> response;
-                            response = json.toJavaList(CutSample.class);
+                            List<BarCode> response;
+                            response = json.toJavaList(BarCode.class);
                             if (response != null && response.size() != 0) {
-                                if (!dateNo.contains(response.get(0).getApplyNo())) {
-                                    dateNo.add(response.get(0).getApplyNo());
+                                if (!dateNo.contains(response.get(0).getOut_no())) {
+                                    dateNo.add(response.get(0).getOut_no());
                                     response.get(0).setFlag(true);
-                                    for (CutSample cutSample : response) {
+                                    for (BarCode cutSample : response) {
                                         String key = cutSample.getOutp_id();
-                                        if (!dataKey.containsKey(cutSample.getApplyNo())) {
-                                            dataKey.put(cutSample.getApplyNo(), new ArrayList<String>());
+                                        if (!dataKey.containsKey(cutSample.getOut_no())) {
+                                            dataKey.put(cutSample.getOut_no(), new ArrayList<String>());
                                         }
-                                        if (!dataKey.get(cutSample.getApplyNo()).contains(key)) {
-                                            dataKey.get(cutSample.getApplyNo()).add(key);
+                                        if (!dataKey.get(cutSample.getOut_no()).contains(key)) {
+                                            dataKey.get(cutSample.getOut_no()).add(key);
                                         }
                                     }
                                     myList.addAll(response);
@@ -205,13 +210,132 @@ public class CutClothOutFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
+                clearData();
+                downLoadData();
                 break;
             case R.id.button2:
+                blinkDialog();
                 break;
         }
     }
+    private void blinkDialog() {
+        final Dialog dialog;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+        text.setText("是否确认出库");
+        dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.show();
+        dialog.getWindow().setContentView(blinkView);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    ArrayList<BarCode> jsocList = new ArrayList<>();
+                    for (BarCode op : myList) {
+                        if (dataKey.containsKey(op.getOut_no()))
+                            if (dataKey.get(op.getOut_no()).contains(op.getOutp_id()))
+                                jsocList.add(op);
+                    }
+                    if (jsocList.size() > 0) {
+//                        final String json = JSON.toJSONString(jsocList);
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", User.newInstance().getId());
+                        jsonObject.put("data", jsocList);
+                        final String json = jsonObject.toJSONString();
+                        try {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
+                                    if (App.LOGCAT_SWITCH) {
+                                        Log.i(TAG, "postInventory;" + e.getMessage());
+                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<CutSample> {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                        if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
+                                            blinkDialog2(true);
+                                        } else {
+                                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                            blinkDialog2(false);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, json);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private AlertDialog dialog;
+
+    private void blinkDialog2(boolean flag) {
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    dialog.hide();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
+        }
+    }
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<BarCode> {
         private Context context;
 
         public void setContext(Context context) {
@@ -231,13 +355,13 @@ public class CutClothOutFragment extends Fragment {
                 this.position = -255;
         }
 
-        public RecycleAdapter(RecyclerView v, Collection<CutSample> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<BarCode> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
 
         @Override
-        public void convert(RecyclerHolder holder, final CutSample item, final int position) {
+        public void convert(RecyclerHolder holder, final BarCode item, final int position) {
             if (item != null) {
                 final String key = item.getOutp_id();
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
@@ -247,7 +371,7 @@ public class CutClothOutFragment extends Fragment {
                         if (position == 0) {
                             if (isChecked){
                                 for (String no:dataKey.keySet()){
-                                    for (CutSample cutSample:myList){
+                                    for (BarCode cutSample:myList){
                                         if (!dataKey.get(no).contains(cutSample.getOutp_id()))
                                             dataKey.get(no).add(cutSample.getOutp_id());
                                     }
@@ -261,13 +385,13 @@ public class CutClothOutFragment extends Fragment {
                             }
                         } else {
                             if (isChecked) {
-                                if (dataKey.containsKey(item.getApplyNo()))
-                                    if (!dataKey.get(item.getApplyNo()).contains(key))
-                                        dataKey.get(item.getApplyNo()).add(key);
+                                if (dataKey.containsKey(item.getOut_no()))
+                                    if (!dataKey.get(item.getOut_no()).contains(key))
+                                        dataKey.get(item.getOut_no()).add(key);
                             } else {
-                                if (dataKey.containsKey(item.getApplyNo()))
-                                    if (dataKey.get(item.getApplyNo()).contains(key)) {
-                                        Iterator<String> iter = dataKey.get(item.getApplyNo()).iterator();
+                                if (dataKey.containsKey(item.getOut_no()))
+                                    if (dataKey.get(item.getOut_no()).contains(key)) {
+                                        Iterator<String> iter = dataKey.get(item.getOut_no()).iterator();
                                         while (iter.hasNext()) {
                                             String str = iter.next();
                                             if (str.equals(key))
@@ -286,7 +410,7 @@ public class CutClothOutFragment extends Fragment {
                         title.setVisibility(View.VISIBLE);
                         no.setVisibility(View.VISIBLE);
                         view.setVisibility(View.VISIBLE);
-                        holder.setText(R.id.text1, "申请单号：" + item.getApplyNo());
+                        holder.setText(R.id.text1, "申请单号：" + item.getOut_no());
                     } else {
                         title.setVisibility(View.GONE);
                         no.setVisibility(View.GONE);
@@ -300,15 +424,15 @@ public class CutClothOutFragment extends Fragment {
                     } else {
                         if (cb.isEnabled())
                             cb.setEnabled(true);
-                        if (dataKey.containsKey(item.getApplyNo())) {
-                            if (dataKey.get(item.getApplyNo()).contains(key))
+                        if (dataKey.containsKey(item.getOut_no())) {
+                            if (dataKey.get(item.getOut_no()).contains(key))
                                 cb.setChecked(true);
                             else
                                 cb.setChecked(false);
                         }
                         holder.setText(R.id.item1, item.getProduct_no() + "");
-                        holder.setText(R.id.item2, item.getSelNo() + "");
-                        holder.setText(R.id.item3, item.getColor() + "");
+                        holder.setText(R.id.item2, item.getSelColor() + "");
+                        holder.setText(R.id.item3, item.getColorName() + "");
                         holder.setText(R.id.item4, item.getVatNo() + "");
                         holder.setText(R.id.item5, item.getWeight() + "");
                         holder.setText(R.id.item6, item.getYard_out() + "");

@@ -21,6 +21,8 @@ public class User {
      * 密码
      */
     private String password = "";
+    /**用户权限*/
+    private int user_right=0;
 
     private static User user;
 
@@ -60,6 +62,14 @@ public class User {
 
     private User() {
 
+    }
+
+    public int getUser_right() {
+        return user_right;
+    }
+
+    public void setUser_right(int user_right) {
+        this.user_right = user_right;
     }
 
     public String getMsg() {

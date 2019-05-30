@@ -16,9 +16,7 @@ import android.widget.Button;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.entity.HomeButton;
-
-
-import java.lang.reflect.Parameter;
+import com.example.mumu.warehousecheckcar.entity.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,7 +56,10 @@ public class HomeFragment extends Fragment {
     Button button13;
     @Bind(R.id.button14)
     Button button14;
-
+    @Bind(R.id.button15)
+    Button button15;
+    @Bind(R.id.button16)
+    Button button16;
 
 
     public static HomeFragment newInstance() {
@@ -66,6 +67,8 @@ public class HomeFragment extends Fragment {
         fragment = new HomeFragment();
         return fragment;
     }
+
+    private User user = User.newInstance();
 
     @Nullable
     @Override
@@ -77,10 +80,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void initView( View view) {
-        for (HomeButton homeButton:HomeButton.values()){
+    private void initView(View view) {
+        for (HomeButton homeButton : HomeButton.values()) {
             //Parameter.IMG_SMALL是图片的大小值，setCompoundDrawables参数指定图片的位置：左、上、右、下
-            Button button =(Button) view.findViewById(homeButton.getId());
+            Button button = (Button) view.findViewById(homeButton.getId());
             button.setCompoundDrawables(
                     null,
                     findImgAsSquare(getActivity(),
@@ -116,6 +119,7 @@ public class HomeFragment extends Fragment {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
     }
+
     //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

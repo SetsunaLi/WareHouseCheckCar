@@ -539,15 +539,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             e.printStackTrace();
                         }
                     }
-                           /* try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }*/
-                }
 
-//                    }
-//                });
+                }
                 dialog.dismiss();
             }
         });
@@ -606,7 +599,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         Output obj = myList.get(position);
      /*   String key = obj.getOutp_id() + obj.getVat_no() + obj.getProduct_no() + obj.getSelNo();
         KEY = key;
-        APPLY_NO = obj.getApplyNo();*/
+        APPLY_NO = obj.getOut_no();*/
         Fragment fragment = OutApplyDetailFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putSerializable("dataList", obj);
@@ -758,7 +751,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (item.getCountOut() == item.getCountProfit())
+                    if (item.getCount() >item.getCountOut())
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorREAD));
+                    else if (item.getCountOut() == item.getCountProfit())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));

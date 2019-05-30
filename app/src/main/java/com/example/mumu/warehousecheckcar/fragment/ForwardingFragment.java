@@ -922,7 +922,7 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                 }
 
 /*
-                if ((item.getVatNo() + "").equals("") && (item.getApplyNo() + "").equals("")) {
+                if ((item.getVatNo() + "").equals("") && (item.getOut_no() + "").equals("")) {
                     if (cb.isEnabled())
                         cb.setEnabled(false);
                     cb.setChecked(false);

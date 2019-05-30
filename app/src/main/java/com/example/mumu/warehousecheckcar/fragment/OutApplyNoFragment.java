@@ -262,6 +262,15 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
 
                 }
             });
+            ImageButton imageButton=(ImageButton)holder.getView(R.id.imagebutton1);
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    myList.remove((Integer) editNo.getTag())
+                    myList.remove(position);
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
            /* editNo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

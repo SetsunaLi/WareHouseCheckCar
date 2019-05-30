@@ -165,6 +165,10 @@
 
     <!--cuttingCloth-->
     <string name="cut_carroer">剪板区</string>
+    <string name="cut_os">剪板操作</string>
+    <string name="cut_scanner">剪板绑定</string>
+    <string name="cut_weight">剪板称重</string>
+    <string name="cut_out">剪板出库</string>
     <!--空加-->
     <string-array name="change_Empty_array">
         <item>0KG</item>
