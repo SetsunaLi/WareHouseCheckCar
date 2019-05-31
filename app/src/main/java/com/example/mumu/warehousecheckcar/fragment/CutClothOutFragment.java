@@ -158,7 +158,7 @@ public class CutClothOutFragment extends Fragment {
             object.put("applyNo", no);
             final String json = object.toJSONString();
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/scanCutCode.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
@@ -254,7 +254,7 @@ public class CutClothOutFragment extends Fragment {
                         jsonObject.put("data", jsocList);
                         final String json = jsonObject.toJSONString();
                         try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCutOut.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
@@ -434,7 +434,7 @@ public class CutClothOutFragment extends Fragment {
                         holder.setText(R.id.item2, item.getSelColor() + "");
                         holder.setText(R.id.item3, item.getColorName() + "");
                         holder.setText(R.id.item4, item.getVatNo() + "");
-                        holder.setText(R.id.item5, item.getWeight() + "");
+                        holder.setText(R.id.item5, item.getCutWeight() + "");
                         holder.setText(R.id.item6, item.getYard_out() + "");
                     }
                 }

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -24,15 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.activity.Main2Activity;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
-import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.view.FixedEditText;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,6 +55,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     private List<OutputDetail> myList;
     private Output oldData;
     private HashMap<String, OutApplyNewFragment.OutputFlag> dataList;
+    private int id;
     private RecycleAdapter mAdapter;
 
 
@@ -134,6 +130,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     public void load() {
         oldData = (Output) getArguments().getSerializable("dataList");
         dataList = (HashMap<String, OutApplyNewFragment.OutputFlag>) getArguments().getSerializable("epcList");
+        id = (int) getArguments().getSerializable("id");
      /*   int pei = 0;
         for (OutputDetail i : oldData.getList()) {
             if (dataList.get(i.getEpc()).getOut_no().equals(oldData.getOut_no())) {
@@ -216,7 +213,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-//        mAdapter.select(position);
+//        mAdapter.select(id);
 //        mAdapter.notifyDataSetChanged();
     }
 
@@ -253,7 +250,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     for (int i = 1; i < myList.size(); i++) {
                                         if (oldData.getCountProfit() < oldData.getCountOut()) {
                                             if (dataList.get(myList.get(i).getEpc()).isFind() && dataList.get(myList.get(i).getEpc()).getApplyNo().equals("")) {
-                                                dataList.get(myList.get(i).getEpc()).setApplyNo(oldData.getApplyNo());
+                                                dataList.get(myList.get(i).getEpc()).setApplyNo(oldData.getApplyNo()+id);
                                                 oldData.setCountProfit(oldData.getCountProfit() + 1);
                                             }
                                         } else
@@ -262,7 +259,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 } else {
                                     oldData.setCountProfit(0);
                                     for (int i = 1; i < myList.size(); i++) {
-                                        if (dataList.get(myList.get(i).getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                                        if (dataList.get(myList.get(i).getEpc()).getApplyNo().equals(oldData.getApplyNo()+id)) {
                                             dataList.get(myList.get(i).getEpc()).setApplyNo("");
                                         }
                                     }
@@ -273,7 +270,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     if (dataList.get(item.getEpc()).isFind()) {
                                         if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
                                             if (oldData.getCountProfit() < oldData.getCountOut()) {
-                                                dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo());
+                                                dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo()+id);
                                                 oldData.setCountProfit(oldData.getCountProfit() + 1);
                                             } else {
                                                 cb.setChecked(false);
@@ -283,7 +280,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     }
 
                                 } else {
-                                    if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                                    if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id)) {
                                         dataList.get(item.getEpc()).setApplyNo("");
                                         oldData.setCountProfit(oldData.getCountProfit() - 1);
                                     }

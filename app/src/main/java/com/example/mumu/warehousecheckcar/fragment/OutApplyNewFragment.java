@@ -125,6 +125,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         recyle.setAdapter(mAdapter);
         ComeBack.getInstance().setCallbackLiatener(this);
         initRFID();
+
         return view;
     }
 
@@ -198,7 +199,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 if (!dateNo.contains(response.get(0).getApplyNo())) {
                                     dateNo.add(response.get(0).getApplyNo());
                                     response.get(0).setStatus(true);
-                                    for (Output output : response) {
+//                                    for (Output output : response) {
+                                    for (int i = 0; i < response.size(); i++) {
+                                        Output output = response.get(i);
                                         if (vatKey.containsKey(output.getVatNo())) {
                                             vatKey.put(output.getVatNo(), false);
                                         } else {
@@ -209,7 +212,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                                 epcKeyList.put(outputDetail.getEpc() + "", new OutputFlag(false, "", true, outputDetail.getWeight()));
                                             }
                                         }
-                                        final String key = output.getOutp_id() + output.getVatNo() + output.getProduct_no() + output.getSelNo();
+                                        final String key = output.getOutp_id() + output.getVatNo() + output.getProduct_no() + output.getSelNo() + (myList.size() + i);
                                         if (!dataKey.containsKey(output.getApplyNo())) {
                                             dataKey.put(output.getApplyNo(), new ArrayList<String>());
                                         }
@@ -276,15 +279,17 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             epcKeyList.get(EPC).setFind(true);
                             epcKeyList.get(EPC).setStatus(true);
 
-                            for (Output i : myList) {
-                                for (OutputDetail od : i.getList()) {
+//                            for (Output i : myList) {
+                            for (int i = 0; i <myList.size(); i++) {
+                                Output output=myList.get(i);
+                                for (OutputDetail od : output.getList()) {
                                     if (od.getEpc().equals(EPC)) {
-                                        i.setCount(i.getCount() + 1);
-                                        i.setWeightall(ArithUtil.add(i.getWeightall(), epcKeyList.get(EPC).getWeight()));
+                                        output.setCount(output.getCount() + 1);
+                                        output.setWeightall(ArithUtil.add(output.getWeightall(), epcKeyList.get(EPC).getWeight()));
 //                                        自动配货
-                                        if (vatKey.get(i.getVatNo()) && i.getCountProfit() < i.getCountOut()) {
-                                            epcKeyList.get(EPC).setApplyNo(i.getApplyNo());
-                                            i.addCountProfit();
+                                        if (vatKey.get(output.getVatNo()) && output.getCountProfit() < output.getCountOut()) {
+                                            epcKeyList.get(EPC).setApplyNo(output.getApplyNo()+i);
+                                            output.addCountProfit();
                                         }
                                         break;
                                     }
@@ -375,23 +380,27 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 case 0x01:
                     epcKeyList.clear();
                     epcKeyList.putAll(((Main2Activity) getActivity()).getOutApplyDataList());
-                    for (Output i : myList) {
-                        i.setCountProfit(0);
-                        i.setWeightPei(0);
-                        for (OutputDetail od : i.getList()) {
-                            if (epcKeyList.containsKey(od.getEpc())) {
-                                if (epcKeyList.get(od.getEpc()).getApplyNo().equals(i.getApplyNo())) {
-                                    i.setCountProfit(i.getCountProfit() + 1);
-                                    i.setWeightPei(ArithUtil.add(i.getWeightPei(), epcKeyList.get(od.getEpc()).getWeight()));
-                                }
+//                    for (Output i : myList) {
+//                        i.setCountProfit(0);
+//                        i.setWeightPei(0);
+                    Output i = myList.get(position);
+                    i.setCountProfit(0);
+                    i.setWeightPei(0);
+                    for (OutputDetail od : i.getList()) {
+                        if (epcKeyList.containsKey(od.getEpc())) {
+                            if (epcKeyList.get(od.getEpc()).getApplyNo().equals(i.getApplyNo() + position)) {
+                                i.setCountProfit(i.getCountProfit() + 1);
+                                i.setWeightPei(ArithUtil.add(i.getWeightPei(), epcKeyList.get(od.getEpc()).getWeight()));
                             }
                         }
                     }
+//                    }
                     mAdapter.notifyDataSetChanged();
                     break;
             }
         }
     };
+
 
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
@@ -477,13 +486,15 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 //                上传数据
                 for (String applyNo : dataKey.keySet()) {
                     ArrayList<Output> jsocList = new ArrayList<>();
-                    for (Output op : myList) {
+//                    for (Output op : myList) {
+                    for (int i = 0; i < myList.size(); i++) {
+                        Output op = myList.get(i);
                         if (op.getApplyNo().equals(applyNo)) {
-                            final String key = op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo();
+                            final String key = op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo() + i;
                             if (dataKey.get(applyNo).contains(key)) {
                                 ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
                                 for (OutputDetail od : op.getList()) {
-                                    if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo)) {
+                                    if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo+i)) {
                                         od.setFlag(1);
                                         od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
                                         newList.add(od);
@@ -592,8 +603,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
+    private int position;
+
     @Override
     public void onItemClick(View view, Object data, int position) {
+        this.position = position;
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
         Output obj = myList.get(position);
@@ -604,6 +618,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         Bundle bundle = new Bundle();
         bundle.putSerializable("dataList", obj);
         bundle.putSerializable("epcList", epcKeyList);
+        bundle.putSerializable("position", position);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
         transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -699,7 +714,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         @Override
         public void convert(RecyclerHolder holder, final Output item, final int position) {
             if (item != null) {
-                final String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo();
+                final String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo() + position;
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -751,7 +766,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (item.getCount() >item.getCountOut())
+                    if (item.getCount() > item.getCountOut())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorREAD));
                     else if (item.getCountOut() == item.getCountProfit())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
