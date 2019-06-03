@@ -147,13 +147,13 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                 if (obj2.getEpc()==null||obj2.getEpc().equals(""))
                     return 1;
              if (dataList.containsKey(obj1.getEpc())&&dataList.containsKey(obj2.getEpc())) {
-                 if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
-                     if (!dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                 if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id)) {
+                     if (!dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id)) {
                          return -1;
                      }
                  }
-                 if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
-                     if (dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo())) {
+                 if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id)) {
+                     if (dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id)) {
                          return 1;
                      }
                  }
@@ -296,14 +296,14 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 cb.setEnabled(false);
                         } else {
                             if (dataList.get(item.getEpc()).isFind() &&
-                                    (dataList.get(item.getEpc()).getApplyNo().equals("") || dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))) {
+                                    (dataList.get(item.getEpc()).getApplyNo().equals("") || dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id))) {
                                 if (cb.isEnabled() != true)
                                     cb.setEnabled(true);
                             } else {
                                 if (cb.isEnabled() != false)
                                     cb.setEnabled(false);
                             }
-                            if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()))
+                            if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo()+id))
                                 cb.setChecked(true);
                             else
                                 cb.setChecked(false);
