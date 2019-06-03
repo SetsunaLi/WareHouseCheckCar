@@ -176,9 +176,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     }
 
     public void downLoadData() {
-        for (String no : fatherNoList) {
+//        for (String no : fatherNoList) {
             JSONObject object = new JSONObject();
-            object.put("applyNo", no);
+//            object.put("applyNo", no);
+            object.put("applyNo", "B90601505");
             final String json = object.toJSONString();
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
@@ -232,7 +233,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+//        }
     }
 
 
@@ -279,16 +280,16 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             epcKeyList.get(EPC).setFind(true);
                             epcKeyList.get(EPC).setStatus(true);
 
-//                            for (Output i : myList) {
-                            for (int i = 0; i <myList.size(); i++) {
-                                Output output=myList.get(i);
+                            for (Output output : myList) {
+//                            for (int i = 0; i <myList.size(); i++) {
+//                                Output output=myList.get(i);
                                 for (OutputDetail od : output.getList()) {
                                     if (od.getEpc().equals(EPC)) {
                                         output.setCount(output.getCount() + 1);
                                         output.setWeightall(ArithUtil.add(output.getWeightall(), epcKeyList.get(EPC).getWeight()));
 //                                        自动配货
                                         if (vatKey.get(output.getVatNo()) && output.getCountProfit() < output.getCountOut()) {
-                                            epcKeyList.get(EPC).setApplyNo(output.getApplyNo()+i);
+                                            epcKeyList.get(EPC).setApplyNo(output.getApplyNo());
                                             output.addCountProfit();
                                         }
                                         break;
@@ -452,7 +453,12 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
-                blinkDialog();
+//                blinkDialog();
+                Message msg = handler.obtainMessage();
+                msg.what = 0x00;
+                msg.obj = "3035A5370000040008898212";
+                handler.sendMessage(msg);
+
                 break;
         }
     }
