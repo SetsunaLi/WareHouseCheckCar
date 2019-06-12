@@ -18,9 +18,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CutClothFragment extends Fragment {
+public class CarFragment extends Fragment {
 
-    private static CutClothFragment fragment;
+    private static CarFragment fragment;
     @Bind(R.id.button1)
     Button button1;
     @Bind(R.id.button2)
@@ -28,16 +28,16 @@ public class CutClothFragment extends Fragment {
     @Bind(R.id.button3)
     Button button3;
 
-    public static CutClothFragment newInstance() {
+    public static CarFragment newInstance() {
         if (fragment == null) ;
-        fragment = new CutClothFragment();
+        fragment = new CarFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle(getResources().getString(R.string.cut_os));
+        getActivity().setTitle(getResources().getString(R.string.btn_click4));
         View view = inflater.inflate(R.layout.cut_cloth_home_layout, container, false);
         ButterKnife.bind(this, view);
         initView();
@@ -45,26 +45,29 @@ public class CutClothFragment extends Fragment {
     }
 
     private void initView() {
+        button1.setText(getResources().getString(R.string.btn_car_up));
         button1.setCompoundDrawables(
                 findImgAsSquare(getActivity(),
-                        R.mipmap.cut_scan_l, 64),
+                        R.mipmap.car_up_l, 64),
                 null,
                 null,
                 null);
+        button2.setText(getResources().getString(R.string.btn_car_down));
         button2.setCompoundDrawables(
                 findImgAsSquare(getActivity(),
-                        R.mipmap.cut_weight_l, 64),
+                        R.mipmap.car_down_l, 64),
                 null,
                 null,
                 null);
+        button3.setText(getResources().getString(R.string.btn_car_tuo));
         button3.setCompoundDrawables(
                 findImgAsSquare(getActivity(),
-                        R.mipmap.cut_out_l, 64),
+                        R.mipmap.kong_l, 64),
                 null,
                 null,
                 null);
 
-}
+    }
 
     /**
      * 获取,寻找并裁剪图片
@@ -104,7 +107,7 @@ public class CutClothFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1: {
-                Fragment fragment = CutClothScanFragment.newInstance();
+                Fragment fragment = CarPutawayCarrierFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);

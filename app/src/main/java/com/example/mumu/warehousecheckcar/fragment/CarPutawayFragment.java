@@ -185,7 +185,7 @@ public class CarPutawayFragment extends Fragment {
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                dialog.cancel();
             }
         });
         yes.setOnClickListener(new View.OnClickListener() {

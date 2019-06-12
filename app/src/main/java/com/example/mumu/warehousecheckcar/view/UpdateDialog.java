@@ -52,7 +52,14 @@ public class UpdateDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        aDialogOperate.executeCommit("");
+        switch (view.getId()){
+            case R.id.update_btn_cancle:
+                aDialogOperate.executeCancel("");
+                break;
+            case R.id.update_btn_ok:
+                aDialogOperate.executeCommit("");
+                break;
+        }
 
     }
 }

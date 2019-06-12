@@ -66,6 +66,18 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/update_btn_cancle"
+                style="@style/dialog_button_yes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="取消"
+                />
+
+            <Button
                 android:id="@+id/update_btn_ok"
                 style="@style/dialog_button_yes"
                 android:layout_width="0dp"

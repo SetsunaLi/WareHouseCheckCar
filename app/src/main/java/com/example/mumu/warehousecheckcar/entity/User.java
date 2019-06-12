@@ -22,7 +22,7 @@ public class User {
      */
     private String password = "";
     /**用户权限*/
-    private int user_right=0;
+    private int auth =0;
 
     private static User user;
 
@@ -35,11 +35,12 @@ public class User {
     /**
      * 成功
      */
-    public void setUser(int id, String username, String msg, int code) {
+    public void setUser(int id, String username, String msg, int code,int auth) {
         setId(id);
         setUsername(username);
         setMsg(msg);
         setCode(code);
+        setAuth(auth);
     }
 
     /**
@@ -64,12 +65,12 @@ public class User {
 
     }
 
-    public int getUser_right() {
-        return user_right;
+    public int getAuth() {
+        return auth;
     }
 
-    public void setUser_right(int user_right) {
-        this.user_right = user_right;
+    public void setAuth(int auth) {
+        this.auth = auth;
     }
 
     public String getMsg() {

@@ -499,7 +499,7 @@ public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAda
                     holder.setText(R.id.item5, item.getWeight_in() + "KG");
                     final EditText editText1 = holder.getView(R.id.edittext1);
 //                    final EditText editText2 = holder.getView(R.id.edittext2);
-                    editText1.setText(item.getWeight_papertube() + "");
+                    editText1.setText(item.getWeight() + "");
 //                    editText2.setText(item.getBlank_add() + "");
                     editText1.setEnabled(true);
 //                    editText2.setEnabled(true);
