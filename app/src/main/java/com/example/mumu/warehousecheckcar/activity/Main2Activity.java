@@ -40,6 +40,8 @@ import com.example.mumu.warehousecheckcar.fragment.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.CutClothFragment;
+import com.example.mumu.warehousecheckcar.fragment.CutClothOutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CutClothOutNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.CuttingClothPutwayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
@@ -164,9 +166,11 @@ public class Main2Activity extends AppCompatActivity
         TextView tv2 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView2);
         tv2.setText(getResources().getString(R.string.options_welcome));
 //      导航列表(枚举)
-        for (OptionMenu om : OptionMenu.values()) {
+//        for (OptionMenu om : OptionMenu.values()) {
+        for (int i = 0; i < OptionMenu.values().length; i++) {
+            OptionMenu om = OptionMenu.values()[i];
             MenuItem mi = navigationView.getMenu().findItem(om.getId());
-            mi.setTitle(mOptionTitle[om.getIndex()]);
+            mi.setTitle(mOptionTitle[i]);
         }
     }
 
@@ -256,82 +260,120 @@ public class Main2Activity extends AppCompatActivity
 
     private void selectItem(int position) {
         Fragment fragment = null;
+        User user=User.newInstance();
+        int auth=user.getAuth();
+        boolean flag=false;
         switch (position) {
             case 0:
 //                主页
                 fragment = HomeFragment.newInstance();
+                flag=true;
                 break;
             case 1:
 //                入库校验
                 fragment = InCheckFragment.newInstance();
+                if (auth!=6&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
+                    flag=true;
                 break;
             case 2:
+//                盘点
+                fragment = CheckCarrierFragment.newInstance();
 //                出库校验
-                fragment = OutCheckCarFragment.newInstance();
+//                fragment = OutCheckCarFragment.newInstance();
+                if (auth!=5&&auth!=6&&auth!=8&&auth!=9&&auth!=10)
+                    flag=true;
                 break;
             case 3:
 //                上架
                 fragment = PutawayCarrierFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
+                    flag=true;
                 break;
             case 4:
 //                叉车上架
                 fragment = CarPutawayCarrierFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
+                    flag=true;
                 break;
             case 5:
-//                查布
-                fragment = ChubbFragment.newInstance();
+                //                寻缸
+                fragment = FindVatNoFragment.newInstance();
+                flag=true;
+
                 break;
             case 6:
-//                查布上架
-                fragment = ChubbUpFragment.newInstance();
+//                寻托盘
+                fragment = FindTpNoFragmentf.newInstance();
+                flag=true;
+
                 break;
             case 7:
                 //出库申请
                 fragment = OutApplyNoFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=6)
+                    flag=true;
+
                 break;
             case 8:
-//                盘点
-                fragment = CheckCarrierFragment.newInstance();
+////              发运
+                fragment = ForwardingMsgFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=6)
+                    flag=true;
                 break;
             case 9:
-//                寻缸
-                fragment = FindVatNoFragment.newInstance();
+//                剪布操作
+                fragment = CutClothFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=10&&auth!=6)
+                    flag=true;
                 break;
             case 10:
-//                寻托盘
-                fragment = FindTpNoFragmentf.newInstance();
+                //                剪布上架
+                fragment = CuttingClothPutwayCarrierFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=10&&auth!=6)
+                    flag=true;
                 break;
             case 11:
-//                重量修改
-                fragment = WeightChangeFragment.newInstance();
+                //                查布
+                fragment = ChubbFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=9&&auth!=10&&auth!=6)
+                    flag=true;
                 break;
             case 12:
-//                查布异常
-                fragment = ChubbExceptionFragment.newInstance();
+                //                查布上架
+                fragment = ChubbUpFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=9&&auth!=10&&auth!=6)
+                    flag=true;
+
                 break;
             case 13:
-//              发运
-                fragment = ForwardingMsgFragment.newInstance();
+//                重量修改
+                fragment = WeightChangeFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=8&&auth!=10&&auth!=6)
+                    flag=true;
                 break;
             case 14:
-//                剪布上架
-                fragment = CuttingClothPutwayCarrierFragment.newInstance();
+//                查布异常
+                fragment = ChubbExceptionFragment.newInstance();
+                if (auth!=5&&auth!=7&&auth!=9&&auth!=10&&auth!=6)
+                    flag=true;
                 break;
             case 15:
 //                待开发
 //                fragment= new TextFragment();
-                fragment = CutClothFragment.newInstance();
 
 //                fragment = CutClothScanFragment.newInstance();
                 //fragment = CutClothWeightFragment.newInstance();
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();
+                flag=true;
                 break;
             default:
                 fragment = AboutFragment.newInstance();
+                flag=true;
                 break;
         }
+        if (flag){
         FragmentManager fragmentManager = getFragmentManager();
         if (fragment instanceof HomeFragment) {
 
@@ -340,6 +382,9 @@ public class Main2Activity extends AppCompatActivity
         } else if (fragment != null) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+        }
+        }else {
+            Toast.makeText(this,"你的账号权限无法使用该功能",Toast.LENGTH_LONG).show();
         }
 //        设置列表点击状态
         navigationView.getMenu().findItem(OptionMenu.values()[position].getId()).setChecked(true);
@@ -356,7 +401,7 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /*
-     * 出库校验
+     * 盘点
      * */
     public void click2(View view) {
         selectItem(2);
@@ -370,21 +415,21 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /*
-     * 叉车上架
+     * 叉车操作
      * */
     public void click4(View view) {
         selectItem(4);
     }
 
     /*
-     * 查布
+     * 寻缸
      * */
     public void click5(View view) {
         selectItem(5);
     }
 
     /*
-     * 查布上架
+     * 寻托
      * */
     public void click6(View view) {
         selectItem(6);
@@ -398,49 +443,49 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /*
-     * 盘点
+     * 发运
      * */
     public void click8(View view) {
         selectItem(8);
     }
 
     /**
-     * 寻布
+     * 剪布
      */
     public void click9(View view) {
         selectItem(9);
     }
 
     /**
-     * 寻托盘
+     * 剪布上架
      */
     public void click10(View view) {
         selectItem(10);
     }
 
     /**
-     * 修改重量
+     * 查布
      */
     public void click11(View view) {
         selectItem(11);
     }
 
     /**
-     * 查布异常
+     * 查布上架
      */
     public void click12(View view) {
         selectItem(12);
     }
 
     /**
-     * 发运
+     * 调整库存重量
      */
     public void click13(View view) {
         selectItem(13);
     }
 
     /**
-     * 剪布上架
+     * 查布异常
      */
     public void click14(View view) {
         selectItem(14);
@@ -476,7 +521,8 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
                     || fragment instanceof WeightChangeFragment || fragment instanceof ChubbExceptionFragment
-                    || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothPutwayCarrierFragment)) {
+                    || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothPutwayCarrierFragment
+                    || fragment instanceof CutClothFragment)) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
                 }
@@ -499,7 +545,9 @@ public class Main2Activity extends AppCompatActivity
                 } else if (fragment != null && (fragment instanceof OutApplyNewFragment)) {
                     selectItem(7);
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
-                    selectItem(8);
+                    selectItem(2);
+                } else if (fragment != null && (fragment instanceof CutClothOutFragment||fragment instanceof CutClothOutNoFragment)) {
+                    selectItem(9);
                 } else if (fragment != null && (fragment instanceof OutApplyDetailFragment)) {
                     setOutApplyDataList(((OutApplyDetailFragment) fragment).getList());
                     getFragmentManager().popBackStack();

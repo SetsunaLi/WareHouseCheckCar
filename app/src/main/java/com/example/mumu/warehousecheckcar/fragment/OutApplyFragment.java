@@ -228,8 +228,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.i(TAG, "getEpc;" + e.getUpdate_describe());
+                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getUpdate_describe(), Toast.LENGTH_LONG).show();
                         }
 //                        Toast.makeText(getActivity(), "无法获取申请单信息请返回重试！", Toast.LENGTH_SHORT).show();
                     }
@@ -346,8 +346,8 @@ public class OutApplyFragment extends Fragment implements UHFCallbackLiatener, B
                         @Override
                         public void onError(Request request, Exception e) {
                             if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "postInventory;" + e.getMessage());
-                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                Log.i(TAG, "postInventory;" + e.getUpdate_describe());
+                                Toast.makeText(getActivity(), "上传信息失败；" + e.getUpdate_describe(), Toast.LENGTH_LONG).show();
                             }
                         }
 
@@ -454,8 +454,8 @@ if (myList.get(keyValue.get(key1)).getCount() > myList.get(keyValue.get(key1)).g
                                         @Override
                                         public void onError(Request request, Exception e) {
                                             if (App.LOGCAT_SWITCH) {
-                                                Log.i(TAG, "getEpc;" + e.getMessage());
-                                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                Log.i(TAG, "getEpc;" + e.getUpdate_describe());
+                                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getUpdate_describe(), Toast.LENGTH_LONG).show();
                                             }
                                         }
 

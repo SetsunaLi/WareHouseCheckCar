@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">仓库APP</string>
     <string name="title_activity_main2">仓库APP</string>
+    <!--当前版本1.0,2019年6月14日-->
+    <string name="app_version">1.0</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_password">Password (optional)</string>
@@ -25,7 +28,7 @@
     <string name="btn_click1">入库检验</string>
     <string name="btn_click2">出库校验</string>
     <string name="btn_click3">上架</string>
-    <string name="btn_click4">叉车上架</string>
+    <string name="btn_click4">叉车操作</string>
     <string name="btn_click5">查布</string>
     <string name="btn_click6">查布上架</string>
     <string name="btn_click7">出库</string>
@@ -37,9 +40,13 @@
     <string name="btn_click13">付运表发运</string>
     <string name="btn_click14">办布上架</string>
     <string name="btn_click15">剪布操作</string>
+    <string name="btn_click17">待开发</string>
     <string name="btn_click16">系统设置</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
+    <string name="btn_car_up">叉车上架</string>
+    <string name="btn_car_down">叉车下架</string>
+    <string name="btn_car_tuo">取消</string>
 
 
     <!--出库校验-->
@@ -58,20 +65,19 @@
     <string-array name="options_array">
         <item>主页</item>
         <item>入库检验</item>
-        <item>出库校验</item>
+        <item>盘点</item>
         <item>上架</item>
         <item>叉车上架</item>
-        <item>查布</item>
-        <item>查布上架</item>
-        <item>出库</item>
-        <item>盘点</item>
         <item>寻找布匹</item>
         <item>寻找托盘</item>
+        <item>出库</item>
+        <item>付运表发运</item>
+        <item>剪布操作</item>
+        <item>办布上架</item>
+        <item>查布</item>
+        <item>查布上架</item>
         <item>调整库存重量</item>
         <item>查布异常</item>
-        <item>付运表发运</item>
-        <item>办布上架</item>
-        <item>剪布操作</item>
         <item>系统设置</item>
         <item>关于</item>
     </string-array>
@@ -137,13 +143,13 @@
     <string name="logcat_title_off">隐藏日志</string>
     <string name="prower_edit_key">get_prower_key</string>
     <string name="prower_edit_summary">20</string>
+    <string name="putaway_assistant">协助人：</string>
 
     <!--about-->
     <string name="RFID_demo_app">WareHouseCheckCAR Application</string>
     <string name="moto_solutions">RIDKO Technologies</string>
     <string name="app_version_title">Application Version</string>
     <string name="colon">:</string>
-    <string name="app_version">19.05.17-11</string>
     <string name="system_version">系统版本</string>
     <string name="device_number_title">Device Number</string>
     <string name="device_number">JiaQian_01</string>

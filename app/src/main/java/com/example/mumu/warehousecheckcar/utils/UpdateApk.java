@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.LoginActivity;
 import com.example.mumu.warehousecheckcar.client.HttpNet;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
@@ -40,9 +41,11 @@ public class UpdateApk {
 
     public static int UpdateVersion(final Context context, final UpdateBean updateBean) {
         String packageName = context.getPackageName();
-        int nowCode = getVersionCode(context);//手机端的版本
-        int newCode = updateBean.getVersionCode();
-        if (nowCode < newCode) {//小于最新版本号
+
+//        String nowCode = "1.0";//手机端的版本
+        String nowCode = context.getResources().getString(R.string.app_version);//手机端的版本
+        String newCode = updateBean.getVersion_no();
+        if (!nowCode.equals(newCode)) {//小于最新版本号
             checkPermission(context, updateBean);
         } else {
             Log.e("MA", "已经是最新版本");
@@ -73,7 +76,7 @@ public class UpdateApk {
 
             @Override
             public void executeCommit(String text) {
-                downFile(updateBean.getUrl(), context);
+                downFile(updateBean.getUpdate_url(), context);
                 updateDialog.dismiss();
             }
         });
@@ -112,7 +115,7 @@ public class UpdateApk {
                     setMax(total, context);//为progressDialog设置大小
                     File file = null;
                     if (is != null) {
-                        file = new File(Environment.getExternalStorageDirectory(), "warehouse.apk");// 设置路径
+                        file = new File(Environment.getExternalStorageDirectory(), "app-debug.apk");// 设置路径
                         fos = new FileOutputStream(file);
                         byte[] buf = new byte[1024];
                         int ch = -1;

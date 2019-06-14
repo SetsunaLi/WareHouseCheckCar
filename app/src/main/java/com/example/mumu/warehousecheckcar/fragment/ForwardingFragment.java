@@ -1199,8 +1199,8 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
 //                    @Override
 //                    public void onError(Request request, Exception e) {
 //                        if (App.LOGCAT_SWITCH) {
-//                            Log.i(TAG, "getEpc;" + e.getMessage());
-//                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+//                            Log.i(TAG, "getEpc;" + e.getUpdate_describe());
+//                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getUpdate_describe(), Toast.LENGTH_LONG).show();
 //                        }
 //                    }
 //
@@ -1345,8 +1345,8 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
 //                @Override
 //                public void onError(Request request, Exception e) {
 //                    if (App.LOGCAT_SWITCH) {
-//                        Log.i(TAG, "postInventory;" + e.getMessage());
-//                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+//                        Log.i(TAG, "postInventory;" + e.getUpdate_describe());
+//                        Toast.makeText(getActivity(), "上传信息失败；" + e.getUpdate_describe(), Toast.LENGTH_LONG).show();
 //                    }
 //                }
 //
@@ -1493,8 +1493,8 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
 //                                        @Override
 //                                        public void onError(Request request, Exception e) {
 //                                            if (App.LOGCAT_SWITCH) {
-//                                                Log.i(TAG, "getEpc;" + e.getMessage());
-//                                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+//                                                Log.i(TAG, "getEpc;" + e.getUpdate_describe());
+//                                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getUpdate_describe(), Toast.LENGTH_LONG).show();
 //                                            }
 //                                        }
 //

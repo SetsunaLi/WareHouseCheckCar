@@ -2,25 +2,34 @@ package com.example.mumu.warehousecheckcar.entity;
 
 public class UpdateBean {
     private String title;
-    private String message;
-    private int versionCode;
-    private String versionName;
-    private String url;
+    /**更新描述*/
+    private String update_describe;
+    /**版本号*/
+    private String version_no;
+    /**版本名称*/
+    private String version_name;
+    /**URL*/
+    private String update_url;
+    /**更新时间*/
+    private String update_time;
+    /**更新人*/
+    private String operator;
 
-    public String getVersionName() {
-        return versionName;
+
+    public String getVersion_name() {
+        return version_name;
     }
 
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
+    public void setVersion_name(String version_name) {
+        this.version_name = version_name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUpdate_url() {
+        return update_url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUpdate_url(String update_url) {
+        this.update_url = update_url;
     }
 
     public String getTitle() {
@@ -31,20 +40,35 @@ public class UpdateBean {
         this.title = title;
     }
 
-    public String getMessage() {
-        return message;
+    public String getUpdate_describe() {
+        return update_describe;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUpdate_describe(String update_describe) {
+        this.update_describe = update_describe;
     }
 
-    public int getVersionCode() {
-        return versionCode;
+    public String getVersion_no() {
+        return version_no;
     }
 
-    public void setVersionCode(int versionCode) {
-        this.versionCode = versionCode;
+    public void setVersion_no(String version_no) {
+        this.version_no = version_no;
     }
 
+    public String getUpdate_time() {
+        return update_time;
+    }
+
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 }

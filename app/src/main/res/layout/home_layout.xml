@@ -178,9 +178,17 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click1"
-                android:text="@string/btn_click1" />
-
+                android:text="@string/btn_click1"/>
             <Button
+                android:id="@+id/button2"
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:onClick="click2"
+                android:text="@string/btn_click8" />
+         <!--   <Button
                 android:id="@+id/button2"
 
                 style="@style/DashboardButton"
@@ -190,7 +198,7 @@
                 android:layout_weight="1"
                 android:onClick="click2"
                 android:text="@string/btn_click2" />
-
+-->
 
         </LinearLayout>
 
@@ -223,13 +231,13 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
             android:orientation="horizontal">
-
             <Button
                 android:id="@+id/button5"
                 style="@style/DashboardButton"
@@ -238,7 +246,7 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click5"
-                android:text="@string/btn_click5" />
+                android:text="@string/btn_click9" />
             <Button
                 android:id="@+id/button6"
                 style="@style/DashboardButton"
@@ -247,7 +255,7 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click6"
-                android:text="@string/btn_click6" />
+                android:text="@string/btn_click10" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -270,12 +278,12 @@
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="90dp"
-                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click8"
-                android:text="@string/btn_click8" />
-        </LinearLayout>
+                android:text="@string/btn_click13" />
 
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -290,7 +298,7 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click9"
-                android:text="@string/btn_click9" />
+                android:text="@string/btn_click15" />
             <Button
                 android:id="@+id/button10"
                 style="@style/DashboardButton"
@@ -299,7 +307,7 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click10"
-                android:text="@string/btn_click10" />
+                android:text="@string/btn_click14" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -307,6 +315,7 @@
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/button11"
                 style="@style/DashboardButton"
@@ -315,7 +324,7 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click11"
-                android:text="@string/btn_click11" />
+                android:text="@string/btn_click5" />
             <Button
                 android:id="@+id/button12"
                 style="@style/DashboardButton"
@@ -324,8 +333,10 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click12"
-                android:text="@string/btn_click12" />
+                android:text="@string/btn_click6" />
         </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -340,7 +351,7 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click13"
-                android:text="@string/btn_click13" />
+                android:text="@string/btn_click11" />
             <Button
                 android:id="@+id/button14"
                 style="@style/DashboardButton"
@@ -349,8 +360,9 @@
                 android:layout_marginLeft="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click14"
-                android:text="@string/btn_click14" />
+                android:text="@string/btn_click12" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -359,7 +371,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="18dp"
             >
-            <Button
+           <!-- <Button
                 android:id="@+id/button15"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
@@ -367,7 +379,7 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click15"
-                android:text="@string/btn_click15" />
+                android:text="@string/btn_click17" />-->
             <Button
                 android:id="@+id/button16"
                 style="@style/DashboardButton"

@@ -30,8 +30,6 @@ public class HomeFragment extends Fragment {
     private static HomeFragment fragment;
     @Bind(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
-    Button button2;
     @Bind(R.id.button3)
     Button button3;
     @Bind(R.id.button4)
@@ -56,10 +54,12 @@ public class HomeFragment extends Fragment {
     Button button13;
     @Bind(R.id.button14)
     Button button14;
-    @Bind(R.id.button15)
-    Button button15;
+//    @Bind(R.id.button15)
+//    Button button15;
     @Bind(R.id.button16)
     Button button16;
+    @Bind(R.id.button2)
+    Button button2;
 
 
     public static HomeFragment newInstance() {
@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment {
         ButterKnife.bind(this, view);
         getActivity().setTitle("主页");
         initView(view);
+
         return view;
     }
 
@@ -90,7 +91,9 @@ public class HomeFragment extends Fragment {
                             homeButton.getIndex(), 64),
                     null,
                     null);
+            button.setVisibility(View.GONE);
         }
+
 
     }
 
@@ -118,6 +121,66 @@ public class HomeFragment extends Fragment {
     public static int dip2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    //
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (user != null) {
+            switch (user.getAuth()) {
+//                目前认为GONE是最好的，INVISIBLE会占有位置
+                case 5:
+                    button1.setVisibility(View.VISIBLE);
+                    button5.setVisibility(View.VISIBLE);
+                    button6.setVisibility(View.VISIBLE);
+                    button16.setVisibility(View.VISIBLE);
+                    break;
+                case 6:
+                    button3.setVisibility(View.VISIBLE);
+                    button5.setVisibility(View.VISIBLE);
+                    button6.setVisibility(View.VISIBLE);
+                    button16.setVisibility(View.VISIBLE);
+                    break;
+                case 7:
+                    button2.setVisibility(View.VISIBLE);
+                    button5.setVisibility(View.VISIBLE);
+                    button6.setVisibility(View.VISIBLE);
+                    button16.setVisibility(View.VISIBLE);
+                    break;
+                case 8:
+                    button11.setVisibility(View.VISIBLE);
+                    button12.setVisibility(View.VISIBLE);
+                    button14.setVisibility(View.VISIBLE);
+                    button5.setVisibility(View.VISIBLE);
+                    button6.setVisibility(View.VISIBLE);
+                    button16.setVisibility(View.VISIBLE);
+
+                    break;
+                case 9:
+                    button9.setVisibility(View.VISIBLE);
+                    button10.setVisibility(View.VISIBLE);
+                    button13.setVisibility(View.VISIBLE);
+                    button5.setVisibility(View.VISIBLE);
+                    button6.setVisibility(View.VISIBLE);
+                    button16.setVisibility(View.VISIBLE);
+                    break;
+                case 10:
+                    button7.setVisibility(View.VISIBLE);
+                    button8.setVisibility(View.VISIBLE);
+                    button5.setVisibility(View.VISIBLE);
+                    button6.setVisibility(View.VISIBLE);
+                    button16.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    for (HomeButton homeButton : HomeButton.values()) {
+                        Button button = (Button) getView().findViewById(homeButton.getId());
+                        button.setVisibility(View.VISIBLE);
+                    }
+                    break;
+            }
+
+        }
     }
 
     //右上角列表R.menu.main2

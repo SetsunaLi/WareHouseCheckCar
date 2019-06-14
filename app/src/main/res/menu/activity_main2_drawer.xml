@@ -62,10 +62,10 @@
             android:id="@+id/nav_item15"
             android:icon="@mipmap/click14_s"
             android:title="Tools" />
-        <item
+     <!--   <item
             android:id="@+id/nav_item16"
             android:icon="@mipmap/wait_s"
-            android:title="Tools" />
+            android:title="Tools" />-->
     </group>
 
     <item android:title="Communicate">

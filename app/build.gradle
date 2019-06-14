@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
 //    编译版本，就是运行我们这个项目的需要的SDK
+    signingConfigs {
+        warehouse {
+            keyAlias 'key'
+            keyPassword '00000000'
+            storeFile file('D:/AndroidStudio/apk/warehouse_key')
+            storePassword 'ridko2019'
+        }
+    }
     compileSdkVersion 26
 //    构建工具的版本，其中包括了打包工具aapt、dx等等。
     buildToolsVersion '28.0.3'
@@ -10,16 +18,21 @@ android {
 //        最小的SDK版本。
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 2
+        versionCode 1
         versionName "19.05.17"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+      /*  debug {
+            minifyEnabled true
+            shrinkResources true
+        }*/
     }
     sourceSets {
         main {

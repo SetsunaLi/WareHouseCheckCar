@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -32,6 +32,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.UpdateApk;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -71,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initUtil();
+        initDate();
         // Set up the login form.
 //        populateAutoComplete();
 //设置回车键监听
@@ -84,18 +86,22 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-//        checkVersion();
-        /**更新版本入口*/
-//        UpdateApk.UpdateVersion(this,updateBean);
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+                checkVersion();
+//            }
+//        });
+
     }
 
     private void initDate() {
-        App.IP = "http://47.106.157.255";
-        App.PORT = "80";
+//        App.IP = "http://47.106.157.255";
+//        App.PORT = "80";
 //        App.IP = "http://120.79.56.119";
 //        App.PORT = "8080";
-//        App.IP = "http://192.168.1.243";
-//        App.PORT = "80";
+        App.IP = "http://192.168.1.243";
+        App.PORT = "80";
 //        App.IP="http://192.168.1.146";
 //        App.PORT="8080";
       /*  App.IP="http://192.168.1.146";
@@ -105,7 +111,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initDate();
         SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
         if (sharedPreferences != null) {
             String name = sharedPreferences.getString("username", "");
@@ -124,12 +129,36 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkVersion() {
-        updateBean.setMessage("更新啦");
-        updateBean.setTitle("立即更新");
-        updateBean.setUrl("https://github.com/SetsunaLi/getNewApk/raw/master/app-debug.apk");
-        updateBean.setVersionCode(1);
-//        这里获取版本号
-        updateBean.setVersionName("1.0.2");
+    /*    try {
+            Response response=OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/getUpdateInfo");
+//            updateBean=response.
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/getUpdateInfo", new OkHttpClientManager.ResultCallback<JSONObject>() {
+            @Override
+            public void onError(Request request, Exception e) {
+                if (App.LOGCAT_SWITCH) {
+                    Toast.makeText(getBaseContext(), "获取托盘信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                updateBean=response.toJavaObject(UpdateBean.class);
+                /**更新版本入口*/
+                UpdateApk.UpdateVersion(LoginActivity.this,updateBean);
+            }
+        });
+
+//        updateBean.setUpdate_describe("更新啦");
+//        updateBean.setTitle("立即更新");
+////        /usr/local/tomcat/webapps/Android
+//        updateBean.setUpdate_url("https://github.com/SetsunaLi/getNewApk/raw/master/app-debug.apk");
+//        updateBean.setVersion_no("1");
+////        这里获取版本号
+//        updateBean.setVersion_name("1.0.2");
     }
 
     @Override
@@ -294,8 +323,10 @@ public class LoginActivity extends AppCompatActivity {
                         int id = (int) message.get("id");
                         String username = (String) message.get("username");
                         String msg = (String) message.get("msg");
+//                        int auth = (int) message.get("auth");
                         User user = User.newInstance();
-                        user.setUser(id, username, msg, code);
+                        user.setUser(id, username, msg, code,0);
+//                        user.setUser(id, username, msg, code,auth);
 
 
                         return true;

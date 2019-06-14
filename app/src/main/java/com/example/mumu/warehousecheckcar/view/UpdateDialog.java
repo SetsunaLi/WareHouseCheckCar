@@ -14,9 +14,6 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 import com.example.mumu.warehousecheckcar.listener.UpdateDialogOperate;
 
-import butterknife.Bind;
-import butterknife.OnClick;
-
 public class UpdateDialog extends Dialog implements View.OnClickListener {
 
     TextView ver;
@@ -40,7 +37,7 @@ public class UpdateDialog extends Dialog implements View.OnClickListener {
         this.upadtebean = upadtebean;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         update_ok.setVisibility(View.VISIBLE);
-        ver.setText(upadtebean.getVersionName());
+        ver.setText(upadtebean.getVersion_name());
         this.setCancelable(false);
     }
 
