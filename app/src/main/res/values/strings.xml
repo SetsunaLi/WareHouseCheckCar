@@ -48,6 +48,8 @@
     <string name="btn_car_down">叉车下架</string>
     <string name="btn_car_tuo">取消</string>
 
+    <!--转仓-->
+    <string name="toast_msg">该托盘库存布匹大于20，不允许转仓</string>
 
     <!--出库校验-->
     <string name="edittext_title">请输入申请单号</string>

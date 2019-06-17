@@ -323,6 +323,8 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
         Button no = (Button) blinkView.findViewById(R.id.dialog_no);
         Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        no.setText("否");
+        yes.setText("是");
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
         text.setText("是否完成装车");
         dialog = new AlertDialog.Builder(getActivity()).create();

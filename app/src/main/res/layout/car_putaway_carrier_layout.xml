@@ -8,7 +8,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:padding="@dimen/home_margin">
+        android:padding="@dimen/home_margin"
+        android:visibility="gone">
         <TextView
             android:layout_width="0dip"
             android:layout_height="match_parent"

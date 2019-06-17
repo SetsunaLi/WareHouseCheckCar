@@ -407,7 +407,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
     }
-
+//标签操作
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
         Message msg = handler.obtainMessage();
@@ -454,10 +454,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 break;
             case R.id.button2:
                 blinkDialog();
-             /*   Message msg = handler.obtainMessage();
+                Message msg = handler.obtainMessage();
                 msg.what = 0x00;
                 msg.obj = "3035A5370000040008898212";
-                handler.sendMessage(msg);*/
+                handler.sendMessage(msg);
                 break;
         }
     }

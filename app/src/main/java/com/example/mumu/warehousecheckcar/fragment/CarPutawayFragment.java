@@ -70,8 +70,10 @@ public class CarPutawayFragment extends Fragment {
         fragment = new CarPutawayFragment();
         return fragment;
     }
+
     private ArrayList<Cloth> myList;
     private RecycleAdapter mAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,14 +103,17 @@ public class CarPutawayFragment extends Fragment {
                 text3.setText(App.CARRIER.getTrayNo());
         }
     }
-    private void initData(){
-        myList=new ArrayList<>();
+
+    private void initData() {
+        myList = new ArrayList<>();
         myList.add(new Cloth());
     }
+
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.car_putaway_item, null);
         mAdapter.setHeader(view);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -141,10 +146,10 @@ public class CarPutawayFragment extends Fragment {
                         if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
                             List<Cloth> response;
-                            response=jsonArray.toJavaList(Cloth.class);
+                            response = jsonArray.toJavaList(Cloth.class);
                             if (response != null && response.size() != 0) {
                                 myList.addAll(response);
-                                text1.setText(myList.size()-1+"");
+                                text1.setText(myList.size() - 1 + "");
                                 mAdapter.notifyDataSetChanged();
                             }
                         }
@@ -166,8 +171,12 @@ public class CarPutawayFragment extends Fragment {
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        blinkDialog();
+        if (myList.size() < 21)
+            blinkDialog();
+        else
+            Toast.makeText(getActivity(),getResources().getString(R.string.toast_msg),Toast.LENGTH_LONG).show();
     }
+
     private void blinkDialog() {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -193,12 +202,12 @@ public class CarPutawayFragment extends Fragment {
             public void onClick(View view) {
 //                上传数据
                 ArrayList<Cloth> jsocList = new ArrayList<>();
-                for (int i=1;i<myList.size();i++){
+                for (int i = 1; i < myList.size(); i++) {
                     jsocList.add(myList.get(i));
                 }
                 JSONObject obj = new JSONObject();
                 obj.put("data", jsocList);
-                obj.put("carrier",App.CARRIER);
+                obj.put("carrier", App.CARRIER);
                 obj.put("userId", User.newInstance().getId());
                 final String json = JSON.toJSONString(obj);
 
@@ -214,7 +223,7 @@ public class CarPutawayFragment extends Fragment {
 
                         @Override
                         public void onResponse(JSONObject response) {
-                            try{
+                            try {
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
