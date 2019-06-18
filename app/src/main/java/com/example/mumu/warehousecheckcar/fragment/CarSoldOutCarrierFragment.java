@@ -68,6 +68,7 @@ public class CarSoldOutCarrierFragment extends Fragment implements UHFCallbackLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(getResources().getString(R.string.btn_car_down));
         View view = inflater.inflate(R.layout.car_soldout_carrier_layout, container, false);
 
         ButterKnife.bind(this, view);

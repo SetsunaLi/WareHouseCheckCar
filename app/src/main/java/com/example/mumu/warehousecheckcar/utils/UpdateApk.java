@@ -40,17 +40,17 @@ import static java.lang.Thread.sleep;
 public class UpdateApk {
 
     public static int UpdateVersion(final Context context, final UpdateBean updateBean) {
-        String packageName = context.getPackageName();
+//        String packageName = context.getPackageName();
 
 //        String nowCode = "1.0";//手机端的版本
-        String nowCode = context.getResources().getString(R.string.app_version);//手机端的版本
-        String newCode = updateBean.getVersion_no();
-        if (!nowCode.equals(newCode)) {//小于最新版本号
+//        String nowCode = context.getResources().getString(R.string.app_version);//手机端的版本
+//        String newCode = updateBean.getVersion_no();
+//        if (!nowCode.equals(newCode)) {//小于最新版本号
             checkPermission(context, updateBean);
-        } else {
-            Log.e("MA", "已经是最新版本");
+//        } else {
+//            Log.e("MA", "已经是最新版本");
 //            ToastUtils.showMessage("已经是最新的版本");
-        }
+//        }
         return 0;
     }
     public static void checkPermission(final Context context, final UpdateBean updateBean) {

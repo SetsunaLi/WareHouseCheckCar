@@ -3,6 +3,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -238,6 +239,14 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         switch (view.getId()) {
             case R.id.button2:
                 if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+                    if (flagRFID) {
+                        disRFID();
+                        flagRFID = false;
+                    }
+                    if (flag2D) {
+                        disConnect2D();
+                        flag2D = false;
+                    }
                     final String json = JSON.toJSONString(App.CARRIER);
                     try {
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
@@ -256,8 +265,12 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                                     if (baseReturn != null && baseReturn.getStatus() == 1) {
                                         Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
                                         Fragment fragment = PutawayFragment.newInstance();
-                                        getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                        getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                                        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                                        transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                                        transaction.show(fragment);
+                                        transaction.commit();
+//                                        getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                                        getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                                     } else {
                                         Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();
                                     }

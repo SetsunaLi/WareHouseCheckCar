@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg2">
     <LinearLayout
+        android:id="@+id/line1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:padding="@dimen/home_margin"
-        android:visibility="gone">
+        android:visibility="visible">
         <TextView
             android:layout_width="0dip"
             android:layout_height="match_parent"
@@ -18,7 +18,17 @@
             android:text="@string/putaway_assistant"
             style="@style/text_style1"
             android:textSize="28sp"/>
-        <EditText
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:singleLine="true"
+            style="@style/text_style3"/>
+      <!--  <EditText
             android:id="@+id/edit3"
             android:layout_width="0dip"
             android:layout_weight="1"
@@ -27,7 +37,7 @@
             android:imeOptions="actionDone"
             android:maxLines="1"
             android:singleLine="true"
-            style="@style/text_style1"/>
+            style="@style/text_style3"/>-->
     </LinearLayout>
     <LinearLayout
         android:id="@+id/relativelayout"
@@ -76,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="请扫描或输入上架库位"/>
+                android:text="请输入要上架的库位"/>
 
         </LinearLayout>
         <LinearLayout

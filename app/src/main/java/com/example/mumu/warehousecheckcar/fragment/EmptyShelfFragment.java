@@ -83,6 +83,7 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(getResources().getString(R.string.btn_car_tuo));
         View view = inflater.inflate(R.layout.empty_shelf_layout, container, false);
         ButterKnife.bind(this, view);
         initData();

@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,14 +27,16 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
-import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.Input;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.squareup.okhttp.Request;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,7 +77,7 @@ public class CarPutawayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.car_putaway_layout, container, false);
         ButterKnife.bind(this, view);
-        getActivity().setTitle("叉车上架");
+        getActivity().setTitle(getResources().getString(R.string.btn_car_up));
 
         initView();
         initData();
@@ -92,6 +90,7 @@ public class CarPutawayFragment extends Fragment {
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -113,7 +112,15 @@ public class CarPutawayFragment extends Fragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.car_putaway_item, null);
         mAdapter.setHeader(view);
     }
-
+    private int assistantID =0;
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void getEventMsg(EventBusMsg message) {
+        switch (message.getStatus()){
+            case 0x05:
+                assistantID = (int) message.getPositionObj(0);
+                break;
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -167,6 +174,8 @@ public class CarPutawayFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
+
     }
 
     @OnClick(R.id.button2)
@@ -209,6 +218,7 @@ public class CarPutawayFragment extends Fragment {
                 obj.put("data", jsocList);
                 obj.put("carrier", App.CARRIER);
                 obj.put("userId", User.newInstance().getId());
+                obj.put("assistant", assistantID);
                 final String json = JSON.toJSONString(obj);
 
                 try {

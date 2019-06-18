@@ -16,8 +16,8 @@ import com.example.mumu.warehousecheckcar.listener.UpdateDialogOperate;
 
 public class UpdateDialog extends Dialog implements View.OnClickListener {
 
-    TextView ver;
-    Button update_ok;
+    TextView name,no,msg;
+    Button update_no,update_ok;
     private UpdateDialogOperate aDialogOperate; // 操作接口
     private Context context;
     private UpdateBean upadtebean;
@@ -28,8 +28,12 @@ public class UpdateDialog extends Dialog implements View.OnClickListener {
 //        super(context);
         this.context = context;
         this.setContentView(R.layout.update_dialog_layout);
-        ver = (TextView) findViewById(R.id.update_ver);
+        name = (TextView) findViewById(R.id.update_name);
+        no = (TextView) findViewById(R.id.update_no);
+        msg = (TextView) findViewById(R.id.update_msg);
+        update_no = (Button) findViewById(R.id.update_btn_cancle);
         update_ok = (Button) findViewById(R.id.update_btn_ok);
+        update_no.setOnClickListener(this);
         update_ok.setOnClickListener(this);
     }
     public void setData(UpdateBean upadtebean, boolean flag, UpdateDialogOperate aDialogOperate) {
@@ -37,7 +41,9 @@ public class UpdateDialog extends Dialog implements View.OnClickListener {
         this.upadtebean = upadtebean;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         update_ok.setVisibility(View.VISIBLE);
-        ver.setText(upadtebean.getVersion_name());
+        name.setText(upadtebean.getVersion_name());
+        no.setText(upadtebean.getVersion_no());
+        msg.setText(upadtebean.getUpdate_describe());
         this.setCancelable(false);
     }
 

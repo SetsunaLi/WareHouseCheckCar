@@ -44,9 +44,11 @@
     <string name="btn_click16">系统设置</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
-    <string name="btn_car_up">叉车上架</string>
+
+    <!--叉车操作-->
+    <string name="btn_car_up">转仓</string>
     <string name="btn_car_down">叉车下架</string>
-    <string name="btn_car_tuo">取消</string>
+    <string name="btn_car_tuo">空托整理</string>
 
     <!--转仓-->
     <string name="toast_msg">该托盘库存布匹大于20，不允许转仓</string>
@@ -192,7 +194,12 @@
         <item>1KG</item>
         <item>1.2KG</item>
     </string-array>
-
+    <!--自动更新-->
+    <string name="update_name">版本名称</string>
+    <string name="update_no">版本号</string>
+    <string name="update_msg">版本描述</string>
+<!--发运-->
+    <string name="forwarding_toast_msg">请输入有效单号进行操作！</string>
 
 
 </resources>

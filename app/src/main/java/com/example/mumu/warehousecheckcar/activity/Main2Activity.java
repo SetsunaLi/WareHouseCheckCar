@@ -28,9 +28,11 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CarFragment;
 import com.example.mumu.warehousecheckcar.fragment.CarPutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.CheckCarrierFragment;
@@ -61,6 +63,8 @@ import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.rfid.RFIDReaderHelper;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 
@@ -290,8 +294,8 @@ public class Main2Activity extends AppCompatActivity
                     flag=true;
                 break;
             case 4:
-//                叉车上架
-                fragment = CarPutawayCarrierFragment.newInstance();
+//                叉车操作
+                fragment = CarFragment.newInstance();
                 if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
                     flag=true;
                 break;
@@ -516,7 +520,7 @@ public class Main2Activity extends AppCompatActivity
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
             if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment || fragment instanceof HomeFragment
                     || fragment instanceof InCheckCarrierFragment || fragment instanceof OutCheckCarFragment
-                    || fragment instanceof PutawayCarrierFragment || fragment instanceof CarPutawayCarrierFragment
+                    || fragment instanceof PutawayCarrierFragment || fragment instanceof CarFragment
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
@@ -538,10 +542,10 @@ public class Main2Activity extends AppCompatActivity
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
-                } else if (fragment != null && (fragment instanceof PutawayFragment)) {
+              /*  } else if (fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(3);
                 } else if (fragment != null && (fragment instanceof CarPutawayFragment)) {
-                    selectItem(4);
+                    selectItem(4);*/
                 } else if (fragment != null && (fragment instanceof OutApplyNewFragment)) {
                     selectItem(7);
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
@@ -558,12 +562,7 @@ public class Main2Activity extends AppCompatActivity
                     if (comeBack.fragmentCallBackListener != null)
                         comeBack.fragmentCallBackListener.ubLoad(true);
 
-                }
-                    /*else if (fragment != null && (fragment instanceof OutApplyFragment)){
-                    ((OutApplyFragment)fragment).onBackPressed();
-                    getFragmentManager().popBackStack();
-                }*/
-                else {
+                } else {
                     getFragmentManager().popBackStack();
                 }
             }
@@ -666,9 +665,10 @@ public class Main2Activity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+          /*  SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("remember", false);
+            editor.putBoolean("up", false);*/
+            EventBus.getDefault().postSticky(new EventBusMsg(0xfe));
             Intent intent = new Intent(Main2Activity.this, LoginActivity.class);
             startActivity(intent);
             finish();

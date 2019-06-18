@@ -194,13 +194,21 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
                 scannerFlag=false;
                 mAdapter.select(-255);
                 mAdapter.notifyDataSetChanged();
-
-                EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList));
-                Fragment fragment = ForwardingFragment.newInstance();
+                boolean flag=false;
+                for (String str:myList){
+                    if (str!=null&&!str.equals(""))
+                        flag=true;
+                }
+                if (flag) {
+                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList));
+                    Fragment fragment = ForwardingFragment.newInstance();
 //                直接清掉再加载，没有返回层
-                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getActivity().getFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                }else {
+                    Toast.makeText(getActivity(),getResources().getString(R.string.forwarding_toast_msg),Toast.LENGTH_SHORT).show();
+                }
 //                直接加载在最上层，有返回层
 //                getActivity().getFragmentManager().beginTransaction()
 //                        .add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).show(fragment).commit();

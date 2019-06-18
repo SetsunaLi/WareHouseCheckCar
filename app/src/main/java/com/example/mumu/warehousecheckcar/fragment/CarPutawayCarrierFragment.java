@@ -3,9 +3,11 @@ package com.example.mumu.warehousecheckcar.fragment;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,22 +15,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.entity.Coadjutant;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -36,7 +46,11 @@ import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,9 +69,12 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     EditText edittext2;
 
 
-
-
     private static CarPutawayCarrierFragment fragment;
+
+    @Bind(R.id.line1)
+    LinearLayout line1;
+    @Bind(R.id.spinner1)
+    Spinner spinner1;
 
     public static CarPutawayCarrierFragment newInstance() {
         if (fragment == null) ;
@@ -66,16 +83,20 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     }
 
     private Sound sound;
-    private boolean flagRFID=false;
-    private boolean flag2D=false;
+    private boolean flagRFID = false;
+    private boolean flag2D = false;
+    private int assistantID =0;
+    private ArrayList<Coadjutant> data_list;
+    private ArrayList<String> spinner_list;
+    private ArrayAdapter<String> arr_adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.car_putaway_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         sound = new Sound(getActivity());
-
-        getActivity().setTitle("叉车上架");
+        getActivity().setTitle(getResources().getString(R.string.btn_car_up));
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,9 +106,9 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged","onTextChanged");
-                String trayNo=charSequence.toString();
-                trayNo=trayNo.replaceAll(" ","");
+                Log.i("onTextChanged", "onTextChanged");
+                String trayNo = charSequence.toString();
+                trayNo = trayNo.replaceAll(" ", "");
                 App.CARRIER.setTrayNo(trayNo);
                 App.CARRIER.setTrayEPC("");
             }
@@ -105,9 +126,9 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                Log.i("onTextChanged","onTextChanged");
-                String locationNo=charSequence.toString();
-                locationNo=locationNo.replaceAll(" ","");
+                Log.i("onTextChanged", "onTextChanged");
+                String locationNo = charSequence.toString();
+                locationNo = locationNo.replaceAll(" ", "");
                 App.CARRIER.setLocationNo(locationNo);
                 App.CARRIER.setLocationEPC("");
             }
@@ -117,18 +138,19 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
             }
         });
+
         edittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    if (!flagRFID){
+                if (hasFocus) {
+                    if (!flagRFID) {
                         initRFID();
-                        flagRFID=true;
+                        flagRFID = true;
                     }
-                }else {
-                    if (flagRFID){
+                } else {
+                    if (flagRFID) {
                         disRFID();
-                        flagRFID=false;
+                        flagRFID = false;
                     }
                 }
             }
@@ -136,25 +158,28 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
         edittext2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    if (!flag2D){
+                if (hasFocus) {
+                    if (!flag2D) {
                         init2D();
-                        flag2D=true;
+                        flag2D = true;
                     }
-                }else {
-                    if (flag2D){
+                } else {
+                    if (flag2D) {
                         disConnect2D();
-                        flag2D=false;
+                        flag2D = false;
                     }
                 }
             }
         });
         if (App.CARRIER == null)
-            App.CARRIER =new Carrier();
+            App.CARRIER = new Carrier();
         else
             App.CARRIER.clear();
       /*  init2D();
         initRFID();*/
+
+        line1.setVisibility(View.VISIBLE);
+        initSpinner();
         return view;
     }
 
@@ -174,8 +199,8 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
         }
     }
-    private TDScannerHelper scannerHander;
 
+    private TDScannerHelper scannerHander;
     private void init2D() {
         try {
             boolean flag2 = RFID_2DHander.getInstance().on_2D();
@@ -198,17 +223,73 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
         }
     }
+    private void initSpinner() {
+        data_list=new ArrayList<>();
+        data_list.add(new Coadjutant("","","无",-1));
+        spinner_list=new ArrayList<>();
+        spinner_list.add("无");
+        //数据
+//        data_list = getResources().getStringArray(R.array.change_Empty_array);
+
+        //适配器
+        arr_adapter= new ArrayAdapter<String>(getActivity(), R.layout.adapter_mytopactionbar_spinner, spinner_list) {
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if(convertView == null) {
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.adapter_mytopactionbar_spinner_item,parent,false);
+                }
+                TextView spinnerText = (TextView) convertView.findViewById(R.id.spinner_textView);
+                spinnerText.setText(getItem(position).toString());
+                return convertView;
+            }
+        };
+
+        //加载适配器
+        spinner1.setAdapter(arr_adapter);
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                assistantID=data_list.get(position).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinner1.setSelection(0);
+
+        OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/getAccountList", new OkHttpClientManager.ResultCallback<JSONArray>() {
+            @Override
+            public void onError(Request request, Exception e) {
+                if (App.LOGCAT_SWITCH) {
+                    Toast.makeText(getActivity(), "获取托盘信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponse(JSONArray response) {
+                List<Coadjutant> list=response.toJavaList(Coadjutant.class);
+                data_list.addAll(list);
+                spinner_list.clear();
+                for (Coadjutant c:data_list)
+                    spinner_list.add(c.getUsername());
+                arr_adapter.notifyDataSetChanged();
+            }
+        });
+
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (flagRFID){
+        if (flagRFID) {
             disRFID();
-            flagRFID=false;
+            flagRFID = false;
         }
-        if (flag2D){
+        if (flag2D) {
             disConnect2D();
-            flag2D=false;
+            flag2D = false;
         }
 //        disConnect2D();
 //        disRFID();
@@ -218,7 +299,15 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
+        if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+            if (flagRFID) {
+                disRFID();
+                flagRFID = false;
+            }
+            if (flag2D) {
+                disConnect2D();
+                flag2D = false;
+            }
             final String json = JSON.toJSONString(App.CARRIER);
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
@@ -235,9 +324,15 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                             BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                             if (baseReturn != null && baseReturn.getStatus() == 1) {
                                 Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
+//                                assistantID
+                                EventBus.getDefault().postSticky(new EventBusMsg(0x05, assistantID));
                                 Fragment fragment = CarPutawayFragment.newInstance();
-                                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                                transaction.show(fragment);
+                                transaction.commit();
+//                                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                                getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                             } else {
                                 Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();
                             }
@@ -308,19 +403,19 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                         break;
                     case 0x01:
                         Carrier response = (Carrier) msg.obj;
-                        if (response!=null&&response.getTrayNo()!=null&&!response.getTrayNo().equals("")) {
+                        if (response != null && response.getTrayNo() != null && !response.getTrayNo().equals("")) {
                             App.CARRIER.setTrayNo(response.getTrayNo());
                             edittext1.setText(response.getTrayNo() + "");
                         }
-                        if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
-                            App.CARRIER .setTrayEPC(response.getTrayEPC());
+                        if (response != null && response.getTrayEPC() != null && !response.getTrayEPC().equals(""))
+                            App.CARRIER.setTrayEPC(response.getTrayEPC());
 
-                        if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
+                        if (response != null && response.getLocationNo() != null && !response.getLocationNo().equals("")) {
                             App.CARRIER.setLocationNo(response.getLocationNo());
                             edittext2.setText(response.getLocationNo() + "");
                         }
-                        if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
-                            App.CARRIER .setLocationEPC(response.getLocationEPC());
+                        if (response != null && response.getLocationEPC() != null && !response.getLocationEPC().equals(""))
+                            App.CARRIER.setLocationEPC(response.getLocationEPC());
                         break;
                     case 0x02:
                         if (App.MUSIC_SWITCH) {
@@ -329,8 +424,8 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                                 currenttime = System.currentTimeMillis();
                             }
                         }
-                        String location= (String) msg.obj;
-                        location=location.replaceAll(" ","");
+                        String location = (String) msg.obj;
+                        location = location.replaceAll(" ", "");
                         edittext2.setText(location);
                         break;
                 }
@@ -370,4 +465,56 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
         msg.obj = new String(bytes);
         handler.sendMessage(msg);
     }
+   /* public class Coadjutant {
+        *//**描述*//*
+        private String description;
+        *//**账号*//*
+        private String account_code;
+        *//**用户名*//*
+        private String username;
+        *//**id*//*
+        private int id;
+
+        public Coadjutant() {
+        }
+
+        public Coadjutant(String description, String account_code, String username, int id) {
+            this.description = description;
+            this.account_code = account_code;
+            this.username = username;
+            this.id = id;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getAccount_code() {
+            return account_code;
+        }
+
+        public void setAccount_code(String account_code) {
+            this.account_code = account_code;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+    }*/
 }

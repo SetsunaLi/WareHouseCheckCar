@@ -29,11 +29,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.UpdateApk;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -86,22 +91,24 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-                checkVersion();
-//            }
-//        });
-
+        EventBus.getDefault().register(this);
     }
-
+    private boolean exit=false;
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getEventMsg(EventBusMsg message) {
+        switch (message.getStatus()){
+            case 0xfe:
+                exit=true;
+                break;
+        }
+    }
     private void initDate() {
 //        App.IP = "http://47.106.157.255";
 //        App.PORT = "80";
-//        App.IP = "http://120.79.56.119";
-//        App.PORT = "8080";
-        App.IP = "http://192.168.1.243";
-        App.PORT = "80";
+        App.IP = "http://120.79.56.119";
+        App.PORT = "8080";
+//        App.IP = "http://192.168.1.243";
+//        App.PORT = "80";
 //        App.IP="http://192.168.1.146";
 //        App.PORT="8080";
       /*  App.IP="http://192.168.1.146";
@@ -115,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         if (sharedPreferences != null) {
             String name = sharedPreferences.getString("username", "");
             String word = sharedPreferences.getString("password", "");
-            boolean rememberFlag = sharedPreferences.getBoolean("remember", true);
+            boolean rememberFlag = sharedPreferences.getBoolean("remember", false);
             boolean upFlag = sharedPreferences.getBoolean("up", false);
             username.setText(name + "");
             checkbox1.setChecked(rememberFlag);
@@ -123,9 +130,10 @@ public class LoginActivity extends AppCompatActivity {
                 checkbox2.setChecked(upFlag);
                 password.setText(word + "");
             }
-            if (upFlag && !name.equals("") && !word.equals(""))
-                onViewClicked(loginButton);
+
         }
+
+        checkVersion();
     }
 
     private void checkVersion() {
@@ -148,7 +156,16 @@ public class LoginActivity extends AppCompatActivity {
 
                 updateBean=response.toJavaObject(UpdateBean.class);
                 /**更新版本入口*/
-                UpdateApk.UpdateVersion(LoginActivity.this,updateBean);
+                String nowCode = getResources().getString(R.string.app_version);//手机端的版本
+                String newCode = updateBean.getVersion_no();
+                if (!nowCode.equals(newCode)) {//小于最新版本号
+                    UpdateApk.UpdateVersion(LoginActivity.this,updateBean);
+                } else {
+                    if (checkbox2.isChecked() && !username.getText().toString().equals("") && !password.getText().toString().equals("")&&!exit)
+                        onViewClicked(loginButton);
+                    Log.e("MA", "已经是最新版本");
+//            ToastUtils.showMessage("已经是最新的版本");
+                }
             }
         });
 
@@ -165,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -218,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+//    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
 
         username.setFocusable(show ? false : true);
@@ -229,7 +247,10 @@ public class LoginActivity extends AppCompatActivity {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        if (loginProgress!=null){
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
             loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
             loginProgress.animate().setDuration(shortAnimTime).alpha(
@@ -245,6 +266,8 @@ public class LoginActivity extends AppCompatActivity {
             loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
             loginProgress.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
         }
+        }
+
     }
 
     private InputMethodManager mInputMethodManager;
