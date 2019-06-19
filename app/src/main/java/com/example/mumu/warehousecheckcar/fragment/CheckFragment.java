@@ -443,7 +443,9 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
 
                                     clearData();
                                     mAdapter.notifyDataSetChanged();
-                                    blinkDialog2(true);
+                                    getActivity().onBackPressed();
+
+//                                    blinkDialog2(true);
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
@@ -495,7 +497,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                    getActivity().onBackPressed();
                 }
             });
         } else {

@@ -272,7 +272,7 @@ public class CutClothOutFragment extends Fragment {
                                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                                             Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
 
-                                            blinkDialog2(true);
+//                                            blinkDialog2(true);
                                         } else {
                                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                             blinkDialog2(false);
