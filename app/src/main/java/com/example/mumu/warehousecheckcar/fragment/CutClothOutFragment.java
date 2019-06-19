@@ -232,6 +232,8 @@ public class CutClothOutFragment extends Fragment {
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,6 +314,8 @@ public class CutClothOutFragment extends Fragment {
             dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
             no.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

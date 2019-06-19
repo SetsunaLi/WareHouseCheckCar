@@ -173,6 +173,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                 mAdapter.select(myList.size() - 1);
                 mAdapter.setId(myList.size() - 1);
                 mAdapter.notifyDataSetChanged();
+                recyle.scrollToPosition(myList.size()-1);
                 break;
             case R.id.button2:
                 Fragment fragment = OutApplyNewFragment.newInstance();
@@ -226,7 +227,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
             final FixedEditText editNo = (FixedEditText) holder.getView(R.id.fixeedittext1);
             editNo.setTag(position);
 //            editNo.setFixedText("申请单号：");
-            editNo.setText(myList.get((Integer) editNo.getTag()));
+            editNo.setText(item);
             if (position == this.position) {
                 editNo.setFocusable(true);//设置输入框可聚集
                 editNo.setFocusableInTouchMode(true);//设置触摸聚焦
@@ -240,8 +241,8 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                 @Override
                 public void onFocusChange(View view, boolean b) {
                     if (b) {
-                        FixedEditText fe = (FixedEditText) view;
-                        setId((int) fe.getTag());
+//                        FixedEditText fe = (FixedEditText) view;
+                        setId(position);
                     }
                 }
             });
@@ -254,7 +255,7 @@ public class OutApplyNoFragment extends Fragment implements RXCallback {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                     Log.i("onTextChanged", "onTextChanged");
-                    myList.set((int) editNo.getTag(), charSequence.toString());
+                    myList.set(position, charSequence.toString());
                 }
 
                 @Override

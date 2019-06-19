@@ -1,6 +1,8 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
@@ -33,7 +37,9 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.rfid.RFIDReaderHelper;
@@ -42,6 +48,7 @@ import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -205,6 +212,35 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
+                blinkDialog();
+                break;
+        }
+    }
+    private void blinkDialog(){
+        final Dialog dialog;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+        text.setText("是否空托盘整理");
+        dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.show();
+        dialog.getWindow().setContentView(blinkView);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if(dataKEY != null){
                     JSONObject jsonObject = new JSONObject();
                     User user = User.newInstance();
@@ -223,14 +259,70 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
 
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(getActivity(), response.getString("message"), Toast.LENGTH_SHORT).show();
+                                try {
+                                    BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                    if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
+                                        blinkDialog2(true);
+                                    } else {
+                                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                        blinkDialog2(false);
+                                    }
+                                } catch (Exception e) {
+
+                                }
                             }
                         }, json);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                break;
+                dialog.dismiss();
+            }
+        });
+    }
+    private AlertDialog dialog;
+    private void blinkDialog2(boolean flag) {
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
         }
     }
 

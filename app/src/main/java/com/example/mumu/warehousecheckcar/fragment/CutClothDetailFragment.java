@@ -35,6 +35,7 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BarCode;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -393,6 +394,8 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -425,7 +428,19 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                         }
                         @Override
                         public void onResponse(JSONObject response) {
-                          Toast.makeText(getActivity(), response.getString("message"),Toast.LENGTH_SHORT).show();
+                            try {
+                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
+                                    blinkDialog2(true);
+                                } else {
+                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                    blinkDialog2(false);
+                                }
+                            } catch (Exception e) {
+
+                            }
                         }
                     }, json);
                 } catch (Exception e) {
@@ -436,6 +451,50 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
             }
         });
     }
+    private AlertDialog dialog;
+    private void blinkDialog2(boolean flag) {
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
+        }
+    }
+
 
 
 }

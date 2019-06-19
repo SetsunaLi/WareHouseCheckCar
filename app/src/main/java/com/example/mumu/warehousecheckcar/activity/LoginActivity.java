@@ -109,8 +109,8 @@ public class LoginActivity extends AppCompatActivity {
         App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
-//        App.IP="http://192.168.1.146";
-//        App.PORT="8080";
+//        App.IP="http://192.168.1.176";
+//        App.PORT="80";
       /*  App.IP="http://192.168.1.146";
         App.PORT="8080";*/
     }

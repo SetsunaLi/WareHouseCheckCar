@@ -39,6 +39,7 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
@@ -394,6 +395,8 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -437,12 +440,13 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                             try {
                                 if (response.equals("1")) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
                                     clearData();
                                     mAdapter.notifyDataSetChanged();
-                                    //调用Activity中onBackPressed()方法
-                                    getActivity().onBackPressed();
+                                    blinkDialog2(true);
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                    blinkDialog2(false);
                                 }
                             } catch (Exception e) {
 
@@ -460,6 +464,50 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         });
     }
 
+    private AlertDialog dialog;
+    private void blinkDialog2(boolean flag) {
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    getActivity().onBackPressed();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
+        }
+    }
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @Override
