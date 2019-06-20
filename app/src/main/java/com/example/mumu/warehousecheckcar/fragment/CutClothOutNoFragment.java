@@ -151,6 +151,7 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
                 mAdapter.select(myList.size() - 1);
                 mAdapter.setId(myList.size() - 1);
                 mAdapter.notifyDataSetChanged();
+                recyle.scrollToPosition(myList.size()-1);
                 break;
             case R.id.button2:
                 EventBus.getDefault().postSticky(new EventBusMsg(0x04, myList));
@@ -225,8 +226,7 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
                 @Override
                 public void onFocusChange(View view, boolean b) {
                     if (b) {
-                        FixedEditText fe = (FixedEditText) view;
-                        setId((int) fe.getTag());
+                        setId(position);
                     }
                 }
             });
@@ -239,7 +239,7 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
                     Log.i("onTextChanged", "onTextChanged");
-                    myList.set((int) editNo.getTag(), charSequence.toString());
+                    myList.set(position, charSequence.toString());
                 }
 
                 @Override
