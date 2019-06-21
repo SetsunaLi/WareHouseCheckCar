@@ -239,6 +239,12 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
        /* if (App.CARRIER != null && (App.CARRIER.getTrayNo() != null || App.CARRIER.getLocationNo() != null) &&
                 (!App.CARRIER.getTrayNo().equals("") || !App.CARRIER.getLocationNo().equals(""))) {*/
         if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
+            edittext1.setFocusableInTouchMode(false);
+            edittext2.setFocusableInTouchMode(false);
+            if (flagRFID){
+                disRFID();
+                flagRFID=false;
+            }
             if (flag2D){
                 disConnect2D();
                 flag2D=false;

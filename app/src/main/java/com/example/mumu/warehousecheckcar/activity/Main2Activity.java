@@ -264,102 +264,102 @@ public class Main2Activity extends AppCompatActivity
 
     private void selectItem(int position) {
         Fragment fragment = null;
-        User user=User.newInstance();
-        int auth=user.getAuth();
-        boolean flag=false;
+        User user = User.newInstance();
+        int auth = user.getAuth();
+        boolean flag = false;
         switch (position) {
             case 0:
 //                主页
                 fragment = HomeFragment.newInstance();
-                flag=true;
+                flag = true;
                 break;
             case 1:
 //                入库校验
                 fragment = InCheckFragment.newInstance();
-                if (auth!=6&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
-                    flag=true;
+                if (auth != 6 && auth != 7 && auth != 8 && auth != 9 && auth != 10)
+                    flag = true;
                 break;
             case 2:
 //                盘点
                 fragment = CheckCarrierFragment.newInstance();
 //                出库校验
 //                fragment = OutCheckCarFragment.newInstance();
-                if (auth!=5&&auth!=6&&auth!=8&&auth!=9&&auth!=10)
-                    flag=true;
+                if (auth != 5 && auth != 6 && auth != 8 && auth != 9 && auth != 10)
+                    flag = true;
                 break;
             case 3:
 //                上架
                 fragment = PutawayCarrierFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 && auth != 10)
+                    flag = true;
                 break;
             case 4:
 //                叉车操作
                 fragment = CarFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=10)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 && auth != 10)
+                    flag = true;
                 break;
             case 5:
                 //                寻缸
                 fragment = FindVatNoFragment.newInstance();
-                flag=true;
+                flag = true;
 
                 break;
             case 6:
 //                寻托盘
                 fragment = FindTpNoFragmentf.newInstance();
-                flag=true;
+                flag = true;
 
                 break;
             case 7:
                 //出库申请
                 fragment = OutApplyNoFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 && auth != 6)
+                    flag = true;
 
                 break;
             case 8:
 ////              发运
                 fragment = ForwardingMsgFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=9&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 && auth != 6)
+                    flag = true;
                 break;
             case 9:
 //                剪布操作
                 fragment = CutClothFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=10&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 10 && auth != 6)
+                    flag = true;
                 break;
             case 10:
                 //                剪布上架
                 fragment = CuttingClothPutwayCarrierFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=10&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 10 && auth != 6)
+                    flag = true;
                 break;
             case 11:
                 //                查布
                 fragment = ChubbFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=9&&auth!=10&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 9 && auth != 10 && auth != 6)
+                    flag = true;
                 break;
             case 12:
                 //                查布上架
                 fragment = ChubbUpFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=9&&auth!=10&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 9 && auth != 10 && auth != 6)
+                    flag = true;
 
                 break;
             case 13:
 //                重量修改
                 fragment = WeightChangeFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=8&&auth!=10&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 10 && auth != 6)
+                    flag = true;
                 break;
             case 14:
 //                查布异常
                 fragment = ChubbExceptionFragment.newInstance();
-                if (auth!=5&&auth!=7&&auth!=9&&auth!=10&&auth!=6)
-                    flag=true;
+                if (auth != 5 && auth != 7 && auth != 9 && auth != 10 && auth != 6)
+                    flag = true;
                 break;
             case 15:
 //                待开发
@@ -367,30 +367,33 @@ public class Main2Activity extends AppCompatActivity
 
 //                fragment = CutClothScanFragment.newInstance();
                 //fragment = CutClothWeightFragment.newInstance();
+
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();
-                flag=true;
+                flag = true;
                 break;
             default:
                 fragment = AboutFragment.newInstance();
-                flag=true;
+                flag = true;
                 break;
         }
-        if (flag){
-        FragmentManager fragmentManager = getFragmentManager();
-        if (fragment instanceof HomeFragment) {
+        if (flag) {
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragment instanceof HomeFragment) {
 
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
-        } else if (fragment != null) {
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-        }
-        }else {
-            Toast.makeText(this,"你的账号权限无法使用该功能",Toast.LENGTH_LONG).show();
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
+            } else if (fragment != null) {
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+            }
+        } else {
+            Toast.makeText(this, "你的账号权限无法使用该功能", Toast.LENGTH_LONG).show();
         }
 //        设置列表点击状态
+        if (position>15)
+            position--;
         navigationView.getMenu().findItem(OptionMenu.values()[position].getId()).setChecked(true);
 //        关闭抽屉
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
@@ -542,15 +545,15 @@ public class Main2Activity extends AppCompatActivity
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
-              /*  } else if (fragment != null && (fragment instanceof PutawayFragment)) {
+                } else if (fragment != null && (fragment instanceof PutawayFragment)) {
                     selectItem(3);
                 } else if (fragment != null && (fragment instanceof CarPutawayFragment)) {
-                    selectItem(4);*/
+                    selectItem(4);
                 } else if (fragment != null && (fragment instanceof OutApplyNewFragment)) {
                     selectItem(7);
                 } else if (fragment != null && (fragment instanceof CheckFragment)) {
                     selectItem(2);
-                } else if (fragment != null && (fragment instanceof CutClothOutFragment||fragment instanceof CutClothOutNoFragment)) {
+                } else if (fragment != null && (fragment instanceof CutClothOutFragment || fragment instanceof CutClothOutNoFragment)) {
                     selectItem(9);
                 } else if (fragment != null && (fragment instanceof OutApplyDetailFragment)) {
                     setOutApplyDataList(((OutApplyDetailFragment) fragment).getList());

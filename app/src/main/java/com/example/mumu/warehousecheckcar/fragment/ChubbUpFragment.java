@@ -37,6 +37,8 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.ChubbUp;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.Forwarding;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -44,6 +46,10 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -158,6 +164,8 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
 
         ComeBack.getInstance().setCallbackLiatener(this);
         initRFID();
+        EventBus.getDefault().register(this);
+
     }
 
     private void setAdaperHeader() {
@@ -220,7 +228,15 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
             });
         }
     }
-
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void getEventMsg(EventBusMsg msg) {
+        if (msg != null)
+            switch (msg.getStatus()) {
+                case 0x06:
+                    initRFID();
+                    break;
+            }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

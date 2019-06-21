@@ -1,6 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -29,6 +32,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.ChubbUp;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -36,6 +40,8 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -206,16 +212,16 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-       /* if (flagRFID){
+        if (flagRFID){
             disRFID();
             flagRFID=false;
-        }*/
-
+        }
         if (flag2D){
             disConnect2D();
             flag2D=false;
         }
-        RFID_2DHander.getInstance().on_RFID();
+        EventBus.getDefault().post(new EventBusMsg(0x06));
+//        RFID_2DHander.getInstance().on_RFID();
 
 //        App.CARRIER = null;
 //        disConnect2D();
@@ -288,6 +294,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                             getActivity().onBackPressed();
                         } else {
                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                            blinkDialog2(false);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -298,7 +305,49 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
             Log.i(TAG, "");
         }
     }
+    private AlertDialog dialog;
+    private void blinkDialog2(boolean flag) {
+        if (dialog == null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
 
+            dialog = new AlertDialog.Builder(getActivity()).create();
+            dialog.show();
+            dialog.getWindow().setContentView(blinkView);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
+            if (flag)
+                text.setText("上传成功");
+            else
+                text.setText("上传失败");
+            if (!dialog.isShowing())
+                dialog.show();
+        }
+    }
     long currenttime = 0;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {

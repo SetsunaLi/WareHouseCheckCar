@@ -40,7 +40,7 @@
     <string name="btn_click13">付运表发运</string>
     <string name="btn_click14">办布上架</string>
     <string name="btn_click15">剪布操作</string>
-    <string name="btn_click17">待开发</string>
+    <!--<string name="btn_click17">待开发</string>-->
     <string name="btn_click16">系统设置</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>

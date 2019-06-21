@@ -239,6 +239,9 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         switch (view.getId()) {
             case R.id.button2:
                 if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+//                    edittext1.setFocusable(show ? false : true);
+                    edittext1.setFocusableInTouchMode(false);
+                    edittext2.setFocusableInTouchMode(false);
                     if (flagRFID) {
                         disRFID();
                         flagRFID = false;

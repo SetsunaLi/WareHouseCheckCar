@@ -241,17 +241,15 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
         }
     };
 
-
-
-
-
-
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+
+            if (flag2D) {
+                disConnect2D();
+                flag2D = false;
+            }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -259,6 +257,11 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
     @OnClick(R.id.button2)
     public void onViewClicked(){
       if(App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+          edittext2.setFocusableInTouchMode(false);
+          if (flag2D) {
+              disConnect2D();
+              flag2D = false;
+          }
           final String json = JSON.toJSONString(App.CARRIER);
           try {
               OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {

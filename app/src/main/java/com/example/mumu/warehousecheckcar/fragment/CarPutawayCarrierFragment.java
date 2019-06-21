@@ -300,6 +300,8 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     @OnClick(R.id.button2)
     public void onViewClicked() {
         if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+            edittext1.setFocusableInTouchMode(false);
+            edittext2.setFocusableInTouchMode(false);
             if (flagRFID) {
                 disRFID();
                 flagRFID = false;
