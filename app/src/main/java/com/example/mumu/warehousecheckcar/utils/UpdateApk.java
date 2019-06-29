@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -115,7 +114,7 @@ public class UpdateApk {
                     setMax(total, context);//为progressDialog设置大小
                     File file = null;
                     if (is != null) {
-                        file = new File(Environment.getExternalStorageDirectory(), "app-debug.apk");// 设置路径
+                        file = new File(Environment.getExternalStorageDirectory(), context.getResources().getString(R.string.app_download_url));// 设置路径
                         fos = new FileOutputStream(file);
                         byte[] buf = new byte[1024];
                         int ch = -1;

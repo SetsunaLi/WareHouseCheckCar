@@ -164,7 +164,9 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
 
         ComeBack.getInstance().setCallbackLiatener(this);
         initRFID();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+
+            EventBus.getDefault().register(this);
 
     }
 

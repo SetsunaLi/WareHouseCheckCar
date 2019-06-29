@@ -91,7 +91,9 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+
+            EventBus.getDefault().register(this);
     }
     private boolean exit=false;
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -103,14 +105,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     private void initDate() {
-        App.IP = "http://47.106.157.255";
-        App.PORT = "80";
+//         正式服
+//        App.IP = "http://47.106.157.255";
+//        App.PORT = "80";
+//        测试服
 //        App.IP = "http://120.79.56.119";
 //        App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
-//        App.IP="http://192.168.1.176";
-//        App.PORT="80";
+        App.IP="http://192.168.1.176";
+        App.PORT="80";
       /*  App.IP="http://192.168.1.146";
         App.PORT="8080";*/
     }
@@ -130,7 +134,6 @@ public class LoginActivity extends AppCompatActivity {
                 checkbox2.setChecked(upFlag);
                 password.setText(word + "");
             }
-
         }
 
         checkVersion();
@@ -322,6 +325,7 @@ public class LoginActivity extends AppCompatActivity {
                 jsonObject.put("username", mUserName);
                 jsonObject.put("password", mPassword);
                 String json = jsonObject.toString();
+//                登录
                 Response response = OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/login", json);
                 final String string = response.body().string();
                 JSONObject message = JSONObject.parseObject(string);
@@ -361,7 +365,8 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(context,"密码不正确",Toast.LENGTH_SHORT).show();
                     }
                         break;*/
-                    default: {//else
+//
+                    default: {//else登录失败
                         String msg = (String) message.get("msg");
                         User user = User.newInstance();
                         user.setUser(msg, code);

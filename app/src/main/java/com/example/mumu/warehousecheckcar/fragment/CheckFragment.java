@@ -242,6 +242,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                 }
                             } else {
                                 Toast.makeText(getActivity(), "至少需要输入一个有效库位信息！", Toast.LENGTH_SHORT).show();
+//                                返回
                                 getActivity().onBackPressed();
                             }
                         } catch (Exception e) {

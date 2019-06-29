@@ -71,7 +71,9 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
 
         initUtil();
         initData();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+
+            EventBus.getDefault().register(this);
 
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_detail_item);
         mAdapter.setContext(getActivity());

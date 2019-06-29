@@ -177,6 +177,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                             try {
                                 List<String> arry;
                                 arry = response.toJavaList(String.class);
+                                String str=response.toJSONString();
                                 if (arry != null && arry.size() > 0) {
                                     vatList.clear();
                                     vatList.addAll(arry);
@@ -581,6 +582,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                             @Override
                             public void onResponse(JSONObject jsonObject) {
                                 try {
+                                    String str=jsonObject.toJSONString();
                                     if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
                                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                                         List<FindVatNo> response;

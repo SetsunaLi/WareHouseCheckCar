@@ -105,7 +105,9 @@ public class CutClothOutFragment extends Fragment {
         myList.add(new BarCode());
         dataKey = new HashMap<>();
         dateNo = new ArrayList<>();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+
+            EventBus.getDefault().register(this);
     }
 
     private void clearData() {
@@ -204,6 +206,7 @@ public class CutClothOutFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @OnClick({R.id.button1, R.id.button2})

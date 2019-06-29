@@ -3,6 +3,7 @@
     <string name="title_activity_main2">仓库APP</string>
     <!--当前版本1.0,2019年6月20日-->
     <string name="app_version">6.21</string>
+    <string name="app_download_url">app-debug.apk</string>
 
 
     <!-- Strings related to login -->

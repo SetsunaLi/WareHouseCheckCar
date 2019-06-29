@@ -49,7 +49,9 @@ public class ForwardingMsgFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forwarding_msg_layout, container, false);
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+
+            EventBus.getDefault().register(this);
         ButterKnife.bind(this, view);
         getActivity().setTitle("发运");
         initView();

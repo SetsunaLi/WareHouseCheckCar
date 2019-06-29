@@ -109,6 +109,7 @@ public class Main2Activity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         mTitle = getTitle();
+//        加载列表
         initDate();
         initView();
         initRFID();
@@ -682,6 +683,7 @@ public class Main2Activity extends AppCompatActivity
     }
 
     //左边列表点击监听（相当于onclickitemlistener,可用id匹配）
+//    列表点击时候触发的回调
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

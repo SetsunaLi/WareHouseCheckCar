@@ -87,7 +87,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
     private JSONObject json;
     private List<String> epcList;
     private List<String> epcArray;
-    private Cloth cloth;
     private BarCode barcode;
     private String clothVat;
 
@@ -113,11 +112,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         //注册中间件EventBus
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
-
-//        Message msg = handler.obtainMessage();
-//        msg.arg1 = 0x00;
-//        msg.obj = "3035A53700002F0008380514";
-//        handler.sendMessage(msg);
         return view;
     }
 
@@ -128,7 +122,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         json = new JSONObject();
         epcList = new ArrayList<>();
         epcArray = new ArrayList<>();
-        cloth = new Cloth();
         barcode = new BarCode();
     }
 
@@ -181,6 +174,7 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
         ButterKnife.unbind(this);
+        disRFID();
 
     }
 
@@ -192,10 +186,10 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-       /* Message msg = handler.obtainMessage();
+        Message msg = handler.obtainMessage();
         msg.arg1 = 0x00;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);*/
+        handler.sendMessage(msg);
     }
 
     @Override
@@ -222,7 +216,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            try {
                 switch (msg.arg1) {
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
@@ -248,11 +241,10 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                                     @Override
                                     public void onResponse(JSONArray jsonArray) {
                                         if (jsonArray != null && jsonArray.size() > 0) {
-                                             cloth = jsonArray.getObject(0, Cloth.class);
+                                            Cloth cloth = jsonArray.getObject(0, Cloth.class);
                                             if (cloth != null && !epcArray.contains(cloth.getEpc())) {
                                                 epcArray.add(cloth.getEpc());
                                                 myList.add(cloth);
-                                                System.out.println(myList);
                                                 text1.setText(myList.size()-1+"");
                                                 text2.setText(cloth.getVatNo());
                                             }
@@ -268,9 +260,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                         }
                         break;
                 }
-            } catch (Exception e) {
-
-            }
         }
     };
 
@@ -280,13 +269,13 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
             case R.id.button1:
                 clear();
                 text1.setText("0");
-                text2.setText(" ");
+                text2.setText("");
                 mAdapter.select(-255);
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
                 //进行数据关联
-                String codeVat = barcode.getVatNo().replaceAll(""," ");
+                String codeVat = barcode.getVatNo().replaceAll(" ","");
                 if( codeVat.equals(clothVat))
                     blinkDialog();
                  else
@@ -353,7 +342,7 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                         epcList.clear();
                         if (!epcList.contains(item.getEpc())){
                             epcList.add(item.getEpc());
-                            clothVat = item.getVatNo().replaceAll("", " ");
+                            clothVat = item.getVatNo().replaceAll(" ", "");
                         }
                         cb.setChecked(true);
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
@@ -432,7 +421,7 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-
+                                    onViewClicked(button1);
 //                                    blinkDialog2(true);
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();

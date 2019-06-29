@@ -67,8 +67,6 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     Button button1;
 
 
-    private BarCode code;
-
     public static CutClothEditWeightFragment newInstance() {
         if (fragment == null) ;
         fragment = new CutClothEditWeightFragment();
@@ -76,7 +74,9 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     }
 
     private JSONObject json;
-    private String weightIn;
+    private BarCode code;
+
+    private double weightIn;
 
 
     @Nullable
@@ -98,8 +98,17 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                weightIn = charSequence.toString();
-                weightIn = weightIn.replaceAll("", " ");
+                try {
+                    String weight = charSequence.toString();
+                    weight = weight.replaceAll(" ", "");
+                    if (weight != null && !weight.equals("")) {
+                        weightIn = Double.parseDouble(weight);
+                    }
+                } catch (Exception e) {
+                    edit1.setText("0.0");
+                }
+//                weightIn = Double.parseDouble(charSequence.toString());
+//                weightIn = weightIn.replaceAll(" ", "");
 
             }
 
@@ -115,7 +124,6 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(JSONObject event) {
         json = event.getJSONObject("barcode");
-
         code = json.toJavaObject(BarCode.class);
         text1.setText(code.getVatNo());
         text2.setText(code.getProduct_no());
@@ -145,6 +153,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
         edit1.setFocusable(false);
         blinkDialog();
     }
+
     private void blinkDialog() {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -173,8 +182,8 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                 User user = User.newInstance();
                 json.put("userId", user.getId());
                 json.put("cutWeight", edit1.getText());
-                JSONObject jsonObject=new JSONObject(json);
-                final String json =jsonObject.toJSONString() ;
+                JSONObject jsonObject = new JSONObject(json);
+                final String json = jsonObject.toJSONString();
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCutWeight.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @SuppressLint("LongLogTag")
@@ -191,7 +200,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-
+                                    getActivity().onBackPressed();
 //                                    blinkDialog2(true);
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
@@ -211,6 +220,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     }
 
     private AlertDialog dialog;
+
     private void blinkDialog2(boolean flag) {
         if (dialog == null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());

@@ -122,7 +122,9 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         ButterKnife.bind(this, view);
 
         initData();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+
+            EventBus.getDefault().register(this);
         sound = new Sound(getActivity());
 
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_item);
