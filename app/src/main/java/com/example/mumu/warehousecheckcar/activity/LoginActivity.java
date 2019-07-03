@@ -109,12 +109,12 @@ public class LoginActivity extends AppCompatActivity {
 //        App.IP = "http://47.106.157.255";
 //        App.PORT = "80";
 //        测试服
-//        App.IP = "http://120.79.56.119";
-//        App.PORT = "8080";
+        App.IP = "http://120.79.56.119";
+        App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
-        App.IP="http://192.168.1.176";
-        App.PORT="80";
+//        App.IP="http://192.168.1.176";
+//        App.PORT="80";
       /*  App.IP="http://192.168.1.146";
         App.PORT="8080";*/
     }
@@ -313,14 +313,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
             try {
-                // Simulate network access.
-//                Thread.sleep(3000);
-//                OkHttpClientManager.Param[] param=new OkHttpClientManager.Param[1];
-//                param[0]=new OkHttpClientManager.Param("username",mUserName);
-//                param[1]=new OkHttpClientManager.Param("password",mPassword);
-//                Response response=OkHttpClientManager.post(App.IP+":"+App.PORT+"/shYf/sh/android/login",param);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("username", mUserName);
                 jsonObject.put("password", mPassword);
@@ -354,8 +347,6 @@ public class LoginActivity extends AppCompatActivity {
                         User user = User.newInstance();
                         user.setUser(id, username, msg, code,0);
 //                        user.setUser(id, username, msg, code,auth);
-
-
                         return true;
                     }
                   /*  case 1003:{//密码不正确
@@ -365,7 +356,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(context,"密码不正确",Toast.LENGTH_SHORT).show();
                     }
                         break;*/
-//
                     default: {//else登录失败
                         String msg = (String) message.get("msg");
                         User user = User.newInstance();
@@ -373,8 +363,6 @@ public class LoginActivity extends AppCompatActivity {
                         return false;
                     }
                 }
-//            } catch (InterruptedException e) {
-//                return false;
             } catch (JSONException e) {
                 e.printStackTrace();
                 User user = User.newInstance();

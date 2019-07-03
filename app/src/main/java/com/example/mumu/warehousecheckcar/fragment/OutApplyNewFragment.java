@@ -288,7 +288,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                         output.setCount(output.getCount() + 1);
                                         output.setWeightall(ArithUtil.add(output.getWeightall(), epcKeyList.get(EPC).getWeight()));
 //                                        自动配货
-                                        if (vatKey.get(output.getVatNo()) && output.getCountProfit() < output.getCountOut()) {
+                                        if (vatKey.get(output.getVatNo()) && output.getCountProfit() <output.getCountOut()) {
                                             epcKeyList.get(EPC).setApplyNo(output.getApplyNo()+i);
                                             output.addCountProfit();
                                         }
@@ -454,10 +454,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 break;
             case R.id.button2:
                 blinkDialog();
-                Message msg = handler.obtainMessage();
-                msg.what = 0x00;
-                msg.obj = "3035A5370000040008898212";
-                handler.sendMessage(msg);
                 break;
         }
     }
@@ -541,9 +537,13 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                             Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
 
 //                                            blinkDialog2(true);
+                                        } else if (baseReturn != null && baseReturn.getStatus() == 0){
+                                            Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
+                                            blinkDialog2(true,baseReturn.getData());
+
                                         } else {
                                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                            blinkDialog2(false);
+                                            blinkDialog2(false,"");
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -565,15 +565,15 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     }
 
     private AlertDialog dialog;
-    private void blinkDialog2(boolean flag) {
-        if (dialog == null) {
+    private void blinkDialog2(boolean flag,String msg) {
+//        if (dialog == null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
             Button no = (Button) blinkView.findViewById(R.id.dialog_no);
             Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
             TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
             if (flag)
-                text.setText("上传成功");
+                text.setText(msg+"出库失败，请在ERP出库");
             else
                 text.setText("上传失败");
 
@@ -597,15 +597,15 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     dialog.dismiss();
                 }
             });
-        } else {
+      /*  } else {
             TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
             if (flag)
-                text.setText("上传成功");
+                text.setText(msg+"出库失败，请在ERP出库");
             else
                 text.setText("上传失败");
             if (!dialog.isShowing())
                 dialog.show();
-        }
+        }*/
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -773,13 +773,16 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+//                    扫描>配货红色
                     if (item.getCount() > item.getCountOut())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorREAD));
                     else if (item.getCountOut() == item.getCountProfit())
+                        //                    扫描=配货蓝色
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                     if (item.getFlag() == 2) {
+                        //            非单号扫描黄色
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                         if (cb.isEnabled())
                             cb.setEnabled(false);
