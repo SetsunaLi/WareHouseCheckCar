@@ -71,7 +71,7 @@
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/colorDialogContent</item>
-        <item name="android:background">@drawable/dialog_button_no</item>
+        <item name="android:background">@drawable/button_no_select</item>
     </style>
     <!--提示框右边按钮-->
     <style name="dialog_button_yes">
@@ -79,7 +79,7 @@
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:background">@drawable/dialog_button_yes</item>
+        <item name="android:background">@drawable/button_yes_select</item>
     </style>
 
     <!--适用于整个应用程序的普通字体的样式 -->

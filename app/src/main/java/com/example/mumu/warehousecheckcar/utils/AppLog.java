@@ -65,10 +65,10 @@ public class AppLog {
         ps.close();
     }
 
-    static FormatStrategy formatStrategy;
-    static FormatStrategy formatStrategy2;
+    private static FormatStrategy formatStrategy;
+    private static FormatStrategy formatStrategy2;
 
-    static void initFormat1() {
+    private static void initFormat1() {
         formatStrategy = PrettyFormatStrategy.newBuilder()
                 .tag("WareHouse")
                 .build();
@@ -82,7 +82,7 @@ public class AppLog {
         });
     }
 
-    static void initFormat2() {
+    private static void initFormat2() {
         formatStrategy2 = CsvFormatStrategy.newBuilder()
                 .tag("WareHouse")
                 .build();
