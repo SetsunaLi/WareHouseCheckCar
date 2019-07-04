@@ -24,6 +24,7 @@ import java.util.Map;
 public class App extends Application {
     public  static final boolean APPLOGGER=true;
     public  static final boolean APPLOGGERTXT=true;
+    public static final long TIME=5000;
     public  static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     public static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 

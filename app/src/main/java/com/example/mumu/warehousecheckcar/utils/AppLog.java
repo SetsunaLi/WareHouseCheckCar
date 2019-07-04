@@ -15,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -62,11 +64,12 @@ public class AppLog {
 //        关闭流
         ps.close();
     }
+
     static FormatStrategy formatStrategy;
     static FormatStrategy formatStrategy2;
 
-     static void initFormat1(){
-        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+    static void initFormat1() {
+        formatStrategy = PrettyFormatStrategy.newBuilder()
                 .tag("WareHouse")
                 .build();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
@@ -78,8 +81,9 @@ public class AppLog {
             }
         });
     }
-     static void initFormat2(){
-        FormatStrategy formatStrategy2 = CsvFormatStrategy.newBuilder()
+
+    static void initFormat2() {
+        formatStrategy2 = CsvFormatStrategy.newBuilder()
                 .tag("WareHouse")
                 .build();
 
@@ -91,16 +95,17 @@ public class AppLog {
             }
         });
     }
-    public static void clearFormat(){
+
+    public static void clearFormat() {
         Logger.clearLogAdapters();
-        formatStrategy=null;
-        formatStrategy2=null;
+        formatStrategy = null;
+        formatStrategy2 = null;
     }
 
     public static void writeLog(String tag, String msg, int TPYE) {
-        if (formatStrategy==null)
+        if (formatStrategy == null)
             initFormat1();
-        if (formatStrategy2==null)
+        if (formatStrategy2 == null)
             initFormat2();
 
         switch (TPYE) {
@@ -114,8 +119,23 @@ public class AppLog {
                 Logger.t(tag).i(msg);
                 break;
             default:
+                Logger.t(tag).i(msg);
                 break;
         }
+    }
+
+    public static void write(Context context, String tag, String msg, int TPYE) throws IOException {
+//         IO日志
+//        获取日期
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        Date date = new Date(System.currentTimeMillis());
+        String dateStr = simpleDateFormat.format(date);
+        //获取当前时间
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");// HH:mm:ss
+        String time = simpleDateFormat2.format(date);
+        writeIO(context, dateStr + ".txt", time + tag + ":" + msg + "\r\n");
+//Logger日志
+        writeLog(tag, msg, TPYE);
     }
 
 }

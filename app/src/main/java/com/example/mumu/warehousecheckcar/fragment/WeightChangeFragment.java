@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.CheckWeight;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -50,6 +51,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class WeightChangeFragment extends Fragment implements UHFCallbackLiatener {
     private final String TAG = "WeightChangeFragment";
@@ -265,31 +268,41 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
     public void onViewClicked() {
         blinkDialog();
     }
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            if (dialog1!=null)
+                if (dialog1.isShowing()) {
+                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                    no.setEnabled(true);
+                }
 
+        }
+    };
+    private Dialog dialog1;
     private void blinkDialog() {
-        final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.dialog_weight_change, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text1 = (TextView) blinkView.findViewById(R.id.dialog_text1);
         TextView text2 = (TextView) blinkView.findViewById(R.id.dialog_text2);
         TextView text3 = (TextView) blinkView.findViewById(R.id.dialog_text3);
         text1.setText("修改前库存重量:" + cloth.getWeight() + "KG");
         text2.setText("修改后库存重量:" + cloth.getWeightChange() + "KG");
         text3.setText("修改的重量差异:" + ArithUtil.sub(cloth.getWeightChange(), cloth.getWeight()) + "KG");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+        dialog1 = new AlertDialog.Builder(getActivity()).create();
+        dialog1.show();
+        dialog1.getWindow().setContentView(blinkView);
+        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(false);
+        dialog1.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                dialog1.dismiss();
             }
         });
         yes.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +312,11 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                 jsonObject.put("data",cloth);
                 jsonObject.put("userId", User.newInstance().getId());
                 final String json = JSON.toJSONString(jsonObject);
+                try {
+                    AppLog.write(getActivity(),"weightc",json,AppLog.TYPE_INFO);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/inv_sum/change_weight_inv", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
@@ -312,6 +330,15 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
+                                try {
+                                    AppLog.write(getActivity(),"weightc","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (dialog1.isShowing())
+                                    dialog1.dismiss();
+                                no.setEnabled(true);
+                                handler.removeCallbacks(r);
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
@@ -331,7 +358,9 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                dialog.dismiss();
+                no.setEnabled(false);
+                yes.setEnabled(false);
+                handler.postDelayed(r,TIME);
             }
         });
     }

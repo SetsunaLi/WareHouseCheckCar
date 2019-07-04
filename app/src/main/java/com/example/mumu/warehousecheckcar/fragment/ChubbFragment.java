@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -55,6 +56,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 
 /**
@@ -327,25 +330,36 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                 break;
         }
     }
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            if (dialog1!=null)
+                if (dialog1.isShowing()) {
+                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                    no.setEnabled(true);
+                }
+
+        }
+    };
+    private Dialog dialog1;
 
     private void blinkDialog() {
-        final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
         text.setText("是否确认查布？");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+        dialog1 = new AlertDialog.Builder(getActivity()).create();
+        dialog1.show();
+        dialog1.getWindow().setContentView(blinkView);
+        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                dialog1.dismiss();
             }
         });
         yes.setOnClickListener(new View.OnClickListener() {
@@ -364,6 +378,11 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                 jsonObject.put("userId", User.newInstance().getId());
                 final String json = JSON.toJSONString(jsonObject);
                 try {
+                    AppLog.write(getActivity(),"chubb",json,AppLog.TYPE_INFO);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushCheck", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
@@ -376,6 +395,15 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
+                                try {
+                                    AppLog.write(getActivity(),"chubb","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (ChubbFragment.this.dialog1.isShowing())
+                                    ChubbFragment.this.dialog1.dismiss();
+                                no.setEnabled(true);
+                                handler.removeCallbacks(r);
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
@@ -399,7 +427,9 @@ public class ChubbFragment extends Fragment implements UHFCallbackLiatener, BRec
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                dialog.dismiss();
+                no.setEnabled(false);
+                yes.setEnabled(false);
+                handler.postDelayed(r,TIME);
             }
         });
     }

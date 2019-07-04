@@ -42,6 +42,7 @@ import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.RFIDReaderHelper;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -56,6 +57,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 
 public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener,UHFCallbackLiatener{
@@ -216,26 +219,37 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
                 break;
         }
     }
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            if (dialog1!=null)
+            if (dialog1.isShowing()) {
+                Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                no.setEnabled(true);
+            }
+
+        }
+    };
+    private Dialog dialog1;
     private void blinkDialog(){
-        final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
         text.setText("是否空托盘整理");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+        dialog1 = new AlertDialog.Builder(getActivity()).create();
+        dialog1.show();
+        dialog1.getWindow().setContentView(blinkView);
+        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(false);
+        dialog1.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.cancel();
+                dialog1.cancel();
             }
         });
         yes.setOnClickListener(new View.OnClickListener() {
@@ -247,6 +261,11 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
                     jsonObject.put("userId",user.getId());
                     jsonObject.put("pallets",dataKEY);
                     final  String json = jsonObject.toString();
+                    try {
+                        AppLog.write(getActivity(),"emptyshelf",json,AppLog.TYPE_INFO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     try{
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/static/arrangePallets.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @SuppressLint("LongLogTag")
@@ -260,10 +279,20 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
+                                    try {
+                                        AppLog.write(getActivity(),"emptyshelf","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (dialog1.isShowing())
+                                        dialog1.dismiss();
+                                    no.setEnabled(true);
+                                    handler.removeCallbacks(r);
                                     BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                     if (baseReturn != null && baseReturn.getStatus() == 1) {
                                         Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-
+                                        clearData();
+                                        mAdapter.notifyDataSetChanged();
 //                                        blinkDialog2(true);
                                     } else {
                                         Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
@@ -278,7 +307,9 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
                         e.printStackTrace();
                     }
                 }
-                dialog.dismiss();
+                no.setEnabled(false);
+                yes.setEnabled(false);
+                handler.postDelayed(r,TIME);
             }
         });
     }

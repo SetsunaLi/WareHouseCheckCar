@@ -44,6 +44,7 @@ import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -61,6 +62,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.CHECK_DETAIL_LIST;
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 /**
  * Created by mumu on 2018/11/26.
@@ -84,7 +86,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     TextView text2;
     @Bind(R.id.text3)
     TextView text3;
-
 
 
     public static CheckFragment newInstance() {
@@ -211,6 +212,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         }
                         Toast.makeText(getActivity(), "获取库位信息失败！", Toast.LENGTH_SHORT).show();
                     }
+
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         try {
@@ -226,7 +228,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                                 myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
                                             } else {//里面没有
                                                 if (!dataKEY.contains(obj.getVatNo()))
-                                                dataKEY.add(obj.getVatNo());
+                                                    dataKEY.add(obj.getVatNo());
                                                 obj.setCountIn(1);
                                                 myList.add(obj);
                                                 keyValue.put(obj.getVatNo(), myList.size() - 1);
@@ -382,26 +384,37 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         }
     }
 
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            if (dialog1.isShowing()) {
+                Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                no.setEnabled(true);
+            }
+
+        }
+    };
+    private Dialog dialog1;
+
     private void blinkDialog() {
-        final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
         text.setText("是否上传盘点数据");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+        dialog1 = new AlertDialog.Builder(getActivity()).create();
+        dialog1.show();
+        dialog1.getWindow().setContentView(blinkView);
+        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(false);
+        dialog1.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                dialog1.dismiss();
             }
         });
         yes.setOnClickListener(new View.OnClickListener() {
@@ -422,10 +435,15 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         jsocList.add(obj);
                     }
                 }
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("data",jsocList);
-                jsonObject.put("userId",User.newInstance().getId());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("data", jsocList);
+                jsonObject.put("userId", User.newInstance().getId());
                 final String json = JSON.toJSONString(jsonObject);
+                try {
+                    AppLog.write(getActivity(),"check",json,AppLog.TYPE_INFO);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 try {
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
                         @Override
@@ -439,7 +457,18 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                         @Override
                         public void onResponse(String response) {
                             try {
+                                try {
+                                    AppLog.write(getActivity(),"check","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (dialog1.isShowing())
+                                dialog1.dismiss();
+                                no.setEnabled(true);
+                                handler.removeCallbacks(r);
+
                                 if (response.equals("1")) {
+
                                     Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
 
                                     clearData();
@@ -462,12 +491,16 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                dialog.dismiss();
+                no.setEnabled(false);
+                yes.setEnabled(false);
+                handler.postDelayed(r,TIME);
             }
         });
+
     }
 
     private AlertDialog dialog;
+
     private void blinkDialog2(boolean flag) {
         if (dialog == null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -510,6 +543,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 dialog.show();
         }
     }
+
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @Override
@@ -625,7 +659,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                     holder.setText(R.id.item5, item.getCountIn() + "");
                     holder.setText(R.id.item6, item.getCountReal() + "");
                     holder.setText(R.id.item7, item.getCountProfit() + "");
-                    holder.setText(R.id.item8, item.getCountIn() - item.getCountReal() + item.getCountProfit()+"");
+                    holder.setText(R.id.item8, item.getCountIn() - item.getCountReal() + item.getCountProfit() + "");
                 }
             }
         }

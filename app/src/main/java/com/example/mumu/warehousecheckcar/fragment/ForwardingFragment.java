@@ -42,6 +42,7 @@ import com.example.mumu.warehousecheckcar.entity.Forwarding;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -377,6 +378,11 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         jsonObject.put("data", list);
         final String json = jsonObject.toJSONString();
         try {
+            AppLog.write(getActivity(),"forwarding",json,AppLog.TYPE_INFO);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/setTransport_out.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @Override
                 public void onError(Request request, Exception e) {
@@ -389,9 +395,16 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
+                        try {
+                            AppLog.write(getActivity(),"forwarding","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                             Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                            clearData();
+                            mAdapter.notifyDataSetChanged();
 //                            blinkDialog2(true);
                         } else {
                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();

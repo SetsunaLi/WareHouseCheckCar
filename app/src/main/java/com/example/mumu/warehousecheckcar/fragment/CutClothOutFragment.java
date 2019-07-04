@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,6 +50,8 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class CutClothOutFragment extends Fragment {
     private final String TAG = "CutClothOutFragment";
@@ -221,26 +225,38 @@ public class CutClothOutFragment extends Fragment {
                 break;
         }
     }
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            if (dialog1!=null)
+                if (dialog1.isShowing()) {
+                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                    no.setEnabled(true);
+                }
+
+        }
+    };
+    private Handler handler=new Handler();
+    private Dialog dialog1;
     private void blinkDialog() {
-        final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
         text.setText("是否确认出库");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+        dialog1 = new AlertDialog.Builder(getActivity()).create();
+        dialog1.show();
+        dialog1.getWindow().setContentView(blinkView);
+        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(false);
+        dialog1.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                dialog1.dismiss();
             }
         });
         yes.setOnClickListener(new View.OnClickListener() {
@@ -259,6 +275,11 @@ public class CutClothOutFragment extends Fragment {
                         jsonObject.put("data", jsocList);
                         final String json = jsonObject.toJSONString();
                         try {
+                            AppLog.write(getActivity(),"ccout",json,AppLog.TYPE_INFO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCutOut.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
@@ -271,10 +292,20 @@ public class CutClothOutFragment extends Fragment {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
+                                        try {
+                                            AppLog.write(getActivity(),"ccout","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (dialog1.isShowing())
+                                            dialog1.dismiss();
+                                        no.setEnabled(true);
+                                        handler.removeCallbacks(r);
                                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                                             Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-
+                                            clearData();
+                                            mAdapter.notifyDataSetChanged();
 //                                            blinkDialog2(true);
                                         } else {
                                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
@@ -292,7 +323,9 @@ public class CutClothOutFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                dialog.dismiss();
+                no.setEnabled(false);
+                yes.setEnabled(false);
+                handler.postDelayed(r,TIME);
             }
         });
     }

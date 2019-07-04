@@ -62,6 +62,7 @@ import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.RFIDReaderHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -238,6 +239,8 @@ public class Main2Activity extends AppCompatActivity
         clearAllData();
 //        if (SK_UHFHander.getInstance() != null)
 //            SK_UHFHander.getInstance().disConnectRFID();
+//        销毁日志事务
+        AppLog.clearFormat();
     }
 
     private void clearAllData() {
