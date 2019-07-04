@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">仓库APP</string>
     <string name="title_activity_main2">仓库APP</string>
-    <!--当前版本1.0,2019年6月20日-->
-    <string name="app_version">7.3.2</string>
-    <string name="app_download_url">app-debug.apk</string>
+    <!--当前版本1.0,2019年7月5日-->
+    <string name="app_version">7.5</string>
+    <string name="app_download_url">warehouse.apk</string>
 
 
     <!-- Strings related to login -->
@@ -151,7 +151,7 @@
     <string name="putaway_assistant">协助人：</string>
 
     <!--about-->
-    <string name="RFID_demo_app">WareHouseCheckCAR Application</string>
+    <string name="RFID_demo_app">WareHouse Application</string>
     <string name="moto_solutions">RIDKO Technologies</string>
     <string name="app_version_title">Application Version</string>
     <string name="colon">:</string>
