@@ -424,76 +424,84 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 ArrayList<Inventory> jsocList = new ArrayList<>();
                 for (Inventory obj : dataList) {
                     if (obj.getVatNo() != null && dataKEY.contains(obj.getVatNo())) {
-                        Carrier c = new Carrier();
+                      /*  Carrier c = new Carrier();
                         c.setTrayNo(App.CARRIER.getTrayNo());
                         c.setLocationNo(App.CARRIER.getLocationNo());
                         c.setLocationEPC(App.CARRIER.getLocationEPC());
                         c.setTrayEPC(App.CARRIER.getTrayEPC());
-                        c.setId(App.CARRIER.getId());
+                        c.setId(App.CARRIER.getId());*/
                         obj.setDevice(App.DEVICE_NO);
-                        obj.setCarrier(c);
+//                        obj.setCarrier(c);
                         jsocList.add(obj);
                     }
                 }
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("data", jsocList);
-                jsonObject.put("userId", User.newInstance().getId());
-                final String json = JSON.toJSONString(jsonObject);
-                try {
-                    AppLog.write(getActivity(),"check",json,AppLog.TYPE_INFO);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "postInventory;" + e.getMessage());
-                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                try {
-                                    AppLog.write(getActivity(),"check","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                if (jsocList.size() > 0) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("data", jsocList);
+                    jsonObject.put("userId", User.newInstance().getId());
+                    jsonObject.put("carrier", App.CARRIER);
+                    final String json = JSON.toJSONString(jsonObject);
+                    try {
+                        AppLog.write(getActivity(), "check", json, AppLog.TYPE_INFO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Log.i(TAG, "postInventory;" + e.getMessage());
+                                    Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                                if (dialog1.isShowing())
-                                dialog1.dismiss();
-                                no.setEnabled(true);
-                                handler.removeCallbacks(r);
+                            }
 
-                                if (response.equals("1")) {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    try {
+                                        AppLog.write(getActivity(), "check", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (dialog1.isShowing())
+                                        dialog1.dismiss();
+                                    no.setEnabled(true);
+                                    handler.removeCallbacks(r);
 
-                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    if (response.equals("1")) {
 
-                                    clearData();
-                                    mAdapter.notifyDataSetChanged();
-                                    getActivity().onBackPressed();
+                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+
+                                        clearData();
+                                        mAdapter.notifyDataSetChanged();
+                                        getActivity().onBackPressed();
 
 //                                    blinkDialog2(true);
-                                } else {
-                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    blinkDialog2(false);
+                                    } else {
+                                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                        blinkDialog2(false);
+                                    }
+                                } catch (Exception e) {
+
                                 }
-                            } catch (Exception e) {
-
                             }
-                        }
-                    }, json);
+                        }, json);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    no.setEnabled(false);
+                    yes.setEnabled(false);
+                    handler.postDelayed(r, TIME);
+                }else{
+                    if (dialog1.isShowing())
+                        dialog1.dismiss();
+                    Toast.makeText(getActivity(), "请勾选上传信息", Toast.LENGTH_LONG).show();
                 }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,TIME);
+
             }
         });
 
