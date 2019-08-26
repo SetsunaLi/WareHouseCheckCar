@@ -110,7 +110,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            }
+        }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -119,7 +119,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                 locationNo = locationNo.replaceAll(" ", "");
                 App.CARRIER.setLocationNo(locationNo);
                 App.CARRIER.setLocationEPC("");
-
             }
 
             @Override

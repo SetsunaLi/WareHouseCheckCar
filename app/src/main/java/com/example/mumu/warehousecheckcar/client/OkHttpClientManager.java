@@ -2,11 +2,13 @@ package com.example.mumu.warehousecheckcar.client;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.mumu.warehousecheckcar.application.App;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Types;
+import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -29,6 +31,7 @@ import java.net.CookiePolicy;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,55 +40,10 @@ import java.util.Set;
  */
 
 public class OkHttpClientManager {
-
-    /*请求出库申请单*/
-    private static   String applyNoURL;
-    /*请求缸号信息列表*/
-    private static   String applyDetailURL;
-    /*请求EPC布匹信息*/
-    private static   String epcClothURL;
-    /*上传出库布匹信息*/
-    private static  String outBoundURL;
     private static OkHttpClientManager mInstance;
     private OkHttpClient mOkHttpClient;
     private Handler mDelivery;
     private Gson mGson;
-
-    public static String getApplyNoURL() {
-        setApplyNoURL(App.IP+":"+ App.PORT+"/app/outbound/outbound_apply/");
-        return applyNoURL;
-    }
-
-    public static void setApplyNoURL(String applyNoURL) {
-        OkHttpClientManager.applyNoURL = applyNoURL;
-    }
-
-    public static String getApplyDetailURL() {
-        setApplyDetailURL(App.IP+":"+App.PORT+"/app/outbound/detail_vatedye/");
-        return applyDetailURL;
-    }
-
-    public static void setApplyDetailURL(String applyDetailURL) {
-        OkHttpClientManager.applyDetailURL = applyDetailURL;
-    }
-
-    public static String getEpcClothURL() {
-        setEpcClothURL(App.IP+":"+App.PORT+"/app/outbound/detail/");
-        return epcClothURL;
-    }
-
-    public static void setEpcClothURL(String epcClothURL) {
-        OkHttpClientManager.epcClothURL = epcClothURL;
-    }
-
-    public static String getOutBoundURL() {
-        setOutBoundURL(outBoundURL= App.IP+":"+App.PORT+"/app/outbound");
-        return outBoundURL;
-    }
-
-    public static void setOutBoundURL(String outBoundURL) {
-        OkHttpClientManager.outBoundURL = outBoundURL;
-    }
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -94,8 +52,10 @@ public class OkHttpClientManager {
     private OkHttpClientManager()
     {
         mOkHttpClient = new OkHttpClient();
+
         //cookie enabled
         mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+//        mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy ACCEPT_ALL));
         mDelivery = new Handler(Looper.getMainLooper());
         mGson = new Gson();
     }
@@ -659,6 +619,14 @@ public class OkHttpClientManager {
             @Override
             public void onResponse(final Response response)
             {
+                   //获取session的操作，session放在cookie头，且取出后含有“；”，取出后为下面的 s （也就是jsesseionid）
+//                Headers headers = response.headers();
+//                Log.e(TAG, "header " + headers);
+//                List<String> cookies = headers.values("Set-Cookie");
+           /*     String session = cookies.get(0);
+                Log.e(TAG, "onResponse-size: " + cookies);
+                String s = session.substring(0, session.indexOf(";"));
+                Log.e(TAG, "session is :" + s);*/
                 try
                 {
                     final String string = response.body().string();

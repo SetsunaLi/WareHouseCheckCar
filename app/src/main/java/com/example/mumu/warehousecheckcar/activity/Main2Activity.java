@@ -396,7 +396,7 @@ public class Main2Activity extends AppCompatActivity
             Toast.makeText(this, "你的账号权限无法使用该功能", Toast.LENGTH_LONG).show();
         }
 //        设置列表点击状态
-        if (position>15)
+        if (position > 15)
             position--;
         navigationView.getMenu().findItem(OptionMenu.values()[position].getId()).setChecked(true);
 //        关闭抽屉

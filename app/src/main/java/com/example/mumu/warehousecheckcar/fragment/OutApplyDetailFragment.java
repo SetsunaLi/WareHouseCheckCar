@@ -158,6 +158,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                             return 1;
                         }
                     }
+                    if (dataList.get(obj1.getEpc()).isFind())
+                        return -1;
+                    if (dataList.get(obj2.getEpc()).isFind())
+                        return 1;
                 }
                 String aFab = obj1.getFabRool();
                 String bFab = obj2.getFabRool();
@@ -292,7 +296,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                         if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
                                             dataList.get(item.getEpc()).setApplyNo("");
 //                                            防止配货数量为负数
-                                            if (oldData.getCountProfit()<1)
+                                            if (oldData.getCountProfit() < 1)
                                                 oldData.setCountProfit(oldData.getCountProfit() - 1);
                                             else
                                                 oldData.setCountProfit(0);
@@ -332,7 +336,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                                 cb.setEnabled(false);
                             } else {
-                                ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                                if (item.getWeight() < item.getWeight_in())
+                                    ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                                else
+                                    ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                                 cb.setEnabled(true);
                             }
                         final EditText editText = (EditText) holder.getView(R.id.edittext1);
@@ -354,6 +361,9 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                         double a = Double.parseDouble(weight);
                                         if (dataList.containsKey(item.getEpc()))
                                             dataList.get(item.getEpc()).setWeight(a);
+                                    }else {
+                                        if (dataList.containsKey(item.getEpc()))
+                                            dataList.get(item.getEpc()).setWeight(0);
                                     }
                                 } catch (Exception e) {
                                     editText.setText(item.getWeight() + "");

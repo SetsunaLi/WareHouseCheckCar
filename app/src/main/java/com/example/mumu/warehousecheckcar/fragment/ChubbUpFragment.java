@@ -230,6 +230,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
             });
         }
     }
+
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void getEventMsg(EventBusMsg msg) {
         if (msg != null)
@@ -239,6 +240,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                     break;
             }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -567,8 +569,11 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));*/
-
-                    holder.setText(R.id.item1, item.getBas_location() + "");
+                    if (item.getBas_location() != null) {
+                        String location = item.getBas_location().replaceAll("临时入库区", "").replaceAll("备货区", "");
+                        holder.setText(R.id.item1, location + "");
+                    } else
+                        holder.setText(R.id.item1, "");
                     holder.setText(R.id.item2, item.getBas_pallet() + "");
                     holder.setText(R.id.item3, item.getVatNo() + "");
                     holder.setText(R.id.item4, item.getProduct_no() + "");
