@@ -27,7 +27,6 @@ public class RFID_2DHander {
     }
 
     private RFIDReaderHelper rfidReaderHelper;
-    private TDScannerHelper mScanner;
     private ModuleConnector connectRFID;
     private TDScannerConnector Connector2D;
 
@@ -112,7 +111,7 @@ public class RFID_2DHander {
      */
     public boolean disConnect2D(){
         if (Connector2D != null&&Connector2D.isConnected()) {
-            mScanner.unRegisterObservers();
+            TDScannerHelper.getDefaultHelper().unRegisterObservers();
             Connector2D.disConnect();
             ModuleManager.newInstance().release();
             return true;

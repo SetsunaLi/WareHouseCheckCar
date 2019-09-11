@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -282,16 +283,16 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             epcKeyList.get(EPC).setStatus(true);
 
 //                            for (Output i : myList) {
-                            for (int i = 0; i <myList.size(); i++) {
-                                Output output=myList.get(i);
+                            for (int i = 0; i < myList.size(); i++) {
+                                Output output = myList.get(i);
                                 for (OutputDetail od : output.getList()) {
                                     if (od.getEpc().equals(EPC)) {
                                         output.setCount(output.getCount() + 1);
                                         output.setWeightall(ArithUtil.add(output.getWeightall(), epcKeyList.get(EPC).getWeight()));
 
 //                                        自动配货
-                                        if (vatKey.get(output.getVatNo()) && output.getCountProfit() <output.getCountOut()) {
-                                            epcKeyList.get(EPC).setApplyNo(output.getApplyNo()+i);
+                                        if (vatKey.get(output.getVatNo()) && output.getCountProfit() < output.getCountOut()) {
+                                            epcKeyList.get(EPC).setApplyNo(output.getApplyNo() + i);
                                             output.setWeightPei(ArithUtil.add(output.getWeightPei(), epcKeyList.get(EPC).getWeight()));
                                             output.addCountProfit();
                                         }
@@ -409,7 +410,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
     }
-//标签操作
+
+    //标签操作
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
         Message msg = handler.obtainMessage();
@@ -459,10 +461,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 break;
         }
     }
+
     private Runnable r = new Runnable() {
         @Override
         public void run() {
-            if (dialog1!=null)
+            if (dialog1 != null)
                 if (dialog1.isShowing()) {
                     Button no = (Button) dialog1.findViewById(R.id.dialog_no);
                     no.setEnabled(true);
@@ -471,6 +474,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         }
     };
     private Dialog dialog1;
+
     private void blinkDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
@@ -499,6 +503,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //                    @Override
 //                    public void run() {
                 //                上传数据
+                ArrayList<ArrayList<Output>> allList = new ArrayList<>();
+                boolean isPush = true;
                 for (String applyNo : dataKey.keySet()) {
                     ArrayList<Output> jsocList = new ArrayList<>();
 //                    for (Output op : myList) {
@@ -509,7 +515,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             if (dataKey.get(applyNo).contains(key)) {
                                 ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
                                 for (OutputDetail od : op.getList()) {
-                                    if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo+i)) {
+                                    if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo + i)) {
                                         od.setFlag(1);
                                         od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
                                         newList.add(od);
@@ -520,112 +526,134 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                     obj.setDevice(App.DEVICE_NO);
                                     obj.setFlag(1);
                                     obj.setList(newList);
+                                    if (isPush && obj.getCountOut() != obj.getCountProfit())
+                                        isPush = false;
                                     jsocList.add(obj);
                                 }
                             }
                         }
                     }
                     if (jsocList.size() > 0) {
+                        allList.add(jsocList);
+                    }
+                }
+                if (User.newInstance().getAuth() == 11 || (User.newInstance().getAuth() == 10 && isPush)) {
+                    for (ArrayList<Output> jsocList : allList) {
+                        if (jsocList.size() > 0) {
 //                        final String json = JSON.toJSONString(jsocList);
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", User.newInstance().getId());
-                        jsonObject.put("data", jsocList);
-                        final String json = jsonObject.toJSONString();
-                        try {
-                            AppLog.write(getActivity(),"outapply",json,AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "postInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("userId", User.newInstance().getId());
+                            jsonObject.put("data", jsocList);
+                            final String json = jsonObject.toJSONString();
+                            try {
+                                AppLog.write(getActivity(), "outapply", json, AppLog.TYPE_INFO);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "postInventory;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
                                         try {
-                                            AppLog.write(getActivity(),"outapply","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                                        } catch (IOException e) {
+                                            try {
+                                                AppLog.write(getActivity(), "outapply", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (dialog1.isShowing())
+                                                dialog1.dismiss();
+                                            no.setEnabled(true);
+                                            handler.removeCallbacks(r);
+                                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                                clearData();
+                                                mAdapter.notifyDataSetChanged();
+//                                            blinkDialog2(true);
+                                            } else if (baseReturn != null && baseReturn.getStatus() == 0) {
+                                                Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
+                                                blinkDialog2(true, baseReturn.getData());
+
+                                            } else {
+                                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                                blinkDialog2(false, "");
+                                            }
+                                        } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        if (dialog1.isShowing())
-                                            dialog1.dismiss();
-                                        no.setEnabled(true);
-                                        handler.removeCallbacks(r);
-                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                                        if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                            clearData();
-                                            mAdapter.notifyDataSetChanged();
-//                                            blinkDialog2(true);
-                                        } else if (baseReturn != null && baseReturn.getStatus() == 0){
-                                            Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
-                                            blinkDialog2(true,baseReturn.getData());
-
-                                        } else {
-                                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                            blinkDialog2(false,"");
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
                                     }
-                                }
-                            }, json);
+                                }, json);
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-
-                }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,App.TIME);
+                    no.setEnabled(false);
+                    yes.setEnabled(false);
+                    handler.postDelayed(r, App.TIME);
+                }else
+                    showDialog();
             }
         });
     }
-
+    private void showDialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        builder.setTitle("提示");
+        builder.setMessage("配货条数与申请条数不一致！请联系收发人员或出库文员。");
+        builder.setCancelable(false);
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
     private AlertDialog dialog;
-    private void blinkDialog2(boolean flag,String msg) {
-//        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText(msg+"出库失败，请在ERP出库");
-            else
-                text.setText("上传失败");
 
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
+    private void blinkDialog2(boolean flag, String msg) {
+//        if (dialog == null) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
+        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
+        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
+        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
+        if (flag)
+            text.setText(msg + "出库失败，请在ERP出库");
+        else
+            text.setText("上传失败");
+
+        dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.show();
+        dialog.getWindow().setContentView(blinkView);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
       /*  } else {
             TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
             if (flag)
