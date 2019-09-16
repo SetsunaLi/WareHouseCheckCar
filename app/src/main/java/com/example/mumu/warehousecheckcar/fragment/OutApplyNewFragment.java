@@ -537,7 +537,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         allList.add(jsocList);
                     }
                 }
-                if (User.newInstance().getAuth() == 11 || (User.newInstance().getAuth() == 10 && isPush)) {
+//                if (User.newInstance().getAuth() == 11 || (User.newInstance().getAuth() == 10 && isPush)) {
                     for (ArrayList<Output> jsocList : allList) {
                         if (jsocList.size() > 0) {
 //                        final String json = JSON.toJSONString(jsocList);
@@ -580,11 +580,12 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //                                            blinkDialog2(true);
                                             } else if (baseReturn != null && baseReturn.getStatus() == 0) {
                                                 Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
-                                                blinkDialog2(true, baseReturn.getData());
+                                                showDialog(baseReturn.getData()+ "出库失败，请在ERP出库");
 
                                             } else {
                                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                                blinkDialog2(false, "");
+                                                showDialog("上传失败");
+
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -602,15 +603,15 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     no.setEnabled(false);
                     yes.setEnabled(false);
                     handler.postDelayed(r, App.TIME);
-                }else
-                    showDialog();
+//                }else
+//                    showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
             }
         });
     }
-    private void showDialog(){
+    private void showDialog(String msg){
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         builder.setTitle("提示");
-        builder.setMessage("配货条数与申请条数不一致！请联系收发人员或出库文员。");
+        builder.setMessage(msg);
         builder.setCancelable(false);
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
@@ -620,7 +621,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         });
         builder.create().show();
     }
-    private AlertDialog dialog;
+   /* private AlertDialog dialog;
 
     private void blinkDialog2(boolean flag, String msg) {
 //        if (dialog == null) {
@@ -640,8 +641,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+//        dialog.setCanceledOnTouchOutside(false);
+//        dialog.setCancelable(false);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -654,7 +655,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 dialog.dismiss();
             }
         });
-      /*  } else {
+      *//*  } else {
             TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
             if (flag)
                 text.setText(msg+"出库失败，请在ERP出库");
@@ -662,9 +663,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 text.setText("上传失败");
             if (!dialog.isShowing())
                 dialog.show();
-        }*/
+        }*//*
     }
-
+*/
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private int position;
