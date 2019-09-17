@@ -19,7 +19,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
-        versionName "19.05.17"
+        versionName "19.07.08"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
@@ -65,7 +65,7 @@ dependencies {
     implementation files('libs/xdl2d&RFID.jar')
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     implementation 'com.squareup.okio:okio:1.7.0'
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+//    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.orhanobut:logger:2.1.1'
     implementation 'com.android.support:recyclerview-v7:26.+'
