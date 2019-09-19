@@ -103,8 +103,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void initDate() {
 //         正式服
-        App.IP = "http://47.106.157.255";
-        App.PORT = "80";
+//        App.IP = "http://47.106.157.255";
+//        App.PORT = "80";
 //        测试服
 //        App.IP = "http://120.79.56.119";
 //        App.PORT = "8080";
@@ -112,8 +112,8 @@ public class LoginActivity extends AppCompatActivity {
 //        App.PORT = "80";
 //        App.IP="http://192.168.1.118";
 //        App.PORT="80";
-      /*  App.IP="http://192.168.1.146";
-        App.PORT="8080";*/
+        App.IP="http://192.168.1.224";
+        App.PORT="8080";
     }
 
     @Override

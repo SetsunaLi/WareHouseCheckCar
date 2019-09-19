@@ -371,7 +371,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="18dp"
             >
-           <!-- <Button
+            <Button
                 android:id="@+id/button15"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
@@ -379,7 +379,7 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click15"
-                android:text="@string/btn_click17" />-->
+                android:text="@string/btn_click17" />
             <Button
                 android:id="@+id/button16"
                 style="@style/DashboardButton"

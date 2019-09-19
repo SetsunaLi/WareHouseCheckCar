@@ -54,8 +54,8 @@ public class HomeFragment extends Fragment {
     Button button13;
     @Bind(R.id.button14)
     Button button14;
-//    @Bind(R.id.button15)
-//    Button button15;
+    @Bind(R.id.button15)
+    Button button15;
     @Bind(R.id.button16)
     Button button16;
     @Bind(R.id.button2)
@@ -134,18 +134,21 @@ public class HomeFragment extends Fragment {
                     button1.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 6:
                     button3.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 7:
                     button2.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 8:
@@ -154,6 +157,7 @@ public class HomeFragment extends Fragment {
                     button14.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
 
                     break;
@@ -163,6 +167,7 @@ public class HomeFragment extends Fragment {
                     button13.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 10:
@@ -170,6 +175,7 @@ public class HomeFragment extends Fragment {
                     button8.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 11:
@@ -177,6 +183,7 @@ public class HomeFragment extends Fragment {
                     button8.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
                 default:

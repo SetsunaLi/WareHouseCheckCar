@@ -49,6 +49,7 @@ import com.example.mumu.warehousecheckcar.fragment.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.ForwardingMsgFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
+import com.example.mumu.warehousecheckcar.fragment.InAssistFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.InCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.OutApplyDetailFragment;
@@ -367,11 +368,8 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 15:
 //                待开发
-//                fragment= new TextFragment();
-
-//                fragment = CutClothScanFragment.newInstance();
-                //fragment = CutClothWeightFragment.newInstance();
-
+                fragment=InAssistFragment.newInstance();
+                flag = true;
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();
@@ -533,7 +531,7 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
                     || fragment instanceof WeightChangeFragment || fragment instanceof ChubbExceptionFragment
                     || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothPutwayCarrierFragment
-                    || fragment instanceof CutClothFragment)) {
+                    || fragment instanceof CutClothFragment|| fragment instanceof InAssistFragment)) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
                 }
