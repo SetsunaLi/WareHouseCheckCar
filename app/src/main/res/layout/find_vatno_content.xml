@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
+                android:layout_marginLeft="9dip"
+                android:layout_marginRight="9dip"
+                android:layout_marginTop="9dip"
+                android:layout_marginBottom="9dip"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <com.example.mumu.warehousecheckcar.view.FixedEditText
+                    android:id="@+id/fixeedittext1"
+                    style="@style/edit_style2"
+                    android:layout_width="0dp"
+                    android:layout_height="60dip"
+                    android:layout_weight="1"
+                    android:hint="请输入缸号"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <Button
+                    android:id="@+id/buttonAdd"
+                    android:layout_width="56dip"
+                    android:layout_height="56dip"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="9dp"
+
+                    android:background="@drawable/button_add" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="56dip"
+                    android:layout_height="56dip"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="9dp"
+                    android:background="@drawable/button_find" />
+            </LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/layout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip">
+
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="340dp"
+                android:background="@drawable/table_padding">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_style2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="扫描数量：" />
+
+                <TextView
+                    android:id="@+id/text2"
+                    style="@style/text_style2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="left|center_vertical"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/text_style2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="查询数量：" />
+
+                <TextView
+                    android:id="@+id/text3"
+                    style="@style/text_style2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="left|center_vertical"
+                    android:text="0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_style2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ERP查询数量：" />
+
+                <TextView
+                    android:id="@+id/text4"
+                    style="@style/text_style2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="left|center_vertical"
+                    android:text="0" />
+
+
+            </LinearLayout>
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/button0"
+                    style="@style/button_style1"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="@dimen/home_margin"
+                    android:layout_marginRight="@dimen/button_margin"
+                    android:layout_weight="1"
+                    android:text="清空" />
+                <Button
+                    android:id="@+id/button1"
+                    style="@style/button_style1"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="@dimen/home_margin"
+                    android:layout_marginRight="@dimen/button_margin"
+                    android:layout_weight="1"
+                    android:text="刷新" />
+
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/button_style1"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="@dimen/home_margin"
+                    android:layout_marginRight="@dimen/button_margin"
+                    android:layout_weight="1"
+                    android:text="功率" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+   <!-- <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="70dip"
+        android:layout_marginRight="125dip"
+        android:layout_marginBottom="95dip"
+        android:background="@drawable/fuzzy_padding"></ListView>-->
+
+</RelativeLayout>
