@@ -243,12 +243,12 @@ public class InAssistFragment extends Fragment implements UHFCallbackLiatener, B
                 holder.setText(R.id.item1, item.getBas_batch_name() + "");
                 holder.setText(R.id.item2, item.getInv_serial() + "");
                 if (item.getSuggest_location() != null) {
-                    String location = item.getSuggest_location().replaceAll("临时入库区", "").replaceAll("备货区", "");
+                    String location = item.getSuggest_location().replaceAll("剪布区", "").replaceAll("备货区", "");
                     holder.setText(R.id.item3, location + "");
                 } else
                     holder.setText(R.id.item3, "Null");
                 if (item.getSuggest_location() != null) {
-                    String location = item.getSuggest_location().replaceAll("临时入库区", "").replaceAll("备货区", "");
+                    String location = item.getSuggest_location().replaceAll("剪布区", "").replaceAll("备货区", "");
                     holder.setText(R.id.item4, location + "");
                 } else
                     holder.setText(R.id.item4, "Null");

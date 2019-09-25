@@ -537,7 +537,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         allList.add(jsocList);
                     }
                 }
-//                if (User.newInstance().getAuth() == 11 || (User.newInstance().getAuth() == 10 && isPush)) {
+                if (User.newInstance().getAuth() !=10 || (User.newInstance().getAuth() == 10 && isPush)) {
                     for (ArrayList<Output> jsocList : allList) {
                         if (jsocList.size() > 0) {
 //                        final String json = JSON.toJSONString(jsocList);
@@ -603,8 +603,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     no.setEnabled(false);
                     yes.setEnabled(false);
                     handler.postDelayed(r, App.TIME);
-//                }else
-//                    showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
+                }else
+                    showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -7,16 +8,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -70,7 +70,7 @@ import butterknife.OnClick;
  * Created by mumu on 2019/1/21.
  */
 
-public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener{
+public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
     private static FindVatNoFragment fragment;
     @Bind(R.id.layout2)
     LinearLayout layout2;
@@ -90,8 +90,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     Button button1;
     @Bind(R.id.button2)
     Button button2;
-    @Bind(R.id.layout1)
-    LinearLayout layout1;
     @Bind(R.id.autoText1)
     AutoCompleteTextView autoText1;
     @Bind(R.id.autoText2)
@@ -102,7 +100,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     Button button10;
     @Bind(R.id.button9)
     Button button9;
-    @Bind(R.id.dlAssets)
+    @Bind(R.id.drawer_layout)
     DrawerLayout dlAssets;
 
 
@@ -113,7 +111,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     }
 
     private RecycleAdapter mAdapter;
-    private MyAdapter textAdapter;
     //    显示布匹
     private List<FindVatNo> myList;
     //    查询的布匹
@@ -122,119 +119,44 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     private List<String> dataKEY;
     //    扫描epc
     private List<String> dataEpc;
-    //    查询的缸号
+    //    查询
     private ArrayList<String> findList;
 
-    //     模糊查询缸号
-    private ArrayList<String> vatList;
     private Sound sound;
-    private boolean isLookFlag = false;
+    private FilterAdapter vatAdapter;
+    private FilterAdapter colorAdapter;
+    private FilterAdapter clothAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
         ButterKnife.bind(this, view);
-        initView();
-        initData();
-        initUtil();
-
         sound = new Sound(getActivity());
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
-//        点击事件可以改视图样式但不可恢复
-        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
-        ms.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(ms);
-        recyle.setAdapter(mAdapter);
-
-        /*textAdapter = new MyAdapter(getActivity(), R.layout.fuzzy_query_item, vatList);
-        listview.setAdapter(textAdapter);
-//        listview.addHeaderView(getLayoutInflater().inflate(R.layout.check_item),listview,false);
-        listview.setOnItemClickListener(this);
-        listview.setVisibility(View.GONE);
-        fixeedittext1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String vat = s.toString();
-                vat = vat.replaceAll(" ", "");
-                if (vat != null && !vat.equals("") && vat.length() >= 4) {
-                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + vat, new OkHttpClientManager.ResultCallback<JSONArray>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-
-                        }
-
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            try {
-                                List<String> arry;
-                                arry = response.toJavaList(String.class);
-                                String str = response.toJSONString();
-                                if (arry != null && arry.size() > 0) {
-                                    vatList.clear();
-                                    vatList.addAll(arry);
-                                    textAdapter.setList(vatList);
-                                    textAdapter.notifyDataSetChanged();
-                                    if (!vatFlag) {
-                                        if (listview.getVisibility() == View.GONE && isLookFlag)
-                                            listview.setVisibility(View.VISIBLE);
-                                    } else {
-                                        vatFlag = false;
-                                    }
-                                }
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    });
-                } else if (vat.length() < 4) {
-                    if (vatList.size() > 0) {
-                        vatList.clear();
-                        textAdapter.setList(vatList);
-                        textAdapter.notifyDataSetChanged();
-                        if (listview.getVisibility() != View.GONE)
-                            listview.setVisibility(View.GONE);
-                    }
-                }
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                isLookFlag = hasFocus;
-            }
-        });*/
+        initUtil();
+        initData();
+        initView();
+        initLister();
         initRFID();
         return view;
     }
 
     private void initView() {
-       /* fixeedittext1.setFixedText("缸号:");
-        fixeedittext1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE) {
-                    onViewClicked(button);
-                    return true;
-                }
-                return false;
-            }
-        });*/
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+//        点击事件可以改视图样式但不可恢复
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
+        ms.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(ms);
+        recyle.setAdapter(mAdapter);
+        vatAdapter = new FilterAdapter(getActivity());
+        autoText1.setAdapter(vatAdapter);
+        colorAdapter = new FilterAdapter(getActivity());
+        autoText2.setAdapter(colorAdapter);
+        clothAdapter = new FilterAdapter(getActivity());
+        autoText3.setAdapter(clothAdapter);
     }
 
     private void setAdaperHeader() {
@@ -248,7 +170,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         dataKEY = new ArrayList<>();
         dataList = new ArrayList<>();
         dataEpc = new ArrayList<>();
-        vatList = new ArrayList<>();
         findList = new ArrayList<>();
     }
 
@@ -263,10 +184,122 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             dataKEY.clear();
         if (dataEpc != null)
             dataEpc.clear();
-        if (vatList != null)
-            vatList.clear();
         if (findList != null)
             findList.clear();
+    }
+
+    private void initLister() {
+        mAdapter.setOnItemClickListener(this);
+        autoText1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                final String str = charSequence.toString().replaceAll(" ", "");
+                if (!TextUtils.isEmpty(str) && str.length() >= 4) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
+                                List<String> arry = response.toJavaList(String.class);
+                                if (arry != null && arry.size() > 0) {
+                                    vatAdapter.transforData(arry);
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        autoText2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
+                final String str = charSequence.toString().replaceAll(" ", "");
+                if (!TextUtils.isEmpty(str) && str.length() >= 4) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByColor/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
+                                List<String> arry = response.toJavaList(String.class);
+                                if (arry != null && arry.size() > 0) {
+                                    colorAdapter.transforData(arry);
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+        });
+        autoText3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                final String str = charSequence.toString().replaceAll(" ", "");
+                if (!TextUtils.isEmpty(str) && str.length() >= 4) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByCloth/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
+                                List<String> arry = response.toJavaList(String.class);
+                                if (arry != null && arry.size() > 0) {
+                                    clothAdapter.transforData(arry);
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void initRFID() {
@@ -288,7 +321,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 if (i == 0)
                     App.PROWER = 20;
             }
-
             RFID_2DHander.getInstance().off_RFID();
         } catch (Exception e) {
 
@@ -317,7 +349,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-
         clearData();
         myList.clear();
         disRFID();
@@ -326,24 +357,13 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     @Override
     public void onItemClick(View view, Object data, int position) {
         if (position != 0) {
-           /* if (mAdapter.getPosition() == position) {
-                dataKEY.clear();
-                for (FindVatNo i : myList) {
-                    if (i != null && i.getEpc() != null && !i.getEpc().equals(""))
-                        dataKEY.add(i.getEpc());
-                }
-            } else {
-                if (myList.get(position) != null && myList.get(position).getEpc() != null && !myList.get(position).getEpc().equals("")) {
-                    dataKEY.clear();
-                    dataKEY.add(myList.get(position).getEpc());
-                }
-            }*/
             mAdapter.selectItem(position);
             mAdapter.notifyDataSetChanged();
         }
     }
 
     private long currenttime = 0;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -418,36 +438,18 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     private int erpCount = 0;
 
-    @OnClick({R.id.button, R.id.button1, R.id.button2, R.id.layout1,
-            R.id.button0, R.id.buttonAdd, R.id.recyle, R.id.scrollView})
+    @OnClick({R.id.button0, R.id.button1, R.id.button2, R.id.button10, R.id.button9})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.button:
-              /*  if (listview.getVisibility() != View.GONE)
-                    listview.setVisibility(View.GONE);
-                fixeedittext1.clearFocus();*/
-                cancelKeyBoard(view);
-                if (myList != null) {
-                    myList.clear();
-                    myList.add(new FindVatNo());
-                }
-                if (dataList != null)
-                    dataList.clear();
-                if (dataKEY != null)
-                    dataKEY.clear();
-                if (dataEpc != null)
-                    dataEpc.clear();
-                mAdapter.notifyDataSetChanged();
-                addView("");
-                erpCount = 0;
-                goFind();
-                break;
             case R.id.button0:
                 clearData();
                 text2.setText(myList.size() - 1 + "");
                 text3.setText(dataList.size() + "");
                 layout2.removeAllViews();
                 mAdapter.notifyDataSetChanged();
+                vatAdapter.notifyDataSetChanged();
+                colorAdapter.notifyDataSetChanged();
+                clothAdapter.notifyDataSetChanged();
                 break;
             case R.id.button1:
                 myList.clear();
@@ -455,42 +457,41 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 dataEpc.clear();
                 text2.setText(myList.size() - 1 + "");
                 mAdapter.notifyDataSetChanged();
-
                 break;
             case R.id.button2:
                 blinkDialog();
                 break;
-            case R.id.buttonAdd:
-                addView("");
+            case R.id.button10:
+                clearDraw();
                 break;
-            default:
-             /*   if (listview.getVisibility() != View.GONE)
-                    listview.setVisibility(View.GONE);*/
+            case R.id.button9:
+                String vat = autoText1.getText().toString().replaceAll(" ", "");
+                String color = autoText2.getText().toString().replaceAll(" ", "");
+                String cloth = autoText3.getText().toString().replaceAll(" ", "");
+                goFind(vat, color, cloth);
                 break;
-           /* case R.id.layout1:
-
-                break;
-            case R.id.recyle:
-                if (listview.getVisibility() != View.GONE)
-                    listview.setVisibility(View.GONE);
-                break;*/
         }
     }
 
-    private void addView( String vatNo) {
-        vatNo = vatNo.replaceAll(" ", "");
-        if (!findList.contains(vatNo)) {
-            findList.add(vatNo);
-            TextView textView = new TextView(getActivity());
-            textView.setText(vatNo);
-            textView.setTextColor(getResources().getColor(R.color.colorAboutText));
-            textView.setTextSize(20);
-            textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
-            textView.setId(findList.size() - 1);
-            textView.setWidth(0);
+    private void clearDraw() {
+        autoText1.setText("");
+        autoText2.setText("");
+        autoText3.setText("");
+        vatAdapter.notifyDataSetChanged();
+        colorAdapter.notifyDataSetChanged();
+        clothAdapter.notifyDataSetChanged();
+    }
 
-            layout2.addView(textView);
-        }
+    private void addView(String vatNo) {
+        vatNo = vatNo.replaceAll(" ", "");
+        TextView textView = new TextView(getActivity());
+        textView.setText(vatNo);
+        textView.setTextColor(getResources().getColor(R.color.colorAboutText));
+        textView.setTextSize(20);
+        textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        textView.setId(findList.size() - 1);
+        textView.setWidth(0);
+        layout2.addView(textView);
     }
 
     private void blinkDialog() {
@@ -557,140 +558,87 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         if (mInputMethodManager.isActive()) {
             mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
         }
-
     }
 
-    private void goFind() {
-        if (findList.size() != 0) {
-            for (String vatNo : findList) {
-                if (vatNo != null && !vatNo.equals("")) {
-                    JSONObject object = new JSONObject();
-                    object.put("vatNo", vatNo);
-                    final String json = object.toJSONString();
-                    try {
-                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventoryByVatNo", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                            @Override
-                            public void onError(Request request, Exception e) {
-                                if (App.LOGCAT_SWITCH) {
-                                    Toast.makeText(getActivity(), "缸号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onResponse(JSONObject jsonObject) {
-                                try {
-                                    String str = jsonObject.toJSONString();
-                                    if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
-                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                        List<FindVatNo> response;
-                                        response = jsonArray.toJavaList(FindVatNo.class);
-                                        if (response != null && response.size() != 0) {
-//                                            clearData();
-                                            dataList.addAll(response);
-                                            for (FindVatNo i : response) {
-                                                if (i != null && i.getEpc() != null && !i.getEpc().equals("") && !dataKEY.contains(i.getEpc()))
-                                                    dataKEY.add(i.getEpc());
-                                            }
-                                            text3.setText(dataList.size() + "");
-                                            mAdapter.notifyDataSetChanged();
-                                            Toast.makeText(getActivity(), "成功查询缸号！", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getActivity(), "此缸号无库存数据！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(getActivity(), "查无此缸号！", Toast.LENGTH_SHORT).show();
-//                                getActivity().onBackPressed();
-                                    }
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        }, json);
-                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getErpSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                            @Override
-                            public void onError(Request request, Exception e) {
-                                if (App.LOGCAT_SWITCH) {
-                                    Toast.makeText(getActivity(), "缸号查询失败m！" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onResponse(JSONObject jsonObject) {
-                                try {
-                                    if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
-                                        int count = jsonObject.getJSONObject("data").getInteger("sum");
-                                        erpCount = count + erpCount;
-                                        text4.setText(erpCount + "");
-                                    } else {
-                                        Toast.makeText(getActivity(), "ERP查询失败", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        }, json);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+    private void goFind(final String vat, final String color, final String cloth) {
+        JSONObject object = new JSONObject();
+        if (!TextUtils.isEmpty(vat))
+            object.put("vat_No", vat);
+        if (!TextUtils.isEmpty(color))
+            object.put("colorName", color);
+        if (!TextUtils.isEmpty(cloth))
+            object.put("clothName", cloth);
+        final String json = object.toJSONString();
+        try {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventoryByVatNo", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    if (App.LOGCAT_SWITCH) {
+                        Toast.makeText(getActivity(), "缸号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }
-        }
-    }
 
-    boolean vatFlag = false;
-        class MyAdapter extends ArrayAdapter {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    try {
+                        String key = "缸号:" + vat + ";色号:" + color + ";布号:" + cloth;
+                        if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            List<FindVatNo> response;
+                            response = jsonArray.toJavaList(FindVatNo.class);
+                            if (response != null && response.size() != 0 && !findList.contains(key)) {
+                                findList.add(key);
+                                addView(key);
+                                for (FindVatNo i : response) {
+                                    if (i != null && i.getEpc() != null && !i.getEpc().equals("") && !dataKEY.contains(i.getEpc())) {
+                                        dataKEY.add(i.getEpc());
+                                        dataList.add(i);
+                                    }
+                                }
+                                text3.setText(dataList.size() + "");
+                                mAdapter.notifyDataSetChanged();
+                                Toast.makeText(getActivity(), "成功查询缸号！", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), "此缸号无库存数据！", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "查无此缸号！", Toast.LENGTH_SHORT).show();
+//                                getActivity().onBackPressed();
+                        }
+                    } catch (Exception e) {
 
+                    }
+                }
+            }, json);
+            JSONObject object2 = new JSONObject();
+            if (!TextUtils.isEmpty(vat))
+                object.put("vatNo", vat);
+            final String json2=object2.toJSONString();
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getErpSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    if (App.LOGCAT_SWITCH) {
+                        Toast.makeText(getActivity(), "缸号查询失败m！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
 
-        private List<String> list;
-        private LayoutInflater mInflater;
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    try {
+                        if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
+                            int count = jsonObject.getJSONObject("data").getInteger("sum");
+                            erpCount = count + erpCount;
+                            text4.setText(erpCount + "");
+                        } else {
+                            Toast.makeText(getActivity(), "ERP查询失败", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
 
-        public MyAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<String> objects) {
-            super(context, resource, objects);
-            this.list = objects;
-            this.mInflater = LayoutInflater.from(context);
-        }
-
-        private int id = -255;
-
-        public void selectItem(int id) {
-            if (this.id != id)
-                notifyDataSetChanged();
-            this.id = id;
-        }
-
-        public List<String> getList() {
-            return this.list;
-        }
-
-        public void setList(List<String> list) {
-            this.list = list;
-        }
-
-        @NonNull
-        @Override
-        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.fuzzy_query_item, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.editText1 = (TextView) convertView.findViewById(R.id.text1);
-                viewHolder.linearLayout = (LinearLayout) convertView.findViewById(R.id.layout1);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            if (id == position)
-                viewHolder.linearLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            else
-                viewHolder.linearLayout.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-            viewHolder.editText1.setText(list.get(position));
-            return convertView;
-        }
-
-        class ViewHolder {
-            LinearLayout linearLayout;
-            TextView editText1;
-
+                    }
+                }
+            }, json2);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -750,17 +698,93 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         }
     }
 
-    class VatNoFlag {
-        private String vatNo;
-        private int count;
+    class FilterAdapter extends BaseAdapter implements Filterable {
+        private Context mContext;
+        private List<String> mItems;
+        private List<String> fData;
+        private final Object mLock = new Object();
+        private MyFilter mFilter;
 
-        public VatNoFlag(String vatNo) {
-            this.vatNo = vatNo;
+        public FilterAdapter(Context context) {
+            this.mContext = context;
+            mFilter = new MyFilter();
         }
 
-        public VatNoFlag(String vatNo, int count) {
-            this.vatNo = vatNo;
-            this.count = count;
+        public void transforData(List<String> items) {
+            this.mItems = items;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mItems.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return mItems.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.fuzzy_query_item, parent, false);
+                viewHolder.content = convertView.findViewById(R.id.text1);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.content.setText(mItems.get(position));
+            return convertView;
+        }
+
+        @Override
+        public Filter getFilter() {
+            return mFilter;
+        }
+
+        class ViewHolder {
+            TextView content;
+        }
+
+        class MyFilter extends Filter {
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                if (fData == null) {
+                    synchronized (mLock) {
+                        fData = new ArrayList<>(mItems);
+                    }
+                }
+                int count = fData.size();
+                ArrayList<String> values = new ArrayList<>();
+                for (int i = 0; i < count; i++) {
+                    String value = fData.get(i);
+                    if (null != value && null != constraint
+                            && value.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        values.add(value);
+                    }
+                }
+                results.values = values;
+                results.count = values.size();
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence arg0, FilterResults results) {
+                mItems = (List<String>) results.values;
+                if (results.count > 0) {
+                    notifyDataSetChanged();
+                } else {
+                    notifyDataSetInvalidated();
+                }
+            }
         }
     }
 }

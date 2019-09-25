@@ -340,10 +340,10 @@ public class LoginActivity extends AppCompatActivity {
                         int id = (int) message.get("id");
                         String username = (String) message.get("username");
                         String msg = (String) message.get("msg");
-//                        int auth = (int) message.get("auth");
+                        int auth = (int) message.get("auth");
                         User user = User.newInstance();
-                        user.setUser(id, username, msg, code,0);
-//                        user.setUser(id, username, msg, code,auth);
+//                        user.setUser(id, username, msg, code,0);
+                        user.setUser(id, username, msg, code,auth);
                         return true;
                     }
                   /*  case 1003:{//密码不正确

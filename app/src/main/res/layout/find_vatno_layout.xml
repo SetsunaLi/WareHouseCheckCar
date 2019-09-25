@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.mumu.warehousecheckcar.view.BaseDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dlAssets"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:openDrawer="end">
 
     <include
@@ -32,7 +33,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <TextView
                     style="@style/text_style3"
@@ -40,44 +42,52 @@
                     android:layout_height="wrap_content"
                     android:text="缸号"
                     android:textSize="22sp"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="5dp"/>
 
                 <AutoCompleteTextView
                     android:id="@+id/autoText1"
                     style="@style/edit_style2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:completionThreshold="5"
                     android:dropDownSelector="@color/colorDialogTitleBG"
-                    android:completionHint="请输入缸号"/>
+                    android:completionThreshold="4"/>
                 <TextView
                     style="@style/text_style3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="色号"
                     android:textSize="22sp"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="5dp"/>
 
                 <AutoCompleteTextView
                     android:id="@+id/autoText2"
                     style="@style/edit_style2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:completionHint="请输入色号"/>
+                    android:dropDownSelector="@color/colorDialogTitleBG"
+                    android:completionThreshold="4"/>
                 <TextView
                     style="@style/text_style3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="布号"
                     android:textSize="22sp"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="5dp"/>
 
                 <AutoCompleteTextView
                     android:id="@+id/autoText3"
                     style="@style/edit_style2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:completionHint="请输入布号"/>
+                    android:dropDownSelector="@color/colorDialogTitleBG"
+                    android:completionThreshold="4"/>
+                <LinearLayout
+                    android:id="@+id/layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dip"
+                    android:orientation="vertical"/>
+
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
@@ -103,4 +113,4 @@
 
 
     </android.support.constraint.ConstraintLayout>
-</android.support.v4.widget.DrawerLayout>
+</com.example.mumu.warehousecheckcar.view.BaseDrawerLayout>
