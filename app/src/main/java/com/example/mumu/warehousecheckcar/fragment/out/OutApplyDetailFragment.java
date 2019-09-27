@@ -281,7 +281,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     if (item.getEpc() != null && !item.getEpc().equals(""))
                                         if (dataList.get(item.getEpc()).isFind()) {
                                             if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
-                                                if (oldData.getCountProfit() < oldData.getCountOut()) {
+                                                if (oldData.getCountProfit()+1 < oldData.getCountOut()) {
                                                     dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo() + id);
                                                     oldData.addCountProfit();
                                                 } else {
