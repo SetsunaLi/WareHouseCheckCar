@@ -455,6 +455,12 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
+                /*for (String epc:epcKeyList.keySet()){
+                    Message msg = handler.obtainMessage();
+                    msg.what = 0x00;
+                    msg.obj = epc;
+                    handler.sendMessage(msg);
+                }*/
                 break;
             case R.id.button2:
                 blinkDialog();
