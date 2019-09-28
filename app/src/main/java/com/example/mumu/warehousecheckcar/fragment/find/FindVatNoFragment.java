@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -446,9 +448,10 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 text3.setText(dataList.size() + "");
                 layout2.removeAllViews();
                 mAdapter.notifyDataSetChanged();
-                vatAdapter.notifyDataSetChanged();
-                colorAdapter.notifyDataSetChanged();
-                clothAdapter.notifyDataSetChanged();
+                clearDraw();
+//                vatAdapter.notifyDataSetChanged();
+//                colorAdapter.notifyDataSetChanged();
+//                clothAdapter.notifyDataSetChanged();
                 break;
             case R.id.button1:
                 myList.clear();
@@ -468,6 +471,10 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 String color = autoText2.getText().toString().replaceAll(" ", "");
                 String cloth = autoText3.getText().toString().replaceAll(" ", "");
                 goFind(vat, color, cloth);
+                if (dlAssets.isDrawerOpen(Gravity.END))
+                    dlAssets.closeDrawer(Gravity.END);
+//                if (!dlAssets.isDrawerOpen(GravityCompat.START))
+//                    dlAssets.closeDrawer(GravityCompat.START);
                 break;
         }
     }
@@ -476,9 +483,9 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         autoText1.setText("");
         autoText2.setText("");
         autoText3.setText("");
-        vatAdapter.notifyDataSetChanged();
-        colorAdapter.notifyDataSetChanged();
-        clothAdapter.notifyDataSetChanged();
+//        vatAdapter.notifyDataSetChanged();
+//        colorAdapter.notifyDataSetChanged();
+//        clothAdapter.notifyDataSetChanged();
     }
 
     private void addView(String vatNo) {
@@ -707,11 +714,16 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         public FilterAdapter(Context context) {
             this.mContext = context;
             mFilter = new MyFilter();
+            mItems=new ArrayList<>();
+            fData=new ArrayList<>();
         }
 
         public void transforData(List<String> items) {
             this.mItems = items;
             notifyDataSetChanged();
+        }
+        public void clearData(){
+            mItems.clear();
         }
 
         @Override
