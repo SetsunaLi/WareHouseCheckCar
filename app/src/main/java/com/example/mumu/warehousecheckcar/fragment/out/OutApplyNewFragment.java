@@ -27,11 +27,11 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
@@ -53,7 +53,6 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -457,7 +456,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
-                /*for (String epc:epcKeyList.keySet()){
+              /*  for (String epc:epcKeyList.keySet()){
                     Message msg = handler.obtainMessage();
                     msg.what = 0x00;
                     msg.obj = epc;

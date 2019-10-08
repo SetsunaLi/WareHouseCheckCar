@@ -281,7 +281,7 @@ public class Main2Activity extends AppCompatActivity
             case 1:
 //                入库校验
                 fragment = InCheckFragment.newInstance();
-                if (auth != 6 && auth != 7 && auth != 8 && auth != 9 && auth != 10)
+                if (auth != 6 && auth != 7 && auth != 8 && auth != 9 )
                     flag = true;
                 break;
             case 2:

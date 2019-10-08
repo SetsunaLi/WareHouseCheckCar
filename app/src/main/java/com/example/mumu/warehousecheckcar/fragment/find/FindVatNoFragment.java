@@ -473,8 +473,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 goFind(vat, color, cloth);
                 if (dlAssets.isDrawerOpen(Gravity.END))
                     dlAssets.closeDrawer(Gravity.END);
-//                if (!dlAssets.isDrawerOpen(GravityCompat.START))
-//                    dlAssets.closeDrawer(GravityCompat.START);
                 break;
         }
     }
