@@ -27,6 +27,7 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.entity.OutputFlag;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     private final String TAG = "OutApplyDetailFragment";
     private List<OutputDetail> myList;
     private Output oldData;
-    private HashMap<String, OutApplyNewFragment.OutputFlag> dataList;
+    private HashMap<String, OutputFlag> dataList;
     private int id;
     private RecycleAdapter mAdapter;
 
@@ -130,7 +131,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
     public void load() {
         oldData = (Output) getArguments().getSerializable("dataList");
-        dataList = (HashMap<String, OutApplyNewFragment.OutputFlag>) getArguments().getSerializable("epcList");
+        dataList = (HashMap<String, OutputFlag>) getArguments().getSerializable("epcList");
         id = (int) getArguments().getSerializable("position");
      /*   int pei = 0;
         for (OutputDetail i : oldData.getList()) {
@@ -281,7 +282,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     if (item.getEpc() != null && !item.getEpc().equals(""))
                                         if (dataList.get(item.getEpc()).isFind()) {
                                             if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
-                                                if (oldData.getCountProfit()+1 < oldData.getCountOut()) {
+                                                if (oldData.getCountProfit()+1 <= oldData.getCountOut()) {
                                                     dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo() + id);
                                                     oldData.addCountProfit();
                                                 } else {

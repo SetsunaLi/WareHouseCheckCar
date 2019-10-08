@@ -1,12 +1,13 @@
 package com.example.mumu.warehousecheckcar.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by mumu on 2019/1/3.
  */
 
-public class OutputDetail {
+public class OutputDetail implements Serializable {
     /**EPC*/
     private String epc;
     /** 布票号     */

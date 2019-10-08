@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.entity.OutputFlag;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
@@ -52,6 +53,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -278,7 +280,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     }
                     final String EPC = ((String) msg.obj).replaceAll(" ", "");
                     if (EPC.startsWith("3035A537") && epcKeyList.containsKey(EPC)) {
-                        if (!epcKeyList.get(EPC).isFind) {
+                        if (!epcKeyList.get(EPC).isStatus()) {
                             epcKeyList.get(EPC).setFind(true);
                             epcKeyList.get(EPC).setStatus(true);
 
@@ -301,7 +303,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             }
                             int count = 0;
                             for (OutputFlag o : epcKeyList.values()) {
-                                if (o.isFind)
+                                if (o.isStatus())
                                     count++;
                             }
                             text1.setText(count + "");
@@ -697,65 +699,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         transaction.commit();
     }
 
-    public class OutputFlag {
-        /**
-         * 是否扫描
-         */
-        private boolean isFind = false;
-        /**
-         * No申请单号
-         */
-        private String applyNo = "";
-        /**
-         * 是否正常
-         */
-        private boolean status = true;
-
-        /**
-         * 重量（指的是库存重量）
-         */
-        private double weight = 0.0;
-
-
-        public OutputFlag(boolean isFind, String applyNo, boolean status, double weight) {
-            this.isFind = isFind;
-            this.applyNo = applyNo;
-            this.status = status;
-            this.weight = weight;
-        }
-
-        public double getWeight() {
-            return weight;
-        }
-
-        public void setWeight(double weight) {
-            this.weight = weight;
-        }
-
-        public boolean isFind() {
-            return isFind;
-        }
-
-        public void setFind(boolean find) {
-            isFind = find;
-        }
-
-        public String getApplyNo() {
-            return applyNo;
-        }
-
-        public void setApplyNo(String applyNo) {
-            this.applyNo = applyNo;
-        }
-
-        public boolean isStatus() {
-            return status;
-        }
-
-        public void setStatus(boolean status) {
-            this.status = status;
-        }
-    }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
         private Context context;

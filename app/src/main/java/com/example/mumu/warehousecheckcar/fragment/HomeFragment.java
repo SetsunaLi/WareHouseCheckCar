@@ -171,6 +171,8 @@ public class HomeFragment extends Fragment {
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 10:
+                    button1.setVisibility(View.VISIBLE);
+                    button3.setVisibility(View.VISIBLE);
                     button7.setVisibility(View.VISIBLE);
                     button8.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
@@ -179,6 +181,8 @@ public class HomeFragment extends Fragment {
                     button16.setVisibility(View.VISIBLE);
                     break;
                 case 11:
+                    button1.setVisibility(View.VISIBLE);
+                    button3.setVisibility(View.VISIBLE);
                     button7.setVisibility(View.VISIBLE);
                     button8.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);

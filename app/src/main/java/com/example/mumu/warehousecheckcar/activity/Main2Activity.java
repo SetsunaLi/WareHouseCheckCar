@@ -30,6 +30,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
+import com.example.mumu.warehousecheckcar.entity.OutputFlag;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
 import com.example.mumu.warehousecheckcar.fragment.car.CarFragment;
@@ -294,7 +295,7 @@ public class Main2Activity extends AppCompatActivity
             case 3:
 //                上架
                 fragment = PutawayCarrierFragment.newInstance();
-                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 && auth != 10)
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 )
                     flag = true;
                 break;
             case 4:
@@ -573,7 +574,7 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
-    private HashMap<String, OutApplyNewFragment.OutputFlag> dataList = new HashMap<>();
+    private HashMap<String, OutputFlag> dataList = new HashMap<>();
 
     public HashMap getOutApplyDataList() {
         if (dataList != null)
@@ -581,7 +582,7 @@ public class Main2Activity extends AppCompatActivity
         return new HashMap();
     }
 
-    public void setOutApplyDataList(HashMap<String, OutApplyNewFragment.OutputFlag> dataList) {
+    public void setOutApplyDataList(HashMap<String, OutputFlag> dataList) {
         this.dataList.clear();
         this.dataList.putAll(dataList);
     }
