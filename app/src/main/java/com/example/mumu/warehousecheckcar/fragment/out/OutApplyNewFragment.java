@@ -279,7 +279,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     }
                     final String EPC = ((String) msg.obj).replaceAll(" ", "");
                     if (EPC.startsWith("3035A537") && epcKeyList.containsKey(EPC)) {
-                        if (!epcKeyList.get(EPC).isStatus()) {
+                        if (!epcKeyList.get(EPC).isFind()) {
                             epcKeyList.get(EPC).setFind(true);
                             epcKeyList.get(EPC).setStatus(true);
 

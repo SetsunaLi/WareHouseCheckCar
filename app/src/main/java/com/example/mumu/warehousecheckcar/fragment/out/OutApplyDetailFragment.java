@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -141,49 +142,60 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         }*/
 //        oldData.setCountProfit(0);
         myList.addAll(oldData.getList());
-        Collections.sort(myList, new Comparator<OutputDetail>() {
-            @Override
-            public int compare(OutputDetail obj1, OutputDetail obj2) {
-                if (obj1.getEpc() == null || obj1.getEpc().equals(""))
-                    return -1;
-                if (obj2.getEpc() == null || obj2.getEpc().equals(""))
-                    return 1;
-                if (dataList.containsKey(obj1.getEpc()) && dataList.containsKey(obj2.getEpc())) {
-                    if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                        if (!dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                            return -1;
-                        }
-                    }
-                    if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                        if (dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                            return 1;
-                        }
-                    }
-                    if (dataList.get(obj1.getEpc()).isFind())
+        try {
+            Collections.sort(myList, new Comparator<OutputDetail>() {
+                @Override
+                public int compare(OutputDetail obj1, OutputDetail obj2) {
+                    if (TextUtils.isEmpty(obj1.getEpc()) && !TextUtils.isEmpty(obj2.getEpc()))
                         return -1;
-                    if (dataList.get(obj2.getEpc()).isFind())
+                    else if (!TextUtils.isEmpty(obj1.getEpc()) && TextUtils.isEmpty(obj2.getEpc()))
                         return 1;
-                }
-                String aFab = obj1.getFabRool();
-                String bFab = obj2.getFabRool();
-                if (aFab == null)
-                    return -1;
-                if (bFab == null)
-                    return 1;
-                if (aFab.equals(""))
-                    return 1;
-                if (bFab.equals(""))
-                    return -1;
-                if (aFab != null && bFab != null) {
-                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
-                        return 1;
+                    else if (TextUtils.isEmpty(obj1.getEpc()) && TextUtils.isEmpty(obj2.getEpc()))
+                        return 0;
+                    else {
+                        if (dataList.containsKey(obj1.getEpc()) && dataList.containsKey(obj2.getEpc())) {
+                            if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
+                                if (!dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
+                                    return -1;
+                                }
+                            }
+                            if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
+                                if (dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
+                                    return 1;
+                                }
+                            }
+                            if (dataList.get(obj1.getEpc()).isFind())
+                                return -1;
+                            if (dataList.get(obj2.getEpc()).isFind())
+                                return 1;
+                        }
+                        String aFab = obj1.getFabRool();
+                        String bFab = obj2.getFabRool();
+                        if (aFab == null)
+                            return -1;
+                        if (bFab == null)
+                            return 1;
+                        if (aFab.equals(""))
+                            return 1;
+                        if (bFab.equals(""))
+                            return -1;
+                        if (aFab != null && bFab != null) {
+                            if (Integer.valueOf(aFab) > Integer.valueOf(bFab)) {
+                                return 1;
+                            }
+                            if (Integer.valueOf(aFab) < Integer.valueOf(bFab)) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                        return 0;
                     }
-                    return -1;
                 }
-                return 0;
-            }
-        });
+            });
+        }catch (Exception e){
 
+        }
     }
 
     //右上角列表R.menu.main2
