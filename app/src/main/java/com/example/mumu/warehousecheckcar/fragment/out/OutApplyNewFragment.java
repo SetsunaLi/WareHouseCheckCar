@@ -302,7 +302,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                             }
                             int count = 0;
                             for (OutputFlag o : epcKeyList.values()) {
-                                if (o.isStatus())
+                                if (o.isFind())
                                     count++;
                             }
                             text1.setText(count + "");
