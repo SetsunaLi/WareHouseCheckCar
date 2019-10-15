@@ -281,8 +281,7 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 1:
 //                入库校验
-//                fragment = InCheckFragment.newInstance();
-                fragment= ReturnGoodsInNoFragment.newInstance();
+                fragment = InCheckFragment.newInstance();
                 if (auth != 6 && auth != 7 && auth != 8 && auth != 9 )
                     flag = true;
                 break;
@@ -375,6 +374,10 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 16:
                 fragment = SettingFragment.newInstance();
+                flag = true;
+                break;
+            case 17:
+                fragment= ReturnGoodsInNoFragment.newInstance();
                 flag = true;
                 break;
             default:
@@ -515,7 +518,12 @@ public class Main2Activity extends AppCompatActivity
     public void click16(View view) {
         selectItem(16);
     }
-
+    /**
+     * 退库入库
+     */
+    public void click17(View view) {
+        selectItem(17);
+    }
 
     //返回键监听
     @Override

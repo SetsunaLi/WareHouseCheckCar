@@ -41,8 +41,9 @@
     <string name="btn_click13">付运表发运</string>
     <string name="btn_click14">办布上架</string>
     <string name="btn_click15">剪布操作</string>
-    <string name="btn_click17">入库辅助</string>
+    <string name="btn_click15_1">入库辅助</string>
     <string name="btn_click16">系统设置</string>
+    <string name="btn_click17">退库入库</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
 
@@ -85,6 +86,7 @@
         <item>查布异常</item>
         <item>入库辅助</item>
         <item>系统设置</item>
+        <item>退库入库</item>
         <item>关于</item>
     </string-array>
     <!--导航栏的选项名称-->

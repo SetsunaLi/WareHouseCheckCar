@@ -5,154 +5,6 @@
     android:background="@mipmap/bg2"
     android:orientation="vertical"
     android:weightSum="5">
-
-   <!-- <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:background="@mipmap/bg_top">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/home_margin"
-            android:layout_marginTop="@dimen/home_margin"
-            android:layout_weight="1"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/iv"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:layout_marginLeft="@dimen/home_margin"
-                android:background="@drawable/img_style_1"
-                android:padding="20dp"
-                android:src="@mipmap/user_head"
-                android:scaleType="center"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:id="@+id/tv1"
-                style="@style/text_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv"
-                android:layout_marginTop="@dimen/home_margin"
-                android:text="@string/options_username"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/ll1"
-                style="@style/layout_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv1">
-
-                <TextView
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&#8195;ID:" />
-
-                <TextView
-                    android:id="@+id/tv2"
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/options_id" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll2"
-                style="@style/layout_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ll1">
-
-                <TextView
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&#8195;登录时间:" />
-
-                <TextView
-                    android:id="@+id/tv3"
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/options_login_time" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll3"
-                style="@style/layout_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ll2">
-
-                <TextView
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&#8195;在线时间:" />
-
-                <TextView
-                    android:id="@+id/tv4"
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/options_online_time" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll4"
-                style="@style/layout_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ll3">
-
-                <TextView
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&#8195;岗位:" />
-
-                <TextView
-                    android:id="@+id/tv5"
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/options_work" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll5"
-                style="@style/layout_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ll4"
-                android:layout_marginBottom="27dp">
-
-                <TextView
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="&#8195;状态:" />
-
-                <TextView
-                    android:id="@+id/tv6"
-                    style="@style/text_style2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/options_status" />
-            </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
-<View android:layout_width="match_parent"
-        android:layout_height="3dp"
-    android:background="@drawable/side_nav_bar"
-    />-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -362,15 +214,12 @@
                 android:onClick="click14"
                 android:text="@string/btn_click12" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/home_button_margin1"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginBottom="18dp"
-            >
+            android:orientation="horizontal">
             <Button
                 android:id="@+id/button15"
                 style="@style/DashboardButton"
@@ -379,7 +228,25 @@
                 android:layout_marginRight="@dimen/home_button_margin2"
                 android:layout_weight="1"
                 android:onClick="click15"
+                android:text="@string/btn_click15_1" />
+            <Button
+                android:id="@+id/button17"
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_marginLeft="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:onClick="click17"
                 android:text="@string/btn_click17" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/home_button_margin1"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="18dp"
+            >
             <Button
                 android:id="@+id/button16"
                 style="@style/DashboardButton"

@@ -60,6 +60,8 @@ public class HomeFragment extends Fragment {
     Button button16;
     @Bind(R.id.button2)
     Button button2;
+    @Bind(R.id.button17)
+    Button button17;
 
 
     public static HomeFragment newInstance() {
@@ -189,6 +191,12 @@ public class HomeFragment extends Fragment {
                     button6.setVisibility(View.VISIBLE);
                     button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
+                    break;
+                case 12:
+                    for (HomeButton homeButton : HomeButton.values()) {
+                        Button button = (Button) getView().findViewById(homeButton.getId());
+                        button.setVisibility(View.VISIBLE);
+                    }
                     break;
                 default:
                     for (HomeButton homeButton : HomeButton.values()) {
