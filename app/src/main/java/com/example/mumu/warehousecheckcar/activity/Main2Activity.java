@@ -52,6 +52,7 @@ import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InAssistFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InCheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.in.ReturnGoodsInNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
@@ -144,11 +145,11 @@ public class Main2Activity extends AppCompatActivity
 //        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
 //        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
-        App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), false);
+        App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), true);
         App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
         if (App.PROWER == 0)
             App.PROWER = 20;
-        App.LOGCAT_SWITCH = sp.getBoolean(getResources().getString(R.string.logcat_ket), false);
+        App.LOGCAT_SWITCH = sp.getBoolean(getResources().getString(R.string.logcat_ket), true);
 //        TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 //        App.DEVICE_ID=tm.getImei();
 //        App.DEVICE_ID=tm.getDeviceId();
@@ -280,7 +281,8 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 1:
 //                入库校验
-                fragment = InCheckFragment.newInstance();
+//                fragment = InCheckFragment.newInstance();
+                fragment= ReturnGoodsInNoFragment.newInstance();
                 if (auth != 6 && auth != 7 && auth != 8 && auth != 9 )
                     flag = true;
                 break;
