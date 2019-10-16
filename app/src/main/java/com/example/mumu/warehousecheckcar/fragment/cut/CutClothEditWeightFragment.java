@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
@@ -74,7 +75,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
 
     private JSONObject json;
     private BarCode code;
-
+    private Sound sound;
     private double weightIn;
 
 
@@ -84,7 +85,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
         View view = inflater.inflate(R.layout.cut_cloth_editweight_layout, container, false);
         view.setOnTouchListener(this);
         ButterKnife.bind(this, view);
-
+        sound=new Sound(getActivity());
         code = new BarCode();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
@@ -230,6 +231,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
+                                    sound.uploadFail();
                                 }
                             } catch (Exception e) {
 

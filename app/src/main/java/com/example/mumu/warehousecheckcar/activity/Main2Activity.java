@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
@@ -85,23 +86,14 @@ public class Main2Activity extends AppCompatActivity
     DrawerLayout drawerLayout;
     private final String TAG = "Main2Activity";
     private CharSequence mTitle;
+    private Sound sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
-
-        //右下角按钮监听
-     /*   FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "欢迎使用亿锋公司配套软件", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-            }
-        });*/
-//       左上角按钮
+        sound = new Sound(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         User user = User.newInstance();
         toolbar.setSubtitle("操作人:" + user.getUsername());
@@ -112,12 +104,10 @@ public class Main2Activity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         mTitle = getTitle();
-//        加载列表
         initDate();
         initView();
         initRFID();
         init2D();
-//      首页
         selectItem(0);
         comeBack = ComeBack.getInstance();
 
@@ -166,15 +156,12 @@ public class Main2Activity extends AppCompatActivity
         User user = User.newInstance();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        导航头部
         ImageView iv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView);
         iv.setImageBitmap(CutToBitmap.changeToBitmap(getResources(), iv, R.mipmap.user_head));
         TextView tv1 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView1);
         tv1.setText(user.getUsername());
         TextView tv2 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView2);
         tv2.setText(getResources().getString(R.string.options_welcome));
-//      导航列表(枚举)
-//        for (OptionMenu om : OptionMenu.values()) {
         for (int i = 0; i < OptionMenu.values().length; i++) {
             OptionMenu om = OptionMenu.values()[i];
             MenuItem mi = navigationView.getMenu().findItem(om.getId());
@@ -191,9 +178,7 @@ public class Main2Activity extends AppCompatActivity
             RFID_2DHander.getInstance().on_RFID();
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             rfidHander.registerObserver(UHFResult.getInstance());
-            //返回0表示成功？
-            int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
-//            RFID_2DHander.getInstance().off_RFID();
+            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
         } catch (Exception e) {
             Log.w(TAG, "RFID读写器异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -202,7 +187,7 @@ public class Main2Activity extends AppCompatActivity
 
     private void init2D() {
         try {
-            boolean flag1 = RFID_2DHander.getInstance().connect2D();
+            RFID_2DHander.getInstance().connect2D();
         } catch (Exception e) {
             Log.w(TAG, "2D模块异常");
             Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
@@ -211,7 +196,6 @@ public class Main2Activity extends AppCompatActivity
 
     private void disConnectRFID() {
         try {
-
             RFID_2DHander.getInstance().off_RFID();
             if (rfidHander != null)
                 rfidHander.unRegisterObserver(UHFResult.getInstance());
@@ -224,9 +208,7 @@ public class Main2Activity extends AppCompatActivity
 
     private void disConnect2D() {
         try {
-//            RFID_2DHander.getInstance().off_2D();
             RFID_2DHander.getInstance().disConnect2D();
-
         } catch (Exception e) {
 
         }
@@ -239,8 +221,6 @@ public class Main2Activity extends AppCompatActivity
         disConnectRFID();
         disConnect2D();
         clearAllData();
-//        if (SK_UHFHander.getInstance() != null)
-//            SK_UHFHander.getInstance().disConnectRFID();
 //        销毁日志事务
         AppLog.clearFormat();
     }
@@ -249,22 +229,15 @@ public class Main2Activity extends AppCompatActivity
         App.APPLY_NO = "";
         App.carNo = "";
         App.SYSTEM_VERSION = "";
-       /* App.IP = "";
-        App.PORT = "";*/
         App.DEVICE_NO = "";
         App.CARRIER = null;
         App.DEVICE_NO = "";
         App.IN_DETAIL_LIST.clear();
         App.OUTDETAIL_LIST.clear();
         App.CHECK_DETAIL_LIST.clear();
-//        App.OUTPUT_DETAIL_LIST.clear();
         App.INPUT_DETAIL_LIST.clear();
-//        App.DATA_KEY.clear();
-
     }
 
-
-    //Tag to identify the currently displayed fragment
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     protected static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 
@@ -282,21 +255,20 @@ public class Main2Activity extends AppCompatActivity
             case 1:
 //                入库校验
                 fragment = InCheckFragment.newInstance();
-                if (auth != 6 && auth != 7 && auth != 8 && auth != 9 )
+                if (auth != 6 && auth != 7 && auth != 8 && auth != 9)
                     flag = true;
                 break;
             case 2:
 //                盘点
                 fragment = CheckCarrierFragment.newInstance();
 //                出库校验
-//                fragment = OutCheckCarFragment.newInstance();
                 if (auth != 5 && auth != 6 && auth != 8 && auth != 9 && auth != 10)
                     flag = true;
                 break;
             case 3:
 //                上架
                 fragment = PutawayCarrierFragment.newInstance();
-                if (auth != 5 && auth != 7 && auth != 8 && auth != 9 )
+                if (auth != 5 && auth != 7 && auth != 8 && auth != 9)
                     flag = true;
                 break;
             case 4:
@@ -309,20 +281,17 @@ public class Main2Activity extends AppCompatActivity
                 //                寻缸
                 fragment = FindVatNoFragment.newInstance();
                 flag = true;
-
                 break;
             case 6:
 //                寻托盘
                 fragment = FindTpNoFragmentf.newInstance();
                 flag = true;
-
                 break;
             case 7:
                 //出库申请
                 fragment = OutApplyNoFragment.newInstance();
                 if (auth != 5 && auth != 7 && auth != 8 && auth != 9 && auth != 6)
                     flag = true;
-
                 break;
             case 8:
 ////              发运
@@ -353,7 +322,6 @@ public class Main2Activity extends AppCompatActivity
                 fragment = ChubbUpFragment.newInstance();
                 if (auth != 5 && auth != 7 && auth != 9 && auth != 10 && auth != 6)
                     flag = true;
-
                 break;
             case 13:
 //                重量修改
@@ -369,7 +337,7 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 15:
 //                待开发
-                fragment=InAssistFragment.newInstance();
+                fragment = InAssistFragment.newInstance();
                 flag = true;
                 break;
             case 16:
@@ -377,7 +345,7 @@ public class Main2Activity extends AppCompatActivity
                 flag = true;
                 break;
             case 17:
-                fragment= ReturnGoodsInNoFragment.newInstance();
+                fragment = ReturnGoodsInNoFragment.newInstance();
                 flag = true;
                 break;
             default:
@@ -398,11 +366,6 @@ public class Main2Activity extends AppCompatActivity
         } else {
             Toast.makeText(this, "你的账号权限无法使用该功能", Toast.LENGTH_LONG).show();
         }
-//        设置列表点击状态
-        if (position > 15)
-            position--;
-        navigationView.getMenu().findItem(OptionMenu.values()[position].getId()).setChecked(true);
-//        关闭抽屉
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START);
     }
@@ -518,6 +481,7 @@ public class Main2Activity extends AppCompatActivity
     public void click16(View view) {
         selectItem(16);
     }
+
     /**
      * 退库入库
      */
@@ -541,19 +505,12 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
                     || fragment instanceof WeightChangeFragment || fragment instanceof ChubbExceptionFragment
                     || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothPutwayCarrierFragment
-                    || fragment instanceof CutClothFragment|| fragment instanceof InAssistFragment)) {
+                    || fragment instanceof CutClothFragment || fragment instanceof InAssistFragment)) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
                 }
-                //update the selected item in the drawer and the title
-//            mDrawerList.setItemChecked(0, true);
                 selectItem(0);
                 setTitle(mOptionTitle[0]);
-                //We are handling back pressed for saving pre-filters settings. Notify the appropriate fragment.
-                //{@link BaseReceiverActivity # onBackPressed should be called by the fragment when the processing is done}
-                //super.onBackPressed();
-
-
             } else {
                 if (fragment != null && (fragment instanceof OutCheckFragment)) {
                     askForBack();
@@ -576,7 +533,6 @@ public class Main2Activity extends AppCompatActivity
                     getFragmentManager().popBackStack();
                     if (comeBack.fragmentCallBackListener != null)
                         comeBack.fragmentCallBackListener.ubLoad(true);
-
                 } else {
                     getFragmentManager().popBackStack();
                 }
@@ -597,33 +553,8 @@ public class Main2Activity extends AppCompatActivity
         this.dataList.putAll(dataList);
     }
 
-    public void showProgress(final boolean show) {
-/*
-        loginButton.setEnabled(show?false:true);
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.///////////////////////
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-            loginProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-            loginProgress.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
-        }*/
-    }
-
     private void askForBack() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle("提示" + "").
                 setMessage("确认返回吗？" + "").
                 setPositiveButton(getString(R.string.btn_yes),
@@ -643,7 +574,6 @@ public class Main2Activity extends AppCompatActivity
 
     private void askForOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle("提示" + "").
                 setMessage("确认要退出吗？" + "").
                 setPositiveButton(getString(R.string.btn_yes),
@@ -662,43 +592,28 @@ public class Main2Activity extends AppCompatActivity
                 }).setCancelable(false).show();
     }
 
-    //右上角列表R.menu.main2
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main2, menu);
         return true;
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-          /*  SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("up", false);*/
             EventBus.getDefault().postSticky(new EventBusMsg(0xfe));
             Intent intent = new Intent(Main2Activity.this, LoginActivity.class);
             startActivity(intent);
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    //左边列表点击监听（相当于onclickitemlistener,可用id匹配）
-//    列表点击时候触发的回调
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         for (OptionMenu om : OptionMenu.values()) {
             if (om.getId() == id) {
@@ -715,6 +630,4 @@ public class Main2Activity extends AppCompatActivity
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
     }
-
-
 }

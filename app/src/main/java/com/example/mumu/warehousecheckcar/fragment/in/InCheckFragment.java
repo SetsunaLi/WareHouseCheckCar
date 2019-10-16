@@ -376,7 +376,8 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                         handler.sendMessage(msg);*/
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    /*    Message msg = handler.obtainMessage();
+                                    sound.uploadFail();
+/*    Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x03;
                                         handler.sendMessage(msg);*/
                                 }

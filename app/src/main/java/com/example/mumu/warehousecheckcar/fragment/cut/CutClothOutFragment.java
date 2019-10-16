@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
@@ -82,7 +83,7 @@ public class CutClothOutFragment extends Fragment {
     private Map<String, List<String>> dataKey;
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
-
+    private Sound sound;
     private RecycleAdapter mAdapter;
 
     @Nullable
@@ -90,7 +91,7 @@ public class CutClothOutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cutcloth_out_layout, container, false);
         ButterKnife.bind(this, view);
-
+        sound=new Sound(getActivity());
         initData();
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.cutcloth_out_item);
         mAdapter.setContext(getActivity());
@@ -310,6 +311,7 @@ public class CutClothOutFragment extends Fragment {
                                         } else {
                                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                             blinkDialog2(false);
+                                            sound.uploadFail();
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();

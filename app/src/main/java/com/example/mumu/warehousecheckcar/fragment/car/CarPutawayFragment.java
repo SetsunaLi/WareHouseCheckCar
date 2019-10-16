@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
@@ -75,14 +76,14 @@ public class CarPutawayFragment extends Fragment {
 
     private ArrayList<Cloth> myList;
     private RecycleAdapter mAdapter;
-
+    private Sound sound;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.car_putaway_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.btn_car_up));
-
+        sound=new Sound(getActivity());
         initView();
         initData();
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.car_putaway_item);
@@ -275,6 +276,8 @@ public class CarPutawayFragment extends Fragment {
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
+                                    sound.uploadFail();
+
                                 }
                             } catch (Exception e) {
 

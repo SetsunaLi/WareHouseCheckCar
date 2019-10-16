@@ -447,6 +447,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                                } else {
                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                    blinkDialog2(false);
+                                   sound.uploadFail();
                                }
                            } catch (Exception e) {
 

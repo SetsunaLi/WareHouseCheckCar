@@ -74,6 +74,7 @@ public class CarSoldOutCarrierFragment extends Fragment implements UHFCallbackLi
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle(getResources().getString(R.string.btn_car_down));
+        sound=new Sound(getActivity());
         View view = inflater.inflate(R.layout.car_soldout_carrier_layout, container, false);
 
         ButterKnife.bind(this, view);
@@ -337,6 +338,8 @@ public class CarSoldOutCarrierFragment extends Fragment implements UHFCallbackLi
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
+                                    sound.uploadFail();
+
                                 }
                             } catch (Exception e) {
 

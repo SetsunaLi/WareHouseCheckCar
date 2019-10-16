@@ -65,7 +65,7 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
-        getActivity().setTitle("出库");
+        getActivity().setTitle("退货入库");
         sound = new Sound(getActivity());
         init2D();
         myList = new ArrayList<>();

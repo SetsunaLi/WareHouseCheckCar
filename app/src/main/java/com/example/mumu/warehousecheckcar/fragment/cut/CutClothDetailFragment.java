@@ -456,6 +456,7 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
+                                    sound.uploadFail();
                                 }
                             } catch (Exception e) {
 

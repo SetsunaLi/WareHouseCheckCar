@@ -588,10 +588,12 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                             } else if (baseReturn != null && baseReturn.getStatus() == 0) {
                                                 Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
                                                 showDialog(baseReturn.getData()+ "出库失败，请在ERP出库");
+                                                sound.uploadFail();
 
                                             } else {
                                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                                 showDialog("上传失败");
+                                                sound.uploadFail();
 
                                             }
                                         } catch (Exception e) {

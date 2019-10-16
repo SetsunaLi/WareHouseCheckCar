@@ -390,6 +390,7 @@ public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAda
                                     blinkDialog2(true);
                                 } else {
                                     blinkDialog2(false);
+                                    sound.uploadFail();
                                 }
                             } catch (Exception e) {
 

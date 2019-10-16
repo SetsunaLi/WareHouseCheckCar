@@ -107,13 +107,14 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
 
     private RecycleAdapter mAdapter;
     private Handler handler;
-
+    private Sound sound;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_apply_new_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("退货入库");
+        sound=new Sound(getActivity());
         handler = new Handler();
         initData();
         initView();
@@ -329,6 +330,7 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
                                         } else {
                                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                             showDialog("上传失败");
+                                            sound.uploadFail();
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();

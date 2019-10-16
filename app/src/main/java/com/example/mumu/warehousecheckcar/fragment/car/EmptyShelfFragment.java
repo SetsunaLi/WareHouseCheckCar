@@ -295,6 +295,7 @@ public class EmptyShelfFragment extends Fragment implements BRecyclerAdapter.OnI
                                     } else {
                                         Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                         blinkDialog2(false);
+                                        sound.uploadFail();
                                     }
                                 } catch (Exception e) {
 
