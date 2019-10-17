@@ -279,22 +279,27 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<RetIn> allList = new ArrayList<>();
+                ArrayList<ArrayList<RetIn>> allList = new ArrayList<>();
                 boolean flag = true;
-                for (RetIn retIn : myList) {
-                    if (dataKey.contains(retIn.getSh_no())) {
-                        if (retIn.getPs() == retIn.getInd().size()) {
-                            RetIn data = retIn.clone();
-                            allList.add(data);
-                        } else {
-                            flag = false;
+                for (String no:dataKey) {
+                    ArrayList<RetIn> list=new ArrayList<>();
+                    for (RetIn retIn : myList) {
+                        if (no.equals(retIn.getSh_no())) {
+                            if (retIn.getPs() == retIn.getInd().size()) {
+                                RetIn data = retIn.clone();
+                                data.setRecord_by(User.newInstance().getUsername());
+                                list.add(data);
+                            } else {
+                                flag = false;
+                            }
                         }
                     }
+                    if (list.size()>0)
+                        allList.add(list);
                 }
                 if (flag) {
-                    for (RetIn retIn : allList) {
-                        retIn.setRecord_by(User.newInstance().getUsername());
-                        final String json = JSONObject.toJSONString(retIn);
+                    for (ArrayList<RetIn> retInList : allList) {
+                        final String json = JSONObject.toJSONString(retInList);
                         try {
                             AppLog.write(getActivity(), "returnIn", json, AppLog.TYPE_INFO);
                         } catch (IOException e) {
