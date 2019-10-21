@@ -92,19 +92,22 @@ public class LoginActivity extends AppCompatActivity {
 
             EventBus.getDefault().register(this);
     }
-    private boolean exit=false;
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+
+    private boolean exit = false;
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void getEventMsg(EventBusMsg message) {
-        switch (message.getStatus()){
+        switch (message.getStatus()) {
             case 0xfe:
-                exit=true;
+                exit = true;
                 break;
         }
     }
+
     private void initDate() {
 //         正式服
-//        App.IP = "http://47.106.157.255";
-//        App.PORT = "80";
+        App.IP = "http://47.106.157.255";
+        App.PORT = "80";
 //        测试服
 //        App.IP = "http://120.79.56.119";
 //        App.PORT = "8080";
@@ -112,8 +115,8 @@ public class LoginActivity extends AppCompatActivity {
 //        App.PORT = "80";
 //        App.IP="http://192.168.1.118";
 //        App.PORT="80";
-        App.IP="http://192.168.1.155";
-        App.PORT="80";
+//        App.IP = "http://192.168.1.155";
+//        App.PORT = "8080";
     }
 
     @Override
@@ -154,14 +157,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
 
-                updateBean=response.toJavaObject(UpdateBean.class);
+                updateBean = response.toJavaObject(UpdateBean.class);
                 /**更新版本入口*/
                 String nowCode = getResources().getString(R.string.app_version);//手机端的版本
                 String newCode = updateBean.getVersion_no();
                 if (!nowCode.equals(newCode)) {//小于最新版本号
-                    UpdateApk.UpdateVersion(LoginActivity.this,updateBean);
+                    UpdateApk.UpdateVersion(LoginActivity.this, updateBean);
                 } else {
-                    if (checkbox2.isChecked() && !username.getText().toString().equals("") && !password.getText().toString().equals("")&&!exit)
+                    if (checkbox2.isChecked() && !username.getText().toString().equals("") && !password.getText().toString().equals("") && !exit)
                         onViewClicked(loginButton);
                     Log.e("MA", "已经是最新版本");
 //            ToastUtils.showMessage("已经是最新的版本");
@@ -247,25 +250,25 @@ public class LoginActivity extends AppCompatActivity {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (loginProgress!=null){
+        if (loginProgress != null) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-            loginProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-            loginProgress.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
-        }
+                int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+                loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+                loginProgress.animate().setDuration(shortAnimTime).alpha(
+                        show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+                    }
+                });
+            } else {
+                // The ViewPropertyAnimator APIs are not available, so simply show
+                // and hide the relevant UI components.
+                loginProgress.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+                loginProgress.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            }
         }
 
     }
@@ -343,7 +346,7 @@ public class LoginActivity extends AppCompatActivity {
                         int auth = (int) message.get("auth");
                         User user = User.newInstance();
 //                        user.setUser(id, username, msg, code,0);
-                        user.setUser(id, username, msg, code,auth);
+                        user.setUser(id, username, msg, code, auth);
                         return true;
                     }
                   /*  case 1003:{//密码不正确

@@ -54,6 +54,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -152,41 +154,48 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                     oldData = (RetIn) msg.getPositionObj(1);
                     chooseEpcList = (Map<String, String>) msg.getPositionObj(2);
                     mAdapter.notifyDataSetChanged();
-                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByVatNo/" + oldData.getVat_no(), new OkHttpClientManager.ResultCallback<JSONArray>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "getEpc;" + e.getMessage());
-                                Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            try {
-                                List<RetInd> arry = new ArrayList<>();
-                                Gson gson = new Gson();
-                                JsonParser jsonParser = new JsonParser();
-                                JsonArray jsonElements = jsonParser.parse(response.toJSONString()).getAsJsonArray();
-                                for (JsonElement bean : jsonElements) {
-                                    arry.add(gson.fromJson(bean, RetInd.class));
+                    try {
+                    String string=URLEncoder.encode( oldData.getVat_no(), "UTF-8");
+                        OkHttpClientManager.getAsyn(
+                                App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByVatNo/" +string
+                                , new OkHttpClientManager.ResultCallback<JSONArray>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Log.i(TAG, "getEpc;" + e.getMessage());
+                                    Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                                if (arry != null && arry.size() > 0) {
-                                    for (RetInd retInd : arry) {
-                                        if (chooseEpcList.containsKey(retInd.getWms_epc()) && chooseEpcList.get(retInd.getWms_epc()).equals(oldData.getSh_no())) {
-                                            scanEpcList.add(retInd.getWms_epc());
-                                            getEpcList.add(retInd.getWms_epc());
-                                        }
+                            }
+
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                try {
+                                    List<RetInd> arry = new ArrayList<>();
+                                    Gson gson = new Gson();
+                                    JsonParser jsonParser = new JsonParser();
+                                    JsonArray jsonElements = jsonParser.parse(response.toJSONString()).getAsJsonArray();
+                                    for (JsonElement bean : jsonElements) {
+                                        arry.add(gson.fromJson(bean, RetInd.class));
                                     }
-                                    myList.addAll(arry);
-                                    text1.setText(String.valueOf(myList.size() - 1));
-                                    mAdapter.notifyDataSetChanged();
-                                }
-                            } catch (Exception e) {
+                                    if (arry != null && arry.size() > 0) {
+                                        for (RetInd retInd : arry) {
+                                            if (chooseEpcList.containsKey(retInd.getWms_epc()) && chooseEpcList.get(retInd.getWms_epc()).equals(oldData.getSh_no())) {
+                                                scanEpcList.add(retInd.getWms_epc());
+                                                getEpcList.add(retInd.getWms_epc());
+                                            }
+                                        }
+                                        myList.addAll(arry);
+                                        text1.setText(String.valueOf(myList.size() - 1));
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                } catch (Exception e) {
 
+                                }
                             }
-                        }
-                    });
+                        });
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
     }
