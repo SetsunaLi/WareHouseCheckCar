@@ -79,6 +79,7 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
         recyle.setAdapter(mAdapter);
 
         initUtil();
+        cancelKeyBoard(view);
         return view;
     }
 
@@ -116,6 +117,14 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
         mAdapter.setId(0);
         mAdapter.select(0);
         mAdapter.notifyDataSetChanged();
+    }
+
+    //隐藏输入法
+    public void cancelKeyBoard(View view) {
+        if (mInputMethodManager.isActive()) {
+            mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
+        }
+
     }
 
     @Override
@@ -208,6 +217,7 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
             final FixedEditText editNo = (FixedEditText) holder.getView(R.id.fixeedittext1);
             editNo.setTag(position);
             editNo.setText(item);
+            editNo.setHint("请输入出仓单号");
             if (position == this.position) {
                 editNo.setFocusable(true);//设置输入框可聚集
                 editNo.setFocusableInTouchMode(true);//设置触摸聚焦

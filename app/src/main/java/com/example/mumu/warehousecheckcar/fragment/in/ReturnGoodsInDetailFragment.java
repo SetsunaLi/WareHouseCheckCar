@@ -155,44 +155,49 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                     chooseEpcList = (Map<String, String>) msg.getPositionObj(2);
                     mAdapter.notifyDataSetChanged();
                     try {
-                    String string=URLEncoder.encode( oldData.getVat_no(), "UTF-8");
+                        String string = URLEncoder.encode(oldData.getVat_no(), "UTF-8");
                         OkHttpClientManager.getAsyn(
-                                App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByVatNo/" +string
+                                App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByVatNo/" + string
                                 , new OkHttpClientManager.ResultCallback<JSONArray>() {
-                            @Override
-                            public void onError(Request request, Exception e) {
-                                if (App.LOGCAT_SWITCH) {
-                                    Log.i(TAG, "getEpc;" + e.getMessage());
-                                    Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                try {
-                                    List<RetInd> arry = new ArrayList<>();
-                                    Gson gson = new Gson();
-                                    JsonParser jsonParser = new JsonParser();
-                                    JsonArray jsonElements = jsonParser.parse(response.toJSONString()).getAsJsonArray();
-                                    for (JsonElement bean : jsonElements) {
-                                        arry.add(gson.fromJson(bean, RetInd.class));
-                                    }
-                                    if (arry != null && arry.size() > 0) {
-                                        for (RetInd retInd : arry) {
-                                            if (chooseEpcList.containsKey(retInd.getWms_epc()) && chooseEpcList.get(retInd.getWms_epc()).equals(oldData.getSh_no())) {
-                                                scanEpcList.add(retInd.getWms_epc());
-                                                getEpcList.add(retInd.getWms_epc());
-                                            }
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getEpc;" + e.getMessage());
+                                            Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                                         }
-                                        myList.addAll(arry);
-                                        text1.setText(String.valueOf(myList.size() - 1));
-                                        mAdapter.notifyDataSetChanged();
                                     }
-                                } catch (Exception e) {
 
-                                }
-                            }
-                        });
+                                    @Override
+                                    public void onResponse(JSONArray response) {
+                                        try {
+                                            List<RetInd> arry = new ArrayList<>();
+                                            Gson gson = new Gson();
+                                            JsonParser jsonParser = new JsonParser();
+                                            JsonArray jsonElements = jsonParser.parse(response.toJSONString()).getAsJsonArray();
+                                            for (JsonElement bean : jsonElements) {
+                                                arry.add(gson.fromJson(bean, RetInd.class));
+                                            }
+                                            if (arry != null && arry.size() > 0) {
+                                                for (RetInd retInd : arry) {
+                                                    if (chooseEpcList.containsKey(retInd.getWms_epc()) && chooseEpcList.get(retInd.getWms_epc()).equals(oldData.getSh_no())) {
+                                                        scanEpcList.add(retInd.getWms_epc());
+                                                        getEpcList.add(retInd.getWms_epc());
+                                                        for (RetInd oldRetInd : oldData.getInd()) {
+                                                            if (oldRetInd.getWms_epc().equals(retInd.getWms_epc())){
+                                                                retInd.setWeight_in(oldRetInd.getWeight_in());
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                myList.addAll(arry);
+                                                text1.setText(String.valueOf(myList.size() - 1));
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
+                                });
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }

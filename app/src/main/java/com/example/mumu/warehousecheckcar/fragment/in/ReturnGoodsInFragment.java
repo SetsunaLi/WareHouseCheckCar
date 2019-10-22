@@ -261,7 +261,7 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
         final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
         final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
         TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认出库");
+        text.setText("是否确认入库");
         dialog1 = new AlertDialog.Builder(getActivity()).create();
         dialog1.show();
         dialog1.getWindow().setContentView(blinkView);
