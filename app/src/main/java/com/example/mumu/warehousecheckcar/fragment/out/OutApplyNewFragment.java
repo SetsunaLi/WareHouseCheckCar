@@ -78,7 +78,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     @Bind(R.id.button2)
     Button button2;
 
-
     public static OutApplyNewFragment newInstance() {
         if (fragment == null) ;
         fragment = new OutApplyNewFragment();
@@ -99,8 +98,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private HashMap<String, Integer> getEpcKey;
     /***    缸号，是否自动匹配缸号*/
     private HashMap<String, Boolean> vatKey;
-
-//    private ArrayList<Output> dataList;
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
 
@@ -136,7 +133,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         fatherNoList = new ArrayList<>();
         epcKeyList = new HashMap<>();
         myList = new ArrayList<>();
-//        dataList = new ArrayList<>();
         dateNo = new ArrayList<>();
         dataKey = new HashMap<>();
         epcList = new ArrayList<>();
@@ -169,9 +165,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 str = str.replaceAll(" ", "");
                 if (str != null && !str.equals("") && !fatherNoList.contains(str))
                     fatherNoList.add(str);
-
             }
-
             text1.setText(0 + "");
             text2.setText(fatherNoList.size() + "");
             downLoadData();
@@ -182,7 +176,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         for (String no : fatherNoList) {
             JSONObject object = new JSONObject();
             object.put("applyNo", no);
-//            object.put("applyNo", "B90601505");
             final String json = object.toJSONString();
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
@@ -203,7 +196,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 if (!dateNo.contains(response.get(0).getApplyNo())) {
                                     dateNo.add(response.get(0).getApplyNo());
                                     response.get(0).setStatus(true);
-//                                    for (Output output : response) {
                                     for (int i = 0; i < response.size(); i++) {
                                         Output output = response.get(i);
                                         if (vatKey.containsKey(output.getVatNo())) {
@@ -282,8 +274,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         if (!epcKeyList.get(EPC).isFind()) {
                             epcKeyList.get(EPC).setFind(true);
                             epcKeyList.get(EPC).setStatus(true);
-
-//                            for (Output i : myList) {
                             for (int i = 0; i < myList.size(); i++) {
                                 Output output = myList.get(i);
                                 for (OutputDetail od : output.getList()) {
@@ -385,9 +375,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 case 0x01:
                     epcKeyList.clear();
                     epcKeyList.putAll(((Main2Activity) getActivity()).getOutApplyDataList());
-//                    for (Output i : myList) {
-//                        i.setCountProfit(0);
-//                        i.setWeightPei(0);
                     Output i = myList.get(position);
                     i.setCountProfit(0);
                     i.setWeightPei(0);
@@ -456,12 +443,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
-              /*  for (String epc:epcKeyList.keySet()){
-                    Message msg = handler.obtainMessage();
-                    msg.what = 0x00;
-                    msg.obj = epc;
-                    handler.sendMessage(msg);
-                }*/
                 break;
             case R.id.button2:
                 blinkDialog();
@@ -506,15 +487,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-                //                上传数据
                 ArrayList<ArrayList<Output>> allList = new ArrayList<>();
                 boolean isPush = true;
                 for (String applyNo : dataKey.keySet()) {
                     ArrayList<Output> jsocList = new ArrayList<>();
-//                    for (Output op : myList) {
                     for (int i = 0; i < myList.size(); i++) {
                         Output op = myList.get(i);
                         if (op.getApplyNo().equals(applyNo)) {
@@ -533,9 +509,14 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                     obj.setDevice(App.DEVICE_NO);
                                     obj.setFlag(1);
                                     obj.setList(newList);
-                                    if (isPush && obj.getCountOut() != obj.getCountProfit())
+                                    if (isPush && obj.getCountOut() != newList.size()) {
                                         isPush = false;
+                                        break;
+                                    }
                                     jsocList.add(obj);
+                                } else {
+                                    isPush = false;
+                                    break;
                                 }
                             }
                         }
@@ -544,10 +525,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         allList.add(jsocList);
                     }
                 }
-                if (User.newInstance().getAuth() !=10 || (User.newInstance().getAuth() == 10 && isPush)) {
+                if (User.newInstance().getAuth() != 10 || (User.newInstance().getAuth() == 10 && isPush)) {
                     for (ArrayList<Output> jsocList : allList) {
                         if (jsocList.size() > 0) {
-//                        final String json = JSON.toJSONString(jsocList);
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("userId", User.newInstance().getId());
                             jsonObject.put("data", jsocList);
@@ -612,13 +592,14 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     no.setEnabled(false);
                     yes.setEnabled(false);
                     handler.postDelayed(r, App.TIME);
-                }else
+                } else
                     showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
             }
         });
     }
-    private void showDialog(String msg){
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+
+    private void showDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("提示");
         builder.setMessage(msg);
         builder.setCancelable(false);
@@ -630,51 +611,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         });
         builder.create().show();
     }
-   /* private AlertDialog dialog;
 
-    private void blinkDialog2(boolean flag, String msg) {
-//        if (dialog == null) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        if (flag)
-            text.setText(msg + "出库失败，请在ERP出库");
-        else
-            text.setText("上传失败");
-
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//        dialog.setCanceledOnTouchOutside(false);
-//        dialog.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-      *//*  } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText(msg+"出库失败，请在ERP出库");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
-        }*//*
-    }
-*/
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     private int position;
@@ -685,9 +622,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
         Output obj = myList.get(position);
-     /*   String key = obj.getOutp_id() + obj.getVat_no() + obj.getProduct_no() + obj.getSelNo();
-        KEY = key;
-        APPLY_NO = obj.getOut_no();*/
         Fragment fragment = OutApplyDetailFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putSerializable("dataList", obj);
@@ -699,7 +633,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         transaction.show(fragment);
         transaction.commit();
     }
-
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
         private Context context;
