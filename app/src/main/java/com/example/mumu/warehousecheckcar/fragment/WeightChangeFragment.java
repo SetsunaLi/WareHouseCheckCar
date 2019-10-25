@@ -85,7 +85,6 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
         return fragment;
     }
 
-    private Sound sound;
     private CheckWeight cloth;
     private double weight;
     private int id=2;
@@ -97,7 +96,6 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
         View view = inflater.inflate(R.layout.weight_change_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("调整库存重量");
-        sound = new Sound(getActivity());
         array = getResources().getStringArray(R.array.change_cause_array);
         edittext1.setFocusable(false);
         edittext2.addTextChangedListener(new TextWatcher() {
@@ -183,7 +181,7 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }
@@ -346,7 +344,7 @@ public class WeightChangeFragment extends Fragment implements UHFCallbackLiatene
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
-                                    sound.uploadFail();
+                                    Sound.faillarm();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

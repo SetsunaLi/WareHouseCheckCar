@@ -70,8 +70,6 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
         fragment = new CheckCarrierFragment();
         return fragment;
     }
-
-    private Sound sound;
     private boolean flagRFID=false;
     private boolean flag2D=false;
     @Nullable
@@ -79,8 +77,6 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
-
         getActivity().setTitle("盘点");
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
@@ -269,7 +265,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -338,7 +334,7 @@ public class CheckCarrierFragment extends Fragment implements UHFCallbackLiatene
                         case 0x02:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }

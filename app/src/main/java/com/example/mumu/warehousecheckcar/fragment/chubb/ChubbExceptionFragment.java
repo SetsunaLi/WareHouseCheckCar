@@ -81,7 +81,6 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
     private List<String> dataKey;
 //    epc
     private List<String> epcList;
-    private Sound sound;
     private RecycleAdapter mAdapter;
     @Nullable
     @Override
@@ -90,8 +89,6 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
         ButterKnife.bind(this, view);
         getActivity().setTitle("查布异常布匹");
         initData();
-        sound = new Sound(getActivity());
-
         mAdapter=new RecycleAdapter(recyle,myList,R.layout.chubb_item);
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
@@ -245,7 +242,7 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
-                                    sound.uploadFail();
+                                    Sound.faillarm();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -315,7 +312,7 @@ public class ChubbExceptionFragment extends Fragment implements UHFCallbackLiate
             super.handleMessage(msg);
             if (App.MUSIC_SWITCH) {
                 if (System.currentTimeMillis() - currenttime > 150) {
-                    sound.callAlarm();
+                    Sound.scanAlarm();
                     currenttime = System.currentTimeMillis();
                 }
             }

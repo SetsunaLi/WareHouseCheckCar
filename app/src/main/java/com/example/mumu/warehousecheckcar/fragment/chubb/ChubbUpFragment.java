@@ -98,8 +98,6 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
     private List<String> dataKEY;
     //    private List<Object> dataList;
     private List<String> dataEPC;
-    private Sound sound;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,8 +109,6 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chubbup_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
-
         return view;
     }
 
@@ -354,7 +350,7 @@ public class ChubbUpFragment extends Fragment implements UHFCallbackLiatener, Fr
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }

@@ -84,7 +84,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
     }
 
     private RecycleAdapter mAdapter;
-    private Sound sound;
     private List<Cloth> myList;
     private LinearLayoutManager ms;
     private JSONObject json;
@@ -101,7 +100,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         ButterKnife.bind(this, view);
         initArray();
         clear();
-        sound = new Sound(getActivity());
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.cut_cloth_matching_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -223,7 +221,7 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -456,7 +454,7 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
-                                    sound.uploadFail();
+                                    Sound.faillarm();
                                 }
                             } catch (Exception e) {
 

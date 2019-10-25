@@ -55,7 +55,6 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
         return fragment;
     }
     private TDScannerHelper scannerHander;
-    private Sound sound;
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private InputMethodManager mInputMethodManager;
@@ -65,7 +64,6 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.cut_out));
-        sound = new Sound(getActivity());
         init2D();
         myList = new ArrayList<>();
         myList.add("");
@@ -135,7 +133,7 @@ public class CutClothOutNoFragment extends Fragment implements RXCallback {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            sound.callAlarm();
+            Sound.scanAlarm();
             String No = (String) msg.obj;
             int id = mAdapter.getId();
             myList.set(id, No);

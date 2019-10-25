@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.activity;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +10,6 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,16 +24,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.entity.OutputFlag;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
+import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
+import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
 import com.example.mumu.warehousecheckcar.fragment.car.CarFragment;
 import com.example.mumu.warehousecheckcar.fragment.car.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckCarrierFragment;
@@ -49,7 +51,6 @@ import com.example.mumu.warehousecheckcar.fragment.cut.CuttingClothPutwayCarrier
 import com.example.mumu.warehousecheckcar.fragment.find.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.find.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.forward.ForwardingMsgFragment;
-import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InAssistFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InCheckFragment;
@@ -61,8 +62,6 @@ import com.example.mumu.warehousecheckcar.fragment.out.OutCheckCarFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
-import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
-import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
@@ -86,14 +85,12 @@ public class Main2Activity extends AppCompatActivity
     DrawerLayout drawerLayout;
     private final String TAG = "Main2Activity";
     private CharSequence mTitle;
-    private Sound sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
-        sound = new Sound(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         User user = User.newInstance();
         toolbar.setSubtitle("操作人:" + user.getUsername());

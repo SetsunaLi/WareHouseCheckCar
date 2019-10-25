@@ -56,9 +56,6 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
         fragment = new CutClothScanFragment();
         return fragment;
     }
-
-    //音频
-    private Sound sound;
     private TDScannerHelper scannerHander;
 
     @Nullable
@@ -66,7 +63,6 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cut_cloth_barcode_layout, container, false);
         getActivity().setTitle(getResources().getString(R.string.cut_scanner));
-        sound = new Sound(getActivity());
         ButterKnife.bind(this, view);
         init2D();
         return view;
@@ -237,7 +233,7 @@ public class CutClothScanFragment extends Fragment implements RXCallback {
                     //callback
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }

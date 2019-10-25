@@ -73,7 +73,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         return fragment;
     }
 
-    private Sound sound;
     private boolean flagRFID = false;
     private boolean flag2D = false;
 
@@ -83,7 +82,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 //        和盘点Check布局一样
         View view = inflater.inflate(R.layout.putaway_carrier_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
         getActivity().setTitle("上架");
         button2.setText("确认库位");
 
@@ -308,7 +306,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -373,7 +371,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                     case 0x02:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }

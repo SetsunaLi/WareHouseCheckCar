@@ -55,6 +55,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -94,7 +95,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
     private RetIn oldData;
     private int position;
     private RecycleAdapter mAdapter;
-    private Sound sound;
 
     //    这里加载视图
     @Nullable
@@ -105,7 +105,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         initData();
         initView();
         initRFID();
-        sound = new Sound(getActivity());
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         return view;
@@ -183,7 +182,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                                                         scanEpcList.add(retInd.getWms_epc());
                                                         getEpcList.add(retInd.getWms_epc());
                                                         for (RetInd oldRetInd : oldData.getInd()) {
-                                                            if (oldRetInd.getWms_epc().equals(retInd.getWms_epc())){
+                                                            if (oldRetInd.getWms_epc().equals(retInd.getWms_epc())) {
                                                                 retInd.setWeight_in(oldRetInd.getWeight_in());
                                                             }
                                                         }
@@ -191,6 +190,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                                                 }
                                                 myList.addAll(arry);
                                                 text1.setText(String.valueOf(myList.size() - 1));
+                                                clearList(myList, scanEpcList);
                                                 mAdapter.notifyDataSetChanged();
                                             }
                                         } catch (Exception e) {
@@ -230,7 +230,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         scanEpcList.clear();
     }
 
-    private void clearList(final ArrayList<String> scanList) {
+    private void clearList(final List<RetInd> myList, final List<String> scanList) {
         Collections.sort(myList, new Comparator<RetInd>() {
             @Override
             public int compare(RetInd obj1, RetInd obj2) {
@@ -256,13 +256,14 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                     else if (TextUtils.isEmpty(bFab) & TextUtils.isEmpty(aFab))
                         return 0;
                     else {
-                        if (Integer.valueOf(aFab) > Integer.valueOf(bFab))
-                            return 1;
-                        else if (Integer.valueOf(aFab) < Integer.valueOf(bFab))
-                            return -1;
-                        else
+                        int a = aFab.compareTo(bFab);
+                        if (a == 0) {
                             return 0;
-
+                        } else if (a > 0) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
                     }
                 }
             }
@@ -320,7 +321,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }
@@ -343,7 +344,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                     }
                     break;
                 case 0x01:
-                    clearList(scanEpcList);
+                    clearList(myList, scanEpcList);
                     mAdapter.notifyDataSetChanged();
                     break;
             }

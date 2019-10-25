@@ -93,7 +93,6 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.car_putaway_carrier_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
         getActivity().setTitle(getResources().getString(R.string.btn_car_up));
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
@@ -360,7 +359,7 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -420,7 +419,7 @@ public class CarPutawayCarrierFragment extends Fragment implements UHFCallbackLi
                     case 0x02:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }

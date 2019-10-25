@@ -106,7 +106,6 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
      * value：index
      */
     private List<String> dataKEY;
-    private Sound sound;
     private LinearLayoutManager ms;
 
     @Nullable
@@ -114,7 +113,6 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
         getActivity().setTitle("入库校验");
         myList = new ArrayList<>();
         strIndex = new HashMap<>();
@@ -234,7 +232,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -376,7 +374,7 @@ public class InCheckFragment extends Fragment implements UHFCallbackLiatener, BR
                                         handler.sendMessage(msg);*/
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    sound.uploadFail();
+                                    Sound.faillarm();
 /*    Message msg = handler.obtainMessage();
                                         msg.arg1 = 0x03;
                                         handler.sendMessage(msg);*/

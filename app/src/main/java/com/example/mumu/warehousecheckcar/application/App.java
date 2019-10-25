@@ -1,8 +1,10 @@
 package com.example.mumu.warehousecheckcar.application;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.ArrayRes;
 
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.ChubbUp;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
@@ -22,6 +24,23 @@ import java.util.Map;
  */
 
 public class App extends Application {
+    private static App INSTANCE;
+
+    public static App getInstance() {
+        return INSTANCE;
+    }
+
+    public static Context getContext() {
+        return INSTANCE;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        INSTANCE = this;
+        Sound.init(getContext());
+    }
+
     public  static final boolean APPLOGGER=true;
     public  static final boolean APPLOGGERTXT=true;
     public static final long TIME=10000;

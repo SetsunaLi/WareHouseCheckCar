@@ -123,7 +123,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     //    查询
     private ArrayList<String> findList;
 
-    private Sound sound;
     private FilterAdapter vatAdapter;
     private FilterAdapter colorAdapter;
     private FilterAdapter clothAdapter;
@@ -133,7 +132,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
         initUtil();
         initData();
         initView();
@@ -374,7 +372,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             if (dataKEY.contains(epc)) {
 
                 if (System.currentTimeMillis() - currenttime > 150) {
-                    sound.callAlarm();
+                    Sound.scanAlarm();
                     currenttime = System.currentTimeMillis();
                 }
                 if (!dataEpc.contains(epc)) {

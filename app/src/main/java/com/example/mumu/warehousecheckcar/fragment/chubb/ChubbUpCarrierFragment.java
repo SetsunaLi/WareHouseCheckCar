@@ -71,8 +71,6 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
         fragment = new ChubbUpCarrierFragment();
         return fragment;
     }
-
-    private Sound sound;
     private final String TAG = "ChubbUpCarrierFragment";
     private boolean flagRFID=false;
     private boolean flag2D=false;
@@ -81,8 +79,6 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
-
         getActivity().setTitle("查布上架");
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
@@ -363,7 +359,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                         } else {
                             Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                             blinkDialog2(false);
-                            sound.uploadFail();
+                            Sound.faillarm();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -428,7 +424,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                     case 0x00:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -499,7 +495,7 @@ public class ChubbUpCarrierFragment extends Fragment implements UHFCallbackLiate
                     case 0x02:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }

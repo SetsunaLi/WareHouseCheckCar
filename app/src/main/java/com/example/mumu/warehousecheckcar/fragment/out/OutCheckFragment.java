@@ -104,15 +104,11 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
      * value：index
      */
     private List<String> dataKEY;
-    private Sound sound;
-    private LinearLayoutManager ms;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_check_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
         myList = new ArrayList<>();
         strIndex = new HashMap<>();
 //        epcList = new ArrayList<>();
@@ -126,7 +122,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
         mAdapter.setOnItemClickListener(this);
-        ms = new LinearLayoutManager(getActivity());
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
@@ -228,7 +224,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                     case 0x10:
                         if (App.MUSIC_SWITCH) {
                             if (System.currentTimeMillis() - currenttime > 150) {
-                                sound.callAlarm();
+                                Sound.scanAlarm();
                                 currenttime = System.currentTimeMillis();
                             }
                         }
@@ -382,7 +378,7 @@ public class OutCheckFragment extends Fragment implements UHFCallbackLiatener, B
                                     mAdapter.notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    sound.uploadFail();
+                                    Sound.faillarm();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

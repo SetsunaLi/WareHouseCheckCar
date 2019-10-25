@@ -83,7 +83,6 @@ public class CarPutawayFragment extends Fragment {
         View view = inflater.inflate(R.layout.car_putaway_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.btn_car_up));
-        sound=new Sound(getActivity());
         initView();
         initData();
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.car_putaway_item);
@@ -276,8 +275,7 @@ public class CarPutawayFragment extends Fragment {
                                 } else {
                                     Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                     blinkDialog2(false);
-                                    sound.uploadFail();
-
+                                    Sound.faillarm();
                                 }
                             } catch (Exception e) {
 

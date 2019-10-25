@@ -68,7 +68,6 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
 
     private TDScannerHelper scannerHander;
     private boolean scannerFlag=true;
-    private Sound sound;
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private InputMethodManager mInputMethodManager;
@@ -83,7 +82,6 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
 
             EventBus.getDefault().register(this);
 
-        sound = new Sound(getActivity());
         initUtil();
         init2D();
         myList = new ArrayList<>();
@@ -222,7 +220,7 @@ public class ForwardingNoFragment extends Fragment implements RXCallback {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            sound.callAlarm();
+            Sound.scanAlarm();
             String No = (String) msg.obj;
             int id = mAdapter.getId();
             myList.set(id, No);

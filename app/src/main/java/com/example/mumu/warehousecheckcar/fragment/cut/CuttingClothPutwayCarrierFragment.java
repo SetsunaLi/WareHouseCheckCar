@@ -58,9 +58,6 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
 
     private String[] data_list;
     private String[] data_lists;
-//    private Cut cloth;
-    private Sound sound;
-//    private boolean flagRFID = false;
     private boolean flag2D = false;
 
     public static CuttingClothPutwayCarrierFragment newInstance() {
@@ -75,7 +72,6 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
         View view = inflater.inflate(R.layout.cut_cloth_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.btn_click14));
-        sound = new Sound(getActivity());
 //         cloth = new Cut();
 //        initSpinner();
 //        initSpinners();
@@ -229,7 +225,7 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }

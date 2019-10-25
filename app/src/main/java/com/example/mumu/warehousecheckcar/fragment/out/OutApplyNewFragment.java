@@ -103,7 +103,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 
     private RecycleAdapter mAdapter;
     private LinearLayoutManager llm;
-    private Sound sound;
 
     @Nullable
     @Override
@@ -113,7 +112,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         getActivity().setTitle("出库列表");
 
         initData();
-        sound = new Sound(getActivity());
 
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_apply_child_item);
         mAdapter.setContext(getActivity());
@@ -265,7 +263,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }
@@ -568,13 +566,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                             } else if (baseReturn != null && baseReturn.getStatus() == 0) {
                                                 Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
                                                 showDialog(baseReturn.getData()+ "出库失败，请在ERP出库");
-                                                sound.uploadFail();
-
+                                                Sound.faillarm();
                                             } else {
                                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                                 showDialog("上传失败");
-                                                sound.uploadFail();
-
+                                                Sound.faillarm();
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();

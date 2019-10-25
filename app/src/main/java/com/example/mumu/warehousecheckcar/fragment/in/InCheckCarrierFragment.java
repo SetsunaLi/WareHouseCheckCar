@@ -57,16 +57,11 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
         fragment = new InCheckCarrierFragment();
         return fragment;
     }
-
-    private Sound sound;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
-        sound = new Sound(getActivity());
-
         getActivity().setTitle("入库校验");
         button2.setText("确认库位");
         edittext1.addTextChangedListener(new TextWatcher() {
@@ -173,7 +168,7 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }

@@ -100,9 +100,6 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
     private List<Inventory> dataList;
     private List<String> dataKEY;
     private List<String> epcList;
-    private LinearLayoutManager ms;
-    private Sound sound;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -110,14 +107,13 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
         ButterKnife.bind(this, view);
         initData();
         clearData();
-        sound = new Sound(getActivity());
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.check_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
 //        点击事件可以改视图样式但不可恢复
         mAdapter.setOnItemClickListener(this);
-        ms = new LinearLayoutManager(getActivity());
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
@@ -297,7 +293,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }
@@ -479,7 +475,7 @@ public class CheckFragment extends Fragment implements BRecyclerAdapter.OnItemCl
                                     } else {
                                         Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                         blinkDialog2(false);
-                                        sound.uploadFail();
+                                        Sound.faillarm();
                                     }
                                 } catch (Exception e) {
 

@@ -55,7 +55,6 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
     }
 
     private TDScannerHelper scannerHander;
-    private Sound sound;
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private InputMethodManager mInputMethodManager;
@@ -66,7 +65,6 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("退货入库");
-        sound = new Sound(getActivity());
         init2D();
         myList = new ArrayList<>();
         myList.add("");
@@ -140,7 +138,7 @@ public class ReturnGoodsInNoFragment extends Fragment implements RXCallback {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            sound.callAlarm();
+            Sound.scanAlarm();
             String No = (String) msg.obj;
             int id = mAdapter.getId();
             myList.set(id, No);

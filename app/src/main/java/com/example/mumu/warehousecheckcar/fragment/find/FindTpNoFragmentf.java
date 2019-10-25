@@ -115,7 +115,6 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
 
     //     模糊查询托盘号
     private ArrayList<String> vatList;
-    private Sound sound;
     private boolean isLookFlag = false;
 
     @Nullable
@@ -126,8 +125,6 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
         initView();
         initData();
         initUtil();
-
-        sound = new Sound(getActivity());
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_tp_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -346,7 +343,7 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
             if (dataKEY.contains(epc)) {
 
                 if (System.currentTimeMillis() - currenttime > 150) {
-                    sound.callAlarm();
+                    Sound.scanAlarm();
                     currenttime = System.currentTimeMillis();
                 }
                 if (!dataEpc.contains(epc)) {

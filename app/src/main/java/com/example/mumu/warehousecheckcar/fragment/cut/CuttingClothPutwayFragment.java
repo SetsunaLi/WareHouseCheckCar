@@ -86,11 +86,8 @@ public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAda
 
     private RecycleAdapter mAdapter;
     private List<Cut> myList;
-    private LinearLayoutManager ms;
     private List<String> dataKEY;
-    private Sound sound;
     private List<String> epcList;
-//    private List<Cut> dataList;
 
 
     @Nullable
@@ -101,12 +98,11 @@ public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAda
         initUtil();
         initArray();
         clear();
-        sound = new Sound(getActivity());
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.cut_cloth_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-        ms = new LinearLayoutManager(getActivity());
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
@@ -236,7 +232,7 @@ public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAda
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }
@@ -390,7 +386,7 @@ public class CuttingClothPutwayFragment extends Fragment implements BRecyclerAda
                                     blinkDialog2(true);
                                 } else {
                                     blinkDialog2(false);
-                                    sound.uploadFail();
+                                    Sound.faillarm();
                                 }
                             } catch (Exception e) {
 

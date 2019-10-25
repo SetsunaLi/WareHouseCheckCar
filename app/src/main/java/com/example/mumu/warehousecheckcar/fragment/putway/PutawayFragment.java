@@ -99,9 +99,6 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
     private List<Input> dataList;
     private List<String> dataKey;
     private List<String> epcList;
-    private LinearLayoutManager llm;
-    private Sound sound;
-
     //    这里加载视图
     @Nullable
     @Override
@@ -112,14 +109,12 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         initData();
         clearData();
         text1.setText(epcList.size() + "");
-        sound = new Sound(getActivity());
-
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.putaway_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
         mAdapter.setOnItemClickListener(this);
-        llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
@@ -239,7 +234,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                 case 0x00:
                     if (App.MUSIC_SWITCH) {
                         if (System.currentTimeMillis() - currenttime > 150) {
-                            sound.callAlarm();
+                            Sound.scanAlarm();
                             currenttime = System.currentTimeMillis();
                         }
                     }
@@ -447,7 +442,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                                } else {
                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
                                    blinkDialog2(false);
-                                   sound.uploadFail();
+                                   Sound.faillarm();
                                }
                            } catch (Exception e) {
 
