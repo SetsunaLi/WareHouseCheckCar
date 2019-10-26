@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/headNo"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:descendantFocusability="blocksDescendants"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:descendantFocusability="blocksDescendants"
-        >
+        android:visibility="gone">
+
+        <CheckBox
+            android:id="@+id/checkbox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:checked="false" />
 
         <View
             android:layout_width="50dip"
             android:layout_height="3dp"
             android:background="@drawable/view_dash_line"
-            android:layerType="software"
-    />
+            android:layerType="software" />
+
         <TextView
             android:id="@+id/text1"
             style="@style/text_style2"
@@ -36,23 +44,16 @@
              />-->
 
     </LinearLayout>
+
     <View style="@style/view_item_bottom" />
+
     <LinearLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:descendantFocusability="blocksDescendants"
         android:orientation="horizontal"
-        android:visibility="gone"
-        >
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:checked="false"
-            android:visibility="invisible"
-            />
-        <View style="@style/view_item_mid" />
+        android:visibility="gone">
 
         <TextView
             style="@style/text_item"
@@ -83,58 +84,60 @@
             android:layout_width="120dip"
             android:layout_height="match_parent"
             android:text="缸号" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="申请条数"
-            />
+            android:text="申请条数" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
             android:text="配货条数"
-            android:textColor="@color/colorDataYesText"/>
+            android:textColor="@color/colorDataYesText" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="配货重量"/>
+            android:text="配货重量" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="扫描条数"/>
+            android:text="扫描条数" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="扫描重量"/>
+            android:text="扫描重量" />
     </LinearLayout>
 
     <View
         android:id="@+id/view"
-        android:visibility="gone"
-        style="@style/view_item_bottom" />
+        style="@style/view_item_bottom"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:descendantFocusability="blocksDescendants"
         android:orientation="horizontal">
-        <CheckBox
-            android:id="@+id/checkbox1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:checked="false"
-            />
-        <View style="@style/view_item_mid" />
 
         <TextView
             android:id="@+id/item1"
@@ -169,43 +172,52 @@
             android:layout_width="120dip"
             android:layout_height="match_parent"
             android:text="缸号" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             android:id="@+id/item5"
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="申请条数"
-            />
+            android:text="申请条数" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             android:id="@+id/item6"
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
             android:text="配货条数"
-            android:textColor="@color/colorDataYesText"/>
+            android:textColor="@color/colorDataYesText" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             android:id="@+id/item8"
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="配货重量"/>
+            android:text="配货重量" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             android:id="@+id/item9"
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="扫描条数"/>
+            android:text="扫描条数" />
+
         <View style="@style/view_item_mid" />
+
         <TextView
             android:id="@+id/item7"
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="扫描重量"/>
+            android:text="扫描重量" />
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />

@@ -91,7 +91,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     /***    显示列表*/
     private ArrayList<Output> myList;
     /***    主表，根据申请单号，字段组成key判断是否上传*/
-    private Map<String, List<String>> dataKey;
+    private ArrayList<String> dataKey;
     /***    所有扫描的epc总集，避免多次查询*/
     private ArrayList<String> epcList;
     /***     key：字段组成，记录非单号查询到的数据，并且记录插入myList的位置*/
@@ -102,7 +102,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private ArrayList<String> dateNo;
 
     private RecycleAdapter mAdapter;
-    private LinearLayoutManager llm;
 
     @Nullable
     @Override
@@ -117,7 +116,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         mAdapter.setOnItemClickListener(this);
-        llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
@@ -132,7 +131,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         epcKeyList = new HashMap<>();
         myList = new ArrayList<>();
         dateNo = new ArrayList<>();
-        dataKey = new HashMap<>();
+        dataKey = new ArrayList<>();
         epcList = new ArrayList<>();
         getEpcKey = new HashMap<>();
         vatKey = new HashMap<>();
@@ -206,13 +205,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                                 epcKeyList.put(outputDetail.getEpc() + "", new OutputFlag(false, "", true, outputDetail.getWeight()));
                                             }
                                         }
-                                        final String key = output.getOutp_id() + output.getVatNo() + output.getProduct_no() + output.getSelNo() + (myList.size() + i);
-                                        if (!dataKey.containsKey(output.getApplyNo())) {
-                                            dataKey.put(output.getApplyNo(), new ArrayList<String>());
-                                        }
-                                        if (!dataKey.get(output.getApplyNo()).contains(key)) {
-                                            dataKey.get(output.getApplyNo()).add(key);
-                                        }
+                                        if (!dataKey.contains(output.getApplyNo()))
+                                            dataKey.add(output.getApplyNo());
                                     }
                                     myList.addAll(response);
                                 }
@@ -487,40 +481,37 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
             public void onClick(View view) {
                 ArrayList<ArrayList<Output>> allList = new ArrayList<>();
                 boolean isPush = true;
-                for (String applyNo : dataKey.keySet()) {
+                for (String applyNo : dataKey) {
                     ArrayList<Output> jsocList = new ArrayList<>();
                     for (int i = 0; i < myList.size(); i++) {
                         Output op = myList.get(i);
-                        if (op.getApplyNo().equals(applyNo)) {
-                            final String key = op.getOutp_id() + op.getVatNo() + op.getProduct_no() + op.getSelNo() + i;
-                            if (dataKey.get(applyNo).contains(key)) {
-                                ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
-                                for (OutputDetail od : op.getList()) {
-                                    if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo + i)) {
-                                        od.setFlag(1);
-                                        od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
-                                        newList.add(od);
-                                    }
+                        if (applyNo.equals(op.getApplyNo())) {
+                            ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
+                            for (OutputDetail od : op.getList()) {
+                                if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo + i)) {
+                                    od.setFlag(1);
+                                    od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
+                                    newList.add(od);
                                 }
-                                if (newList.size() > 0) {
-                                    Output obj = (Output) op.clone();
-                                    obj.setDevice(App.DEVICE_NO);
-                                    obj.setFlag(1);
-                                    obj.setList(newList);
-                                    if (isPush && obj.getCountOut() != newList.size()) {
-                                        isPush = false;
-                                        break;
-                                    }
-                                    jsocList.add(obj);
-                                } else {
+                            }
+                            if (newList.size() > 0) {
+                                Output obj = (Output) op.clone();
+                                obj.setDevice(App.DEVICE_NO);
+                                obj.setFlag(1);
+                                obj.setList(newList);
+                                if (isPush && obj.getCountOut() != newList.size()) {
                                     isPush = false;
                                     break;
                                 }
+                                jsocList.add(obj);
+                            } else {
+                                isPush = false;
+                                break;
                             }
                         }
-                    }
-                    if (jsocList.size() > 0) {
-                        allList.add(jsocList);
+                        if (jsocList.size() > 0) {
+                            allList.add(jsocList);
+                        }
                     }
                 }
                 if (User.newInstance().getAuth() != 10 || (User.newInstance().getAuth() == 10 && isPush)) {
@@ -565,7 +556,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //                                            blinkDialog2(true);
                                             } else if (baseReturn != null && baseReturn.getStatus() == 0) {
                                                 Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
-                                                showDialog(baseReturn.getData()+ "出库失败，请在ERP出库");
+                                                showDialog(baseReturn.getData() + "出库失败，请在ERP出库");
                                                 Sound.faillarm();
                                             } else {
                                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
@@ -658,25 +649,16 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         @Override
         public void convert(RecyclerHolder holder, final Output item, final int position) {
             if (item != null) {
-                final String key = item.getOutp_id() + item.getVatNo() + item.getProduct_no() + item.getSelNo() + position;
                 CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (isChecked) {
-                            if (dataKey.containsKey(item.getApplyNo()))
-                                if (!dataKey.get(item.getApplyNo()).contains(key))
-                                    dataKey.get(item.getApplyNo()).add(key);
+                            if (!dataKey.contains(item.getApplyNo()))
+                                dataKey.add(item.getApplyNo());
                         } else {
-                            if (dataKey.containsKey(item.getApplyNo()))
-                                if (dataKey.get(item.getApplyNo()).contains(key)) {
-                                    Iterator<String> iter = dataKey.get(item.getApplyNo()).iterator();
-                                    while (iter.hasNext()) {
-                                        String str = iter.next();
-                                        if (str.equals(key))
-                                            iter.remove();
-                                    }
-                                }
+                            if (dataKey.contains(item.getApplyNo()))
+                                dataKey.remove(item.getApplyNo());
                         }
                     }
 //                    }
@@ -694,21 +676,18 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     no.setVisibility(View.GONE);
                     view.setVisibility(View.GONE);
                 }
-
-
                 if (((item.getVatNo() + "").equals("") && (item.getProduct_no() + "").equals("") && (item.getSelNo() + "").equals(""))) {
                     if (cb.isEnabled())
                         cb.setEnabled(false);
                     cb.setChecked(false);
                 } else {
-                    if (cb.isEnabled())
+                    if (!cb.isEnabled())
                         cb.setEnabled(true);
-                    if (dataKey.containsKey(item.getApplyNo())) {
-                        if (dataKey.get(item.getApplyNo()).contains(key))
-                            cb.setChecked(true);
-                        else
-                            cb.setChecked(false);
-                    }
+                    if (dataKey.contains(item.getApplyNo()))
+                        cb.setChecked(true);
+                    else
+                        cb.setChecked(false);
+
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
 //                    扫描>配货红色
                     if (item.getCount() > item.getCountOut())
@@ -735,7 +714,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     holder.setText(R.id.item9, item.getCount() + "");
                     holder.setText(R.id.item7, item.getWeightall() + "");
                 }
-
             }
         }
     }

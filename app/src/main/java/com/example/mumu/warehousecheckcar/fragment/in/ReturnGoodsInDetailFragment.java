@@ -54,6 +54,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
@@ -154,9 +155,12 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                     chooseEpcList = (Map<String, String>) msg.getPositionObj(2);
                     mAdapter.notifyDataSetChanged();
                     try {
-                        String string = URLEncoder.encode(oldData.getVat_no(), "UTF-8");
-                        OkHttpClientManager.getAsyn(
-                                App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByVatNo/" + string
+                        JSONObject jsonObject = new JSONObject();
+//                        String string = URLEncoder.encode(oldData.getVat_no(), "UTF-8");
+                        jsonObject.put("vatNo", oldData.getVat_no());
+                        String json = jsonObject.toJSONString();
+                        OkHttpClientManager.postJsonAsyn(
+                                App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByVatNo"
                                 , new OkHttpClientManager.ResultCallback<JSONArray>() {
                                     @Override
                                     public void onError(Request request, Exception e) {
@@ -197,8 +201,8 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
 
                                         }
                                     }
-                                });
-                    } catch (UnsupportedEncodingException e) {
+                                }, json);
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;

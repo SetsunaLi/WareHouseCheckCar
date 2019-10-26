@@ -57,7 +57,7 @@ public class Sound {
     }
 
     public static void faillarm() {
-        vibrate(200);
+        vibrate(1000);
         if (failSoundId!=0){
             mSoundPool.play(failSoundId,1,1,0, 0, 1);
         }
