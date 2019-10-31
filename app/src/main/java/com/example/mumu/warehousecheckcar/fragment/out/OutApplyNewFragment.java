@@ -570,7 +570,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 }, json);
 
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                 e.printStackTrace();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

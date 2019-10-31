@@ -21,13 +21,15 @@ import static android.os.VibrationEffect.DEFAULT_AMPLITUDE;
 
 public class Sound {
     private static final int BEEPER = 1;
-    private static final SoundPool mSoundPool = new SoundPool(2, AudioManager.STREAM_MUSIC,0);
+    private static final SoundPool mSoundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
     private static int scanSoundId;
     private static int failSoundId;
-    public static void init(Context context){
-        scanSoundId= mSoundPool.load(context,R.raw.duka3,BEEPER);
-        failSoundId= mSoundPool.load(context,R.raw.upload_fail,BEEPER);
+
+    public static void init(Context context) {
+        scanSoundId = mSoundPool.load(context, R.raw.duka3, BEEPER);
+        failSoundId = mSoundPool.load(context, R.raw.upload_fail, BEEPER);
     }
+
     /**
      * 震动milliseconds毫秒
      *
@@ -42,7 +44,7 @@ public class Sound {
             } else {
                 vib.vibrate(milliseconds);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -51,15 +53,11 @@ public class Sound {
      * @param ms 振动时间变量，单位ms
      */
     public static void scanAlarm() {
-        if (scanSoundId!=0){
-            mSoundPool.play(scanSoundId,1,1,0, 0, 1);
-        }
+        mSoundPool.play(scanSoundId, 1, 1, 0, 0, 1);
     }
 
     public static void faillarm() {
         vibrate(1000);
-        if (failSoundId!=0){
-            mSoundPool.play(failSoundId,1,1,0, 0, 1);
-        }
+        mSoundPool.play(failSoundId, 1, 1, 0, 0, 1);
     }
 }
