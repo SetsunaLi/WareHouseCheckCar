@@ -482,36 +482,36 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 ArrayList<ArrayList<Output>> allList = new ArrayList<>();
                 boolean isPush = true;
                 for (String applyNo : dataKey) {
-                    ArrayList<Output> jsocList = new ArrayList<>();
+                    ArrayList<Output> oneNoList = new ArrayList<>();
                     for (int i = 0; i < myList.size(); i++) {
                         Output op = myList.get(i);
-                        if (applyNo.equals(op.getApplyNo())) {
-                            ArrayList<OutputDetail> newList = new ArrayList<OutputDetail>();
+                        if (applyNo.equals(op.getApplyNo())&&op.getCountOut()>0) {
+                            ArrayList<OutputDetail> detailsList = new ArrayList<OutputDetail>();
                             for (OutputDetail od : op.getList()) {
                                 if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo + i)) {
                                     od.setFlag(1);
                                     od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
-                                    newList.add(od);
+                                    detailsList.add(od);
                                 }
                             }
-                            if (newList.size() > 0) {
+                            if (detailsList.size() > 0) {
                                 Output obj = (Output) op.clone();
                                 obj.setDevice(App.DEVICE_NO);
                                 obj.setFlag(1);
-                                obj.setList(newList);
-                                if (isPush && obj.getCountOut() != newList.size()) {
+                                obj.setList(detailsList);
+                                if (isPush && obj.getCountOut() != detailsList.size()) {
                                     isPush = false;
                                     break;
                                 }
-                                jsocList.add(obj);
+                                oneNoList.add(obj);
                             } else {
                                 isPush = false;
                                 break;
                             }
                         }
-                        if (jsocList.size() > 0) {
-                            allList.add(jsocList);
-                        }
+                    }
+                    if (oneNoList.size() > 0) {
+                        allList.add(oneNoList);
                     }
                 }
                 if (User.newInstance().getAuth() != 10 || (User.newInstance().getAuth() == 10 && isPush)) {
@@ -570,7 +570,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 }, json);
 
                             } catch (IOException e) {
-                                 e.printStackTrace();
+                                e.printStackTrace();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
