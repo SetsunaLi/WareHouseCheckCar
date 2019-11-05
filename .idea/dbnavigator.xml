@@ -23,12 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="false" />
-    <loaded-nodes>
-      <connection connection-id="1b9ac0fe-48da-4cad-b827-64934bc55f80">
-        <schema name="yf_test" object-types="view, procedure, function, table" />
-        <schema name="yf_test_db" object-types="view, procedure, index, function, table, constraint, column, dataset trigger" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="1b9ac0fe-48da-4cad-b827-64934bc55f80">
