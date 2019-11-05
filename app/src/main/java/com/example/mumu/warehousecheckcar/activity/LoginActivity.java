@@ -106,16 +106,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initDate() {
 //         正式服
-        App.IP = "http://47.106.157.255";
-        App.PORT = "80";
+//        App.IP = "http://47.106.157.255";
+//        App.PORT = "80";
 //        测试服
-//        App.IP = "http://120.79.56.119";
-//        App.PORT = "8080";
+        App.IP = "http://120.79.56.119";
+        App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
 //        App.IP="http://192.168.1.118";
 //        App.PORT="80";
-//        App.IP = "http://192.168.1.155";
+//        App.IP = "http://192.168.1.113";
 //        App.PORT = "8080";
     }
 
@@ -286,7 +286,6 @@ public class LoginActivity extends AppCompatActivity {
         if (mInputMethodManager.isActive()) {
             mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
         }
-
     }
 
     @OnClick(R.id.login_button)

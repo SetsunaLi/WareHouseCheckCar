@@ -13,18 +13,24 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
@@ -33,10 +39,12 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
+import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
@@ -51,6 +59,8 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
+import com.xdl2d.scanner.TDScannerHelper;
+import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,13 +68,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener {
+public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener
+        , RXCallback {
     private final String TAG = "OutApplyNewFragment";
     private static OutApplyNewFragment fragment;
     @Bind(R.id.recyle)
@@ -77,6 +87,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     Button button1;
     @Bind(R.id.button2)
     Button button2;
+    @Bind(R.id.edit1)
+    EditText edit1;
 
     public static OutApplyNewFragment newInstance() {
         if (fragment == null) ;
@@ -102,6 +114,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private ArrayList<String> dateNo;
 
     private RecycleAdapter mAdapter;
+    private boolean is2D = false;
 
     @Nullable
     @Override
@@ -109,24 +122,16 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         View view = inflater.inflate(R.layout.out_apply_new_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("出库列表");
-
+        initUtil();
         initData();
-
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_apply_child_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(llm);
-        recyle.setAdapter(mAdapter);
-        ComeBack.getInstance().setCallbackLiatener(this);
+        initView();
+        initLister();
         initRFID();
 
         return view;
     }
 
-    public void initData() {
+    private void initData() {
         fatherNoList = new ArrayList<>();
         epcKeyList = new HashMap<>();
         myList = new ArrayList<>();
@@ -137,7 +142,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         vatKey = new HashMap<>();
     }
 
-    public void clearData() {
+    private void clearData() {
         epcKeyList.clear();
         myList.clear();
         dateNo.clear();
@@ -147,6 +152,57 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         vatKey.clear();
     }
 
+    private void initView() {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_apply_child_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(llm);
+        recyle.setAdapter(mAdapter);
+    }
+
+    private void initLister() {
+        mAdapter.setOnItemClickListener(this);
+        ComeBack.getInstance().setCallbackLiatener(this);
+        edit1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    is2D=true;
+                    init2D();
+                } else {
+                    is2D=false;
+                    disConnect2D();
+                }
+            }
+        });
+        edit1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == EditorInfo.IME_ACTION_DONE) {
+                    edit1.clearFocus();
+                    cancelKeyBoard(textView);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+    private InputMethodManager mInputMethodManager;
+
+    //     * 初始化必须工具
+    private void initUtil() {
+        //初始化输入法
+        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+
+    //隐藏输入法
+    public void cancelKeyBoard(View view) {
+        if (mInputMethodManager.isActive()) {
+            mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
+        }
+    }
     private boolean flag = true;
 
     @Override
@@ -228,6 +284,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     public void onDestroy() {
         super.onDestroy();
         disRFID();
+        if (is2D)
+            disConnect2D();
     }
 
     private void initRFID() {
@@ -242,6 +300,27 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private void disRFID() {
         try {
             RFID_2DHander.getInstance().off_RFID();
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void init2D() {
+        try {
+            boolean flag2 = RFID_2DHander.getInstance().on_2D();
+            TDScannerHelper scannerHander = RFID_2DHander.getInstance().getTDScanner();
+            scannerHander.regist2DCodeData(this);
+            if (!flag2)
+                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.w(TAG, "2D模块异常");
+            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disConnect2D() {
+        try {
+            RFID_2DHander.getInstance().off_2D();
         } catch (Exception e) {
 
         }
@@ -381,6 +460,17 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //                    }
                     mAdapter.notifyDataSetChanged();
                     break;
+                case 0x02:
+                    if (App.MUSIC_SWITCH) {
+                        if (System.currentTimeMillis() - currenttime > 150) {
+                            Sound.scanAlarm();
+                            currenttime = System.currentTimeMillis();
+                        }
+                    }
+                    String location = (String) msg.obj;
+                    location = location.replaceAll(" ", "");
+                    edit1.setText(location);
+                    break;
             }
         }
     };
@@ -415,6 +505,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         Message msg = handler.obtainMessage();
         msg.what = 0x01;
         handler.sendMessage(msg);
+        if (is2D)
+            init2D();
     }
 
     @Override
@@ -435,6 +527,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
+                handler.removeMessages(0x00);
                 break;
             case R.id.button2:
                 blinkDialog();
@@ -479,110 +572,179 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<ArrayList<Output>> allList = new ArrayList<>();
-                boolean isPush = true;
-                for (String applyNo : dataKey) {
-                    ArrayList<Output> oneNoList = new ArrayList<>();
-                    for (int i = 0; i < myList.size(); i++) {
-                        Output op = myList.get(i);
-                        if (applyNo.equals(op.getApplyNo())&&op.getCountOut()>0) {
-                            ArrayList<OutputDetail> detailsList = new ArrayList<OutputDetail>();
-                            for (OutputDetail od : op.getList()) {
-                                if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo + i)) {
-                                    od.setFlag(1);
-                                    od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
-                                    detailsList.add(od);
-                                }
-                            }
-                            if (detailsList.size() > 0) {
-                                Output obj = (Output) op.clone();
-                                obj.setDevice(App.DEVICE_NO);
-                                obj.setFlag(1);
-                                obj.setList(detailsList);
-                                if (isPush && obj.getCountOut() != detailsList.size()) {
-                                    isPush = false;
-                                    break;
-                                }
-                                oneNoList.add(obj);
-                            } else {
-                                isPush = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (oneNoList.size() > 0) {
-                        allList.add(oneNoList);
-                    }
+               /* String location = edit1.getText().toString();
+                if (TextUtils.isEmpty(location)) {
+                    upLoad(location);
+                } else {
+                    judge(location);
                 }
-                if (User.newInstance().getAuth() != 10 || (User.newInstance().getAuth() == 10 && isPush)) {
-                    for (ArrayList<Output> jsocList : allList) {
-                        if (jsocList.size() > 0) {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("userId", User.newInstance().getId());
-                            jsonObject.put("data", jsocList);
-                            final String json = jsonObject.toJSONString();
-                            try {
-                                AppLog.write(getActivity(), "outapply", json, AppLog.TYPE_INFO);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                                    @Override
-                                    public void onError(Request request, Exception e) {
-                                        if (App.LOGCAT_SWITCH) {
-                                            Log.i(TAG, "postInventory;" + e.getMessage());
-                                            Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        try {
-                                            try {
-                                                AppLog.write(getActivity(), "outapply", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            if (dialog1.isShowing())
-                                                dialog1.dismiss();
-                                            no.setEnabled(true);
-                                            handler.removeCallbacks(r);
-                                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                                            if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                                clearData();
-                                                mAdapter.notifyDataSetChanged();
-//                                            blinkDialog2(true);
-                                            } else if (baseReturn != null && baseReturn.getStatus() == 0) {
-                                                Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
-                                                showDialog(baseReturn.getData() + "出库失败，请在ERP出库");
-                                                Sound.faillarm();
-                                            } else {
-                                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                                showDialog("上传失败");
-                                                Sound.faillarm();
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, json);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    no.setEnabled(false);
-                    yes.setEnabled(false);
-                    handler.postDelayed(r, App.TIME);
-                } else
-                    showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
+                no.setEnabled(false);
+                yes.setEnabled(false);
+                handler.postDelayed(r, App.TIME);*/
             }
         });
+    }
+
+    private void judge(final String location) {
+        Carrier carrier = new Carrier();
+        carrier.setLocationNo(location);
+        final String CARRIER = JSON.toJSONString(carrier);
+
+        try {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    if (App.LOGCAT_SWITCH) {
+                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        try {
+                            AppLog.write(getActivity(), "ccarrier", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                        if (baseReturn != null && baseReturn.getStatus() == 1) {
+                            upLoad(location);
+                        } else {
+                            if (dialog1.isShowing())
+                                dialog1.dismiss();
+                            Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                            Button yes = (Button) dialog1.findViewById(R.id.dialog_yes);
+                            no.setEnabled(true);
+                            yes.setEnabled(true);
+                            handler.removeCallbacks(r);
+                            showDialog("库位无效");
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            }, CARRIER);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void upLoad(final String location) {
+        ArrayList<ArrayList<Output>> allList = new ArrayList<>();
+        boolean isPush = true;
+        for (String applyNo : dataKey) {
+            ArrayList<Output> oneNoList = new ArrayList<>();
+            for (int i = 0; i < myList.size(); i++) {
+                Output op = myList.get(i);
+                if (applyNo.equals(op.getApplyNo()) && op.getCountOut() > 0) {
+                    ArrayList<OutputDetail> detailsList = new ArrayList<OutputDetail>();
+                    for (OutputDetail od : op.getList()) {
+                        if (epcKeyList.get(od.getEpc()).getApplyNo().equals(applyNo + i)) {
+                            od.setFlag(1);
+                            od.setWeight_out(epcKeyList.get(od.getEpc()).getWeight());
+                            detailsList.add(od);
+                        }
+                    }
+                    if (detailsList.size() > 0) {
+                        Output obj = (Output) op.clone();
+                        obj.setDevice(App.DEVICE_NO);
+                        obj.setFlag(1);
+                        obj.setList(detailsList);
+                        if (isPush && obj.getCountOut() != detailsList.size()) {
+                            isPush = false;
+                        }
+                        oneNoList.add(obj);
+                    } else {
+                        isPush = false;
+                    }
+                }
+            }
+            if (oneNoList.size() > 0) {
+                allList.add(oneNoList);
+            }
+        }
+        if ((User.newInstance().getAuth() != 10 || (User.newInstance().getAuth() == 10 && isPush)) && allList.size() > 0) {
+            for (ArrayList<Output> jsocList : allList) {
+                if (jsocList.size() > 0) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", User.newInstance().getId());
+                    jsonObject.put("data", jsocList);
+                    if (!TextUtils.isEmpty(location))
+                        jsonObject.put("tempLocation", location);
+                    else
+                        jsonObject.put("tempLocation", "");
+
+                    final String json = jsonObject.toJSONString();
+                    try {
+                        AppLog.write(getActivity(), "outapply", json, AppLog.TYPE_INFO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+               /*     try {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Log.i(TAG, "postInventory;" + e.getMessage());
+                                    Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    try {
+                                        AppLog.write(getActivity(), "outapply", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (dialog1.isShowing())
+                                        dialog1.dismiss();
+                                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+                                    Button yes = (Button) dialog1.findViewById(R.id.dialog_yes);
+                                    no.setEnabled(true);
+                                    yes.setEnabled(true);
+                                    handler.removeCallbacks(r);
+                                    BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                    if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                        clearData();
+                                        mAdapter.notifyDataSetChanged();
+//                                            blinkDialog2(true);
+                                    } else if (baseReturn != null && baseReturn.getStatus() == 0) {
+                                        Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
+                                        showDialog(baseReturn.getData() + "出库失败，请在ERP出库");
+                                        Sound.faillarm();
+                                    } else {
+                                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
+                                        showDialog("上传失败");
+                                        Sound.faillarm();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, json);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }*/
+                }
+            }
+
+        } else {
+            if (dialog1.isShowing())
+                dialog1.dismiss();
+            Button no = (Button) dialog1.findViewById(R.id.dialog_no);
+            Button yes = (Button) dialog1.findViewById(R.id.dialog_yes);
+            no.setEnabled(true);
+            yes.setEnabled(true);
+            handler.removeCallbacks(r);
+            showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
+        }
     }
 
     private void showDialog(String msg) {
@@ -608,6 +770,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         this.position = position;
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
+        if (is2D)
+        disConnect2D();
         Output obj = myList.get(position);
         Fragment fragment = OutApplyDetailFragment.newInstance();
         Bundle bundle = new Bundle();
@@ -619,6 +783,14 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
         transaction.show(fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void callback(byte[] bytes) {
+        Message msg = handler.obtainMessage();
+        msg.what = 0x02;
+        msg.obj = new String(bytes);
+        handler.sendMessage(msg);
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
