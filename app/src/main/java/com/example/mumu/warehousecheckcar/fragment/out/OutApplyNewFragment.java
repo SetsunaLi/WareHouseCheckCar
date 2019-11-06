@@ -572,7 +572,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* String location = edit1.getText().toString();
+                String location = edit1.getText().toString();
                 if (TextUtils.isEmpty(location)) {
                     upLoad(location);
                 } else {
@@ -580,7 +580,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 }
                 no.setEnabled(false);
                 yes.setEnabled(false);
-                handler.postDelayed(r, App.TIME);*/
+                handler.postDelayed(r, App.TIME);
             }
         });
     }
@@ -589,7 +589,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         Carrier carrier = new Carrier();
         carrier.setLocationNo(location);
         final String CARRIER = JSON.toJSONString(carrier);
-
         try {
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @Override
@@ -681,7 +680,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-               /*     try {
+                    try {
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override
                             public void onError(Request request, Exception e) {
@@ -726,15 +725,13 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                 }
                             }
                         }, json);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }*/
+                    }
                 }
             }
-
         } else {
             if (dialog1.isShowing())
                 dialog1.dismiss();
