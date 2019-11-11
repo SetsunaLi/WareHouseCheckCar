@@ -154,46 +154,41 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                         return 0;
                     else {
                         if (dataList.containsKey(obj1.getEpc()) && dataList.containsKey(obj2.getEpc())) {
-                            if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                                if (!dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                                    return -1;
-                                }
-                            }
-                            if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                                if (dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
-                                    return 1;
-                                }
-                            }
-                            if (dataList.get(obj1.getEpc()).isFind())
+                            if (dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)
+                                    && !dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
                                 return -1;
-                            if (dataList.get(obj2.getEpc()).isFind())
+                            } else if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)
+                                    && dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
                                 return 1;
+                            }else {
+                                if (dataList.get(obj1.getEpc()).isFind() && !dataList.get(obj2.getEpc()).isFind())
+                                    return -1;
+                                else if (dataList.get(obj2.getEpc()).isFind() && !dataList.get(obj1.getEpc()).isFind())
+                                    return 1;
+                            }
                         }
                         String aFab = obj1.getFabRool();
                         String bFab = obj2.getFabRool();
-                        if (aFab == null)
+                        if (TextUtils.isEmpty(aFab) & !TextUtils.isEmpty(bFab))
                             return -1;
-                        if (bFab == null)
+                        else if (TextUtils.isEmpty(bFab) & !TextUtils.isEmpty(aFab))
                             return 1;
-                        if (aFab.equals(""))
-                            return 1;
-                        if (bFab.equals(""))
-                            return -1;
-                        if (aFab != null && bFab != null) {
-                            if (Integer.valueOf(aFab) > Integer.valueOf(bFab)) {
-                                return 1;
-                            }
-                            if (Integer.valueOf(aFab) < Integer.valueOf(bFab)) {
-                                return -1;
-                            } else {
+                        else if (TextUtils.isEmpty(bFab) & TextUtils.isEmpty(aFab))
+                            return 0;
+                        else {
+                            int a = aFab.compareTo(bFab);
+                            if (a == 0) {
                                 return 0;
+                            } else if (a > 0) {
+                                return 1;
+                            } else {
+                                return -1;
                             }
                         }
-                        return 0;
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -294,7 +289,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     if (item.getEpc() != null && !item.getEpc().equals(""))
                                         if (dataList.get(item.getEpc()).isFind()) {
                                             if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
-                                                if (oldData.getCountProfit()+1 <= oldData.getCountOut()) {
+                                                if (oldData.getCountProfit() + 1 <= oldData.getCountOut()) {
                                                     dataList.get(item.getEpc()).setApplyNo(oldData.getApplyNo() + id);
                                                     oldData.addCountProfit();
                                                 } else {
@@ -374,7 +369,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                         double a = Double.parseDouble(weight);
                                         if (dataList.containsKey(item.getEpc()))
                                             dataList.get(item.getEpc()).setWeight(a);
-                                    }else {
+                                    } else {
                                         if (dataList.containsKey(item.getEpc()))
                                             dataList.get(item.getEpc()).setWeight(0);
                                     }

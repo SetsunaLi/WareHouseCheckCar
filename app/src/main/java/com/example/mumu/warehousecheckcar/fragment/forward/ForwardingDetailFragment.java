@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,7 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                 case 0x02:
                     myList.addAll((List<Forwarding>) msg.getPositionObj(0));
 //                    fatherNoList.clear();
-                    dataList= (HashMap<String, ForwardingFragment.ForwardingFlag>) ( (HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1)).clone();
+                    dataList = (HashMap<String, ForwardingFragment.ForwardingFlag>) ((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1)).clone();
                     dataList.putAll((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1));
                     break;
             }
@@ -100,48 +101,47 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
         load();
         mAdapter.notifyDataSetChanged();
         text1.setText(myList.size() - 1 + "");
-        if (myList.size()>1)
-        text2.setText(myList.get(1).getVatNo() + "");
+        if (myList.size() > 1)
+            text2.setText(myList.get(1).getVatNo() + "");
     }
 
     private void load() {
         Collections.sort(myList, new Comparator<Forwarding>() {
             @Override
             public int compare(Forwarding obj1, Forwarding obj2) {
-                if (obj1.getEpc()==null||obj1.getEpc().equals(""))
+                String epc1 = obj1.getEpc();
+                String epc2 = obj2.getEpc();
+                if (TextUtils.isEmpty(epc1) & !TextUtils.isEmpty(epc2))
                     return -1;
-                if (obj2.getEpc()==null||obj2.getEpc().equals(""))
+                if (TextUtils.isEmpty(epc2) & !TextUtils.isEmpty(epc1))
                     return 1;
-
-                if (dataList.containsKey(obj1.getEpc())&&dataList.containsKey(obj2.getEpc())) {
-                    if (dataList.get(obj1.getEpc()).isStatus()) {
-                        if (!dataList.get(obj2.getEpc()).isStatus()) {
-                            return -1;
-                        }
-                    }
-                    if (!dataList.get(obj1.getEpc()).isStatus()) {
-                        if (dataList.get(obj2.getEpc()).isStatus()) {
-                            return 1;
-                        }
+                if (TextUtils.isEmpty(epc1) & TextUtils.isEmpty(epc2))
+                    return 0;
+                if (dataList.containsKey(epc1) && dataList.containsKey(epc2)) {
+                    if (dataList.get(epc1).isStatus() && !dataList.get(epc2).isStatus()) {
+                        return -1;
+                    } else if (!dataList.get(epc1).isStatus() && dataList.get(epc2).isStatus()) {
+                        return 1;
                     }
                 }
                 String aFab = obj1.getFabRool();
                 String bFab = obj2.getFabRool();
-                if (aFab == null)
+                if (TextUtils.isEmpty(aFab) & !TextUtils.isEmpty(bFab))
                     return -1;
-                if (bFab == null)
+                else if (TextUtils.isEmpty(bFab) & !TextUtils.isEmpty(aFab))
                     return 1;
-                if (aFab.equals(""))
-                    return 1;
-                if (bFab.equals(""))
-                    return -1;
-                if (aFab != null && bFab != null) {
-                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
+                else if (TextUtils.isEmpty(bFab) & TextUtils.isEmpty(aFab))
+                    return 0;
+                else {
+                    int a = aFab.compareTo(bFab);
+                    if (a == 0) {
+                        return 0;
+                    } else if (a > 0) {
                         return 1;
+                    } else {
+                        return -1;
                     }
-                    return -1;
                 }
-                return 0;
             }
         });
     }
@@ -172,9 +172,9 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        HashMap<String, ForwardingFragment.ForwardingFlag> msg=new HashMap<>();
+        HashMap<String, ForwardingFragment.ForwardingFlag> msg = new HashMap<>();
         msg.putAll(dataList);
-        EventBus.getDefault().post(new EventBusMsg(0xfe,msg));
+        EventBus.getDefault().post(new EventBusMsg(0xfe, msg));
         EventBus.getDefault().unregister(this);
         myList.clear();
         dataList.clear();
@@ -221,7 +221,7 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                                 for (int i = 1; i < myList.size(); i++) {
                                     if (dataList.containsKey(myList.get(i).getEpc()))
 //                                        if (dataList.get(myList.get(i).getEpc()).isFind()) {
-                                            dataList.get(myList.get(i).getEpc()).setStatus(false);
+                                        dataList.get(myList.get(i).getEpc()).setStatus(false);
 //                                        }
                                 }
                             }
@@ -229,11 +229,11 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                         } else {
                             if (isChecked) {
 //                                if (dataList.get(item.getEpc()).isFind()) {
-                                    dataList.get(item.getEpc()).setStatus(true);
+                                dataList.get(item.getEpc()).setStatus(true);
 //                                }
                             } else {
 //                                if (dataList.get(item.getEpc()).isFind()) {
-                                    dataList.get(item.getEpc()).setStatus(false);
+                                dataList.get(item.getEpc()).setStatus(false);
 //                                }
                             }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,21 +75,22 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
             public int compare(Input obj1, Input obj2) {
                 String aFab = obj1.getFabRool();
                 String bFab = obj2.getFabRool();
-                if (aFab == null)
+                if (TextUtils.isEmpty(aFab) & !TextUtils.isEmpty(bFab))
                     return -1;
-                if (bFab == null)
+                else if (TextUtils.isEmpty(bFab) & !TextUtils.isEmpty(aFab))
                     return 1;
-                if (aFab.equals(""))
-                    return 1;
-                if (bFab.equals(""))
-                    return -1;
-                if (aFab != null && bFab != null) {
-                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
+                else if (TextUtils.isEmpty(bFab) & TextUtils.isEmpty(aFab))
+                    return 0;
+                else {
+                    int a = aFab.compareTo(bFab);
+                    if (a == 0) {
+                        return 0;
+                    } else if (a > 0) {
                         return 1;
+                    } else {
+                        return -1;
                     }
-                    return -1;
                 }
-                return 0;
             }
         });
         dataList = new ArrayList<>();

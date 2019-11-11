@@ -179,6 +179,7 @@ public class HomeFragment extends Fragment {
                     button8.setVisibility(View.VISIBLE);
                     button5.setVisibility(View.VISIBLE);
                     button6.setVisibility(View.VISIBLE);
+                    button11.setVisibility(View.VISIBLE);
                     button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
@@ -192,12 +193,12 @@ public class HomeFragment extends Fragment {
                     button15.setVisibility(View.VISIBLE);
                     button16.setVisibility(View.VISIBLE);
                     break;
-                case 12:
+             /*   case 12:
                     for (HomeButton homeButton : HomeButton.values()) {
                         Button button = (Button) getView().findViewById(homeButton.getId());
                         button.setVisibility(View.VISIBLE);
                     }
-                    break;
+                    break;*/
                 default:
                     for (HomeButton homeButton : HomeButton.values()) {
                         Button button = (Button) getView().findViewById(homeButton.getId());
