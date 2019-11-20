@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
@@ -27,6 +31,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -38,7 +43,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiatener {
+public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     @Bind(R.id.edittext1)
     EditText edittext1;
     @Bind(R.id.edittext2)
@@ -57,13 +62,35 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
         fragment = new InCheckCarrierFragment();
         return fragment;
     }
+
+    private ScanResultHandler scanResultHandler;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("入库校验");
+        return view;
+    }
+
+    @Override
+    protected void initData() {
+        if (App.CARRIER == null)
+            App.CARRIER = new Carrier();
+        else
+            App.CARRIER.clear();
+        App.CARRIER.setLocationNo("临时入库区");
+    }
+
+    @Override
+    protected void initView(View view) {
+        edittext2.setText("临时入库区");
         button2.setText("确认库位");
+    }
+
+    @Override
+    protected void addListener() {
         edittext1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -84,7 +111,6 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
             }
         });
-        edittext2.setText("临时入库区");
 
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,34 +132,19 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
             }
         });
-        if (App.CARRIER == null)
-            App.CARRIER = new Carrier();
-        else
-            App.CARRIER.clear();
-        App.CARRIER.setLocationNo("临时入库区");
+        scanResultHandler = new ScanResultHandler(this);
         initRFID();
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
@@ -148,85 +159,16 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null &&App.CARRIER.getLocationNo() != null&& !App.CARRIER.getLocationNo().equals("")) {
+        scanResultHandler.removeMessages(ScanResultHandler.RFID);
+        if (App.CARRIER != null && !TextUtils.isEmpty(App.CARRIER.getLocationNo())) {
             Fragment fragment = InCheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);
             transaction.commit();
         } else
-            Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
+            showToast("请扫描库位硬标签");
     }
-
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    String EPC = (String) msg.obj;
-                    EPC = EPC.replaceAll(" ", "");
-                    if (EPC.startsWith("31B5A5AF")) {
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onResponse(Carrier response) {
-                                    try {
-                                        if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
-                                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
-                                            Message msg = handler.obtainMessage();
-                                            msg.what = 0x01;
-                                            msg.obj = response;
-                                            handler.sendMessage(msg);
-                                        }
-                                    } catch (Exception e) {
-
-                                    }
-                                }
-                            }, json);
-                        } catch (IOException e) {
-
-                        }
-                    }
-                    break;
-                case 0x01:
-                    Carrier response = (Carrier) msg.obj;
-                    if (response!=null&&response.getTrayNo()!=null&&!response.getTrayNo().equals("")) {
-                        App.CARRIER.setTrayNo(response.getTrayNo());
-                        edittext1.setText(response.getTrayNo() + "");
-                    }
-                    if (response!=null&&response.getTrayEPC()!=null&&!response.getTrayEPC().equals(""))
-                        App.CARRIER .setTrayEPC(response.getTrayEPC());
-
-                    if (response!=null&&response.getLocationNo()!=null&&!response.getLocationNo().equals("")) {
-                        App.CARRIER.setLocationNo(response.getLocationNo());
-                        edittext2.setText(response.getLocationNo() + "");
-                    }
-                    if (response!=null&&response.getLocationEPC()!=null&&!response.getLocationEPC().equals(""))
-                        App.CARRIER .setLocationEPC(response.getLocationEPC());
-                    break;
-            }
-        }
-    };
 
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
@@ -235,11 +177,10 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.what = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
-
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -250,5 +191,51 @@ public class InCheckCarrierFragment extends Fragment implements UHFCallbackLiate
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
 
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (epc.startsWith("31B5A5AF")) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("epc", epc);
+            final String json = jsonObject.toJSONString();
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getInventory;" + e.getMessage());
+                            showToast("获取库位信息失败");
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Carrier response) {
+                        try {
+                            if (response != null) {
+                                if (!TextUtils.isEmpty(response.getTrayNo())) {
+                                    App.CARRIER.setTrayNo(response.getTrayNo());
+                                    edittext1.setText(response.getTrayNo());
+                                }
+                                if (!TextUtils.isEmpty(response.getTrayEPC()))
+                                    App.CARRIER.setTrayEPC(response.getTrayEPC());
+
+                                if (!TextUtils.isEmpty(response.getLocationNo())) {
+                                    App.CARRIER.setLocationNo(response.getLocationNo());
+                                    edittext2.setText(response.getLocationNo());
+                                }
+                                if (!TextUtils.isEmpty(response.getLocationEPC()))
+                                    App.CARRIER.setLocationEPC(response.getLocationEPC());
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+
+            }
+        }
     }
 }

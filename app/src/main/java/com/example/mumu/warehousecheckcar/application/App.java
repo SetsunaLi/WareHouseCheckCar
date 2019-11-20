@@ -76,7 +76,7 @@ public class App extends Application {
 //    盘点库位缓存
     public static Carrier CARRIER=new Carrier();
 //    盘点明细列表缓存
-    public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
+//    public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
 
 //  出库详情缓存
     public static List<Output> OUTPUT_DETAIL_LIST=new ArrayList<>();

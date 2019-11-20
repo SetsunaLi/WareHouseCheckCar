@@ -25,6 +25,7 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.squareup.okhttp.Request;
 
@@ -41,7 +42,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2018/12/12.
  */
 
-public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener{
+public class InCheckDetialFragment extends BaseFragment {
     private static InCheckDetialFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -54,8 +55,6 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
     private List<InCheckDetail> dataList;
     private RecycleAdapter mAdapter;
 
-
-
     public static InCheckDetialFragment newInstance() {
         if (fragment == null) ;
         fragment = new InCheckDetialFragment();
@@ -63,11 +62,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initData();
-    }
-    public void initData(){
+    protected void initData() {
         myList=new ArrayList<>();
         myList.add(new InCheckDetail());//增加一个为头部
         myList.addAll(App.IN_DETAIL_LIST);
@@ -100,26 +95,29 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         });
         dataList=new ArrayList<>();
     }
-    //    这里加载视图
+
+    @Override
+    protected void initView(View view) {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_detail_item_layout);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
+        ms.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(ms);
+        recyle.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void addListener() {
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_detail_item_layout);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
-        ms.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(ms);
-        recyle.setAdapter(mAdapter);
-
-        if (App.IN_DETAIL_LIST.size() > 1) {
-            text1.setText(App.IN_DETAIL_LIST.size() + "");
-            text2.setText(App.IN_DETAIL_LIST.get(0).getVatNo() + "");
-        }
         return view;
     }
     private void setAdaperHeader() {
@@ -138,7 +136,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                 public void onError(Request request, Exception e) {
                                     if (App.LOGCAT_SWITCH) {
                                         Log.i(TAG, "getVatNo_in;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        showToast("获取缸号失败");
                                     }
                                 }
 
@@ -161,7 +159,6 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                                         newList.add(re);
                                                 }
                                             }
-
                                             myList.addAll(newList);
                                             newList.clear();
                                         }
@@ -170,21 +167,22 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                                             public int compare(InCheckDetail obj1, InCheckDetail obj2) {
                                                 String aFab = obj1.getFabRool();
                                                 String bFab = obj2.getFabRool();
-                                                if (aFab == null)
+                                                if (TextUtils.isEmpty(aFab) & !TextUtils.isEmpty(bFab))
                                                     return -1;
-                                                if (bFab == null)
+                                                else if (TextUtils.isEmpty(bFab) & !TextUtils.isEmpty(aFab))
                                                     return 1;
-                                                if (aFab.equals(""))
-                                                    return 1;
-                                                if (bFab.equals(""))
-                                                    return -1;
-                                                if (aFab != null && bFab != null) {
-                                                    if (Integer.valueOf(aFab) >= Integer.valueOf(bFab)) {
+                                                else if (TextUtils.isEmpty(bFab) & TextUtils.isEmpty(aFab))
+                                                    return 0;
+                                                else {
+                                                    int a = aFab.compareTo(bFab);
+                                                    if (a == 0) {
+                                                        return 0;
+                                                    } else if (a > 0) {
                                                         return 1;
+                                                    } else {
+                                                        return -1;
                                                     }
-                                                    return -1;
                                                 }
-                                                return 0;
                                             }
                                         });
                                         mAdapter.notifyDataSetChanged();
@@ -197,34 +195,23 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
 
                         }
             }
+        if (App.IN_DETAIL_LIST.size() > 1) {
+            text1.setText(String.valueOf(App.IN_DETAIL_LIST.size()));
+            text2.setText(App.IN_DETAIL_LIST.get(0).getVatNo());
+        }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    //这里写界面
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -235,12 +222,6 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
         myList.clear();
         dataList.clear();
         App.OUTDETAIL_LIST.clear();
-    }
-
-    @Override
-    public void onItemClick(View view, Object data, int position) {
-        /*mAdapter.select(position);
-        mAdapter.notifyDataSetChanged();*/
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<InCheckDetail> {
@@ -258,14 +239,7 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
             super(v, datas, itemLayoutId);
 
         }
-       /* private int index=-255;
-        public void select(int index){
-            if (this.index==index)
-                this.index=-255;
-            else
-                this.index=index;
 
-        }*/
         @Override
         public void convert(RecyclerHolder holder, InCheckDetail item, int position) {
             if (position != 0) {
@@ -275,13 +249,12 @@ public class InCheckDetialFragment extends Fragment implements BRecyclerAdapter.
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-//                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getProduct_no() + "");
-                    holder.setText(R.id.item3, item.getWeight_in() + "");
-                    holder.setText(R.id.item4, item.getWeight() + "");
-                    holder.setText(R.id.item5, item.getColor() + "");
-                    holder.setText(R.id.item6, item.getSelNo() + "");
+                    holder.setText(R.id.item1, item.getFabRool());
+                    holder.setText(R.id.item2, item.getProduct_no());
+                    holder.setText(R.id.item3, String.valueOf(item.getWeight_in()));
+                    holder.setText(R.id.item4, String.valueOf(item.getWeight()));
+                    holder.setText(R.id.item5, item.getColor());
+                    holder.setText(R.id.item6, item.getSelNo());
                 }
             }
         }

@@ -1,12 +1,8 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,20 +11,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
@@ -38,6 +33,7 @@ import com.example.mumu.warehousecheckcar.entity.BarCode;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.rxobserver.ReaderSetting;
@@ -60,7 +56,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
-public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
+public class CutClothDetailFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
 
     private final String TAG = "CutClothDetailFragment";
 
@@ -85,48 +81,53 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
 
     private RecycleAdapter mAdapter;
     private List<Cloth> myList;
-    private LinearLayoutManager ms;
     private JSONObject json;
     private List<String> epcList;
     private List<String> epcArray;
     private BarCode barcode;
     private String clothVat;
-
+    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cut_cloth_matching_layout, container, false);
         ButterKnife.bind(this, view);
-        initArray();
-        clear();
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.cut_cloth_matching_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        setAdaperHeader();
-        ms = new LinearLayoutManager(getActivity());
-        ms.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(ms);
-        recyle.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this);
-        initRFID();
-        //注册中间件EventBus
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
         return view;
     }
 
-    //初始化数组
-    private void initArray() {
+    @Override
+    protected void initData() {
         myList = new ArrayList<>();
         myList.add(new Cloth());
         json = new JSONObject();
         epcList = new ArrayList<>();
         epcArray = new ArrayList<>();
         barcode = new BarCode();
+        clothVat = "";
     }
 
-    //清除缓存
+    @Override
+    protected void initView(View view) {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.cut_cloth_matching_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
+        ms.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(ms);
+        recyle.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this);
+        initRFID();
+        mAdapter.setOnItemClickListener(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
     private void clear() {
         if (myList != null) {
             myList.clear();
@@ -139,21 +140,15 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         clothVat = "";
     }
 
-    //RFID扫描
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
@@ -162,7 +157,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.setHeader(view);
     }
 
-    //接收事件
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(JSONObject event) {
         json = event.getJSONObject("barcode");
@@ -176,7 +170,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         EventBus.getDefault().unregister(this);
         ButterKnife.unbind(this);
         disRFID();
-
     }
 
     @Override
@@ -187,10 +180,10 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.arg1 = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -211,59 +204,6 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.notifyDataSetChanged();
     }
 
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-                switch (msg.arg1) {
-                    case 0x00:
-                        if (App.MUSIC_SWITCH) {
-                            if (System.currentTimeMillis() - currenttime > 150) {
-                                Sound.scanAlarm();
-                                currenttime = System.currentTimeMillis();
-                            }
-                        }
-                        String EPC = ((String) msg.obj).replaceAll(" ", "");
-                        if (EPC.startsWith("3035A537") && !epcArray.contains(EPC)) {
-                            JSONObject epc = new JSONObject();
-                            epc.put("epc", EPC);
-                            final String json = epc.toJSONString();
-                            try{
-                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                    @Override
-                                    public void onError(Request request, Exception e) {
-                                        if (App.LOGCAT_SWITCH) {
-                                            Log.i(TAG, "getEpc;" + e.getMessage());
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onResponse(JSONArray jsonArray) {
-                                        if (jsonArray != null && jsonArray.size() > 0) {
-                                            Cloth cloth = jsonArray.getObject(0, Cloth.class);
-                                            if (cloth != null && !epcArray.contains(cloth.getEpc())) {
-                                                epcArray.add(cloth.getEpc());
-                                                myList.add(cloth);
-                                                text1.setText(myList.size()-1+"");
-                                                text2.setText(cloth.getVatNo());
-                                            }
-                                            mAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                }, json);
-                            }catch (IOException e) {
-                                Log.i(TAG, "");
-                            }catch (Exception e){
-
-                            }
-                        }
-                        break;
-                }
-        }
-    };
-
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -273,17 +213,115 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                 text2.setText("");
                 mAdapter.select(-255);
                 mAdapter.notifyDataSetChanged();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+
                 break;
             case R.id.button2:
-                //进行数据关联
-                String codeVat = barcode.getVatNo().replaceAll(" ","");
-                if( codeVat.equals(clothVat))
-                    blinkDialog();
-                 else
-                    Toast.makeText(getActivity(),"缸号不一致,请重新选择",Toast.LENGTH_SHORT).show();
+                String codeVat = barcode.getVatNo().replaceAll(" ", "");
+                if (codeVat.equals(clothVat)) {
+                    showUploadDialog("是否需要进行关联");
+                    setUploadYesClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            JSONObject jsonObject = new JSONObject();
+                            User user = User.newInstance();
+                            jsonObject.put("userId", user.getId());
+                            jsonObject.put("applyNo", barcode.getOut_no());
+                            jsonObject.put("outp_id", barcode.getOutp_id());
+                            jsonObject.put("epc", epcList.get(0));
+
+                            final String json = jsonObject.toJSONString();
+                            try {
+                                AppLog.write(getActivity(), "cutclothd", json, AppLog.TYPE_INFO);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCut.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                    @SuppressLint("LongLogTag")
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "getEPC;" + e.getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            try {
+                                                AppLog.write(getActivity(), "cutclothd", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            uploadDialog.openView();
+                                            hideUploadDialog();
+                                            scanResultHandler.removeCallbacks(r);
+                                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                                showToast("上传成功");
+                                                onViewClicked(button1);
+                                            } else {
+                                                showToast("上传失败");
+                                                showConfirmDialog("上传失败");
+                                                Sound.faillarm();
+                                            }
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
+                                }, json);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            uploadDialog.lockView();
+                            scanResultHandler.postDelayed(r, TIME);
+                        }
+                    });
+                } else
+                    showConfirmDialog("缸号不一致,请重新选择");
                 break;
         }
     }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (epc.startsWith("3035A537") && !epcArray.contains(epc)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("epc", epc);
+            final String json = jsonObject.toJSONString();
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getEpc;" + e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        if (jsonArray != null && jsonArray.size() > 0) {
+                            Cloth cloth = jsonArray.getObject(0, Cloth.class);
+                            if (cloth != null && !epcArray.contains(cloth.getEpc())) {
+                                epcArray.add(cloth.getEpc());
+                                myList.add(cloth);
+                                text1.setText(String.valueOf(myList.size() - 1));
+                                text2.setText(cloth.getVatNo());
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+                Log.i(TAG, "");
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Cloth> {
 
@@ -337,11 +375,10 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                         }
                     }
                 });
-
                 if (position != 0) {
                     if (index == position) {
                         epcList.clear();
-                        if (!epcList.contains(item.getEpc())){
+                        if (!epcList.contains(item.getEpc())) {
                             epcList.add(item.getEpc());
                             clothVat = item.getVatNo().replaceAll(" ", "");
                         }
@@ -355,165 +392,17 @@ public class CutClothDetailFragment extends Fragment implements BRecyclerAdapter
                         cb.setChecked(false);
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                     }
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getVatNo() + "");
-                    holder.setText(R.id.item3, item.getProduct_no() + "");
-                    holder.setText(R.id.item4, item.getColor() + "");
-                    holder.setText(R.id.item5, item.getSelNo() + "");
-                    holder.setText(R.id.item6,item.getWeight()+"");
+                    holder.setText(R.id.item1, item.getFabRool());
+                    holder.setText(R.id.item2, item.getVatNo());
+                    holder.setText(R.id.item3, item.getProduct_no());
+                    holder.setText(R.id.item4, item.getColor());
+                    holder.setText(R.id.item5, item.getSelNo());
+                    holder.setText(R.id.item6, String.valueOf(item.getWeight()));
                 } else {
-                    //隐藏表头checkBox
-                    if (cb.isEnabled() != false)
+                    if (cb.isEnabled())
                         cb.setEnabled(false);
                 }
             }
         }
     }
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1!=null)
-                if (dialog1.isShowing()) {
-                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                    no.setEnabled(true);
-                }
-
-        }
-    };
-    private Dialog dialog1;
-
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否需要进行关联");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAdapter.select(0);
-                mAdapter.notifyDataSetChanged();
-                epcList.clear();
-                dialog1.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                JSONObject jsonObject = new JSONObject();
-                User user =  User.newInstance();
-                jsonObject.put("userId",user.getId());
-                jsonObject.put("applyNo",barcode.getOut_no());
-                jsonObject.put("outp_id",barcode.getOutp_id());
-                jsonObject.put("epc",epcList.get(0));
-
-                final String json = jsonObject.toJSONString();
-                try {
-                    AppLog.write(getActivity(),"cutclothd",json,AppLog.TYPE_INFO);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCut.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                        @SuppressLint("LongLogTag")
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "getEPC;" + e.getMessage());
-                            }
-                        }
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                try {
-                                    AppLog.write(getActivity(),"cutclothd","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                if (dialog1.isShowing())
-                                    dialog1.dismiss();
-                                no.setEnabled(true);
-                                handler.removeCallbacks(r);
-                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                                if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                    onViewClicked(button1);
-                                    clear();
-                                    mAdapter.notifyDataSetChanged();
-//                                    blinkDialog2(true);
-                                } else {
-                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    blinkDialog2(false);
-                                    Sound.faillarm();
-                                }
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    }, json);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,TIME);
-            }
-        });
-    }
-    private AlertDialog dialog;
-    private void blinkDialog2(boolean flag) {
-        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
-        }
-    }
-
-
-
 }

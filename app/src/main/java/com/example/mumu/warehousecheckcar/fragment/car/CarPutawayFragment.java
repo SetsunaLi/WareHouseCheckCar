@@ -1,28 +1,24 @@
 package com.example.mumu.warehousecheckcar.fragment.car;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
@@ -32,6 +28,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.squareup.okhttp.Request;
@@ -52,7 +49,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
-public class CarPutawayFragment extends Fragment {
+public class CarPutawayFragment extends BaseFragment {
     private final String TAG = "CarPutawayFragment";
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -76,61 +73,68 @@ public class CarPutawayFragment extends Fragment {
 
     private ArrayList<Cloth> myList;
     private RecycleAdapter mAdapter;
-    private Sound sound;
+    private ScanResultHandler scanResultHandler;
+    private int assistantID = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.car_putaway_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.btn_car_up));
-        initView();
-        initData();
+        return view;
+    }
+
+    @Override
+    protected void initData() {
+        myList = new ArrayList<>();
+        myList.add(new Cloth());
+    }
+
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.car_putaway_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-//        mAdapter.setOnItemClickListener(this);
         LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
-        return view;
-    }
-
-    private void initView() {
         if (App.CARRIER != null) {
-            if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
+            if (!TextUtils.isEmpty(App.CARRIER.getLocationNo()))
                 text2.setText(App.CARRIER.getLocationNo());
-            if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
+            if (!TextUtils.isEmpty(App.CARRIER.getTrayNo()))
                 text3.setText(App.CARRIER.getTrayNo());
         }
-    }
-
-    private void initData() {
-        myList = new ArrayList<>();
-        myList.add(new Cloth());
     }
 
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.car_putaway_item, null);
         mAdapter.setHeader(view);
     }
-    private int assistantID =0;
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void getEventMsg(EventBusMsg message) {
-        switch (message.getStatus()){
+        switch (message.getStatus()) {
             case 0x05:
                 assistantID = (int) message.getPositionObj(0);
                 break;
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
         if (App.CARRIER != null) {
-            if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
+            if (!TextUtils.isEmpty(App.CARRIER.getTrayNo()))
                 downLoading();
         }
     }
@@ -140,7 +144,6 @@ public class CarPutawayFragment extends Fragment {
         JSONObject obj = new JSONObject();
         obj.put("pallet", pallet);
         final String json = obj.toJSONString();
-//        接口
         try {
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/getClothFromInvSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @SuppressLint("LongLogTag")
@@ -148,7 +151,7 @@ public class CarPutawayFragment extends Fragment {
                 public void onError(Request request, Exception e) {
                     if (App.LOGCAT_SWITCH) {
                         Log.i(TAG, "getInventory;" + e.getMessage());
-                        Toast.makeText(getActivity(), "获取托盘信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        showToast("获取托盘信息失败");
                     }
                 }
 
@@ -161,7 +164,7 @@ public class CarPutawayFragment extends Fragment {
                             response = jsonArray.toJavaList(Cloth.class);
                             if (response != null && response.size() != 0) {
                                 myList.addAll(response);
-                                text1.setText(myList.size() - 1 + "");
+                                text1.setText(String.valueOf(myList.size() - 1));
                                 mAdapter.notifyDataSetChanged();
                             }
                         }
@@ -180,162 +183,76 @@ public class CarPutawayFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-
     }
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (myList.size() < 21)
-            blinkDialog();
-        else
-            Toast.makeText(getActivity(),getResources().getString(R.string.toast_msg),Toast.LENGTH_LONG).show();
-    }
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1!=null)
-                if (dialog1.isShowing()) {
-                Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                no.setEnabled(true);
-            }
-
-        }
-    };
-    private Handler handler=new Handler();
-    private Dialog dialog1;
-
-
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认上架");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.cancel();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                上传数据
-                ArrayList<Cloth> jsocList = new ArrayList<>();
-                for (int i = 1; i < myList.size(); i++) {
-                    jsocList.add(myList.get(i));
-                }
-                JSONObject obj = new JSONObject();
-                obj.put("data", jsocList);
-                obj.put("carrier", App.CARRIER);
-                obj.put("userId", User.newInstance().getId());
-                obj.put("assistant", assistantID);
-                final String json = JSON.toJSONString(obj);
-                try {
-                    AppLog.write(getActivity(),"carputaway",json,AppLog.TYPE_INFO);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/pushClothToCcPalletTransfer", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "postInventory;" + e.getMessage());
-                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+        if (myList.size() < 21) {
+            showUploadDialog("是否确认上架");
+            setUploadYesClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ArrayList<Cloth> jsocList = new ArrayList<>();
+                    for (int i = 1; i < myList.size(); i++) {
+                        jsocList.add(myList.get(i));
+                    }
+                    JSONObject obj = new JSONObject();
+                    obj.put("data", jsocList);
+                    obj.put("carrier", App.CARRIER);
+                    obj.put("userId", User.newInstance().getId());
+                    obj.put("assistant", assistantID);
+                    final String json = JSON.toJSONString(obj);
+                    try {
+                        AppLog.write(getActivity(), "carputaway", json, AppLog.TYPE_INFO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/pushClothToCcPalletTransfer", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Log.i(TAG, "postInventory;" + e.getMessage());
+                                    showToast("上传信息失败");
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
+                            @Override
+                            public void onResponse(JSONObject response) {
                                 try {
-                                    AppLog.write(getActivity(),"carputaway",User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                if (dialog1.isShowing())
-                                    dialog1.dismiss();
-                                no.setEnabled(true);
-                                handler.removeCallbacks(r);
-                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                                if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    try {
+                                        AppLog.write(getActivity(), "carputaway", User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    uploadDialog.openView();
+                                    hideUploadDialog();
+                                    scanResultHandler.removeCallbacks(r);
+                                    BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                    if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                        showToast("上传成功");
+                                    } else {
+                                        showToast("上传失败");
+                                        showConfirmDialog("上传失败");
+                                        Sound.faillarm();
+                                    }
+                                } catch (Exception e) {
 
-//                                    blinkDialog2(true);
-                                } else {
-                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    blinkDialog2(false);
-                                    Sound.faillarm();
                                 }
-                            } catch (Exception e) {
-
                             }
-                        }
-                    }, json);
+                        }, json);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,TIME);
-            }
-        });
-    }
-    private AlertDialog dialog;
-    private void blinkDialog2(boolean flag) {
-        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    uploadDialog.lockView();
+                    scanResultHandler.postDelayed(r, TIME);
                 }
             });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
-        }
+        } else
+            showToast(getResources().getString(R.string.toast_msg));
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Cloth> {
@@ -372,11 +289,11 @@ public class CarPutawayFragment extends Fragment {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     } else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    holder.setText(R.id.item1, item.getClothNum() + "");
-                    holder.setText(R.id.item2, item.getVatNo() + "");
-                    holder.setText(R.id.item3, item.getColor() + "");
-                    holder.setText(R.id.item4, item.getFabRool() + "");
-                    holder.setText(R.id.item5, "" + String.valueOf(item.getWeight()) + "KG");
+                    holder.setText(R.id.item1, item.getClothNum());
+                    holder.setText(R.id.item2, item.getVatNo());
+                    holder.setText(R.id.item3, item.getColor());
+                    holder.setText(R.id.item4, item.getFabRool());
+                    holder.setText(R.id.item5, item.getWeight() + "KG");
                 }
             }
         }

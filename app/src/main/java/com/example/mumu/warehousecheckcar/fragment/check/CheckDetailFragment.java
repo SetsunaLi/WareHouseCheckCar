@@ -1,6 +1,5 @@
 package com.example.mumu.warehousecheckcar.fragment.check;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,8 +17,8 @@ import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2018/12/26.
  */
 
-public class CheckDetailFragment extends Fragment{
+public class CheckDetailFragment extends BaseFragment {
 
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -62,15 +61,10 @@ public class CheckDetailFragment extends Fragment{
     private RecycleAdapter mAdapter;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initData();
-    }
-
     public void initData() {
         myList = new ArrayList<>();
-        myList.add(new Inventory());//增加一个为头部
-        myList.addAll(App.CHECK_DETAIL_LIST);
+        myList.add(new Inventory());
+        myList.addAll((ArrayList<Inventory>) getArguments().getSerializable("list"));
         Collections.sort(myList, new Comparator<Inventory>() {
             @Override
             public int compare(Inventory obj1, Inventory obj2) {
@@ -96,12 +90,8 @@ public class CheckDetailFragment extends Fragment{
         });
     }
 
-    //    这里加载视图
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.check_detail_layout, container, false);
-        ButterKnife.bind(this, view);
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_detail_item_layout);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -110,15 +100,14 @@ public class CheckDetailFragment extends Fragment{
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
-
         if (myList.size() > 2) {
-            text1.setText(myList.get(1).getVatNo() + "");
-            int real=0;
-            int profit=0;
-            int losses=0;
-            for(Inventory obj:myList){
-                if (obj!=null&&obj.getVatNo()!=null)
-                    switch (obj.getFlag()){
+            text1.setText(myList.get(1).getVatNo());
+            int real = 0;
+            int profit = 0;
+            int losses = 0;
+            for (Inventory obj : myList) {
+                if (obj != null && obj.getVatNo() != null)
+                    switch (obj.getFlag()) {
                         case 0:
                             losses++;
                             break;
@@ -130,10 +119,24 @@ public class CheckDetailFragment extends Fragment{
                             break;
                     }
             }
-            text2.setText(real+"");
-            text3.setText(profit+"");
-            text4.setText(losses+"");
+            text2.setText(String.valueOf(real));
+            text3.setText(String.valueOf(profit));
+            text4.setText(String.valueOf(losses));
         }
+    }
+
+    @Override
+    protected void addListener() {
+
+    }
+
+    //    这里加载视图
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.check_detail_layout, container, false);
+        ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -145,25 +148,20 @@ public class CheckDetailFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        App.CHECK_DETAIL_LIST.clear();
         myList.clear();
     }
 
-    //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,7 +170,6 @@ public class CheckDetailFragment extends Fragment{
         super.onDestroyView();
         ButterKnife.unbind(this);
         myList.clear();
-        App.CHECK_DETAIL_LIST.clear();
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Inventory> {
@@ -196,20 +193,19 @@ public class CheckDetailFragment extends Fragment{
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (item.getFlag()==0)//亏
+                    if (item.getFlag() == 0)//亏
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    else if (item.getFlag()==1)//盈
+                    else if (item.getFlag() == 1)//盈
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
-                    else if(item.getFlag()==2)//正常
+                    else if (item.getFlag() == 2)//正常
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
 
-//                        holder.setBackground(R.id.layout1,getResources().getColor(R.color.colorAccent));
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getProduct_no() + "");
-                    holder.setText(R.id.item3, item.getWeight_in() + "");
-                    holder.setText(R.id.item4, item.getWeight() + "");
-                    holder.setText(R.id.item5, item.getColor() + "");
-                    holder.setText(R.id.item6, item.getSelNo() + "");
+                    holder.setText(R.id.item1, item.getFabRool());
+                    holder.setText(R.id.item2, item.getProduct_no());
+                    holder.setText(R.id.item3, String.valueOf(item.getWeight_in()));
+                    holder.setText(R.id.item4, String.valueOf(item.getWeight()));
+                    holder.setText(R.id.item5, item.getColor());
+                    holder.setText(R.id.item6, item.getSelNo());
                 }
             }
         }

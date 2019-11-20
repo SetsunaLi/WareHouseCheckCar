@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,10 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
@@ -29,6 +34,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Carrier;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -46,13 +52,10 @@ import butterknife.OnClick;
  * Created by mumu on 2019/1/4.
  */
 
-public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiatener, RXCallback {
+public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackLiatener, RXCallback, OnCodeResult, OnRfidResult {
 
     private final String TAG = "CheckCarrierFragment";
-    /*  @Bind(R.id.text1)
-      TextView text1;
-      @Bind(R.id.text2)
-      TextView text2;*/
+
     @Bind(R.id.relativelayout)
     LinearLayout relativelayout;
     @Bind(R.id.button2)
@@ -75,16 +78,35 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
     private boolean flagRFID = false;
     private boolean flag2D = false;
+    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        和盘点Check布局一样
         View view = inflater.inflate(R.layout.putaway_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("上架");
-        button2.setText("确认库位");
+        return view;
+    }
 
+    @Override
+    protected void initData() {
+        if (App.CARRIER == null)
+            App.CARRIER = new Carrier();
+        if (!TextUtils.isEmpty(App.CARRIER.getLocationNo()))
+            edittext2.setText(App.CARRIER.getLocationNo());
+        if (!TextUtils.isEmpty(App.CARRIER.getTrayNo()))
+            edittext1.setText(App.CARRIER.getTrayNo());
+    }
+
+    @Override
+    protected void initView(View view) {
+        button2.setText("确认库位");
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this, this);
         edittext1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -107,7 +129,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-        }
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -155,59 +177,29 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                 }
             }
         });
-        if (App.CARRIER == null)
-            App.CARRIER = new Carrier();
-        /*App.CARRIER.setLocationNo("查布区");
-        App.CARRIER.setTrayNo("TP0002");*/
-        if (App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals(""))
-            edittext2.setText(App.CARRIER.getLocationNo());
-        if (App.CARRIER.getTrayNo() != null && !App.CARRIER.getTrayNo().equals(""))
-            edittext1.setText(App.CARRIER.getTrayNo());
-//        initRFID();
-//        init2D();
-        return view;
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
-    private TDScannerHelper scannerHander;
-
     private void init2D() {
-        try {
-            boolean flag2 = RFID_2DHander.getInstance().on_2D();
-//            boolean flag1=RFID_2DHander.getInstance().connect2D();
-            scannerHander = RFID_2DHander.getInstance().getTDScanner();
-            scannerHander.regist2DCodeData(this);
-            if (!flag2)
-                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Log.w(TAG, "2D模块异常");
-            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        if (!PdaController.init2D(this)) {
+            showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
 
     private void disConnect2D() {
-        try {
-            RFID_2DHander.getInstance().off_2D();
-//            RFID_2DHander.getInstance().disConnect2D();
-
-        } catch (Exception e) {
-
+        if (!PdaController.disConnect2D()) {
+            showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
 
@@ -215,9 +207,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-//        App.CARRIER = null;
-//        disConnect2D();
-//        disRFID();
         if (flagRFID) {
             disRFID();
             flagRFID = false;
@@ -234,8 +223,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button2:
-                if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
-//                    edittext1.setFocusable(show ? false : true);
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                if (!TextUtils.isEmpty(App.CARRIER.getLocationNo())) {
                     edittext1.setFocusableInTouchMode(false);
                     edittext2.setFocusableInTouchMode(false);
                     if (flagRFID) {
@@ -253,7 +242,7 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                             public void onError(Request request, Exception e) {
                                 if (App.LOGCAT_SWITCH) {
                                     Log.i(TAG, "getInventory;" + e.getMessage());
-                                    Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    showToast("获取库位信息失败");
                                 }
                             }
 
@@ -262,18 +251,15 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                                 try {
                                     BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                     if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                        Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
+                                        showToast("开始上架");
                                         Fragment fragment = PutawayFragment.newInstance();
                                         FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                                         transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                                         transaction.show(fragment);
                                         transaction.commit();
-//                                        getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                                        getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                                     } else {
-                                        Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();
+                                        showToast("库位无效");
                                     }
-
                                 } catch (Exception e) {
 
                                 }
@@ -282,10 +268,8 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
                 } else
-                    Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
+                    showToast("请扫描库位硬标签");
                 break;
             case R.id.button1:
                 App.CARRIER.clear();
@@ -295,97 +279,6 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
         }
     }
 
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            try {
-                switch (msg.arg1) {
-                    case 0x00:
-                        if (App.MUSIC_SWITCH) {
-                            if (System.currentTimeMillis() - currenttime > 150) {
-                                Sound.scanAlarm();
-                                currenttime = System.currentTimeMillis();
-                            }
-                        }
-                        String EPC = (String) msg.obj;
-                        EPC = EPC.replaceAll(" ", "");
-                        if (EPC.startsWith("31B5A5AF")) {
-//                        final String json = EPC;
-                            JSONObject epc = new JSONObject();
-                            epc.put("epc", EPC);
-                            final String json = epc.toJSONString();
-                            try {
-                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
-                                    @Override
-                                    public void onError(Request request, Exception e) {
-                                        if (App.LOGCAT_SWITCH) {
-                                            Log.i(TAG, "getInventory;" + e.getMessage());
-                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                    @Override
-                                    public void onResponse(Carrier response) {
-                                        try {
-                                            if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
-                                                    (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
-                                                Message msg = handler.obtainMessage();
-                                                msg.arg1 = 0x01;
-                                                msg.obj = response;
-                                                handler.sendMessage(msg);
-                                            }
-                                        } catch (Exception e) {
-
-                                        }
-                                    }
-                                }, json);
-                            } catch (IOException e) {
-
-                            }
-                        }
-                        break;
-                    case 0x01:
-                        Carrier response = (Carrier) msg.obj;
-                        /*if (response != null && (response.getTrayNo() != null || response.getLocationNo() != null) &&
-                                (!response.getTrayNo().equals("") || !response.getLocationNo().equals(""))) {
-                            App.CARRIER = response;
-                            edittext2.setText(response.getLocationNo() + "");
-                            edittext1.setText(response.getTrayNo() + "");
-                        }*/
-                        if (response != null && response.getTrayNo() != null && !response.getTrayNo().equals("")) {
-                            App.CARRIER.setTrayNo(response.getTrayNo());
-                            edittext1.setText(response.getTrayNo() + "");
-                        }
-                        if (response != null && response.getTrayEPC() != null && !response.getTrayEPC().equals(""))
-                            App.CARRIER.setTrayEPC(response.getTrayEPC());
-
-                        if (response != null && response.getLocationNo() != null && !response.getLocationNo().equals("")) {
-                            App.CARRIER.setLocationNo(response.getLocationNo());
-                            edittext2.setText(response.getLocationNo() + "");
-                        }
-                        if (response != null && response.getLocationEPC() != null && !response.getLocationEPC().equals(""))
-                            App.CARRIER.setLocationEPC(response.getLocationEPC());
-                        break;
-                    case 0x02:
-                        if (App.MUSIC_SWITCH) {
-                            if (System.currentTimeMillis() - currenttime > 150) {
-                                Sound.scanAlarm();
-                                currenttime = System.currentTimeMillis();
-                            }
-                        }
-                        String location = (String) msg.obj;
-                        location = location.replaceAll(" ", "");
-                        edittext2.setText(location);
-                        break;
-                }
-            } catch (Exception e) {
-
-            }
-        }
-    };
-
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
@@ -393,10 +286,10 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.arg1 = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -412,10 +305,61 @@ public class PutawayCarrierFragment extends Fragment implements UHFCallbackLiate
     //
     @Override
     public void callback(byte[] bytes) {
-        Message msg = handler.obtainMessage();
-        msg.arg1 = 0x02;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.CODE;
         msg.obj = new String(bytes);
+        scanResultHandler.sendMessage(msg);
+    }
 
-        handler.sendMessage(msg);
+    @Override
+    public void codeResult(String code) {
+        code = code.replaceAll(" ", "");
+        edittext2.setText(code);
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (epc.startsWith("31B5A5AF")) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("epc", epc);
+            final String json = jsonObject.toJSONString();
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getInventory;" + e.getMessage());
+                            showToast("获取库位信息失败");
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Carrier response) {
+                        try {
+                            if (response != null) {
+                                if (!TextUtils.isEmpty(response.getTrayNo())) {
+                                    App.CARRIER.setTrayNo(response.getTrayNo());
+                                    edittext1.setText(response.getTrayNo());
+                                }
+                                if (!TextUtils.isEmpty(response.getTrayEPC()))
+                                    App.CARRIER.setTrayEPC(response.getTrayEPC());
+
+                                if (!TextUtils.isEmpty(response.getLocationNo())) {
+                                    App.CARRIER.setLocationNo(response.getLocationNo());
+                                    edittext2.setText(response.getLocationNo());
+                                }
+                                if (!TextUtils.isEmpty(response.getLocationEPC()))
+                                    App.CARRIER.setLocationEPC(response.getLocationEPC());
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+
+            }
+        }
     }
 }

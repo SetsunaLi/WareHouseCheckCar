@@ -58,8 +58,6 @@ import com.example.mumu.warehousecheckcar.fragment.in.ReturnGoodsInNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
-import com.example.mumu.warehousecheckcar.fragment.out.OutCheckCarFragment;
-import com.example.mumu.warehousecheckcar.fragment.out.OutCheckFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
@@ -231,7 +229,6 @@ public class Main2Activity extends AppCompatActivity
         App.DEVICE_NO = "";
         App.IN_DETAIL_LIST.clear();
         App.OUTDETAIL_LIST.clear();
-        App.CHECK_DETAIL_LIST.clear();
         App.INPUT_DETAIL_LIST.clear();
     }
 
@@ -314,15 +311,15 @@ public class Main2Activity extends AppCompatActivity
                 fragment = AboutFragment.newInstance();
                 break;
         }
-            FragmentManager fragmentManager = getFragmentManager();
-            if (fragment instanceof HomeFragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragment instanceof HomeFragment) {
 
-                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
-            } else if (fragment != null) {
-                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-            }
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
+        } else if (fragment != null) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+        }
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START);
     }
@@ -454,34 +451,32 @@ public class Main2Activity extends AppCompatActivity
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-            if (fragment != null && (fragment instanceof AboutFragment || fragment instanceof SettingFragment || fragment instanceof HomeFragment
-                    || fragment instanceof InCheckCarrierFragment || fragment instanceof OutCheckCarFragment
+            if (fragment instanceof AboutFragment || fragment instanceof SettingFragment || fragment instanceof HomeFragment
+                    || fragment instanceof InCheckCarrierFragment
                     || fragment instanceof PutawayCarrierFragment || fragment instanceof CarFragment
                     || fragment instanceof ChubbFragment || fragment instanceof ChubbUpFragment
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
                     || fragment instanceof WeightChangeFragment || fragment instanceof ChubbExceptionFragment
                     || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothPutwayCarrierFragment
-                    || fragment instanceof CutClothFragment || fragment instanceof InAssistFragment)) {
+                    || fragment instanceof CutClothFragment || fragment instanceof InAssistFragment) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();
                 }
                 selectItem(0);
                 setTitle(mOptionTitle[0]);
             } else {
-                if (fragment != null && (fragment instanceof OutCheckFragment)) {
-                    askForBack();
-                } else if (fragment != null && (fragment instanceof PutawayFragment)) {
+                if (fragment instanceof PutawayFragment) {
                     selectItem(3);
-                } else if (fragment != null && (fragment instanceof CarPutawayFragment)) {
+                } else if (fragment instanceof CarPutawayFragment) {
                     selectItem(4);
-                } else if (fragment != null && (fragment instanceof OutApplyNewFragment)) {
+                } else if (fragment instanceof OutApplyNewFragment) {
                     selectItem(7);
-                } else if (fragment != null && (fragment instanceof CheckFragment)) {
+                } else if (fragment instanceof CheckFragment) {
                     selectItem(2);
-                } else if (fragment != null && (fragment instanceof CutClothOutFragment || fragment instanceof CutClothOutNoFragment)) {
+                } else if (fragment instanceof CutClothOutFragment || fragment instanceof CutClothOutNoFragment) {
                     selectItem(9);
-                } else if (fragment != null && (fragment instanceof OutApplyDetailFragment)) {
+                } else if (fragment instanceof OutApplyDetailFragment) {
                     setOutApplyDataList(((OutApplyDetailFragment) fragment).getList());
                     getFragmentManager().popBackStack();
                     if (comeBack.fragmentCallBackListener != null)

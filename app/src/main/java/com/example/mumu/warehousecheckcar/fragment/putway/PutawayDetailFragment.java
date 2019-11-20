@@ -21,6 +21,7 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.entity.Input;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2019/1/8.
  */
 
-public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener{
+public class PutawayDetailFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener {
     private static PutawayDetailFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -44,8 +45,6 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
     TextView text1;
     @Bind(R.id.text2)
     TextView text2;
-
-
 
     public static PutawayDetailFragment newInstance() {
         if (fragment == null) ;
@@ -59,17 +58,11 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
     private RecycleAdapter mAdapter;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initData();
-    }
-
-    public void initData() {
+    protected void initData() {
         myList = new ArrayList<>();
         myList.add(new Input());//增加一个为头部
         if (App.INPUT_DETAIL_LIST != null && App.INPUT_DETAIL_LIST.size() > 0)
             myList.addAll(App.INPUT_DETAIL_LIST);
-
         Collections.sort(myList, new Comparator<Input>() {
             @Override
             public int compare(Input obj1, Input obj2) {
@@ -96,26 +89,32 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
         dataList = new ArrayList<>();
     }
 
-    //    这里加载视图
+    @Override
+    protected void initView(View view) {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.putaway_detail_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
+        ms.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(ms);
+        recyle.setAdapter(mAdapter);
+        if (App.INPUT_DETAIL_LIST.size() > 1) {
+            text1.setText(String.valueOf(App.INPUT_DETAIL_LIST.size()));
+            text2.setText(App.INPUT_DETAIL_LIST.get(1).getVatNo());
+        }
+    }
+
+    @Override
+    protected void addListener() {
+        mAdapter.setOnItemClickListener(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.putaway_detail_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager ms = new LinearLayoutManager(getActivity());
-        ms.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(ms);
-        recyle.setAdapter(mAdapter);
-
-        if (App.INPUT_DETAIL_LIST.size() > 1) {
-            text1.setText(App.INPUT_DETAIL_LIST.size() + "");
-            text2.setText(App.INPUT_DETAIL_LIST.get(1).getVatNo() + "");
-        }
         return view;
     }
 
@@ -125,25 +124,16 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    //右上角列表R.menu.main2
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -185,7 +175,6 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
                 this.index = -255;
             else
                 this.index = index;
-
         }
 
         @Override
@@ -197,11 +186,10 @@ public class PutawayDetailFragment extends Fragment implements BRecyclerAdapter.
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     } else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getProduct_no() + "");
-                    holder.setText(R.id.item3, item.getWeight_in() + "");
-                    holder.setText(R.id.item4, item.getWeight() + "");
+                    holder.setText(R.id.item1, item.getFabRool());
+                    holder.setText(R.id.item2, item.getProduct_no());
+                    holder.setText(R.id.item3, String.valueOf(item.getWeight_in()));
+                    holder.setText(R.id.item4, String.valueOf(item.getWeight()));
                 }
             }
         }

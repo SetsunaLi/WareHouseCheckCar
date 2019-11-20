@@ -1,6 +1,5 @@
 package com.example.mumu.warehousecheckcar.fragment.forward;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,17 +9,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.Forwarding;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,7 +34,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener {
+public class ForwardingDetailFragment extends BaseFragment {
     final String TAG = "ForwardingDetailFragment";
     private static ForwardingDetailFragment fragment;
     @Bind(R.id.recyle)
@@ -63,13 +61,17 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
 
-        initUtil();
-        initData();
-        if (!EventBus.getDefault().isRegistered(this))
+    @Override
+    protected void initData() {
+        myList = new ArrayList<>();
+        myList.add(new Forwarding("", "", "", "", "", 0.0, ""));//增加一个为头部
+    }
 
-            EventBus.getDefault().register(this);
-
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_detail_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -78,8 +80,12 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this);
-        return view;
+    }
+
+    @Override
+    protected void addListener() {
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Subscribe(sticky = true)
@@ -88,7 +94,6 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
             switch (msg.getStatus()) {
                 case 0x02:
                     myList.addAll((List<Forwarding>) msg.getPositionObj(0));
-//                    fatherNoList.clear();
                     dataList = (HashMap<String, ForwardingFragment.ForwardingFlag>) ((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1)).clone();
                     dataList.putAll((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1));
                     break;
@@ -100,9 +105,9 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
         super.onResume();
         load();
         mAdapter.notifyDataSetChanged();
-        text1.setText(myList.size() - 1 + "");
+        text1.setText(String.valueOf(myList.size() - 1));
         if (myList.size() > 1)
-            text2.setText(myList.get(1).getVatNo() + "");
+            text2.setText(myList.get(1).getVatNo());
     }
 
     private void load() {
@@ -146,26 +151,9 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
         });
     }
 
-    public void initData() {
-        myList = new ArrayList<>();
-        myList.add(new Forwarding("", "", "", "", "", 0.0, ""));//增加一个为头部
-    }
-
-    private InputMethodManager mInputMethodManager;
-
-    private void initUtil() {
-        //初始化输入法
-        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.forwarding_detail_item, null);
         mAdapter.setHeader(view);
-    }
-
-    @Override
-    public void onItemClick(View view, Object data, int position) {
-
     }
 
     @Override
@@ -213,56 +201,42 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                             if (isChecked) {
                                 for (int i = 1; i < myList.size(); i++) {
                                     if (dataList.containsKey(myList.get(i).getEpc()))
-//                                    if (dataList.get(myList.get(i).getEpc()).isFind()) {
                                         dataList.get(myList.get(i).getEpc()).setStatus(true);
-//                                    }
                                 }
                             } else {
                                 for (int i = 1; i < myList.size(); i++) {
                                     if (dataList.containsKey(myList.get(i).getEpc()))
-//                                        if (dataList.get(myList.get(i).getEpc()).isFind()) {
                                         dataList.get(myList.get(i).getEpc()).setStatus(false);
-//                                        }
                                 }
                             }
                             mAdapter.notifyDataSetChanged();
                         } else {
                             if (isChecked) {
-//                                if (dataList.get(item.getEpc()).isFind()) {
                                 dataList.get(item.getEpc()).setStatus(true);
-//                                }
                             } else {
-//                                if (dataList.get(item.getEpc()).isFind()) {
                                 dataList.get(item.getEpc()).setStatus(false);
-//                                }
                             }
-
                         }
                     }
                 });
                 if (position != 0) {
-                    if (((item.getFabRool() + "").equals("") && (item.getWeight() + "").equals(""))) {
+                    if (TextUtils.isEmpty(item.getFabRool())) {
                         cb.setChecked(false);
                         if (cb.isEnabled() != false)
                             cb.setEnabled(false);
                     } else {
-                        if (dataList.containsKey(item.getEpc())
-//                                &&dataList.get(item.getEpc()).isFind()
-                        ) {
+                        if (dataList.containsKey(item.getEpc())) {
                             if (!cb.isEnabled())
                                 cb.setEnabled(true);
                         } else {
                             if (cb.isEnabled())
                                 cb.setEnabled(false);
                         }
-                        if (dataList.containsKey(item.getEpc())
-//                                &&dataList.get(item.getEpc()).isStatus()
-                        )
+                        if (dataList.containsKey(item.getEpc()))
                             cb.setChecked(true);
                         else
                             cb.setChecked(false);
                     }
-
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (!dataList.get(item.getEpc()).isFind()) {
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
@@ -271,10 +245,10 @@ public class ForwardingDetailFragment extends Fragment implements BRecyclerAdapt
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                         cb.setEnabled(true);
                     }
-                    holder.setText(R.id.item1, item.getFabRool() + "");
-                    holder.setText(R.id.item2, item.getClothNum() + "");
-                    holder.setText(R.id.item3, item.getVatNo() + "");
-                    holder.setText(R.id.item4, item.getWeight() + "");
+                    holder.setText(R.id.item1, item.getFabRool());
+                    holder.setText(R.id.item2, item.getClothNum());
+                    holder.setText(R.id.item3, item.getVatNo());
+                    holder.setText(R.id.item4, String.valueOf(item.getWeight()));
                 }
             }
         }

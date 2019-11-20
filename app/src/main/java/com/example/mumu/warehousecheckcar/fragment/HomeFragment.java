@@ -17,6 +17,7 @@ import android.widget.Button;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.entity.HomeButton;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.utils.Imgutil;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2018/11/19.
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
     private static HomeFragment fragment;
     @Bind(R.id.button1)
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
-    private User user = User.newInstance();
+    private User user;
 
     @Nullable
     @Override
@@ -78,57 +79,26 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.home_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("主页");
-        initView(view);
-
         return view;
     }
 
-    private void initView(View view) {
+    @Override
+    protected void initData() {
+        user = User.newInstance();
+    }
+
+    @Override
+    protected void initView(View view) {
         for (HomeButton homeButton : HomeButton.values()) {
-            //Parameter.IMG_SMALL是图片的大小值，setCompoundDrawables参数指定图片的位置：左、上、右、下
             Button button = (Button) view.findViewById(homeButton.getId());
             button.setCompoundDrawables(
                     null,
-                    findImgAsSquare(getActivity(),
+                    Imgutil.findImgAsSquare(getActivity(),
                             homeButton.getIndex(), 64),
                     null,
                     null);
             button.setVisibility(View.GONE);
         }
-
-
-    }
-
-    /**
-     * 获取,寻找并裁剪图片
-     *
-     * @param context
-     * @param id
-     * @return
-     */
-    public static Drawable findImgAsSquare(Context context, int id, int sidedp) {
-        Drawable drawable = ContextCompat.getDrawable(context, id);
-        int px = dip2px(context, sidedp);
-        drawable.setBounds(0, 0, px, px);
-        return drawable;
-    }
-
-    /**
-     * 将dip或dp值转换为px值，保证尺寸大小不变
-     *
-     * @param context
-     * @param dipValue （DisplayMetrics类中属性density）
-     * @return
-     */
-    public static int dip2px(Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
-    }
-
-    //
-    @Override
-    public void onResume() {
-        super.onResume();
         if (user != null) {
             switch (user.getAuth()) {
 //                目前认为GONE是最好的，INVISIBLE会占有位置
@@ -210,26 +180,23 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    //右上角列表R.menu.main2
+    @Override
+    protected void addListener() {
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    //    主页返回执行
-    public void onBackPressed() {
     }
 
     @Override

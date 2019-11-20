@@ -3,10 +3,8 @@ package com.example.mumu.warehousecheckcar.fragment.find;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -14,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,15 +36,17 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.rfid.RFIDReaderHelper;
@@ -64,7 +64,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, AdapterView.OnItemClickListener{
+public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, AdapterView.OnItemClickListener, OnRfidResult {
     private static FindTpNoFragmentf fragment;
     @Bind(R.id.fixeedittext1)
     FixedEditText fixeedittext1;
@@ -112,35 +112,74 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
     private List<String> dataEpc;
     //    查询的托盘号
     private ArrayList<String> findList;
-
     //     模糊查询托盘号
     private ArrayList<String> vatList;
     private boolean isLookFlag = false;
+    private ScanResultHandler scanResultHandler;
+    private RFIDReaderHelper rfidHander;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.find_tpno_layout, container, false);
         ButterKnife.bind(this, view);
-        initView();
-        initData();
-        initUtil();
+
+        return view;
+    }
+
+    private void setAdaperHeader() {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.find_tp_item, null);
+        mAdapter.setHeader(view);
+    }
+
+    @Override
+    protected void initData() {
+        myList = new ArrayList<>();
+        myList.add(new TP());
+        dataKEY = new ArrayList<>();
+        dataList = new ArrayList<>();
+        dataEpc = new ArrayList<>();
+        vatList = new ArrayList<>();
+        findList = new ArrayList<>();
+    }
+
+    @Override
+    protected void initView(View view) {
+        fixeedittext1.setFixedText("托盘号:");
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_tp_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
-//        点击事件可以改视图样式但不可恢复
         LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
-
         textAdapter = new MyAdapter(getActivity(), R.layout.fuzzy_query_item, vatList);
         listview.setAdapter(textAdapter);
-//        listview.addHeaderView(getLayoutInflater().inflate(R.layout.check_item),listview,false);
-        listview.setOnItemClickListener(this);
         listview.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this);
+        mAdapter.setOnItemClickListener(this);
+        listview.setOnItemClickListener(this);
+        fixeedittext1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == EditorInfo.IME_ACTION_DONE) {
+                    onViewClicked(button);
+                    return true;
+                }
+                return false;
+            }
+        });
+        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                isLookFlag = hasFocus;
+            }
+        });
         fixeedittext1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -151,7 +190,7 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String pallet = s.toString();
                 pallet = pallet.replaceAll(" ", "");
-                if (pallet != null && !pallet.equals("")&&pallet.length()>=3) {
+                if (!TextUtils.isEmpty(pallet) && pallet.length() >= 3) {
                     JSONObject object = new JSONObject();
                     object.put("pallet", pallet);
                     final String json = object.toJSONString();
@@ -212,46 +251,12 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
 
             }
         });
-        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                isLookFlag = hasFocus;
-            }
-        });
         initRFID();
-        return view;
-    }
-
-    private void initView() {
-//        fixeedittext0.setFixedText("入库单号：");
-        fixeedittext1.setFixedText("托盘号:");
-//        fixeedittext2.setFixedText("布号：");
-
-        fixeedittext1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE) {
-                    onViewClicked(button);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    private void setAdaperHeader() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.find_tp_item, null);
-        mAdapter.setHeader(view);
-    }
-
-    private void initData() {
-        myList = new ArrayList<>();
-        myList.add(new TP());
-        dataKEY = new ArrayList<>();
-        dataList = new ArrayList<>();
-        dataEpc = new ArrayList<>();
-        vatList = new ArrayList<>();
-        findList = new ArrayList<>();
+        try {
+            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void clearData() {
@@ -272,46 +277,28 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
-
-    private RFIDReaderHelper rfidHander;
 
     private void disRFID() {
-        try {
-            if (rfidHander != null) {
-                int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 20);
-                if (i == 0)
-                    App.PROWER = 20;
-            }
-
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
-    //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -319,7 +306,6 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-
         clearData();
         myList.clear();
         disRFID();
@@ -333,33 +319,6 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
         }
     }
 
-    private long currenttime = 0;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String epc = (String) msg.obj;
-            epc = epc.replaceAll(" ", "");
-            if (dataKEY.contains(epc)) {
-
-                if (System.currentTimeMillis() - currenttime > 150) {
-                    Sound.scanAlarm();
-                    currenttime = System.currentTimeMillis();
-                }
-                if (!dataEpc.contains(epc)) {
-                    dataEpc.add(epc);
-                    for (TP findVatNo : dataList) {
-                        if (findVatNo.getPallet_epc().equals(epc)) {
-                            myList.add(findVatNo);
-                        }
-                    }
-                    text2.setText(myList.size() - 1 + "");
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    };
-
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
@@ -367,9 +326,10 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -404,11 +364,12 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
                 mAdapter.notifyDataSetChanged();
                 addView();
                 goFind();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button0:
                 clearData();
-                text2.setText(myList.size() - 1 + "");
-                text3.setText(dataList.size() + "");
+                text2.setText(String.valueOf(myList.size() - 1));
+                text3.setText(String.valueOf(dataList.size()));
                 layout2.removeAllViews();
                 mAdapter.notifyDataSetChanged();
                 break;
@@ -416,12 +377,12 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
                 myList.clear();
                 myList.add(new TP());
                 dataEpc.clear();
-                text2.setText(myList.size() - 1 + "");
+                text2.setText(String.valueOf(dataList.size() - 1));
                 mAdapter.notifyDataSetChanged();
-
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                blinkDialog();
+                powerDialog();
                 break;
             case R.id.buttonAdd:
                 addView();
@@ -449,7 +410,7 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
         fixeedittext1.setText("");
     }
 
-    private void blinkDialog() {
+    private void powerDialog() {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.setprower_dialog_layout, null);
@@ -500,22 +461,6 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
         });
     }
 
-    private InputMethodManager mInputMethodManager;
-
-    //     * 初始化必须工具
-    private void initUtil() {
-        //初始化输入法
-        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    //隐藏输入法
-    public void cancelKeyBoard(View view) {
-        if (mInputMethodManager.isActive()) {
-            mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
-        }
-
-    }
-
     private void goFind() {
         if (findList.size() != 0) {
             for (String pallet : findList) {
@@ -528,7 +473,7 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
                             @Override
                             public void onError(Request request, Exception e) {
                                 if (App.LOGCAT_SWITCH) {
-                                    Toast.makeText(getActivity(), "托盘号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    showToast("托盘号查询失败");
                                 }
                             }
 
@@ -545,14 +490,14 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
                                                 if (!dataKEY.contains(i.getPallet_epc()))
                                                     dataKEY.add(i.getPallet_epc());
                                             }
-                                            text3.setText(dataList.size() + "");
-                                            Toast.makeText(getActivity(), "成功查询托盘号！", Toast.LENGTH_SHORT).show();
+                                            text3.setText(String.valueOf(dataList.size()));
+                                            showToast("成功查询托盘号");
                                         } else {
-                                            Toast.makeText(getActivity(), "此托盘号无库存数据！", Toast.LENGTH_SHORT).show();
+                                            showToast("此托盘号无库存数据");
+                                            showConfirmDialog("此托盘号无库存数据");
                                         }
                                     } else {
-                                        Toast.makeText(getActivity(), "查无此托盘号！", Toast.LENGTH_SHORT).show();
-//                                getActivity().onBackPressed();
+                                        showToast("查无此托盘号");
                                     }
                                 } catch (Exception e) {
 
@@ -575,12 +520,26 @@ public class FindTpNoFragmentf extends Fragment implements BRecyclerAdapter.OnIt
         if (listview.getVisibility() == View.VISIBLE)
             listview.setVisibility(View.GONE);
         vatFlag = true;
-//        onViewClicked(button);
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (dataKEY.contains(epc)) {
+            if (!dataEpc.contains(epc)) {
+                dataEpc.add(epc);
+                for (TP findVatNo : dataList) {
+                    if (findVatNo.getPallet_epc().equals(epc)) {
+                        myList.add(findVatNo);
+                    }
+                }
+                text2.setText(String.valueOf(myList.size() - 1));
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     class MyAdapter extends ArrayAdapter {
-
-
         private List<String> list;
         private LayoutInflater mInflater;
 

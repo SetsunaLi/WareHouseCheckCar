@@ -1,12 +1,13 @@
 package com.example.mumu.warehousecheckcar.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by mumu on 2018/12/21.
  */
 
-public class Inventory {
+public class Inventory implements Serializable {
     /**库位信息*/
     private Carrier carrier;
     /**布匹EPC码*/

@@ -1,14 +1,9 @@
 package com.example.mumu.warehousecheckcar.fragment.out;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,9 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -33,13 +26,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
@@ -50,6 +44,7 @@ import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.entity.OutputFlag;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -59,7 +54,6 @@ import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
@@ -73,8 +67,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener
-        , RXCallback {
+public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener
+        , RXCallback, OnCodeResult, OnRfidResult {
     private final String TAG = "OutApplyNewFragment";
     private static OutApplyNewFragment fragment;
     @Bind(R.id.recyle)
@@ -112,7 +106,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     private HashMap<String, Boolean> vatKey;
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
-
+    private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
     private boolean is2D = false;
 
@@ -122,16 +116,18 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         View view = inflater.inflate(R.layout.out_apply_new_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("出库列表");
-        initUtil();
-        initData();
-        initView();
-        initLister();
-        initRFID();
-
         return view;
     }
 
-    private void initData() {
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            uploadDialog.openView();
+        }
+    };
+
+    @Override
+    protected void initData() {
         fatherNoList = new ArrayList<>();
         epcKeyList = new HashMap<>();
         myList = new ArrayList<>();
@@ -142,17 +138,8 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         vatKey = new HashMap<>();
     }
 
-    private void clearData() {
-        epcKeyList.clear();
-        myList.clear();
-        dateNo.clear();
-        dataKey.clear();
-        epcList.clear();
-        getEpcKey.clear();
-        vatKey.clear();
-    }
-
-    private void initView() {
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_apply_child_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -162,17 +149,20 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         recyle.setAdapter(mAdapter);
     }
 
-    private void initLister() {
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this, this);
+        initRFID();
         mAdapter.setOnItemClickListener(this);
         ComeBack.getInstance().setCallbackLiatener(this);
         edit1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    is2D=true;
+                    is2D = true;
                     init2D();
                 } else {
-                    is2D=false;
+                    is2D = false;
                     disConnect2D();
                 }
             }
@@ -189,40 +179,17 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
             }
         });
     }
-    private InputMethodManager mInputMethodManager;
 
-    //     * 初始化必须工具
-    private void initUtil() {
-        //初始化输入法
-        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    //隐藏输入法
-    public void cancelKeyBoard(View view) {
-        if (mInputMethodManager.isActive()) {
-            mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
-        }
-    }
     private boolean flag = true;
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (flag) {
-            flag = false;
-            ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("NO");
-            fatherNoList.clear();
-            Iterator<String> iter = list.iterator();
-            while (iter.hasNext()) {
-                String str = iter.next();
-                str = str.replaceAll(" ", "");
-                if (str != null && !str.equals("") && !fatherNoList.contains(str))
-                    fatherNoList.add(str);
-            }
-            text1.setText(0 + "");
-            text2.setText(fatherNoList.size() + "");
-            downLoadData();
-        }
+    private void clearData() {
+        epcKeyList.clear();
+        myList.clear();
+        dateNo.clear();
+        dataKey.clear();
+        epcList.clear();
+        getEpcKey.clear();
+        vatKey.clear();
     }
 
     public void downLoadData() {
@@ -288,193 +255,49 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
             disConnect2D();
     }
 
-    private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (flag) {
+            flag = false;
+            ArrayList<String> list = (ArrayList<String>) getArguments().getSerializable("NO");
+            fatherNoList.clear();
+            Iterator<String> iter = list.iterator();
+            while (iter.hasNext()) {
+                String str = iter.next();
+                str = str.replaceAll(" ", "");
+                if (str != null && !str.equals("") && !fatherNoList.contains(str))
+                    fatherNoList.add(str);
+            }
+            text1.setText(String.valueOf(0));
+            text2.setText(String.valueOf(fatherNoList.size()));
+            downLoadData();
+        }
+    }
 
+    private void initRFID() {
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void init2D() {
-        try {
-            boolean flag2 = RFID_2DHander.getInstance().on_2D();
-            TDScannerHelper scannerHander = RFID_2DHander.getInstance().getTDScanner();
-            scannerHander.regist2DCodeData(this);
-            if (!flag2)
-                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Log.w(TAG, "2D模块异常");
-            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        if (!PdaController.init2D(this)) {
+            showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
 
     private void disConnect2D() {
-        try {
-            RFID_2DHander.getInstance().off_2D();
-        } catch (Exception e) {
-
+        if (!PdaController.disConnect2D()) {
+            showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
-
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    final String EPC = ((String) msg.obj).replaceAll(" ", "");
-                    if (EPC.startsWith("3035A537") && epcKeyList.containsKey(EPC)) {
-                        if (!epcKeyList.get(EPC).isFind()) {
-                            epcKeyList.get(EPC).setFind(true);
-                            epcKeyList.get(EPC).setStatus(true);
-                            for (int i = 0; i < myList.size(); i++) {
-                                Output output = myList.get(i);
-                                for (OutputDetail od : output.getList()) {
-                                    if (od.getEpc().equals(EPC)) {
-                                        output.setCount(output.getCount() + 1);
-                                        output.setWeightall(ArithUtil.add(output.getWeightall(), epcKeyList.get(EPC).getWeight()));
-
-//                                        自动配货
-                                        if (vatKey.get(output.getVatNo()) && output.getCountProfit() < output.getCountOut()) {
-                                            epcKeyList.get(EPC).setApplyNo(output.getApplyNo() + i);
-                                            output.setWeightPei(ArithUtil.add(output.getWeightPei(), epcKeyList.get(EPC).getWeight()));
-                                            output.addCountProfit();
-                                        }
-                                    }
-                                }
-                            }
-                            int count = 0;
-                            for (OutputFlag o : epcKeyList.values()) {
-                                if (o.isFind())
-                                    count++;
-                            }
-                            text1.setText(count + "");
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    } else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC) && !epcList.contains(EPC)) {
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
-                        if (!epcList.contains(EPC)) {
-                            try {
-                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                    @Override
-                                    public void onError(Request request, Exception e) {
-                                        if (App.LOGCAT_SWITCH) {
-                                            Log.i(TAG, "getEpc;" + e.getMessage());
-                                            Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onResponse(JSONArray jsonArray) {
-                                        try {
-                                            List<Inventory> arry;
-                                            arry = jsonArray.toJavaList(Inventory.class);
-                                            if (arry != null && arry.size() > 0) {
-                                                Inventory response = arry.get(0);
-                                                if (!epcList.contains(response.getEpc())) {
-                                                    epcList.add(response.getEpc());
-                                                    if (response != null) {
-                                                        epcList.add(response.getEpc());
-                                                        OutputDetail detail = new OutputDetail();
-                                                        detail.setEpc(response.getEpc() + "");
-                                                        detail.setFabRool(response.getFabRool() + "");
-                                                        detail.setWeight(response.getWeight());
-                                                        detail.setWeight_in(response.getWeight_in());
-                                                        detail.setOperator(response.getOperator() + "");
-                                                        detail.setOperatingTime(response.getOperatingTime());
-                                                        detail.setFlag(2);
-                                                        String key2 = "" + response.getVatNo() + response.getProduct_no() + response.getSelNo();
-                                                        if (!getEpcKey.containsKey(key2)) {
-                                                            Output data = new Output();
-                                                            data.setApplyNo("bug");
-                                                            data.setProduct_no(response.getProduct_no() + "");
-                                                            data.setVatNo(response.getVatNo() + "");
-                                                            data.setSelNo(response.getSelNo() + "");
-                                                            data.setColor(response.getColor() + "");
-                                                            data.setCountOut(0);
-                                                            data.setCount(1);
-                                                            data.setCountProfit(1);
-                                                            data.setCountLosses(0);
-                                                            data.setFlag(2);
-                                                            data.setOutp_id("");
-                                                            data.setWeightall(response.getWeight());
-                                                            List<OutputDetail> list = new ArrayList<OutputDetail>();
-                                                            list.add(detail);
-                                                            data.setList(list);
-                                                            myList.add(data);
-                                                            getEpcKey.put(key2, myList.size() - 1);
-                                                        } else {
-                                                            myList.get(getEpcKey.get(key2)).addCount();
-                                                            myList.get(getEpcKey.get(key2)).setWeightall(ArithUtil.add(myList.get(getEpcKey.get(key2)).getWeightall(), response.getWeight()));
-                                                            myList.get(getEpcKey.get(key2)).getList().add(detail);
-                                                        }
-                                                    }
-                                                }
-                                                mAdapter.notifyDataSetChanged();
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, json);
-                            } catch (IOException e) {
-                                Log.i(TAG, "");
-                            }
-                        }
-                    }
-                    break;
-                case 0x01:
-                    epcKeyList.clear();
-                    epcKeyList.putAll(((Main2Activity) getActivity()).getOutApplyDataList());
-                    Output i = myList.get(position);
-                    i.setCountProfit(0);
-                    i.setWeightPei(0);
-                    for (OutputDetail od : i.getList()) {
-                        if (epcKeyList.containsKey(od.getEpc())) {
-                            if (epcKeyList.get(od.getEpc()).getApplyNo().equals(i.getApplyNo() + position)) {
-                                i.setCountProfit(i.getCountProfit() + 1);
-                                i.setWeightPei(ArithUtil.add(i.getWeightPei(), epcKeyList.get(od.getEpc()).getWeight()));
-                            }
-                        }
-                    }
-//                    }
-                    mAdapter.notifyDataSetChanged();
-                    break;
-                case 0x02:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    String location = (String) msg.obj;
-                    location = location.replaceAll(" ", "");
-                    edit1.setText(location);
-                    break;
-            }
-        }
-    };
-
 
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
@@ -484,10 +307,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     //标签操作
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.what = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -501,15 +324,6 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
     }
 
     @Override
-    public void comeBackListener() {
-        Message msg = handler.obtainMessage();
-        msg.what = 0x01;
-        handler.sendMessage(msg);
-        if (is2D)
-            init2D();
-    }
-
-    @Override
     public void ubLoad(boolean flag) {
 
     }
@@ -520,6 +334,26 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         ButterKnife.unbind(this);
     }
 
+    @Override
+    public void comeBackListener() {
+        epcKeyList.clear();
+        epcKeyList.putAll(((Main2Activity) getActivity()).getOutApplyDataList());
+        Output i = myList.get(position);
+        i.setCountProfit(0);
+        i.setWeightPei(0);
+        for (OutputDetail od : i.getList()) {
+            if (epcKeyList.containsKey(od.getEpc())) {
+                if (epcKeyList.get(od.getEpc()).getApplyNo().equals(i.getApplyNo() + position)) {
+                    i.setCountProfit(i.getCountProfit() + 1);
+                    i.setWeightPei(ArithUtil.add(i.getWeightPei(), epcKeyList.get(od.getEpc()).getWeight()));
+                }
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+        if (is2D)
+            init2D();
+    }
+
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -527,62 +361,25 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
-                handler.removeMessages(0x00);
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                blinkDialog();
+                showUploadDialog("是否确认出库");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String location = edit1.getText().toString();
+                        if (TextUtils.isEmpty(location)) {
+                            upLoad(location);
+                        } else {
+                            judge(location);
+                        }
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, App.TIME);
+                    }
+                });
                 break;
         }
-    }
-
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1 != null)
-                if (dialog1.isShowing()) {
-                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                    no.setEnabled(true);
-                }
-
-        }
-    };
-    private Dialog dialog1;
-
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认出库");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String location = edit1.getText().toString();
-                if (TextUtils.isEmpty(location)) {
-                    upLoad(location);
-                } else {
-                    judge(location);
-                }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r, App.TIME);
-            }
-        });
     }
 
     private void judge(final String location) {
@@ -610,14 +407,10 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                             upLoad(location);
                         } else {
-                            if (dialog1.isShowing())
-                                dialog1.dismiss();
-                            Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                            Button yes = (Button) dialog1.findViewById(R.id.dialog_yes);
-                            no.setEnabled(true);
-                            yes.setEnabled(true);
-                            handler.removeCallbacks(r);
-                            showDialog("库位无效");
+                            uploadDialog.openView();
+                            hideUploadDialog();
+                            scanResultHandler.removeCallbacks(r);
+                            showConfirmDialog("库位无效");
                         }
                     } catch (Exception e) {
 
@@ -698,13 +491,9 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    if (dialog1.isShowing())
-                                        dialog1.dismiss();
-                                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                                    Button yes = (Button) dialog1.findViewById(R.id.dialog_yes);
-                                    no.setEnabled(true);
-                                    yes.setEnabled(true);
-                                    handler.removeCallbacks(r);
+                                    uploadDialog.openView();
+                                    hideUploadDialog();
+                                    scanResultHandler.removeCallbacks(r);
                                     BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                     if (baseReturn != null && baseReturn.getStatus() == 1) {
                                         Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
@@ -713,11 +502,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 //                                            blinkDialog2(true);
                                     } else if (baseReturn != null && baseReturn.getStatus() == 0) {
                                         Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
-                                        showDialog(baseReturn.getData() + "出库失败，请在ERP出库");
+                                        showConfirmDialog(baseReturn.getData() + "出库失败，请在ERP出库");
                                         Sound.faillarm();
                                     } else {
                                         Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                        showDialog("上传失败");
+                                        showConfirmDialog("上传失败");
                                         Sound.faillarm();
                                     }
                                 } catch (Exception e) {
@@ -733,29 +522,11 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
                 }
             }
         } else {
-            if (dialog1.isShowing())
-                dialog1.dismiss();
-            Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-            Button yes = (Button) dialog1.findViewById(R.id.dialog_yes);
-            no.setEnabled(true);
-            yes.setEnabled(true);
-            handler.removeCallbacks(r);
-            showDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
+            uploadDialog.openView();
+            hideUploadDialog();
+            scanResultHandler.removeCallbacks(r);
+            showConfirmDialog("配货条数与申请条数不一致！请联系收发人员或出库文员。");
         }
-    }
-
-    private void showDialog(String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("提示");
-        builder.setMessage(msg);
-        builder.setCancelable(false);
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -768,7 +539,7 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
         if (is2D)
-        disConnect2D();
+            disConnect2D();
         Output obj = myList.get(position);
         Fragment fragment = OutApplyDetailFragment.newInstance();
         Bundle bundle = new Bundle();
@@ -784,11 +555,125 @@ public class OutApplyNewFragment extends Fragment implements UHFCallbackLiatener
 
     @Override
     public void callback(byte[] bytes) {
-        Message msg = handler.obtainMessage();
-        msg.what = 0x02;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.CODE;
         msg.obj = new String(bytes);
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
+
+    @Override
+    public void codeResult(String code) {
+        code = code.replaceAll(" ", "");
+        edit1.setText(code);
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        final String EPC = epc.replaceAll(" ", "");
+        if (EPC.startsWith("3035A537") && epcKeyList.containsKey(EPC)) {
+            if (!epcKeyList.get(EPC).isFind()) {
+                epcKeyList.get(EPC).setFind(true);
+                epcKeyList.get(EPC).setStatus(true);
+                for (int i = 0; i < myList.size(); i++) {
+                    Output output = myList.get(i);
+                    for (OutputDetail od : output.getList()) {
+                        if (od.getEpc().equals(EPC)) {
+                            output.setCount(output.getCount() + 1);
+                            output.setWeightall(ArithUtil.add(output.getWeightall(), epcKeyList.get(EPC).getWeight()));
+
+//                                        自动配货
+                            if (vatKey.get(output.getVatNo()) && output.getCountProfit() < output.getCountOut()) {
+                                epcKeyList.get(EPC).setApplyNo(output.getApplyNo() + i);
+                                output.setWeightPei(ArithUtil.add(output.getWeightPei(), epcKeyList.get(EPC).getWeight()));
+                                output.addCountProfit();
+                            }
+                        }
+                    }
+                }
+                int count = 0;
+                for (OutputFlag o : epcKeyList.values()) {
+                    if (o.isFind())
+                        count++;
+                }
+                text1.setText(count + "");
+                mAdapter.notifyDataSetChanged();
+            }
+        } else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC) && !epcList.contains(EPC)) {
+            JSONObject epcJson = new JSONObject();
+            epcJson.put("epc", EPC);
+            final String json = epcJson.toJSONString();
+            if (!epcList.contains(EPC)) {
+                try {
+                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            if (App.LOGCAT_SWITCH) {
+                                Log.i(TAG, "getEpc;" + e.getMessage());
+                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onResponse(JSONArray jsonArray) {
+                            try {
+                                List<Inventory> arry;
+                                arry = jsonArray.toJavaList(Inventory.class);
+                                if (arry != null && arry.size() > 0) {
+                                    Inventory response = arry.get(0);
+                                    if (!epcList.contains(response.getEpc())) {
+                                        epcList.add(response.getEpc());
+                                        if (response != null) {
+                                            epcList.add(response.getEpc());
+                                            OutputDetail detail = new OutputDetail();
+                                            detail.setEpc(response.getEpc() + "");
+                                            detail.setFabRool(response.getFabRool() + "");
+                                            detail.setWeight(response.getWeight());
+                                            detail.setWeight_in(response.getWeight_in());
+                                            detail.setOperator(response.getOperator() + "");
+                                            detail.setOperatingTime(response.getOperatingTime());
+                                            detail.setFlag(2);
+                                            String key2 = "" + response.getVatNo() + response.getProduct_no() + response.getSelNo();
+                                            if (!getEpcKey.containsKey(key2)) {
+                                                Output data = new Output();
+                                                data.setApplyNo("bug");
+                                                data.setProduct_no(response.getProduct_no() + "");
+                                                data.setVatNo(response.getVatNo() + "");
+                                                data.setSelNo(response.getSelNo() + "");
+                                                data.setColor(response.getColor() + "");
+                                                data.setCountOut(0);
+                                                data.setCount(1);
+                                                data.setCountProfit(1);
+                                                data.setCountLosses(0);
+                                                data.setFlag(2);
+                                                data.setOutp_id("");
+                                                data.setWeightall(response.getWeight());
+                                                List<OutputDetail> list = new ArrayList<OutputDetail>();
+                                                list.add(detail);
+                                                data.setList(list);
+                                                myList.add(data);
+                                                getEpcKey.put(key2, myList.size() - 1);
+                                            } else {
+                                                myList.get(getEpcKey.get(key2)).addCount();
+                                                myList.get(getEpcKey.get(key2)).setWeightall(ArithUtil.add(myList.get(getEpcKey.get(key2)).getWeightall(), response.getWeight()));
+                                                myList.get(getEpcKey.get(key2)).getList().add(detail);
+                                            }
+                                        }
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, json);
+                } catch (IOException e) {
+                    Log.i(TAG, "");
+                }
+            }
+        }
+    }
+
+
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {
         private Context context;

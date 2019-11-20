@@ -27,6 +27,9 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
@@ -41,6 +44,7 @@ import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.Forwarding;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -65,7 +69,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
+
+public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
     final String TAG = "ForwardingFragment";
     private static ForwardingFragment fragment;
     @Bind(R.id.recyle)
@@ -82,7 +88,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     Button button1;
     @Bind(R.id.button2)
     Button button2;
-
 
     public static ForwardingFragment newInstance() {
         if (fragment == null) ;
@@ -102,28 +107,39 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     private ArrayList<String> epcList;
     /***     key：字段组成，记录非单号查询到的数据，并且记录插入myList的位置*/
     private HashMap<String, Integer> getKeyValue;
-//    /***    缸号，是否自动匹配缸号*/
-//    private HashMap<String, Boolean> vatKey;
-
     /**
      * 所有的Forwarding信息，不管是申请单内还是epc扫出来的
      */
     private ArrayList<Forwarding> dataList;
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
-
     private RecycleAdapter mAdapter;
+    private ScanResultHandler scanResultHandler;
+    private boolean returnWhere = false;
+    private boolean flag = true;
 
-    //    这里加载视图
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forwarding_layout, container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
 
-        initData();
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
+    @Override
+    protected void initData() {
+        fatherNoList = new ArrayList<>();
+        epcKeyList = new HashMap<>();
+        myList = new ArrayList<>();
+        dateNo = new ArrayList<>();
+        dataKey = new HashMap<>();
+        epcList = new ArrayList<>();
+        getKeyValue = new HashMap<>();
+        dataList = new ArrayList<>();
+    }
+
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -132,22 +148,14 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
-
-        initRFID();
-
-        return view;
     }
 
-    public void initData() {
-        fatherNoList = new ArrayList<>();
-        epcKeyList = new HashMap<>();
-        myList = new ArrayList<>();
-        dateNo = new ArrayList<>();
-        dataKey = new HashMap<>();
-        epcList = new ArrayList<>();
-        getKeyValue = new HashMap<>();
-//        vatKey = new HashMap<>();
-        dataList = new ArrayList<>();
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this);
+        initRFID();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     public void clearData() {
@@ -157,24 +165,18 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         dataKey.clear();
         epcList.clear();
         getKeyValue.clear();
-//        vatKey.clear();
         dataList.clear();
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
@@ -186,7 +188,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
             switch (msg.getStatus()) {
                 case 0x01:
                     carMsg = (ForwardingMsgFragment.CarMsg) msg.getPositionObj(0);
-//                    fatherNoList.clear();
                     fatherNoList = (ArrayList<String>) msg.getPositionObj(1);
                     break;
                 case 0xfe:
@@ -210,8 +211,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
             }
     }
 
-    private boolean flag = true;
-
     @Override
     public void onResume() {
         super.onResume();
@@ -219,9 +218,9 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
             flag = false;
             clearData();
             downLoadData();
-            text2.setText(fatherNoList.size() + "");
-            text3.setText(carMsg.getCarNo() + "");
-            text4.setText(carMsg.getCarName() + "");
+            text2.setText(String.valueOf(fatherNoList.size()));
+            text3.setText(String.valueOf(carMsg.getCarNo()));
+            text4.setText(String.valueOf(carMsg.getCarName()));
         }
     }
 
@@ -236,14 +235,13 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            showToast("获取申请单信息失败");
                         }
                     }
 
                     @Override
                     public void onResponse(List<Forwarding> response) {
                         try {
-//                            List<Forwarding> response = json.toJavaList(Forwarding.class);
                             if (response != null && response.size() > 0) {
                                 for (Forwarding obj1 : response) {
                                     if (!epcKeyList.containsKey(obj1.getEpc())) {
@@ -294,7 +292,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
             getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
         }
-//        EventBus.getDefault().post(new EventBusMsg(0xff));
         EventBus.getDefault().unregister(this);
         disRFID();
         clearData();
@@ -308,46 +305,31 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
-                text1.setText(0 + "");
+                text1.setText("0");
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                blinkDialog();
+                showUploadDialog("是否完成装车");
+                setUploadNoClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        upLoading(false);
+                        returnWhere = false;
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
+                    }
+                });
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        returnWhere = true;
+                        upLoading(true);
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
+                    }
+                });
                 break;
         }
-    }
-
-    private void blinkDialog() {
-        final Dialog dialog;
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        no.setText("否");
-        yes.setText("是");
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否完成装车");
-        dialog = new AlertDialog.Builder(getActivity()).create();
-        dialog.show();
-        dialog.getWindow().setContentView(blinkView);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                upLoading(false);
-                returnWhere = false;
-                dialog.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                returnWhere = true;
-                upLoading(true);
-                dialog.dismiss();
-            }
-        });
     }
 
     private void upLoading(boolean isFinish) {
@@ -374,7 +356,7 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         jsonObject.put("data", list);
         final String json = jsonObject.toJSONString();
         try {
-            AppLog.write(getActivity(),"forwarding",json,AppLog.TYPE_INFO);
+            AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -384,27 +366,30 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                 public void onError(Request request, Exception e) {
                     if (App.LOGCAT_SWITCH) {
                         Log.i(TAG, "postInventory;" + e.getMessage());
-                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        showToast("上传信息失败");
                     }
                 }
 
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        try {
-                            AppLog.write(getActivity(),"forwarding","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        uploadDialog.openView();
+                        hideUploadDialog();
+                        scanResultHandler.removeCallbacks(r);
                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                         if (baseReturn != null && baseReturn.getStatus() == 1) {
-                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                            showToast("上传成功");
                             clearData();
                             mAdapter.notifyDataSetChanged();
-//                            blinkDialog2(true);
+                            onBack();
                         } else {
-                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                            blinkDialog2(false);
+                            showToast("上传失败");
+                            showConfirmDialog("上传失败");
                             Sound.faillarm();
                         }
                     } catch (Exception e) {
@@ -420,60 +405,13 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         }
     }
 
-    private boolean returnWhere = false;
-    private AlertDialog dialog;
-    private void blinkDialog2(final boolean flag) {
-        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBack(flag);
-                    dialog.dismiss();
-                }
-            });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBack(flag);
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
-        }
-    }
-
-    private void onBack(boolean flag) {
-        if (flag)
-            if (returnWhere) {
-                Fragment fragment = ForwardingMsgFragment.newInstance();
-                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-            } else
-                getActivity().onBackPressed();
+    private void onBack() {
+        if (returnWhere) {
+            Fragment fragment = ForwardingMsgFragment.newInstance();
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+        } else
+            getActivity().onBackPressed();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -495,115 +433,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
         transaction.commit();
     }
 
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    final String EPC = ((String) msg.obj).replaceAll(" ", "");
-                    if (!epcList.contains(EPC)) {
-                        if (EPC.startsWith("3035A537") && epcKeyList.containsKey(EPC)) {
-                            epcList.add(EPC);
-                            if (!epcKeyList.get(EPC).isFind) {
-                                epcKeyList.get(EPC).setFind(true);
-                                epcKeyList.get(EPC).setStatus(true);
-                                String key = epcKeyList.get(EPC).getApplyNo() + epcKeyList.get(EPC).getVatNo();
-                                if (getKeyValue.containsKey(key)) {
-                                    myList.get(getKeyValue.get(key)).addScannerCount();
-                                    myList.get(getKeyValue.get(key)).addMatchCount();
-                                    myList.get(getKeyValue.get(key)).addMatchWeight(epcKeyList.get(EPC).getWeight());
-                                }
-                                int count = 0;
-                                for (ForwardingFlag o : epcKeyList.values()) {
-                                    if (o.isFind)
-                                        count++;
-                                }
-                                text1.setText(count + "");
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        } else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC)) {
-                            JSONObject epc = new JSONObject();
-                            epc.put("epc", EPC);
-                            final String json = epc.toJSONString();
-                            if (!epcList.contains(EPC)) {
-                                try {
-                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                        @Override
-                                        public void onError(Request request, Exception e) {
-                                            if (App.LOGCAT_SWITCH) {
-                                                Log.i(TAG, "getEpc;" + e.getMessage());
-                                                Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onResponse(JSONArray jsonArray) {
-                                            try {
-                                                List<Inventory> arry;
-                                                arry = jsonArray.toJavaList(Inventory.class);
-                                                if (arry != null && arry.size() > 0) {
-                                                    Inventory response = arry.get(0);
-                                                    if (response != null) {
-                                                        if (!epcList.contains(response.getEpc())) {
-                                                            epcList.add(response.getEpc());
-                                                            Forwarding forwarding = new Forwarding(response.getProduct_no(), response.getVatNo(), response.getSelNo()
-                                                                    , response.getColor(), response.getFabRool(), response.getWeight(), response.getEpc(), "非申请单");
-                                                            dataList.add(forwarding);
-                                                            epcKeyList.put(forwarding.getEpc(), new ForwardingFlag(true, forwarding.getApplyNo(), forwarding.getVatNo(), true, forwarding.getWeight()));
-                                                            String key = forwarding.getApplyNo() + forwarding.getVatNo();
-                                                            if (!getKeyValue.containsKey(key)) {
-                                                                ForwardingList mlis = new ForwardingList(forwarding.getClothNum(), forwarding.getVatNo(), forwarding.getSelNo(), forwarding.getColor(), forwarding.getApplyNo(), false);
-                                                                mlis.addScannerCount();
-//                                                                mlis.addApplyCount();
-//                                                                mlis.addApplyWeight(forwarding.getWeight());
-                                                                if (dateNo.contains(forwarding.getApplyNo())) {
-                                                                    mlis.setStatus(false);
-                                                                } else {
-                                                                    dateNo.add(forwarding.getApplyNo());
-                                                                    mlis.setStatus(true);
-                                                                }
-                                                                myList.add(mlis);
-                                                                getKeyValue.put(key, myList.size() - 1);
-                                                            } else {
-                                                                myList.get(getKeyValue.get(key)).addScannerCount();
-//                                                                myList.get(getKeyValue.get(key)).addApplyCount();
-//                                                                myList.get(getKeyValue.get(key)).addApplyWeight(forwarding.getWeight());
-                                                            }
-                                                            int count = 0;
-                                                            for (ForwardingFlag o : epcKeyList.values()) {
-                                                                if (o.isFind)
-                                                                    count++;
-                                                            }
-                                                            text1.setText(count + "");
-                                                        }
-                                                    }
-                                                    mAdapter.notifyDataSetChanged();
-                                                }
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }, json);
-                                } catch (IOException e) {
-                                    Log.i(TAG, "");
-                                }
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-    };
-
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
@@ -611,10 +440,10 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.what = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -625,6 +454,96 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
     @Override
     public void onOperationTagCallBack(RXOperationTag tag) {
 
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (!epcList.contains(epc)) {
+            if (epc.startsWith("3035A537") && epcKeyList.containsKey(epc)) {
+                epcList.add(epc);
+                if (!epcKeyList.get(epc).isFind) {
+                    epcKeyList.get(epc).setFind(true);
+                    epcKeyList.get(epc).setStatus(true);
+                    String key = epcKeyList.get(epc).getApplyNo() + epcKeyList.get(epc).getVatNo();
+                    if (getKeyValue.containsKey(key)) {
+                        myList.get(getKeyValue.get(key)).addScannerCount();
+                        myList.get(getKeyValue.get(key)).addMatchCount();
+                        myList.get(getKeyValue.get(key)).addMatchWeight(epcKeyList.get(epc).getWeight());
+                    }
+                    int count = 0;
+                    for (ForwardingFlag o : epcKeyList.values()) {
+                        if (o.isFind)
+                            count++;
+                    }
+                    text1.setText(String.valueOf(count));
+                    mAdapter.notifyDataSetChanged();
+                }
+            } else if (epc.startsWith("3035A537") && !epcKeyList.containsKey(epc)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("epc", epc);
+                final String json = jsonObject.toJSONString();
+                if (!epcList.contains(epc)) {
+                    try {
+                        OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                            @Override
+                            public void onError(Request request, Exception e) {
+                                if (App.LOGCAT_SWITCH) {
+                                    Log.i(TAG, "getEpc;" + e.getMessage());
+                                    showToast("获取库位信息失败");
+                                }
+                            }
+
+                            @Override
+                            public void onResponse(JSONArray jsonArray) {
+                                try {
+                                    List<Inventory> arry;
+                                    arry = jsonArray.toJavaList(Inventory.class);
+                                    if (arry != null && arry.size() > 0) {
+                                        Inventory response = arry.get(0);
+                                        if (response != null) {
+                                            if (!epcList.contains(response.getEpc())) {
+                                                epcList.add(response.getEpc());
+                                                Forwarding forwarding = new Forwarding(response.getProduct_no(), response.getVatNo(), response.getSelNo()
+                                                        , response.getColor(), response.getFabRool(), response.getWeight(), response.getEpc(), "非申请单");
+                                                dataList.add(forwarding);
+                                                epcKeyList.put(forwarding.getEpc(), new ForwardingFlag(true, forwarding.getApplyNo(), forwarding.getVatNo(), true, forwarding.getWeight()));
+                                                String key = forwarding.getApplyNo() + forwarding.getVatNo();
+                                                if (!getKeyValue.containsKey(key)) {
+                                                    ForwardingList mlis = new ForwardingList(forwarding.getClothNum(), forwarding.getVatNo(), forwarding.getSelNo(), forwarding.getColor(), forwarding.getApplyNo(), false);
+                                                    mlis.addScannerCount();
+                                                    if (dateNo.contains(forwarding.getApplyNo())) {
+                                                        mlis.setStatus(false);
+                                                    } else {
+                                                        dateNo.add(forwarding.getApplyNo());
+                                                        mlis.setStatus(true);
+                                                    }
+                                                    myList.add(mlis);
+                                                    getKeyValue.put(key, myList.size() - 1);
+                                                } else {
+                                                    myList.get(getKeyValue.get(key)).addScannerCount();
+                                                }
+                                                int count = 0;
+                                                for (ForwardingFlag o : epcKeyList.values()) {
+                                                    if (o.isFind)
+                                                        count++;
+                                                }
+                                                text1.setText(String.valueOf(count));
+                                            }
+                                        }
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, json);
+                    } catch (IOException e) {
+                        Log.i(TAG, "");
+                    }
+                }
+            }
+        }
     }
 
     class ForwardingList {
@@ -935,13 +854,6 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                     no.setVisibility(View.GONE);
                     view.setVisibility(View.GONE);
                 }
-
-/*
-                if ((item.getVatNo() + "").equals("") && (item.getOut_no() + "").equals("")) {
-                    if (cb.isEnabled())
-                        cb.setEnabled(false);
-                    cb.setChecked(false);
-                } else {*/
                 if (!cb.isEnabled())
                     cb.setEnabled(true);
                 if (dataKey.containsKey(item.getApplyNo())) {
@@ -957,21 +869,17 @@ public class ForwardingFragment extends Fragment implements BRecyclerAdapter.OnI
                     ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                 if (!item.isFlag()) {
                     ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
-                      /*  if (cb.isEnabled())
-                            cb.setEnabled(false);*/
                     cb.setChecked(false);
                 }
-                holder.setText(R.id.item1, item.getClothNum() + "");
-                holder.setText(R.id.item2, item.getSelNo() + "");
-                holder.setText(R.id.item3, item.getColor() + "");
-                holder.setText(R.id.item4, item.getVatNo() + "");
-                holder.setText(R.id.item5, item.getApplyCount() + "");
-                holder.setText(R.id.item6, item.getApplyWeight() + "");
-                holder.setText(R.id.item7, item.getMatchCount() + "");
-                holder.setText(R.id.item8, item.getMatchCount() + "");
-                holder.setText(R.id.item9, item.getMatchWeight() + "");
-//                }
-
+                holder.setText(R.id.item1, item.getClothNum());
+                holder.setText(R.id.item2, item.getSelNo());
+                holder.setText(R.id.item3, item.getColor());
+                holder.setText(R.id.item4, item.getVatNo());
+                holder.setText(R.id.item5, String.valueOf(item.getApplyCount()));
+                holder.setText(R.id.item6, String.valueOf(item.getApplyWeight()));
+                holder.setText(R.id.item7, String.valueOf(item.getMatchCount()));
+                holder.setText(R.id.item8, String.valueOf(item.getMatchCount()));
+                holder.setText(R.id.item9, String.valueOf(item.getMatchWeight()));
             }
         }
     }

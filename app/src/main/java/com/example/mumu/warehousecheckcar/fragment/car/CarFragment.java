@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.utils.Imgutil;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CarFragment extends Fragment {
+public class CarFragment extends BaseFragment {
 
     private static CarFragment fragment;
     @Bind(R.id.button1)
@@ -40,60 +42,10 @@ public class CarFragment extends Fragment {
         getActivity().setTitle(getResources().getString(R.string.btn_click4));
         View view = inflater.inflate(R.layout.cut_cloth_home_layout, container, false);
         ButterKnife.bind(this, view);
-        initView();
         return view;
     }
 
-    private void initView() {
-        button1.setText(getResources().getString(R.string.btn_car_up));
-        button1.setCompoundDrawables(
-                findImgAsSquare(getActivity(),
-                        R.mipmap.car_up_l, 64),
-                null,
-                null,
-                null);
-        button2.setText(getResources().getString(R.string.btn_car_down));
-        button2.setCompoundDrawables(
-                findImgAsSquare(getActivity(),
-                        R.mipmap.car_down_l, 64),
-                null,
-                null,
-                null);
-        button3.setText(getResources().getString(R.string.btn_car_tuo));
-        button3.setCompoundDrawables(
-                findImgAsSquare(getActivity(),
-                        R.mipmap.kong_l, 64),
-                null,
-                null,
-                null);
 
-    }
-
-    /**
-     * 获取,寻找并裁剪图片
-     *
-     * @param context
-     * @param id
-     * @return
-     */
-    public static Drawable findImgAsSquare(Context context, int id, int sidedp) {
-        Drawable drawable = ContextCompat.getDrawable(context, id);
-        int px = dip2px(context, sidedp);
-        drawable.setBounds(0, 0, px, px);
-        return drawable;
-    }
-
-    /**
-     * 将dip或dp值转换为px值，保证尺寸大小不变
-     *
-     * @param context
-     * @param dipValue （DisplayMetrics类中属性density）
-     * @return
-     */
-    public static int dip2px(Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
-    }
 
     @Override
     public void onDestroyView() {
@@ -137,5 +89,40 @@ public class CarFragment extends Fragment {
             }
             break;
         }
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initView(View view) {
+        button1.setText(getResources().getString(R.string.btn_car_up));
+        button1.setCompoundDrawables(
+                Imgutil.findImgAsSquare(getActivity(),
+                        R.mipmap.car_up_l, 64),
+                null,
+                null,
+                null);
+        button2.setText(getResources().getString(R.string.btn_car_down));
+        button2.setCompoundDrawables(
+                Imgutil.findImgAsSquare(getActivity(),
+                        R.mipmap.car_down_l, 64),
+                null,
+                null,
+                null);
+        button3.setText(getResources().getString(R.string.btn_car_tuo));
+        button3.setCompoundDrawables(
+                Imgutil.findImgAsSquare(getActivity(),
+                        R.mipmap.kong_l, 64),
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    protected void addListener() {
+
     }
 }

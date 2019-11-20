@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -50,35 +51,28 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     private EditTextPreference userName, userId, systemVersion, systemIP, systemPort, deviceNumber,prowerText;
     private SwitchPreference music, logcat;
-    private SeekBarPreferenceVolume prower, workTime, intervalTime;
+    private SeekBarPreferenceVolume prower;
     private ListPreference statuslist;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         getActivity().setTitle("设置");
-        //从xml文件加载选项
         addPreferencesFromResource(R.xml.setting_preference);
         userName = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.user_name_key));
         userId = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.user_id_key));
         systemVersion = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_version_key));
-//        setEditTextPre(systemVersion,App.SYSTEM_VERSION);
         systemIP = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_ip_key));
         setEditTextPre(systemIP,App.IP);
         systemPort = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_port_key));
         setEditTextPre(systemPort,App.PORT);
         deviceNumber = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.system_device_number_key));
-//        setEditTextPre(deviceNumber,App.DEVICE_NO);
         music = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.system_music_key));
         logcat = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.logcat_ket));
         prower = (SeekBarPreferenceVolume) getPreferenceScreen().findPreference(getString(R.string.device_prower_key));
         prowerText=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.prower_edit_key));
         prowerText.setOnPreferenceClickListener(this);
-//        这个不生效
         prower.setProgress(PROWER);
-     /*   workTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_work_time_key));
-        intervalTime=(SeekBarPreferenceVolume)getPreferenceScreen().findPreference(getString(R.string.device_interval_time_key));*/
         statuslist = (ListPreference) getPreferenceScreen().findPreference(getString(R.string.user_status_key));
         initView();
         getRFID();
@@ -91,7 +85,6 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         try {
             rfidHander = RFID_2DHander.getInstance().getRFIDReader();
             RFID_2DHander.getInstance().on_RFID();
-//            rfidHander.getOutputPower(RFID_2DHander.getInstance().btReadId);
             flag=true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,7 +113,6 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             case Config.VERSION_KEY:
                 setEditTextPre(systemVersion);
                 App.SYSTEM_VERSION=systemVersion.getText();
-
                 break;
             case Config.IP_KEY:
                 setEditTextPre(systemIP);
@@ -141,7 +133,6 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                     int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, p);
                     if (i != 0)
                         Toast.makeText(getActivity(), "设置功率失败", Toast.LENGTH_SHORT).show();
-
                 }
                 break;
             case Config.MUSIC:
@@ -223,13 +214,14 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(Config.USER_PROWER_KEY, 12);
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ReaderSetting obj=(ReaderSetting)msg.obj;
             if (obj.btAryOutputPower!=null&&obj.btAryOutputPower.length>0)
-            setEditTextPre(prowerText,obj.btAryOutputPower[0]+"");
+                setEditTextPre(prowerText,obj.btAryOutputPower[0]+"");
         }
     };
     @Override
@@ -265,15 +257,4 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         flag=true;
         return false;
     }
-   /* *//**
-     * 获取时间*//*
-    public static int getWorkTime(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(Config.WORK_TIME_KEY,15);
-    }
-
-    *//**
-     * 获取时间*//*
-    public static int getIntervalTime(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(Config.INTERVAL_TIME_KEY,15);
-    }*/
 }

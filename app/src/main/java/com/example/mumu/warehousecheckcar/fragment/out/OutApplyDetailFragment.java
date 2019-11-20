@@ -1,6 +1,5 @@
 package com.example.mumu.warehousecheckcar.fragment.out;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,20 +14,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.entity.OutputFlag;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ import butterknife.ButterKnife;
  * Created by mumu on 2018/12/21.
  */
 
-public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener {
+public class OutApplyDetailFragment extends BaseFragment {
     private static OutApplyDetailFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -60,60 +57,45 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     private int id;
     private RecycleAdapter mAdapter;
 
-
     public static OutApplyDetailFragment newInstance() {
         if (fragment == null) ;
         fragment = new OutApplyDetailFragment();
         return fragment;
     }
 
-    int COUNT;
-
-    public void initData() {
-        myList = new ArrayList<>();
-        myList.add(new OutputDetail());//增加一个为头部
-    }
-
-    private LinearLayoutManager llm;
-
-    //    这里加载视图
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
-        initUtil();
-        initData();
+        return view;
+    }
+
+    @Override
+    protected void initData() {
+        myList = new ArrayList<>();
+        myList.add(new OutputDetail());
+        load();
+    }
+
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.out_put_detail_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-        llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this);
-
-      /*  if (App.OUTPUT_DETAIL_LIST.size() > 0) {
-            text2.setText(App.OUTPUT_DETAIL_LIST.get(0).getVat_no() + "");
-            int i = 0;
-            for (OutputDetail od : App.OUTPUT_DETAIL_LIST.get(0).getList())
-                if (od.getFlag() != 0)
-                    i++;
-            text1.setText(i + "");
-        }*/
-        return view;
+        mAdapter.notifyDataSetChanged();
+        text1.setText(String.valueOf(myList.size() - 1));
+        text2.setText(oldData.getVatNo());
     }
 
-    private InputMethodManager mInputMethodManager;
+    @Override
+    protected void addListener() {
 
-
-    //    *
-//     * 初始化必须工具
-//
-    private void initUtil() {
-        //初始化输入法
-        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void setAdaperHeader() {
@@ -121,26 +103,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         mAdapter.setHeader(view);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        load();
-        text1.setText(myList.size() - 1 + "");
-        text2.setText(oldData.getVatNo() + "");
-        mAdapter.notifyDataSetChanged();
-    }
-
     public void load() {
         oldData = (Output) getArguments().getSerializable("dataList");
         dataList = (HashMap<String, OutputFlag>) getArguments().getSerializable("epcList");
         id = (int) getArguments().getSerializable("position");
-     /*   int pei = 0;
-        for (OutputDetail i : oldData.getList()) {
-            if (dataList.get(i.getEpc()).getOut_no().equals(oldData.getOut_no())) {
-                pei++;
-            }
-        }*/
-//        oldData.setCountProfit(0);
         myList.addAll(oldData.getList());
         try {
             Collections.sort(myList, new Comparator<OutputDetail>() {
@@ -160,7 +126,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                             } else if (!dataList.get(obj1.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)
                                     && dataList.get(obj2.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
                                 return 1;
-                            }else {
+                            } else {
                                 if (dataList.get(obj1.getEpc()).isFind() && !dataList.get(obj2.getEpc()).isFind())
                                     return -1;
                                 else if (dataList.get(obj2.getEpc()).isFind() && !dataList.get(obj1.getEpc()).isFind())
@@ -193,21 +159,17 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
         }
     }
 
-    //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -219,17 +181,8 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-//        ((Main2Activity)getActivity()).setOutApplyDataList(dataList);
         myList.clear();
-//        App.OUTPUT_DETAIL_LIST.clear();
     }
-
-    @Override
-    public void onItemClick(View view, Object data, int position) {
-//        mAdapter.select(id);
-//        mAdapter.notifyDataSetChanged();
-    }
-
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<OutputDetail> {
         private Context context;
@@ -265,10 +218,9 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 if (isChecked) {
                                     for (int i = 1; i < myList.size(); i++) {
                                         if (oldData.getCountProfit() < oldData.getCountOut()) {
-                                            if (myList.get(i).getEpc() != null && !myList.get(i).getEpc().equals(""))
+                                            if (!TextUtils.isEmpty(myList.get(i).getEpc()))
                                                 if (dataList.get(myList.get(i).getEpc()).isFind() && dataList.get(myList.get(i).getEpc()).getApplyNo().equals("")) {
                                                     dataList.get(myList.get(i).getEpc()).setApplyNo(oldData.getApplyNo() + id);
-//                                                    oldData.setCountProfit(oldData.getCountProfit() + 1);
                                                     oldData.addCountProfit();
                                                 }
                                         } else
@@ -277,7 +229,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 } else {
                                     oldData.setCountProfit(0);
                                     for (int i = 1; i < myList.size(); i++) {
-                                        if (myList.get(i).getEpc() != null && !myList.get(i).getEpc().equals(""))
+                                        if (!TextUtils.isEmpty(myList.get(i).getEpc()))
                                             if (dataList.get(myList.get(i).getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
                                                 dataList.get(myList.get(i).getEpc()).setApplyNo("");
                                             }
@@ -286,7 +238,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 if (isChecked) {
-                                    if (item.getEpc() != null && !item.getEpc().equals(""))
+                                    if (!TextUtils.isEmpty(item.getEpc()))
                                         if (dataList.get(item.getEpc()).isFind()) {
                                             if (dataList.get(item.getEpc()).getApplyNo().equals("")) {
                                                 if (oldData.getCountProfit() + 1 <= oldData.getCountOut()) {
@@ -294,13 +246,13 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                                     oldData.addCountProfit();
                                                 } else {
                                                     cb.setChecked(false);
-                                                    Toast.makeText(getActivity(), "已选布匹超出申请数量！", Toast.LENGTH_SHORT).show();
+                                                    showToast("已选布匹超出申请数量");
                                                 }
                                             }
                                         }
 
                                 } else {
-                                    if (item.getEpc() != null && !item.getEpc().equals(""))
+                                    if (!TextUtils.isEmpty(item.getEpc()))
                                         if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id)) {
                                             dataList.get(item.getEpc()).setApplyNo("");
 //                                            防止配货数量为负数
@@ -316,7 +268,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                         }
                     });
                     if (position != 0) {
-                        if (((item.getFabRool() + "").equals("") && (item.getEpc() + "").equals("") && (item.getWeight() + "").equals(""))) {
+                        if (TextUtils.isEmpty(item.getFabRool()) && TextUtils.isEmpty(item.getEpc())) {
                             cb.setChecked(false);
                             if (cb.isEnabled() != false)
                                 cb.setEnabled(false);
@@ -330,8 +282,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                     if (cb.isEnabled() != false)
                                         cb.setEnabled(false);
                                 }
-                            if (item.getEpc() != null && !item.getEpc().equals(""))
-
+                            if (!TextUtils.isEmpty(item.getEpc()))
                                 if (dataList.get(item.getEpc()).getApplyNo().equals(oldData.getApplyNo() + id))
                                     cb.setChecked(true);
                                 else
@@ -353,7 +304,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                         final EditText editText = (EditText) holder.getView(R.id.edittext1);
                         editText.setEnabled(true);
                         if (dataList.containsKey(item.getEpc()))
-                            editText.setText(dataList.get(item.getEpc()).getWeight() + "");
+                            editText.setText(String.valueOf(dataList.get(item.getEpc()).getWeight()));
                         editText.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -365,7 +316,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                 try {
                                     String weight = s.toString();
                                     weight = weight.replaceAll(" ", "");
-                                    if (weight != null && !weight.equals("")) {
+                                    if (!TextUtils.isEmpty(weight)) {
                                         double a = Double.parseDouble(weight);
                                         if (dataList.containsKey(item.getEpc()))
                                             dataList.get(item.getEpc()).setWeight(a);
@@ -374,7 +325,7 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                                             dataList.get(item.getEpc()).setWeight(0);
                                     }
                                 } catch (Exception e) {
-                                    editText.setText(item.getWeight() + "");
+                                    editText.setText(String.valueOf(item.getWeight()));
                                 }
                             }
 
@@ -383,23 +334,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
 
                             }
                         });
-                       /* editText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                v.setFocusable(true);//设置输入框可聚集
-                                v.setFocusableInTouchMode(true);//设置触摸聚焦
-                                v.requestFocus();//请求焦点
-                                v.findFocus();//获取焦点
-                                ((EditText)v).setCursorVisible(true);
-                                ((EditText)v).setSelection( ((EditText)v).getText().length());
-                                mInputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED);// 显示输入法
-                            }
-                        });*/
-
-                        holder.setText(R.id.item1, item.getFabRool() + "");
-                        holder.setText(R.id.item2, oldData.getProduct_no() + "");
-                        holder.setText(R.id.item3, item.getWeight_in() + "");
-                        holder.setText(R.id.item4, item.getWeight() + "");
+                        holder.setText(R.id.item1, item.getFabRool());
+                        holder.setText(R.id.item2, oldData.getProduct_no());
+                        holder.setText(R.id.item3, String.valueOf(item.getWeight_in()));
+                        holder.setText(R.id.item4, String.valueOf(item.getWeight()));
                     } else {
                         EditText editText = (EditText) holder.getView(R.id.edittext1);
                         editText.setEnabled(false);
@@ -410,10 +348,10 @@ public class OutApplyDetailFragment extends Fragment implements BRecyclerAdapter
                         final CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
                         cb.setEnabled(false);
                         cb.setChecked(false);
-                        holder.setText(R.id.item1, item.getFabRool() + "");
-                        holder.setText(R.id.item2, oldData.getProduct_no() + "");
-                        holder.setText(R.id.item3, item.getWeight_in() + "");
-                        holder.setText(R.id.item4, item.getWeight() + "");
+                        holder.setText(R.id.item1, item.getFabRool());
+                        holder.setText(R.id.item2, oldData.getProduct_no());
+                        holder.setText(R.id.item3, String.valueOf(item.getWeight_in()));
+                        holder.setText(R.id.item4, String.valueOf(item.getWeight()));
                     } else {
                         EditText editText = (EditText) holder.getView(R.id.edittext1);
                         editText.setEnabled(false);

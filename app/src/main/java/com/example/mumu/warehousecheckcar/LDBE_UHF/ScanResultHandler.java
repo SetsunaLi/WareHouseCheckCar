@@ -3,6 +3,8 @@ package com.example.mumu.warehousecheckcar.LDBE_UHF;
 import android.os.Handler;
 import android.os.Message;
 
+import com.example.mumu.warehousecheckcar.application.App;
+
 
 /***
  *created by mumu
@@ -14,6 +16,8 @@ public class ScanResultHandler extends Handler {
     private OnCodeResult codeResult;
     private OnRfidResult rfidResult;
 
+    public ScanResultHandler() {
+    }
     public ScanResultHandler(OnCodeResult onCodeResultListener) {
         this.codeResult = onCodeResultListener;
     }
@@ -31,21 +35,24 @@ public class ScanResultHandler extends Handler {
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
         String code = (String) msg.obj;
-        Sound.scanAlarm();
+        if (App.MUSIC_SWITCH) {
+            Sound.scanAlarm();
+        }
         switch (msg.what) {
-            case CODE:
+            case CODE: {
                 if (codeResult != null) {
                     codeResult.codeResult(code);
                 }
-                break;
-            case RFID:
+            }
+            break;
+            case RFID: {
                 if (rfidResult != null) {
                     rfidResult.rfidResult(code);
                 }
-                break;
+            }
+            break;
             default:
                 break;
         }
-
     }
 }

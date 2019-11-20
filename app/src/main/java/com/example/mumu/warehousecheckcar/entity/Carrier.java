@@ -1,10 +1,12 @@
 package com.example.mumu.warehousecheckcar.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by mumu on 2018/12/21.
  */
 
-public class Carrier {
+public class Carrier implements Serializable {
     /**主键（没有的话可以不用）*/
     private int id;
     /**托盘号*/

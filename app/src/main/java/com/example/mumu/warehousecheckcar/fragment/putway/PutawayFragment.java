@@ -11,6 +11,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
@@ -40,6 +44,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Input;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -66,7 +71,7 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
  * Created by mumu on 2019/1/8.
  */
 
-public class PutawayFragment extends Fragment implements UHFCallbackLiatener, BasePullUpRecyclerAdapter.OnItemClickListener {
+public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener, BasePullUpRecyclerAdapter.OnItemClickListener, OnRfidResult {
     private static PutawayFragment fragment;
     private final String TAG = "PutawayFragment";
     @Bind(R.id.recyle)
@@ -81,8 +86,6 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
     Button button1;
     @Bind(R.id.button2)
     Button button2;
-
-
 
     public static PutawayFragment newInstance() {
         if (fragment == null) ;
@@ -99,27 +102,13 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
     private List<Input> dataList;
     private List<String> dataKey;
     private List<String> epcList;
-    //    这里加载视图
+    private ScanResultHandler scanResultHandler;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.putaway_layout, container, false);
         ButterKnife.bind(this, view);
-
-        initData();
-        clearData();
-        text1.setText(epcList.size() + "");
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.putaway_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        setAdaperHeader();
-        mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(llm);
-        recyle.setAdapter(mAdapter);
-
-        initRFID();
         return view;
     }
 
@@ -141,75 +130,67 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
             dataList.clear();
         if (epcList != null)
             epcList.clear();
-//        text1.setText(epcList.size()+"");
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         myList = new ArrayList<>();
+        myList.add(new Input());
         dataKey = new ArrayList<>();
         dataList = new ArrayList<>();
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
+    }
 
+    @Override
+    protected void initView(View view) {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.putaway_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(llm);
+        recyle.setAdapter(mAdapter);
+        text1.setText("0");
+        if (App.CARRIER != null) {
+            if (!TextUtils.isEmpty(App.CARRIER.getLocationNo()))
+                text2.setText(App.CARRIER.getLocationNo());
+            if (!TextUtils.isEmpty(App.CARRIER.getTrayNo()))
+                text3.setText(App.CARRIER.getTrayNo());
+        }
+    }
 
+    @Override
+    protected void addListener() {
+        initRFID();
+        scanResultHandler = new ScanResultHandler(this);
+        mAdapter.setOnItemClickListener(this);
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
-    //这里写界面
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        text1.setText(0 + "");
-        if (App.CARRIER != null) {
-            if (App.CARRIER.getLocationNo() != null)
-                text2.setText(App.CARRIER.getLocationNo() + "");
-            if (App.CARRIER.getTrayNo() != null)
-                text3.setText(App.CARRIER.getTrayNo() + "");
-        }
-        /*if (App.CARRIER != null) {
-            if (App.CARRIER.getLocationNo() != null)
-                text2.setText(App.CARRIER.getLocationNo() + "");
-            if (App.CARRIER.getTrayNo() != null)
-                text3.setText(App.CARRIER.getTrayNo() + "");
-        }*/
-    }
-
-    //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -221,80 +202,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         clearData();
         myList.clear();
         INPUT_DETAIL_LIST.clear();
-//        App.CARRIER=null;
-
     }
-
-    long currenttime = 0;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.arg1) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    RXInventoryTag tag = (RXInventoryTag) msg.obj;
-                    final String EPC = tag.strEPC.replaceAll(" ", "");
-                    if (EPC.startsWith("3035A537")&&!epcList.contains(EPC)) {
-                        JSONObject epc = new JSONObject();
-                        epc.put("epc", EPC);
-                        final String json = epc.toJSONString();
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "getEpc;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onResponse(JSONArray jsonArray) {
-                                    try{
-                                        List<Input> arry;
-                                        arry = jsonArray.toJavaList(Input.class);
-                                        if (arry != null && arry.size() > 0) {
-                                            Input response = arry.get(0);
-                                            if (response != null) {
-                                                if (response.getEpc() != null && !epcList.contains(response.getEpc())) {
-                                                    epcList.add(EPC);
-                                                    dataList.add(response);
-                                                    String key = response.getVatNo() + "";
-                                                    if (!keyValue.containsKey(key)) {//当前没有
-                                                        response.setCount(1);
-                                                        response.setWeightall(response.getWeight());
-                                                        myList.add(response);
-                                                        keyValue.put(key, myList.size() - 1);
-                                                        dataKey.add(response.getVatNo());
-                                                    } else {
-                                                        int index = keyValue.get(key);
-                                                        myList.get(index).addCount();
-                                                        myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), response.getWeight()));
-                                                    }
-                                                }
-                                                text1.setText(epcList.size() + "");
-                                                mAdapter.notifyDataSetChanged();
-                                            }
-                                        }
-                                    } catch (Exception e) {
-
-                                    }
-                                }
-                            }, json);
-                        } catch (IOException e) {
-                            Log.i(TAG, "");
-                        }
-                    }
-                    break;
-            }
-        }
-    };
 
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
@@ -303,10 +211,10 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.arg1 = 0x00;
-        msg.obj = tag;
-        handler.sendMessage(msg);
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
+        msg.obj = tag.strEPC;
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -347,164 +255,137 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                text1.setText(epcList.size()+"");
+                text1.setText(String.valueOf(epcList.size()));
                 mAdapter.notifyDataSetChanged();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                blinkDialog();
+                showUploadDialog("是否确认上架");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ArrayList<Input> jsocList = new ArrayList<>();
+                        for (Input obj : dataList) {
+                            if (obj.getVatNo() != null && dataKey.contains(obj.getVatNo())) {
+                                obj.setCarrier(App.CARRIER);
+                                obj.setDevice(App.DEVICE_NO);
+                                jsocList.add(obj);
+                            }
+                        }
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", User.newInstance().getId());
+                        jsonObject.put("data", jsocList);
+                        final String json = JSON.toJSONString(jsonObject);
+                        try {
+                            AppLog.write(getActivity(), "putaway", json, AppLog.TYPE_INFO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
+                                    if (App.LOGCAT_SWITCH) {
+                                        Log.i(TAG, "postInventory;" + e.getMessage());
+                                        showToast("上传信息失败");
+                                    }
+                                }
+
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        AppLog.write(getActivity(), "putaway", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        uploadDialog.openView();
+                                        hideUploadDialog();
+                                        scanResultHandler.removeCallbacks(r);
+                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                        if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                            showToast("上传成功");
+                                            clearData();
+                                            mAdapter.notifyDataSetChanged();
+                                        } else {
+                                            showToast("上传失败");
+                                            showConfirmDialog("上传失败");
+                                            Sound.faillarm();
+                                        }
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                            }, json);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
+                    }
+                });
                 break;
         }
     }
 
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1!=null)
-                if (dialog1.isShowing()) {
-                Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                no.setEnabled(true);
-            }
-
-        }
-    };
-    private Dialog dialog1;
-
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认上架");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                上传数据
-                ArrayList<Input> jsocList = new ArrayList<>();
-                for (Input obj : dataList) {
-                    if (obj.getVatNo() != null && dataKey.contains(obj.getVatNo())) {
-                        obj.setCarrier(App.CARRIER);
-                        obj.setDevice(App.DEVICE_NO);
-                        jsocList.add(obj);
+    @Override
+    public void rfidResult(String epc) {
+        final String EPC = epc.replaceAll(" ", "");
+        if (EPC.startsWith("3035A537") && !epcList.contains(EPC)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("epc", EPC);
+            final String json = jsonObject.toJSONString();
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getEpc;" + e.getMessage());
+                            showToast("获取库位信息失败");
+                        }
                     }
-                }
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("userId", User.newInstance().getId());
-                jsonObject.put("data",jsocList);
-                final String json = JSON.toJSONString(jsonObject);
-                try {
-                    AppLog.write(getActivity(),"putaway",json,AppLog.TYPE_INFO);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "postInventory;" + e.getMessage());
-                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        try {
+                            List<Input> arry = jsonArray.toJavaList(Input.class);
+                            if (arry != null && arry.size() > 0) {
+                                Input response = arry.get(0);
+                                if (response != null) {
+                                    if (response.getEpc() != null && !epcList.contains(response.getEpc())) {
+                                        epcList.add(EPC);
+                                        dataList.add(response);
+                                        String key = response.getVatNo();
+                                        if (!keyValue.containsKey(key)) {//当前没有
+                                            response.setCount(1);
+                                            response.setWeightall(response.getWeight());
+                                            myList.add(response);
+                                            keyValue.put(key, myList.size() - 1);
+                                            dataKey.add(response.getVatNo());
+                                        } else {
+                                            int index = keyValue.get(key);
+                                            myList.get(index).addCount();
+                                            myList.get(index).setWeightall(ArithUtil.add(myList.get(index).getWeightall(), response.getWeight()));
+                                        }
+                                    }
+                                    text1.setText(String.valueOf(epcList.size()));
+                                    mAdapter.notifyDataSetChanged();
+                                }
                             }
+                        } catch (Exception e) {
+
                         }
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-                           try{
-                               try {
-                                   AppLog.write(getActivity(),"putaway","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                               } catch (IOException e) {
-                                   e.printStackTrace();
-                               }
-                               if (dialog1.isShowing())
-                                   dialog1.dismiss();
-                               no.setEnabled(true);
-                               handler.removeCallbacks(r);
-                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                               if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                   Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                    clearData();
-//                                   blinkDialog2(true);
-                                   mAdapter.notifyDataSetChanged();
-                               } else {
-                                   Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                   blinkDialog2(false);
-                                   Sound.faillarm();
-                               }
-                           } catch (Exception e) {
-
-                           }
-                        }
-                    }, json);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                dialog1.dismiss();
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,TIME);
+                    }
+                }, json);
+            } catch (IOException e) {
+                Log.i(TAG, "");
             }
-        });
-    }
-    private AlertDialog dialog;
-    private void blinkDialog2(boolean flag) {
-        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
         }
     }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Input> {
         private Context context;
 
@@ -529,9 +410,7 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
             super(v, datas, itemLayoutId);
 
         }
-        //eventBus\RxJava
-        //MAP\MVVM\MVC\MVP
-        //SHARE sdk
+
         @Override
         public void convert(RecyclerHolder holder, final Input item, final int position) {
             if (item != null) {
@@ -540,13 +419,12 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (position == 0) {
-                            if (isChecked){
-                                for (Input i: myList){
-                                    if ((i.getVatNo()!=null&&i.getProduct_no()!=null&&i.getSelNo()!=null)
-                                            &&!(i.getVatNo().equals("")||i.getProduct_no().equals("")||i.getSelNo().equals("")))
+                            if (isChecked) {
+                                for (Input i : myList) {
+                                    if (!TextUtils.isEmpty(i.getVatNo()) && !TextUtils.isEmpty(i.getProduct_no()) && !TextUtils.isEmpty(i.getSelNo()))
                                         dataKey.add(i.getVatNo());
                                 }
-                            }else {
+                            } else {
                                 dataKey.clear();
                             }
                             mAdapter.notifyDataSetChanged();
@@ -562,12 +440,12 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                     }
                 });
                 if (position != 0) {
-                    if (((item.getVatNo()+"").equals("")&&(item.getProduct_no()+"").equals("")&&(item.getSelNo()+"").equals(""))){
+                    if (TextUtils.isEmpty(item.getVatNo()) && TextUtils.isEmpty(item.getProduct_no()) && TextUtils.isEmpty(item.getSelNo())) {
                         cb.setChecked(false);
-                        if (cb.getVisibility()!=View.INVISIBLE)
+                        if (cb.getVisibility() != View.INVISIBLE)
                             cb.setVisibility(View.INVISIBLE);
-                    }else {
-                        if (cb.getVisibility()!=View.VISIBLE)
+                    } else {
+                        if (cb.getVisibility() != View.VISIBLE)
                             cb.setVisibility(View.VISIBLE);
                         if (dataKey.contains(item.getVatNo()))
                             cb.setChecked(true);
@@ -579,15 +457,13 @@ public class PutawayFragment extends Fragment implements UHFCallbackLiatener, Ba
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     } else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-
-                    holder.setText(R.id.item1, item.getProduct_no() + "");
-                    holder.setText(R.id.item2, item.getSelNo() + "");
-                    holder.setText(R.id.item3, item.getColor() + "");
-                    holder.setText(R.id.item4, item.getVatNo() + "");
-                    holder.setText(R.id.item5, item.getCount() + "");
-                    holder.setText(R.id.item6, item.getWeightall() + "");
+                    holder.setText(R.id.item1, item.getProduct_no());
+                    holder.setText(R.id.item2, item.getSelNo());
+                    holder.setText(R.id.item3, item.getColor());
+                    holder.setText(R.id.item4, item.getVatNo());
+                    holder.setText(R.id.item5, String.valueOf(item.getCount()));
+                    holder.setText(R.id.item6, String.valueOf(item.getWeightall()));
                 }
-
             }
         }
     }

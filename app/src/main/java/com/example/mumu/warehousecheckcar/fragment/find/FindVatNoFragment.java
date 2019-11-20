@@ -1,15 +1,11 @@
 package com.example.mumu.warehousecheckcar.fragment.find;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -35,21 +30,23 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.CompareUtil;
 import com.rfid.RFIDReaderHelper;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -71,7 +68,7 @@ import butterknife.OnClick;
  * Created by mumu on 2019/1/21.
  */
 
-public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
+public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
     private static FindVatNoFragment fragment;
     @Bind(R.id.layout2)
     LinearLayout layout2;
@@ -126,26 +123,39 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
     private FilterAdapter vatAdapter;
     private FilterAdapter colorAdapter;
     private FilterAdapter clothAdapter;
+    private RFIDReaderHelper rfidHander;
+    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
         ButterKnife.bind(this, view);
-        initUtil();
-        initData();
-        initView();
-        initLister();
-        initRFID();
+
         return view;
     }
 
-    private void initView() {
+    private void setAdaperHeader() {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.find_item, null);
+        mAdapter.setHeader(view);
+    }
+
+    @Override
+    protected void initData() {
+        myList = new ArrayList<>();
+        myList.add(new FindVatNo());
+        dataKEY = new ArrayList<>();
+        dataList = new ArrayList<>();
+        dataEpc = new ArrayList<>();
+        findList = new ArrayList<>();
+    }
+
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.find_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
-//        点击事件可以改视图样式但不可恢复
         LinearLayoutManager ms = new LinearLayoutManager(getActivity());
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
@@ -158,36 +168,9 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         autoText3.setAdapter(clothAdapter);
     }
 
-    private void setAdaperHeader() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.find_item, null);
-        mAdapter.setHeader(view);
-    }
-
-    private void initData() {
-        myList = new ArrayList<>();
-        myList.add(new FindVatNo());
-        dataKEY = new ArrayList<>();
-        dataList = new ArrayList<>();
-        dataEpc = new ArrayList<>();
-        findList = new ArrayList<>();
-    }
-
-    private void clearData() {
-        if (myList != null) {
-            myList.clear();
-            myList.add(new FindVatNo());
-        }
-        if (dataList != null)
-            dataList.clear();
-        if (dataKEY != null)
-            dataKEY.clear();
-        if (dataEpc != null)
-            dataEpc.clear();
-        if (findList != null)
-            findList.clear();
-    }
-
-    private void initLister() {
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this);
         mAdapter.setOnItemClickListener(this);
         autoText1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -299,48 +282,52 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
             }
         });
+        initRFID();
+        try {
+            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearData() {
+        if (myList != null) {
+            myList.clear();
+            myList.add(new FindVatNo());
+        }
+        if (dataList != null)
+            dataList.clear();
+        if (dataKEY != null)
+            dataKEY.clear();
+        if (dataEpc != null)
+            dataEpc.clear();
+        if (findList != null)
+            findList.clear();
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
-
-    private RFIDReaderHelper rfidHander;
 
     private void disRFID() {
-        try {
-            if (rfidHander != null) {
-                int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 20);
-                if (i == 0)
-                    App.PROWER = 20;
-            }
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
-    //右上角列表R.menu.main2
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
     }
 
-    //右上角列表点击监听（相当于onclickitemlistener,可用id或者title匹配）
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -361,58 +348,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         }
     }
 
-    private long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String epc = (String) msg.obj;
-            epc = epc.replaceAll(" ", "");
-            if (dataKEY.contains(epc)) {
-
-                if (System.currentTimeMillis() - currenttime > 150) {
-                    Sound.scanAlarm();
-                    currenttime = System.currentTimeMillis();
-                }
-                if (!dataEpc.contains(epc)) {
-                    dataEpc.add(epc);
-                    for (FindVatNo findVatNo : dataList) {
-                        if (findVatNo.getEpc().equals(epc)) {
-                            myList.add(findVatNo);
-                        }
-                    }
-                    Collections.sort(myList, new Comparator<FindVatNo>() {
-                        @Override
-                        public int compare(FindVatNo obj1, FindVatNo obj2) {
-                            String aInv_serial = obj1.getInv_serial();
-                            String bInv_serial = obj2.getInv_serial();
-
-                            if ((obj1.getEpc() == null || obj1.getEpc().equals("")) && (obj1.getColor_name() == null || obj1.getColor_name().equals(""))
-                                    && (obj1.getLocation_name() == null || obj1.getLocation_name().equals("")) && (obj1.getCloth_name() == null || obj1.getCloth_name().equals(""))
-                                    && (obj1.getPallet_name() == null || obj1.getPallet_name().equals("")) && (obj1.getInv_serial() == null || obj1.getInv_serial().equals("")))
-                                return -1;
-                            if ((obj2.getEpc() == null || obj2.getEpc().equals("")) && (obj2.getColor_name() == null || obj2.getColor_name().equals(""))
-                                    && (obj2.getLocation_name() == null || obj2.getLocation_name().equals("")) && (obj2.getCloth_name() == null || obj2.getCloth_name().equals(""))
-                                    && (obj2.getPallet_name() == null || obj2.getPallet_name().equals("")) && (obj2.getInv_serial() == null || obj2.getInv_serial().equals("")))
-
-                                return 1;
-                            if (aInv_serial != null && bInv_serial != null) {
-                                if (Integer.valueOf(aInv_serial) >= Integer.valueOf(bInv_serial)) {
-                                    return 1;
-                                }
-                                return -1;
-                            }
-                            return 0;
-                        }
-                    });
-                    text2.setText(myList.size() - 1 + "");
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    };
-
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
@@ -420,9 +355,10 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -442,24 +378,23 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         switch (view.getId()) {
             case R.id.button0:
                 clearData();
-                text2.setText(myList.size() - 1 + "");
-                text3.setText(dataList.size() + "");
+                text2.setText(String.valueOf(myList.size() - 1));
+                text3.setText(String.valueOf(dataList.size()));
                 layout2.removeAllViews();
                 mAdapter.notifyDataSetChanged();
                 clearDraw();
-//                vatAdapter.notifyDataSetChanged();
-//                colorAdapter.notifyDataSetChanged();
-//                clothAdapter.notifyDataSetChanged();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button1:
                 myList.clear();
                 myList.add(new FindVatNo());
                 dataEpc.clear();
-                text2.setText(myList.size() - 1 + "");
+                text2.setText(String.valueOf(myList.size() - 1));
                 mAdapter.notifyDataSetChanged();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                blinkDialog();
+                prowerDialog();
                 break;
             case R.id.button10:
                 clearDraw();
@@ -479,9 +414,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         autoText1.setText("");
         autoText2.setText("");
         autoText3.setText("");
-//        vatAdapter.notifyDataSetChanged();
-//        colorAdapter.notifyDataSetChanged();
-//        clothAdapter.notifyDataSetChanged();
     }
 
     private void addView(String vatNo) {
@@ -496,7 +428,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         layout2.addView(textView);
     }
 
-    private void blinkDialog() {
+    private void prowerDialog() {
         final Dialog dialog;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View blinkView = inflater.inflate(R.layout.setprower_dialog_layout, null);
@@ -547,21 +479,6 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         });
     }
 
-    private InputMethodManager mInputMethodManager;
-
-    //     * 初始化必须工具
-    private void initUtil() {
-        //初始化输入法
-        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    //隐藏输入法
-    public void cancelKeyBoard(View view) {
-        if (mInputMethodManager.isActive()) {
-            mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);// 隐藏输入法
-        }
-    }
-
     private void goFind(final String vat, final String color, final String cloth) {
         JSONObject object = new JSONObject();
         if (!TextUtils.isEmpty(vat))
@@ -576,7 +493,7 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                 @Override
                 public void onError(Request request, Exception e) {
                     if (App.LOGCAT_SWITCH) {
-                        Toast.makeText(getActivity(), "缸号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        showToast("缸号查询失败");
                     }
                 }
 
@@ -592,20 +509,19 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                                 findList.add(key);
                                 addView(key);
                                 for (FindVatNo i : response) {
-                                    if (i != null && i.getEpc() != null && !i.getEpc().equals("") && !dataKEY.contains(i.getEpc())) {
+                                    if (i != null && !TextUtils.isEmpty(i.getEpc()) && !dataKEY.contains(i.getEpc())) {
                                         dataKEY.add(i.getEpc());
                                         dataList.add(i);
                                     }
                                 }
-                                text3.setText(dataList.size() + "");
+                                text3.setText(String.valueOf(dataList.size()));
                                 mAdapter.notifyDataSetChanged();
-                                Toast.makeText(getActivity(), "成功查询缸号！", Toast.LENGTH_SHORT).show();
+                                showToast("成功查询缸号");
                             } else {
-                                Toast.makeText(getActivity(), "此缸号无库存数据！", Toast.LENGTH_SHORT).show();
+                                showToast("此缸号无库存数据");
                             }
                         } else {
-                            Toast.makeText(getActivity(), "查无此缸号！", Toast.LENGTH_SHORT).show();
-//                                getActivity().onBackPressed();
+                            showToast("查无此缸号");
                         }
                     } catch (Exception e) {
 
@@ -615,12 +531,12 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             JSONObject object2 = new JSONObject();
             if (!TextUtils.isEmpty(vat))
                 object.put("vatNo", vat);
-            final String json2=object2.toJSONString();
+            final String json2 = object2.toJSONString();
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getErpSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @Override
                 public void onError(Request request, Exception e) {
                     if (App.LOGCAT_SWITCH) {
-                        Toast.makeText(getActivity(), "缸号查询失败m！" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        showToast("缸号查询失败");
                     }
                 }
 
@@ -630,9 +546,9 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                         if (jsonObject.get("data") != null && jsonObject.getIntValue("status") == 1) {
                             int count = jsonObject.getJSONObject("data").getInteger("sum");
                             erpCount = count + erpCount;
-                            text4.setText(erpCount + "");
+                            text4.setText(String.valueOf(erpCount));
                         } else {
-                            Toast.makeText(getActivity(), "ERP查询失败", Toast.LENGTH_SHORT).show();
+                            showToast("ERP查询失败");
                         }
                     } catch (Exception e) {
 
@@ -641,6 +557,41 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
             }, json2);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (dataKEY.contains(epc)) {
+            if (!dataEpc.contains(epc)) {
+                dataEpc.add(epc);
+                for (FindVatNo findVatNo : dataList) {
+                    if (findVatNo.getEpc().equals(epc)) {
+                        myList.add(findVatNo);
+                    }
+                }
+                Collections.sort(myList, new Comparator<FindVatNo>() {
+                    @Override
+                    public int compare(FindVatNo obj1, FindVatNo obj2) {
+                        String aInv_serial = obj1.getInv_serial();
+                        String bInv_serial = obj2.getInv_serial();
+
+                        if (TextUtils.isEmpty(obj1.getInv_serial()) && !TextUtils.isEmpty(obj2.getInv_serial()))
+                            return -1;
+                        else if (!TextUtils.isEmpty(obj1.getInv_serial()) && TextUtils.isEmpty(obj2.getInv_serial()))
+                            return 1;
+                        else if (TextUtils.isEmpty(obj1.getInv_serial()) && TextUtils.isEmpty(obj2.getInv_serial()))
+                            return 0;
+                        else if (!CompareUtil.isMoreThan(aInv_serial, bInv_serial))
+                            return -1;
+                        else
+                            return 1;
+                    }
+                });
+                text2.setText(String.valueOf(myList.size() - 1));
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -686,14 +637,14 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
 
-                    holder.setText(R.id.item1, item.getLocation_name() + "");
-                    holder.setText(R.id.item2, item.getPallet_name() + "");
-                    holder.setText(R.id.item3, item.getVat_no() + "");
-                    holder.setText(R.id.item4, item.getCloth_name() + "");
-                    holder.setText(R.id.item5, item.getInv_serial() + "");
-                    holder.setText(R.id.item6, item.getWeight_inv() + "");
-                    holder.setText(R.id.item7, item.getColor_name() + "");
-                    holder.setText(R.id.item8, item.getEpc() + "");
+                    holder.setText(R.id.item1, item.getLocation_name());
+                    holder.setText(R.id.item2, item.getPallet_name());
+                    holder.setText(R.id.item3, item.getVat_no());
+                    holder.setText(R.id.item4, item.getCloth_name());
+                    holder.setText(R.id.item5, item.getInv_serial());
+                    holder.setText(R.id.item6, item.getWeight_inv());
+                    holder.setText(R.id.item7, item.getColor_name());
+                    holder.setText(R.id.item8, item.getEpc());
                 }
 
             }
@@ -710,15 +661,16 @@ public class FindVatNoFragment extends Fragment implements BRecyclerAdapter.OnIt
         public FilterAdapter(Context context) {
             this.mContext = context;
             mFilter = new MyFilter();
-            mItems=new ArrayList<>();
-            fData=new ArrayList<>();
+            mItems = new ArrayList<>();
+            fData = new ArrayList<>();
         }
 
         public void transforData(List<String> items) {
             this.mItems = items;
             notifyDataSetChanged();
         }
-        public void clearData(){
+
+        public void clearData() {
             mItems.clear();
         }
 

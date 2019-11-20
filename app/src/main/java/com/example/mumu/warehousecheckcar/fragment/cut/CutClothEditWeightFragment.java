@@ -1,11 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
@@ -28,6 +23,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BarCode;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.squareup.okhttp.Request;
 
@@ -43,7 +39,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
-public class CutClothEditWeightFragment extends Fragment implements View.OnTouchListener {
+public class CutClothEditWeightFragment extends BaseFragment implements View.OnTouchListener {
     private final String TAG = "CutClothEditWeightFragment";
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     private static CutClothEditWeightFragment fragment;
@@ -76,7 +72,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     private JSONObject json;
     private BarCode code;
     private double weightIn;
-
+    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
@@ -84,10 +80,25 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
         View view = inflater.inflate(R.layout.cut_cloth_editweight_layout, container, false);
         view.setOnTouchListener(this);
         ButterKnife.bind(this, view);
+
+        return view;
+    }
+
+    @Override
+    protected void initData() {
         code = new BarCode();
+    }
+
+    @Override
+    protected void initView(View view) {
+
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
-
         edit1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -105,9 +116,6 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                 } catch (Exception e) {
                     edit1.setText("0.0");
                 }
-//                weightIn = Double.parseDouble(charSequence.toString());
-//                weightIn = weightIn.replaceAll(" ", "");
-
             }
 
             @Override
@@ -115,7 +123,6 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
 
             }
         });
-        return view;
     }
 
     //接收事件
@@ -130,8 +137,6 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
         text5.setText(code.getYard_out() + "");
         text6.setText(code.getP_ps() + "");
         edit1.setText("0.0");
-        //Toast.makeText(getActivity(), event.getString("barcode"), Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -149,44 +154,8 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
     @OnClick(R.id.button1)
     public void onViewClicked() {
         edit1.setFocusable(false);
-        blinkDialog();
-    }
-
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1!=null)
-                if (dialog1.isShowing()) {
-                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                    no.setEnabled(true);
-                }
-
-        }
-    };
-    private Handler handler=new Handler();
-    private Dialog dialog1;
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认板布重量？");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.cancel();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
+        showUploadDialog("是否确认板布重量?");
+        setUploadYesClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 User user = User.newInstance();
@@ -195,7 +164,7 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                 JSONObject jsonObject = new JSONObject(json);
                 final String json = jsonObject.toJSONString();
                 try {
-                    AppLog.write(getActivity(),"cceweight",json,AppLog.TYPE_INFO);
+                    AppLog.write(getActivity(), "cceweight", json, AppLog.TYPE_INFO);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -212,23 +181,21 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                try {
-                                    AppLog.write(getActivity(),"cceweight","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                if (dialog1.isShowing())
-                                    dialog1.dismiss();
-                                no.setEnabled(true);
-                                handler.removeCallbacks(r);
+                                AppLog.write(getActivity(), "cceweight", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                uploadDialog.openView();
+                                hideUploadDialog();
+                                scanResultHandler.removeCallbacks(r);
                                 BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
+                                    showToast("上传成功");
                                     getActivity().onBackPressed();
-//                                    blinkDialog2(true);
                                 } else {
-                                    Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                    blinkDialog2(false);
+                                    showToast("上传失败");
+                                    showConfirmDialog("上传失败");
                                     Sound.faillarm();
                                 }
                             } catch (Exception e) {
@@ -239,56 +206,9 @@ public class CutClothEditWeightFragment extends Fragment implements View.OnTouch
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,TIME);
+                uploadDialog.lockView();
+                scanResultHandler.postDelayed(r, TIME);
             }
         });
     }
-
-    private AlertDialog dialog;
-
-    private void blinkDialog2(boolean flag) {
-        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
-        }
-    }
-
 }

@@ -1,28 +1,24 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
@@ -32,6 +28,7 @@ import com.example.mumu.warehousecheckcar.entity.BarCode;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.squareup.okhttp.Request;
@@ -54,7 +51,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
-public class CutClothOutFragment extends Fragment {
+public class CutClothOutFragment extends BaseFragment {
     private final String TAG = "CutClothOutFragment";
 
     private static CutClothOutFragment fragment;
@@ -84,32 +81,41 @@ public class CutClothOutFragment extends Fragment {
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
     private RecycleAdapter mAdapter;
+    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.cutcloth_out_layout, container, false);
         ButterKnife.bind(this, view);
-        initData();
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.cutcloth_out_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        setAdaperHeader();
-//        mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(llm);
-        recyle.setAdapter(mAdapter);
         return view;
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         myList = new ArrayList<>();
         myList.add(new BarCode());
         dataKey = new HashMap<>();
         dateNo = new ArrayList<>();
-        if (!EventBus.getDefault().isRegistered(this))
 
+    }
+
+    @Override
+    protected void initView(View view) {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.cutcloth_out_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        setAdaperHeader();
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(llm);
+        recyle.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler();
+        if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
     }
 
@@ -138,8 +144,6 @@ public class CutClothOutFragment extends Fragment {
                         fatherNoList = new ArrayList<>();
                     }
                     break;
-                default:
-                    break;
             }
         }
     }
@@ -153,7 +157,7 @@ public class CutClothOutFragment extends Fragment {
             flag = false;
             clearData();
             downLoadData();
-            text2.setText(fatherNoList.size() + "");
+            text2.setText(String.valueOf(fatherNoList.size()));
         }
     }
 
@@ -168,7 +172,7 @@ public class CutClothOutFragment extends Fragment {
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            showToast("获取申请单信息失败");
                         }
                     }
 
@@ -220,161 +224,77 @@ public class CutClothOutFragment extends Fragment {
                 downLoadData();
                 break;
             case R.id.button2:
-                blinkDialog();
-                break;
-        }
-    }
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1!=null)
-                if (dialog1.isShowing()) {
-                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                    no.setEnabled(true);
-                }
-
-        }
-    };
-    private Handler handler=new Handler();
-    private Dialog dialog1;
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认出库");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    ArrayList<BarCode> jsocList = new ArrayList<>();
-                    for (BarCode op : myList) {
-                        if (dataKey.containsKey(op.getOut_no()))
-                            if (dataKey.get(op.getOut_no()).contains(op.getOutp_id()))
-                                jsocList.add(op);
-                    }
-                    if (jsocList.size() > 0) {
-//                        final String json = JSON.toJSONString(jsocList);
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userId", User.newInstance().getId());
-                        jsonObject.put("data", jsocList);
-                        final String json = jsonObject.toJSONString();
-                        try {
-                            AppLog.write(getActivity(),"ccout",json,AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                showUploadDialog("是否确认出库");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ArrayList<BarCode> jsocList = new ArrayList<>();
+                        for (BarCode op : myList) {
+                            if (dataKey.containsKey(op.getOut_no()))
+                                if (dataKey.get(op.getOut_no()).contains(op.getOutp_id()))
+                                    jsocList.add(op);
                         }
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCutOut.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "postInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        if (jsocList.size() > 0) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("userId", User.newInstance().getId());
+                            jsonObject.put("data", jsocList);
+                            final String json = jsonObject.toJSONString();
+                            try {
+                                AppLog.write(getActivity(), "ccout", json, AppLog.TYPE_INFO);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/pushCutOut.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "postInventory;" + e.getMessage());
+                                            showToast("上传信息失败");
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
                                         try {
-                                            AppLog.write(getActivity(),"ccout","userId:"+User.newInstance().getId()+response.toString(),AppLog.TYPE_INFO);
+                                            AppLog.write(getActivity(), "ccout", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-                                        if (dialog1.isShowing())
-                                            dialog1.dismiss();
-                                        no.setEnabled(true);
-                                        handler.removeCallbacks(r);
-                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                                        if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                            clearData();
-                                            mAdapter.notifyDataSetChanged();
-//                                            blinkDialog2(true);
-                                        } else {
-                                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                            blinkDialog2(false);
-                                            Sound.faillarm();
+                                        try {
+                                            uploadDialog.openView();
+                                            hideUploadDialog();
+                                            scanResultHandler.removeCallbacks(r);
+                                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                                showToast("上传成功");
+                                                clearData();
+                                                mAdapter.notifyDataSetChanged();
+                                            } else {
+                                                showToast("上传失败");
+                                                showConfirmDialog("上传失败");
+                                                Sound.faillarm();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
                                     }
-                                }
-                            }, json);
+                                }, json);
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
                     }
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r,TIME);
-            }
-        });
-    }
-
-    private AlertDialog dialog;
-
-    private void blinkDialog2(boolean flag) {
-        if (dialog == null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-            Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-            Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-            TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-
-            dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.show();
-            dialog.getWindow().setContentView(blinkView);
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                    dialog.hide();
-                }
-            });
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            TextView text = (TextView) dialog.findViewById(R.id.dialog_text);
-            if (flag)
-                text.setText("上传成功");
-            else
-                text.setText("上传失败");
-            if (!dialog.isShowing())
-                dialog.show();
+                });
+                break;
         }
     }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<BarCode> {
         private Context context;
 
@@ -409,16 +329,16 @@ public class CutClothOutFragment extends Fragment {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         if (position == 0) {
-                            if (isChecked){
-                                for (String no:dataKey.keySet()){
-                                    for (BarCode cutSample:myList){
+                            if (isChecked) {
+                                for (String no : dataKey.keySet()) {
+                                    for (BarCode cutSample : myList) {
                                         if (!dataKey.get(no).contains(cutSample.getOutp_id()))
                                             dataKey.get(no).add(cutSample.getOutp_id());
                                     }
                                 }
                                 mAdapter.notifyDataSetChanged();
-                            }else {
-                                for (String no:dataKey.keySet()){
+                            } else {
+                                for (String no : dataKey.keySet()) {
                                     dataKey.get(no).clear();
                                 }
                                 mAdapter.notifyDataSetChanged();
@@ -442,7 +362,7 @@ public class CutClothOutFragment extends Fragment {
                         }
                     }
                 });
-                if (position !=0) {
+                if (position != 0) {
                     LinearLayout title = holder.getView(R.id.layout_title);
                     LinearLayout no = holder.getView(R.id.headNo);
                     View view = holder.getView(R.id.view);
@@ -456,8 +376,7 @@ public class CutClothOutFragment extends Fragment {
                         no.setVisibility(View.GONE);
                         view.setVisibility(View.GONE);
                     }
-
-                    if (((item.getVatNo() + "").equals("") && (item.getProduct_no() + "").equals("") && (item.getSelNo() + "").equals(""))) {
+                    if (TextUtils.isEmpty(item.getVatNo()) && TextUtils.isEmpty(item.getProduct_no()) && TextUtils.isEmpty(item.getSelNo())) {
                         if (cb.isEnabled())
                             cb.setEnabled(false);
                         cb.setChecked(false);
@@ -470,15 +389,14 @@ public class CutClothOutFragment extends Fragment {
                             else
                                 cb.setChecked(false);
                         }
-                        holder.setText(R.id.item1, item.getProduct_no() + "");
-                        holder.setText(R.id.item2, item.getSelColor() + "");
-                        holder.setText(R.id.item3, item.getColorName() + "");
-                        holder.setText(R.id.item4, item.getVatNo() + "");
-                        holder.setText(R.id.item5, item.getCutWeight() + "");
-                        holder.setText(R.id.item6, item.getYard_out() + "");
+                        holder.setText(R.id.item1, item.getProduct_no());
+                        holder.setText(R.id.item2, item.getSelColor());
+                        holder.setText(R.id.item3, item.getColorName());
+                        holder.setText(R.id.item4, item.getVatNo());
+                        holder.setText(R.id.item5, String.valueOf(item.getCutWeight()));
+                        holder.setText(R.id.item6, String.valueOf(item.getYard_out()));
                     }
                 }
-
             }
         }
     }

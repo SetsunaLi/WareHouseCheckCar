@@ -28,7 +28,10 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
@@ -40,6 +43,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.RetIn;
 import com.example.mumu.warehousecheckcar.entity.RetInd;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -74,7 +78,7 @@ import butterknife.OnClick;
  *created by ${mumu}
  *on 2019/9/26
  */
-public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener {
+public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     private final String TAG = ReturnGoodsInDetailFragment.class.getName();
     @Bind(R.id.text3)
     TextView text3;
@@ -96,22 +100,27 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
     private RetIn oldData;
     private int position;
     private RecycleAdapter mAdapter;
+    private ScanResultHandler scanResultHandler;
 
-    //    这里加载视图
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.returngoods_in_detail_fragment, container, false);
         ButterKnife.bind(this, view);
-        initData();
-        initView();
-        initRFID();
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
         return view;
     }
 
-    private void initView() {
+    @Override
+    protected void initData() {
+        myList = new ArrayList<>();
+        myList.add(new RetInd());//增加一个为头部
+        chooseEpcList = new HashMap<>();
+        scanEpcList = new ArrayList<>();
+        getEpcList = new ArrayList<>();
+    }
+
+    @Override
+    protected void initView(View view) {
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.returngoods_in_detail_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
@@ -120,7 +129,14 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this);
+        initRFID();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     private void setAdaperHeader() {
@@ -129,19 +145,14 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
     }
 
     private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().on_RFID();
-            UHFResult.getInstance().setCallbackLiatener(this);
-        } catch (Exception e) {
-
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
     private void disRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-        } catch (Exception e) {
-
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
@@ -156,7 +167,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                     mAdapter.notifyDataSetChanged();
                     try {
                         JSONObject jsonObject = new JSONObject();
-//                        String string = URLEncoder.encode(oldData.getVat_no(), "UTF-8");
                         jsonObject.put("vatNo", oldData.getVat_no());
                         String json = jsonObject.toJSONString();
                         OkHttpClientManager.postJsonAsyn(
@@ -166,7 +176,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                                     public void onError(Request request, Exception e) {
                                         if (App.LOGCAT_SWITCH) {
                                             Log.i(TAG, "getEpc;" + e.getMessage());
-                                            Toast.makeText(getActivity(), "获取缸号失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                            showToast("获取缸号失败");
                                         }
                                     }
 
@@ -180,7 +190,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                                             for (JsonElement bean : jsonElements) {
                                                 arry.add(gson.fromJson(bean, RetInd.class));
                                             }
-                                            if (arry != null && arry.size() > 0) {
+                                            if (arry.size() > 0) {
                                                 for (RetInd retInd : arry) {
                                                     if (chooseEpcList.containsKey(retInd.getWms_epc()) && chooseEpcList.get(retInd.getWms_epc()).equals(oldData.getSh_no())) {
                                                         scanEpcList.add(retInd.getWms_epc());
@@ -216,14 +226,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
             text2.setText(oldData.getVat_no());
             text3.setText(oldData.getSh_no());
         }
-    }
-
-    public void initData() {
-        myList = new ArrayList<>();
-        myList.add(new RetInd());//增加一个为头部
-        chooseEpcList = new HashMap<>();
-        scanEpcList = new ArrayList<>();
-        getEpcList = new ArrayList<>();
     }
 
     private void clearData() {
@@ -294,7 +296,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -312,41 +313,15 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
         disRFID();
-        initData();
+        clearData();
     }
 
-    long currenttime = 0;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    final String EPC = ((String) msg.obj).replaceAll(" ", "");
-                    if (EPC.startsWith("3035A537") && !scanEpcList.contains(EPC)) {
-                        scanEpcList.add(EPC);
-                        if (getEpcList.size() < oldData.getPs() && (!chooseEpcList.containsKey(EPC) || chooseEpcList.get(EPC).equals(oldData.getSh_no()))) {
-                            for (RetInd r : myList) {
-                                if (!TextUtils.isEmpty(r.getWms_epc()) && r.getWms_epc().equals(EPC)) {
-                                    chooseEpcList.put(EPC, oldData.getSh_no());
-                                    if (!getEpcList.contains(EPC))
-                                        getEpcList.add(EPC);
-                                    handler.removeCallbacks(runnable);
-                                    handler.postDelayed(runnable, 2000);
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                    break;
                 case 0x01:
                     clearList(myList, scanEpcList);
                     mAdapter.notifyDataSetChanged();
@@ -361,12 +336,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         }
     };
 
-
-    @Override
-    public void onItemClick(View view, Object data, int position) {
-
-    }
-
     @Override
     public void refreshSettingCallBack(ReaderSetting readerSetting) {
 
@@ -374,10 +343,10 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
 
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = handler.obtainMessage();
-        msg.what = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.RFID;
         msg.obj = tag.strEPC;
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -395,10 +364,33 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 getFragmentManager().popBackStack();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
+        }
+    }
+
+    @Override
+    public void rfidResult(String epc) {
+        epc = epc.replaceAll(" ", "");
+        if (epc.startsWith("3035A537") && !scanEpcList.contains(epc)) {
+            scanEpcList.add(epc);
+            if (getEpcList.size() < oldData.getPs() && (!chooseEpcList.containsKey(epc) || chooseEpcList.get(epc).equals(oldData.getSh_no()))) {
+                for (RetInd r : myList) {
+                    if (!TextUtils.isEmpty(r.getWms_epc()) && r.getWms_epc().equals(epc)) {
+                        chooseEpcList.put(epc, oldData.getSh_no());
+                        if (!getEpcList.contains(epc))
+                            getEpcList.add(epc);
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, 2000);
+                        break;
+                    }
+                }
+            }
+
         }
     }
 
@@ -416,12 +408,6 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
         public RecycleAdapter(RecyclerView v, Collection<RetInd> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
-        }
-
-        private int position;
-
-        public void select(int i) {
-            this.position = i;
         }
 
         @Override
@@ -453,14 +439,14 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                             if (chooseEpcList.containsKey(item.getWms_epc())) {
                                 if (!chooseEpcList.get(item.getWms_epc()).equals(oldData.getSh_no())) {
                                     checkBox.setChecked(false);
-                                    Toast.makeText(getActivity(), "该布匹在其他单号存在", Toast.LENGTH_SHORT).show();
+                                    showToast("该布匹在其他单号存在");
                                 }
                             } else {
                                 if (getEpcList.size() < oldData.getPs()) {
                                     chooseEpcList.put(item.getWms_epc(), oldData.getSh_no());
                                     getEpcList.add(item.getWms_epc());
                                 } else {
-                                    Toast.makeText(getActivity(), "超出入库单条数", Toast.LENGTH_SHORT).show();
+                                    showToast("超出入库单条数");
                                     checkBox.setChecked(false);
                                 }
                             }
@@ -514,7 +500,7 @@ public class ReturnGoodsInDetailFragment extends Fragment implements BRecyclerAd
                 checkBox.setChecked(getEpcList.contains(item.getWms_epc()));
                 holder.setText(R.id.item1, item.getFab_roll());
                 holder.setText(R.id.item2, item.getWms_epc());
-                holder.setText(R.id.edittext1, item.getWeight_in() + "");
+                holder.setText(R.id.edittext1, String.valueOf(item.getWeight_in()));
             }
         }
     }

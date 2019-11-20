@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
@@ -45,6 +46,7 @@ import com.example.mumu.warehousecheckcar.entity.OutNo;
 import com.example.mumu.warehousecheckcar.entity.RetIn;
 import com.example.mumu.warehousecheckcar.entity.RetInd;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.fragment.forward.ForwardingFragment;
 import com.example.mumu.warehousecheckcar.fragment.forward.ForwardingMsgFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -71,11 +73,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
+
 /***
  *created by ${mumu}
  *on 2019/9/25
  */
-public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.OnItemClickListener {
+public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener {
     private final String TAG = ReturnGoodsInFragment.class.getName();
     @Bind(R.id.recyle)
     RecyclerView recyle;
@@ -104,24 +108,20 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
     private Map<String, String> epcNoList;
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
-
+    private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
-    private Handler handler;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.out_apply_new_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("退货入库");
-        handler = new Handler();
-        initData();
-        initView();
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
         return view;
     }
 
-    public void initData() {
+    @Override
+    protected void initData() {
         fatherNoList = new ArrayList<>();
         myList = new ArrayList<>();
         dateNo = new ArrayList<>();
@@ -129,7 +129,8 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
         epcNoList = new HashMap<>();
     }
 
-    public void initView() {
+    @Override
+    protected void initView(View view) {
         text3.setText("送货单数量");
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.returngoods_in_item);
         mAdapter.setContext(getActivity());
@@ -140,6 +141,14 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
     }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
 
     public void clearData() {
         myList.clear();
@@ -177,7 +186,7 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            showToast("获取申请单信息失败");
                         }
                     }
 
@@ -213,13 +222,6 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
         }
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -234,140 +236,88 @@ public class ReturnGoodsInFragment extends Fragment implements BRecyclerAdapter.
                 clearData();
                 downLoadData();
                 mAdapter.notifyDataSetChanged();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                blinkDialog();
+                showUploadDialog("是否确认入库?");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ArrayList<ArrayList<RetIn>> allList = new ArrayList<>();
+                        boolean flag = true;
+                        for (String no : dataKey) {
+                            ArrayList<RetIn> list = new ArrayList<>();
+                            for (RetIn retIn : myList) {
+                                if (no.equals(retIn.getSh_no())) {
+                                    if (retIn.getPs() == retIn.getInd().size()) {
+                                        RetIn data = retIn.clone();
+                                        data.setRecord_by(User.newInstance().getUsername());
+                                        list.add(data);
+                                    } else {
+                                        flag = false;
+                                    }
+                                }
+                            }
+                            if (list.size() > 0)
+                                allList.add(list);
+                        }
+                        if (flag) {
+                            for (ArrayList<RetIn> retInList : allList) {
+                                final String json = JSONObject.toJSONString(retInList);
+                                try {
+                                    AppLog.write(getActivity(), "returnIn", json, AppLog.TYPE_INFO);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/pushRetIn", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                        @Override
+                                        public void onError(Request request, Exception e) {
+                                            if (App.LOGCAT_SWITCH) {
+                                                Log.i(TAG, "postInventory;" + e.getMessage());
+                                                showToast("上传信息失败");
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                            try {
+                                                AppLog.write(getActivity(), "returnIn", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                uploadDialog.openView();
+                                                hideUploadDialog();
+                                                scanResultHandler.removeCallbacks(r);
+                                                BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                                if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                                    showToast("上传成功");
+                                                    clearData();
+                                                    mAdapter.notifyDataSetChanged();
+                                                } else {
+                                                    showToast("上传失败");
+                                                    showConfirmDialog("上传失败");
+                                                    Sound.faillarm();
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }, json);
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else
+                            showToast("入库内容必须与退库单号一致");
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
+                    }
+                });
                 break;
         }
-    }
-
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (dialog1 != null)
-                if (dialog1.isShowing()) {
-                    Button no = (Button) dialog1.findViewById(R.id.dialog_no);
-                    no.setEnabled(true);
-                }
-        }
-    };
-    private Dialog dialog1;
-
-    private void blinkDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View blinkView = inflater.inflate(R.layout.dialog_in_check, null);
-        final Button no = (Button) blinkView.findViewById(R.id.dialog_no);
-        final Button yes = (Button) blinkView.findViewById(R.id.dialog_yes);
-        TextView text = (TextView) blinkView.findViewById(R.id.dialog_text);
-        text.setText("是否确认入库");
-        dialog1 = new AlertDialog.Builder(getActivity()).create();
-        dialog1.show();
-        dialog1.getWindow().setContentView(blinkView);
-        dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog1.dismiss();
-            }
-        });
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<ArrayList<RetIn>> allList = new ArrayList<>();
-                boolean flag = true;
-                for (String no:dataKey) {
-                    ArrayList<RetIn> list=new ArrayList<>();
-                    for (RetIn retIn : myList) {
-                        if (no.equals(retIn.getSh_no())) {
-                            if (retIn.getPs() == retIn.getInd().size()) {
-                                RetIn data = retIn.clone();
-                                data.setRecord_by(User.newInstance().getUsername());
-                                list.add(data);
-                            } else {
-                                flag = false;
-                            }
-                        }
-                    }
-                    if (list.size()>0)
-                        allList.add(list);
-                }
-                if (flag) {
-                    for (ArrayList<RetIn> retInList : allList) {
-                        final String json = JSONObject.toJSONString(retInList);
-                        try {
-                            AppLog.write(getActivity(), "returnIn", json, AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/pushRetIn", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                                @Override
-                                public void onError(Request request, Exception e) {
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "postInventory;" + e.getMessage());
-                                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        try {
-                                            AppLog.write(getActivity(), "returnIn", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                        if (dialog1.isShowing())
-                                            dialog1.dismiss();
-                                        no.setEnabled(true);
-                                        handler.removeCallbacks(r);
-                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                                        if (baseReturn != null && baseReturn.getStatus() == 1) {
-                                            Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
-                                            clearData();
-                                            mAdapter.notifyDataSetChanged();
-                                        } else {
-                                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                            showDialog("上传失败");
-                                            Sound.faillarm();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, json);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else
-                    Toast.makeText(getActivity(), "入库内容必须与退库单号一致", Toast.LENGTH_SHORT).show();
-                no.setEnabled(false);
-                yes.setEnabled(false);
-                handler.postDelayed(r, App.TIME);
-            }
-        });
-    }
-
-    private void showDialog(String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("提示");
-        builder.setMessage(msg);
-        builder.setCancelable(false);
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";

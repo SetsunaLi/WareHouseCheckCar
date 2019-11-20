@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,7 +25,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-public class ForwardingMsgFragment extends Fragment {
+
+public class ForwardingMsgFragment extends BaseFragment {
     final String TAG = "ForwardingMsgFragment";
     private static ForwardingMsgFragment fragment;
     @Bind(R.id.fixeedittext1)
@@ -36,32 +38,36 @@ public class ForwardingMsgFragment extends Fragment {
     @Bind(R.id.button1)
     Button button1;
 
-
-
     public static ForwardingMsgFragment newInstance() {
         if (fragment == null) ;
         fragment = new ForwardingMsgFragment();
         return fragment;
     }
 
-    //    这里加载视图
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forwarding_msg_layout, container, false);
-        if (!EventBus.getDefault().isRegistered(this))
-
-            EventBus.getDefault().register(this);
         ButterKnife.bind(this, view);
         getActivity().setTitle("发运");
-        initView();
-
         return view;
     }
-    private void initView(){
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initView(View view) {
         fixeedittext1.setFixedText("车牌号：\t");
         fixeedittext2.setFixedText("姓名：\t");
         fixeedittext3.setFixedText("电话：\t");
+
+    }
+
+    @Override
+    protected void addListener() {
         fixeedittext3.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -72,17 +78,19 @@ public class ForwardingMsgFragment extends Fragment {
                 return false;
             }
         });
+     /*   if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);*/
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getEventMsg(EventBusMsg message) {
+    /* @Subscribe(threadMode = ThreadMode.MAIN)
+     public void getEventMsg(EventBusMsg message) {
 
-    }
+     }*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     @OnClick(R.id.button1)
@@ -102,8 +110,9 @@ public class ForwardingMsgFragment extends Fragment {
             transaction.commit();
         }else
             Toast.makeText(getActivity(),"车牌号不能为空",Toast.LENGTH_SHORT).show();
-
     }
+
+
     static class CarMsg{
         /**车牌号*/
         private String carNo;

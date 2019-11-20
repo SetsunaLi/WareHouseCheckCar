@@ -66,6 +66,7 @@
     <!--hint-->
     <string name="hint_void">申请单号为空！</string>
     <string name="hint_rfid_mistake">读写器异常，请退出或者重启设备！</string>
+    <string name="hint_2d_mistake">读头异常，请退出或者重启设备！</string>
     <!--导航栏的选项名称-->
     <string-array name="options_array">
         <item>主页</item>

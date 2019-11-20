@@ -1,10 +1,8 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,18 +17,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
@@ -40,14 +38,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCallback{
-     public final String TAG = "CuttingClothCarrier";
+public class CuttingClothPutwayCarrierFragment extends BaseFragment implements RXCallback, OnCodeResult {
+    public final String TAG = "CuttingClothCarrier";
 
     private static CuttingClothPutwayCarrierFragment fragment;
-   /* @Bind(R.id.spinner1)
-    Spinner spinner;
-    @Bind(R.id.spinner2)
-    Spinner spinner1;*/
     @Bind(R.id.edittext2)
     EditText edittext2;
     @Bind(R.id.relativelayout)
@@ -55,10 +49,10 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
     @Bind(R.id.button2)
     Button button2;
 
-
     private String[] data_list;
     private String[] data_lists;
     private boolean flag2D = false;
+    private ScanResultHandler scanResultHandler;
 
     public static CuttingClothPutwayCarrierFragment newInstance() {
         if (fragment == null) ;
@@ -72,10 +66,22 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
         View view = inflater.inflate(R.layout.cut_cloth_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.btn_click14));
-//         cloth = new Cut();
-//        initSpinner();
-//        initSpinners();
-        //监听输入框
+        return view;
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initView(View view) {
+        edittext2.setText(getResources().getString(R.string.cut_carroer));
+    }
+
+    @Override
+    protected void addListener() {
+        scanResultHandler = new ScanResultHandler(this);
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -85,7 +91,7 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String locationNo = charSequence.toString();
-                locationNo = locationNo.replaceAll(" ","");
+                locationNo = locationNo.replaceAll(" ", "");
                 App.CARRIER.setLocationNo(locationNo);
             }
 
@@ -112,22 +118,16 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
             }
 
         });
-        edittext2.setText(getResources().getString(R.string.cut_carroer));
-        return view;
     }
-
 
     //空加下拉
     private void initSpinner() {
-        //数据
         data_list = getResources().getStringArray(R.array.change_Empty_array);
-
-        //适配器
         ArrayAdapter<String> arr_adapter = new ArrayAdapter<String>(getActivity(), R.layout.adapter_mytopactionbar_spinner, data_list) {
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                if(convertView == null) {
-                    convertView = getActivity().getLayoutInflater().inflate(R.layout.adapter_mytopactionbar_spinner_item,parent,false);
+                if (convertView == null) {
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.adapter_mytopactionbar_spinner_item, parent, false);
                 }
                 TextView spinnerText = (TextView) convertView.findViewById(R.id.spinner_textView);
                 spinnerText.setText(getItem(position));
@@ -149,6 +149,7 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
             }
         });*/
     }
+
     //纸卷重下拉
     private void initSpinners() {
         //数据
@@ -180,125 +181,87 @@ public class CuttingClothPutwayCarrierFragment extends Fragment implements RXCal
 
             }
         });*/
-
-    }
-    private Double getNum(String num) {
-        double str = Double.parseDouble(num.replaceAll("[a-zA-Z]", ""));
-        return str;
     }
 
-    private TDScannerHelper scannerHander;
-    //连接读头
-    @SuppressLint("LongLogTag")
     private void init2D() {
-        try {
-            boolean flag2 = RFID_2DHander.getInstance().on_2D();
-//            boolean flag1=RFID_2DHander.getInstance().connect2D();
-            scannerHander = RFID_2DHander.getInstance().getTDScanner();
-            scannerHander.regist2DCodeData(this);
-            if (!flag2)
-                Toast.makeText(getActivity(), "一维读头连接失败", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Log.w(TAG, "2D模块异常");
-            Toast.makeText(getActivity(), getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
+        if (!PdaController.init2D(this)) {
+            showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
-    //断开读头
+
     private void disConnect2D() {
-        try {
-            RFID_2DHander.getInstance().off_2D();
-//            RFID_2DHander.getInstance().disConnect2D();
-
-        } catch (Exception e) {
-
+        if (!PdaController.disConnect2D()) {
+            showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
-
-
-    long currenttime = 0;
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.arg1) {
-                case 0x00:
-                    if (App.MUSIC_SWITCH) {
-                        if (System.currentTimeMillis() - currenttime > 150) {
-                            Sound.scanAlarm();
-                            currenttime = System.currentTimeMillis();
-                        }
-                    }
-                    String location = (String) msg.obj;
-                    location = location.replaceAll(" ", "");
-                    edittext2.setText(location);
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-
-            if (flag2D) {
-                disConnect2D();
-                flag2D = false;
-            }
+        if (flag2D) {
+            disConnect2D();
+            flag2D = false;
+        }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick(R.id.button2)
-    public void onViewClicked(){
-      if(App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
-          edittext2.setFocusableInTouchMode(false);
-          if (flag2D) {
-              disConnect2D();
-              flag2D = false;
-          }
-          final String json = JSON.toJSONString(App.CARRIER);
-          try {
-              OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                  @Override
-                  public void onError(Request request, Exception e) {
-                      if (App.LOGCAT_SWITCH) {
-                          Log.i(TAG, "getInventory;" + e.getMessage());
-                          Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                      }
-                  }
-                  @Override
-                  public void onResponse(JSONObject response) {
-                      try {
-                          BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                          if (baseReturn != null && baseReturn.getStatus() == 1) {
-                              Toast.makeText(getActivity(), "开始上架", Toast.LENGTH_LONG).show();
-                              Fragment fragment = CuttingClothPutwayFragment.newInstance();
-                              getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                              getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-//                              EventBus.getDefault().postSticky(new EventBusMsg(0x03,cloth));
-                          } else {
-                              Toast.makeText(getActivity(), "库位无效", Toast.LENGTH_LONG).show();
-                          }
+    public void onViewClicked() {
+        if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+            edittext2.setFocusableInTouchMode(false);
+            if (flag2D) {
+                disConnect2D();
+                flag2D = false;
+            }
+            final String json = JSON.toJSONString(App.CARRIER);
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "getInventory;" + e.getMessage());
+                            showToast("获取库位信息失败");
+                        }
+                    }
 
-                      } catch (Exception e) {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                showToast("开始上架");
+                                Fragment fragment = CuttingClothPutwayFragment.newInstance();
+                                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                            } else {
+                                showToast("库位无效");
+                            }
 
-                      }
-                  }
-              },json);
-          } catch(IOException e){
-              e.printStackTrace();
-          }
-      } else
-          Toast.makeText(getActivity(), "请扫描库位硬标签", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else
+            showToast("请扫描库位硬标签");
     }
 
     @Override
     public void callback(byte[] bytes) {
-        Message msg = handler.obtainMessage();
-        msg.arg1 = 0x00;
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.CODE;
         msg.obj = new String(bytes);
-        handler.sendMessage(msg);
+        scanResultHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void codeResult(String code) {
+        code = code.replaceAll(" ", "");
+        edittext2.setText(code);
     }
 }
