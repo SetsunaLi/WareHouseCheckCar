@@ -12,6 +12,15 @@ public class InAssistCloth  {
     /***原库位号**/
     private String suggest_location = "";
     private int qtys;
+    private String epc;
+
+    public String getEpc() {
+        return epc;
+    }
+
+    public void setEpc(String epc) {
+        this.epc = epc;
+    }
 
     public String getBas_batch_name() {
         return bas_batch_name;

@@ -1,37 +1,43 @@
 package com.example.mumu.warehousecheckcar.fragment.in;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.entity.InAssistCloth;
+import com.example.mumu.warehousecheckcar.entity.Input;
+import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -45,6 +51,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
+
 /***
  *created by ${mumu}
  *on 2019/9/19
@@ -54,6 +62,10 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
     RecyclerView recyle;
     @Bind(R.id.text1)
     TextView text1;
+    @Bind(R.id.button1)
+    Button button1;
+    @Bind(R.id.button2)
+    Button button2;
 
     public static InAssistFragment newInstance() {
         return new InAssistFragment();
@@ -62,6 +74,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
     private final String TAG = InAssistFragment.class.getName();
     private ArrayList<String> dataEPC;
     private ArrayList<InAssistCloth> myList;
+    private ArrayList<String> dataList;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
 
@@ -79,6 +92,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
         dataEPC = new ArrayList<>();
         myList = new ArrayList<>();
         myList.add(new InAssistCloth());
+        dataList = new ArrayList<>();
     }
 
     @Override
@@ -104,6 +118,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
         dataEPC.clear();
         myList.clear();
         myList.add(new InAssistCloth());
+        dataList.clear();
     }
 
     @Override
@@ -148,13 +163,6 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
 
     }
 
-    @OnClick(R.id.button1)
-    public void onViewClicked() {
-        clearList();
-        mAdapter.notifyDataSetChanged();
-        scanResultHandler.removeMessages(ScanResultHandler.RFID);
-    }
-
     @Override
     public void onItemClick(View view, Object data, int position) {
         mAdapter.selectItem(position);
@@ -185,6 +193,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
                             if (value != null) {
                                 if (!dataEPC.contains(epc)) {
                                     dataEPC.add(epc);
+                                    value.setEpc(epc);
                                     myList.add(value);
                                 }
                             }
@@ -198,6 +207,93 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
             } catch (IOException e) {
                 Log.i(TAG, "");
             }
+        }
+    }
+
+    @OnClick({R.id.button1, R.id.button2})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.button1:
+                clearList();
+                mAdapter.notifyDataSetChanged();
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                break;
+            case R.id.button2:
+                showUploadDialog("是否确认上架？");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ArrayList<Input> jsocList = new ArrayList<>();
+                        for (InAssistCloth obj : myList) {
+                            if (dataList.contains(obj.getEpc()) && !TextUtils.isEmpty(obj.getSuggest_location())
+                                    && !obj.getSuggest_location().equals("剪布区") && !obj.getSuggest_location().equals("备货区")) {
+                                Input input = new Input();
+                                Carrier carrier = new Carrier();
+                                carrier.setLocationNo(obj.getSuggest_location());
+                                carrier.setTrayNo(obj.getSuggest_pallet());
+                                input.setCarrier(carrier);
+                                input.setVatNo(obj.getBas_batch_name());
+                                input.setEpc(obj.getEpc());
+                                jsocList.add(input);
+                            }
+                        }
+                        if (jsocList.size() > 0) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("userId", User.newInstance().getId());
+                            jsonObject.put("data", jsocList);
+                            final String json = JSON.toJSONString(jsonObject);
+                            try {
+                                AppLog.write(getActivity(), "putaway", json, AppLog.TYPE_INFO);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/input/pushInput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        if (App.LOGCAT_SWITCH) {
+                                            Log.i(TAG, "postInventory;" + e.getMessage());
+                                            showToast("上传信息失败");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            AppLog.write(getActivity(), "putaway", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        try {
+                                            uploadDialog.openView();
+                                            hideUploadDialog();
+                                            scanResultHandler.removeCallbacks(r);
+                                            BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
+                                            if (baseReturn != null && baseReturn.getStatus() == 1) {
+                                                showToast("上传成功");
+                                                onViewClicked(button1);
+                                            } else {
+                                                showToast("上传失败");
+                                                showConfirmDialog("上传失败");
+                                                Sound.faillarm();
+                                            }
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
+                                }, json);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            uploadDialog.lockView();
+                            scanResultHandler.postDelayed(r, TIME);
+                        } else
+                            showToast("请选择有效布匹信息");
+                    }
+                });
+                break;
         }
     }
 
@@ -231,25 +327,64 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
         }
 
         public void convert(RecyclerHolder holder, final InAssistCloth item, final int position) {
-            if (item != null && position != 0) {
-                LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                if (this.position == position)
-                    ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
-                else
-                    ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                holder.setText(R.id.item1, item.getBas_batch_name());
-                holder.setText(R.id.item2, item.getInv_serial());
-                if (item.getSuggest_location() != null) {
-                    String location = item.getSuggest_location().replaceAll("剪布区", "").replaceAll("备货区", "");
-                    holder.setText(R.id.item3, location);
-                } else
-                    holder.setText(R.id.item3, "Null");
-                if (item.getSuggest_location() != null) {
-                    String location = item.getSuggest_location().replaceAll("剪布区", "").replaceAll("备货区", "");
-                    holder.setText(R.id.item4, location);
-                } else
-                    holder.setText(R.id.item4, "Null");
-                holder.setText(R.id.item5, String.valueOf(item.getQtys()));
+            if (item != null) {
+                CheckBox cb = (CheckBox) holder.getView(R.id.checkbox1);
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if (position == 0) {
+                            dataList.clear();
+                            if (isChecked) {
+                                for (InAssistCloth inAssistCloth : myList) {
+                                    if (!TextUtils.isEmpty(inAssistCloth.getSuggest_location())) {
+                                        if (!dataList.contains(inAssistCloth.getEpc()))
+                                            dataList.add(inAssistCloth.getEpc());
+                                    }
+                                }
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isChecked) {
+                                if (!TextUtils.isEmpty(item.getSuggest_location())) {
+                                    if (!dataList.contains(item.getEpc()))
+                                        dataList.add(item.getEpc());
+                                }
+                            } else {
+                                if (dataList.contains(item.getEpc()))
+                                    dataList.remove(item.getEpc());
+                            }
+                        }
+                    }
+                });
+                if (position != 0) {
+                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    if (this.position == position)
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                    else
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    if (dataList.contains(item.getEpc())) {
+                        cb.setChecked(true);
+                    } else {
+                        cb.setChecked(false);
+                    }
+                    holder.setText(R.id.item1, item.getBas_batch_name());
+                    holder.setText(R.id.item2, item.getInv_serial());
+                    if (!TextUtils.isEmpty(item.getSuggest_location())) {
+                        String location = item.getSuggest_location().replaceAll("剪布区", "").replaceAll("备货区", "");
+                        holder.setText(R.id.item3, location);
+                        cb.setEnabled(true);
+                    } else {
+                        cb.setEnabled(false);
+                        holder.setText(R.id.item3, "Null");
+                    }
+                    if (!TextUtils.isEmpty(item.getSuggest_pallet())) {
+                        String pallet = item.getSuggest_pallet().replaceAll("剪布区", "").replaceAll("备货区", "");
+                        holder.setText(R.id.item4, pallet);
+                    } else {
+                        holder.setText(R.id.item4, "Null");
+                    }
+                    holder.setText(R.id.item5, String.valueOf(item.getQtys()));
+                }
             }
         }
     }
