@@ -134,6 +134,9 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    /**
+     * 上传Dialog确认按钮监听
+     */
     protected void setUploadYesClickListener(View.OnClickListener onClickListener) {
         if (uploadDialog == null) {
             uploadDialog = UploadDialog.newInstance("");
@@ -141,6 +144,9 @@ public abstract class BaseFragment extends Fragment {
         uploadDialog.setOnYesClickListener(onClickListener);
     }
 
+    /**
+     * 上传Dialog取消按钮监听
+     */
     protected void setUploadNoClickListener(View.OnClickListener onClickListener) {
         if (uploadDialog == null) {
             uploadDialog = UploadDialog.newInstance("");
