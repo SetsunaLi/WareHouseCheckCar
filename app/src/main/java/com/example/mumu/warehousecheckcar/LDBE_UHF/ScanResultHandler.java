@@ -13,6 +13,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 public class ScanResultHandler extends Handler {
     public static final int CODE = 1;
     public static final int RFID = 2;
+    public static final int NO_MUSIC_RFID = 3;
     private OnCodeResult codeResult;
     private OnRfidResult rfidResult;
 
@@ -35,17 +36,25 @@ public class ScanResultHandler extends Handler {
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
         String code = (String) msg.obj;
-        if (App.MUSIC_SWITCH) {
-            Sound.scanAlarm();
-        }
         switch (msg.what) {
             case CODE: {
+                if (App.MUSIC_SWITCH) {
+                    Sound.scanAlarm();
+                }
                 if (codeResult != null) {
                     codeResult.codeResult(code);
                 }
             }
             break;
             case RFID: {
+                if (App.MUSIC_SWITCH) {
+                    Sound.scanAlarm();
+                }
+                if (rfidResult != null) {
+                    rfidResult.rfidResult(code);
+                }
+            }
+            case NO_MUSIC_RFID: {
                 if (rfidResult != null) {
                     rfidResult.rfidResult(code);
                 }

@@ -39,6 +39,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
@@ -327,7 +328,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
     @Override
     public void onInventoryTagCallBack(RXInventoryTag tag) {
         Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
+        msg.what = ScanResultHandler.NO_MUSIC_RFID;
         msg.obj = tag.strEPC;
         scanResultHandler.sendMessage(msg);
     }
@@ -364,7 +365,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                 mAdapter.notifyDataSetChanged();
                 addView();
                 goFind();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                scanResultHandler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
                 break;
             case R.id.button0:
                 clearData();
@@ -379,7 +380,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                 dataEpc.clear();
                 text2.setText(String.valueOf(dataList.size() - 1));
                 mAdapter.notifyDataSetChanged();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                scanResultHandler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
                 break;
             case R.id.button2:
                 powerDialog();
@@ -526,6 +527,9 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
         if (dataKEY.contains(epc)) {
+            if (App.MUSIC_SWITCH) {
+                Sound.scanAlarm();
+            }
             if (!dataEpc.contains(epc)) {
                 dataEpc.add(epc);
                 for (TP findVatNo : dataList) {
