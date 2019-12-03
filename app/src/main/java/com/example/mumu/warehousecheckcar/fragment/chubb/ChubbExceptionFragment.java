@@ -41,6 +41,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -185,6 +186,8 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushErrorStateCloth", new OkHttpClientManager.ResultCallback<JSONObject>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
+                                    if (e instanceof ConnectException)
+                                        showConfirmDialog("链接超时");
                                     if (App.LOGCAT_SWITCH) {
                                         Log.i(TAG, "postInventory;" + e.getMessage());
                                         Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -265,6 +268,8 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取库位信息失败" + e.getMessage());

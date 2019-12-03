@@ -46,6 +46,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -190,6 +191,8 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getCarrier;" + e.getMessage());
                             showToast("获取库位信息失败");
@@ -303,6 +306,8 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
                                     @Override
                                     public void onError(Request request, Exception e) {
+                                        if (e instanceof ConnectException)
+                                            showConfirmDialog("链接超时");
                                         if (App.LOGCAT_SWITCH) {
                                             Log.i(TAG, "postInventory;" + e.getMessage());
                                             showToast("上传信息失败");
@@ -411,6 +416,8 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取库位信息失败");

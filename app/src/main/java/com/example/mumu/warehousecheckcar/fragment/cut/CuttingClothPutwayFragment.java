@@ -47,6 +47,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -171,13 +172,13 @@ public class CuttingClothPutwayFragment extends BaseFragment implements BRecycle
         switch (view.getId()) {
             case R.id.button1:
                 clear();
-                text1.setText(epcList.size() + "");
+                text1.setText(String.valueOf(epcList.size()));
                 mAdapter.notifyDataSetChanged();
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 if (dataKEY != null && dataKEY.size() > 0) {
-                    showUploadDialog("");
+                    showUploadDialog("是否确认上架");
                     setUploadYesClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -203,6 +204,8 @@ public class CuttingClothPutwayFragment extends BaseFragment implements BRecycle
                                     @SuppressLint("LongLogTag")
                                     @Override
                                     public void onError(Request request, Exception e) {
+                                        if (e instanceof ConnectException)
+                                            showConfirmDialog("链接超时");
                                         if (App.LOGCAT_SWITCH) {
                                             Log.i(TAG, "postInventory;" + e.getMessage());
                                             showToast("上传信息失败");
@@ -282,9 +285,11 @@ public class CuttingClothPutwayFragment extends BaseFragment implements BRecycle
             final String json = jsonObject.toJSONString();
             try {
 //                            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cut/getCutEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取库位信息失败");

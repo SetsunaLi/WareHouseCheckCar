@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by mumu on 2018/9/8.
@@ -44,6 +45,7 @@ public class OkHttpClientManager {
     private OkHttpClient mOkHttpClient;
     private Handler mDelivery;
     private Gson mGson;
+    private final long TIMEOUT = 10000;
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -52,6 +54,10 @@ public class OkHttpClientManager {
     private OkHttpClientManager()
     {
         mOkHttpClient = new OkHttpClient();
+        mOkHttpClient.setConnectTimeout(TIMEOUT, TimeUnit.SECONDS);
+        mOkHttpClient.setReadTimeout(TIMEOUT, TimeUnit.SECONDS);
+        mOkHttpClient.setWriteTimeout(TIMEOUT, TimeUnit.SECONDS);
+
 
         //cookie enabled
         mOkHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));

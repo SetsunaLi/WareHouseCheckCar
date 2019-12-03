@@ -71,6 +71,7 @@ public class OutApplyDetailFragment extends BaseFragment {
         return view;
     }
 
+
     @Override
     protected void initData() {
         myList = new ArrayList<>();

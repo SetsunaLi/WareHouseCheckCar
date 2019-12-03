@@ -45,6 +45,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -266,6 +267,8 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/inv_sum/change_weight_inv", new OkHttpClientManager.ResultCallback<JSONObject>() {
                         @Override
                         public void onError(Request request, Exception e) {
+                            if (e instanceof ConnectException)
+                                showConfirmDialog("链接超时");
                             if (App.LOGCAT_SWITCH) {
                                 Log.i(TAG, "postInventory;" + e.getMessage());
                                 showToast("上传信息失败");
@@ -321,6 +324,8 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取库位信息失败");

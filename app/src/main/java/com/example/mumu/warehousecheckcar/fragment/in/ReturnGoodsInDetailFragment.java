@@ -61,6 +61,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -174,6 +175,8 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                                 , new OkHttpClientManager.ResultCallback<JSONArray>() {
                                     @Override
                                     public void onError(Request request, Exception e) {
+                                        if (e instanceof ConnectException)
+                                            showConfirmDialog("链接超时");
                                         if (App.LOGCAT_SWITCH) {
                                             Log.i(TAG, "getEpc;" + e.getMessage());
                                             showToast("获取缸号失败");

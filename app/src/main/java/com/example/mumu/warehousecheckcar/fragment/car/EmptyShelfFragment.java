@@ -44,6 +44,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -195,6 +196,8 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
                                 @SuppressLint("LongLogTag")
                                 @Override
                                 public void onError(Request request, Exception e) {
+                                    if (e instanceof ConnectException)
+                                        showConfirmDialog("链接超时");
                                     if (App.LOGCAT_SWITCH) {
                                         Log.i(TAG, "arrangePallets;" + e.getMessage());
                                     }
@@ -278,6 +281,8 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
                     @SuppressLint("LongLogTag")
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getCarrier;" + e.getMessage());
                         }

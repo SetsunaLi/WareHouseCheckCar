@@ -62,6 +62,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -114,7 +115,7 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.out_apply_new_layout, container, false);
+        View view = inflater.inflate(R.layout.return_goodsin_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("退货入库");
         return view;
@@ -184,6 +185,8 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/getByOutNo", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取申请单信息失败");
@@ -273,6 +276,8 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/android/inquiring/pushRetIn", new OkHttpClientManager.ResultCallback<JSONObject>() {
                                         @Override
                                         public void onError(Request request, Exception e) {
+                                            if (e instanceof ConnectException)
+                                                showConfirmDialog("链接超时");
                                             if (App.LOGCAT_SWITCH) {
                                                 Log.i(TAG, "postInventory;" + e.getMessage());
                                                 showToast("上传信息失败");
@@ -414,6 +419,11 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                 holder.setText(R.id.item4, item.getVat_no());
                 holder.setText(R.id.item5, String.valueOf(item.getPs()));
                 holder.setText(R.id.item6, String.valueOf(item.getInd().size()));
+                double weight = 0;
+                for (RetInd retInd : item.getInd()) {
+                    weight = ArithUtil.add(weight, retInd.getWeight_in());
+                }
+                holder.setText(R.id.item7, String.valueOf(weight));
             }
         }
     }

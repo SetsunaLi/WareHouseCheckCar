@@ -133,8 +133,11 @@ public class CutClothOutNoFragment extends BaseFragment implements RXCallback, O
                 recyle.scrollToPosition(myList.size()-1);
                 break;
             case R.id.button2:
-                EventBus.getDefault().postSticky(new EventBusMsg(0x04, myList));
-                Fragment fragment = CutClothOutFragment.newInstance();
+//                EventBus.getDefault().postSticky(new EventBusMsg(0x04, myList));
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList(CutClothOperateFragment.LIST_KEY, myList);
+                Fragment fragment = CutClothOperateFragment.newInstance();
+                fragment.setArguments(bundle);
                 getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 break;

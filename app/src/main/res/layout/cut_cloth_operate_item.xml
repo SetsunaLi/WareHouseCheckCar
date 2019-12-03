@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/headNo"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:layout_marginLeft="10dp"
@@ -32,6 +32,13 @@
             android:layout_margin="10dp"
             android:text="申请单号：" />
 
+        <TextView
+            android:id="@+id/text2"
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="配货编号：" />
         <View style="@style/view_line" />
 
     </LinearLayout>
@@ -42,16 +49,133 @@
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.example.mumu.warehousecheckcar.view.MsgView
+                android:id="@+id/msgText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:titleText="缸号：" />
+
+            <com.example.mumu.warehousecheckcar.view.MsgView
+                android:id="@+id/msgText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:titleText="色号：" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_margin="5dp">
-            <TextView
+
+            <com.example.mumu.warehousecheckcar.view.MsgView
+                android:id="@+id/msgText3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:titleText="申请重量：" />
+
+            <com.example.mumu.warehousecheckcar.view.MsgView
+                android:id="@+id/msgText4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:titleText="申请米数：" />
         </LinearLayout>
-        
     </LinearLayout>
+
     <View style="@style/view_item_bottom" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:descendantFocusability="beforeDescendants"
+        android:fastScrollEnabled="false"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="65dip"
+            android:layout_height="match_parent"
+            android:text="布票号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="90dip"
+            android:layout_height="match_parent"
+            android:text="库存重量" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/edit_style3"
+            android:layout_width="90dip"
+            android:layout_height="match_parent"
+            android:text="剪板重量" />
+
+        <View style="@style/view_item_mid" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_select"
+            android:text="预留"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:descendantFocusability="beforeDescendants"
+        android:fastScrollEnabled="false"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/item1"
+            style="@style/text_item"
+            android:layout_width="65dip"
+            android:layout_height="match_parent" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item2"
+            style="@style/text_item"
+            android:layout_width="90dip"
+            android:layout_height="match_parent" />
+
+        <View style="@style/view_item_mid" />
+
+        <EditText
+            android:id="@+id/edittext1"
+            style="@style/edit_style3"
+            android:layout_width="90dip"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:inputType="number|numberDecimal" />
+
+        <View style="@style/view_item_mid" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_select"
+            android:text="删除"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp" />
+    </LinearLayout>
+    <View style="@style/view_item_bottom" />
 </LinearLayout>

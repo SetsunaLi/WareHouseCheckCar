@@ -88,7 +88,7 @@ public class CutClothFragment extends BaseFragment {
     @OnClick({R.id.button1, R.id.button2, R.id.button3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.button1: {
+           /* case R.id.button1: {
                 Fragment fragment = CutClothScanFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -103,7 +103,7 @@ public class CutClothFragment extends BaseFragment {
                 transaction.show(fragment);
                 transaction.commit();
             }
-            break;
+            break;*/
             case R.id.button3: {
                 Fragment fragment = CutClothOutNoFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();

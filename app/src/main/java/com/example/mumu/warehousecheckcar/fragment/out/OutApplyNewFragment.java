@@ -57,6 +57,7 @@ import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -201,6 +202,8 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pullOutput.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -390,6 +393,8 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @Override
                 public void onError(Request request, Exception e) {
+                    if (e instanceof ConnectException)
+                        showConfirmDialog("链接超时");
                     if (App.LOGCAT_SWITCH) {
                         Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -477,6 +482,8 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override
                             public void onError(Request request, Exception e) {
+                                if (e instanceof ConnectException)
+                                    showConfirmDialog("链接超时");
                                 if (App.LOGCAT_SWITCH) {
                                     Log.i(TAG, "postInventory;" + e.getMessage());
                                     Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -607,6 +614,8 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
+                            if (e instanceof ConnectException)
+                                showConfirmDialog("链接超时");
                             if (App.LOGCAT_SWITCH) {
                                 Log.i(TAG, "getEpc;" + e.getMessage());
                                 Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();

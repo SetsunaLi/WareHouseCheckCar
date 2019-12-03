@@ -45,7 +45,6 @@ import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CutClothFragment;
-import com.example.mumu.warehousecheckcar.fragment.cut.CutClothOutFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CutClothOutNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CuttingClothPutwayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.find.FindTpNoFragmentf;
@@ -474,7 +473,7 @@ public class Main2Activity extends AppCompatActivity
                     selectItem(7);
                 } else if (fragment instanceof CheckFragment) {
                     selectItem(2);
-                } else if (fragment instanceof CutClothOutFragment || fragment instanceof CutClothOutNoFragment) {
+                } else if (fragment instanceof CutClothOutNoFragment) {
                     selectItem(9);
                 } else if (fragment instanceof OutApplyDetailFragment) {
                     setOutApplyDataList(((OutApplyDetailFragment) fragment).getList());

@@ -42,6 +42,7 @@ import com.xdl2d.scanner.callback.RXCallback;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -235,6 +236,8 @@ public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackL
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override
                             public void onError(Request request, Exception e) {
+                                if (e instanceof ConnectException)
+                                    showConfirmDialog("链接超时");
                                 if (App.LOGCAT_SWITCH) {
                                     showToast("获取库位信息失败");
                                 }
@@ -280,6 +283,8 @@ public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackL
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/pushClothToCheckIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
                 @Override
                 public void onError(Request request, Exception e) {
+                    if (e instanceof ConnectException)
+                        showConfirmDialog("链接超时");
                     if (App.LOGCAT_SWITCH) {
                         Log.i(TAG, "getEpc;" + e.getMessage());
                         Toast.makeText(getActivity(), "扫描查布区布匹失败" + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -359,6 +364,8 @@ public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackL
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<Carrier>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getInventory;" + e.getMessage());
                             showToast("获取库位信息失败");

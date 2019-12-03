@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -149,6 +150,8 @@ public class CarPutawayFragment extends BaseFragment {
                 @SuppressLint("LongLogTag")
                 @Override
                 public void onError(Request request, Exception e) {
+                    if (e instanceof ConnectException)
+                        showConfirmDialog("链接超时");
                     if (App.LOGCAT_SWITCH) {
                         Log.i(TAG, "getInventory;" + e.getMessage());
                         showToast("获取托盘信息失败");
@@ -211,6 +214,8 @@ public class CarPutawayFragment extends BaseFragment {
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/putaway/pushClothToCcPalletTransfer", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override
                             public void onError(Request request, Exception e) {
+                                if (e instanceof ConnectException)
+                                    showConfirmDialog("链接超时");
                                 if (App.LOGCAT_SWITCH) {
                                     Log.i(TAG, "postInventory;" + e.getMessage());
                                     showToast("上传信息失败");

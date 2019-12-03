@@ -163,6 +163,15 @@
             android:layout_width="100dip"
             android:layout_height="match_parent"
             android:text="匹配条数"/>
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item7"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="合计重量" />
     </LinearLayout>
     <View style="@style/view_item_bottom" />
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,11 +28,13 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.entity.Carrier;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,7 +74,11 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
 
     @Override
     protected void initData() {
-
+        if (App.CARRIER == null)
+            App.CARRIER = new Carrier();
+        else
+            App.CARRIER.clear();
+        App.CARRIER.setLocationNo(getResources().getString(R.string.cut_carroer));
     }
 
     @Override
@@ -209,7 +216,7 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        if (App.CARRIER != null && App.CARRIER.getLocationNo() != null && !App.CARRIER.getLocationNo().equals("")) {
+        if (App.CARRIER != null && !TextUtils.isEmpty(App.CARRIER.getLocationNo())) {
             edittext2.setFocusableInTouchMode(false);
             if (flag2D) {
                 disConnect2D();
@@ -220,6 +227,8 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getInventory;" + e.getMessage());
                             showToast("获取库位信息失败");

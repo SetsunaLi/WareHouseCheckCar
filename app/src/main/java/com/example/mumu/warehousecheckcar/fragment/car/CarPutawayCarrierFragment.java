@@ -300,6 +300,7 @@ public class CarPutawayCarrierFragment extends BaseFragment implements UHFCallba
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             showToast("获取库位信息失败");
                         }

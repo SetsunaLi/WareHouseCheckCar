@@ -29,6 +29,7 @@ import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.squareup.okhttp.Request;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -134,6 +135,8 @@ public class InCheckDetialFragment extends BaseFragment {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getVatNo_in.sh", new OkHttpClientManager.ResultCallback<List<InCheckDetail>>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
+                                    if (e instanceof ConnectException)
+                                        showConfirmDialog("链接超时");
                                     if (App.LOGCAT_SWITCH) {
                                         Log.i(TAG, "getVatNo_in;" + e.getMessage());
                                         showToast("获取缸号失败");

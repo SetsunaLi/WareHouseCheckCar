@@ -52,6 +52,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -226,6 +227,8 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/inDetail.sh", new OkHttpClientManager.ResultCallback<String>() {
                                 @Override
                                 public void onError(Request request, Exception e) {
+                                    if (e instanceof ConnectException)
+                                        showConfirmDialog("链接超时");
                                     if (App.LOGCAT_SWITCH) {
                                         Log.i(TAG, "inDetail;" + e.getMessage());
                                         showToast("上传信息失败");
@@ -314,6 +317,8 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
                     @Override
                     public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取epc信息失败");

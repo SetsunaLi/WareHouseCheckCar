@@ -55,6 +55,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -186,7 +187,8 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-
+                            if (e instanceof ConnectException)
+                                showConfirmDialog("链接超时");
                         }
 
                         @Override
@@ -223,7 +225,8 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByColor/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-
+                            if (e instanceof ConnectException)
+                                showConfirmDialog("链接超时");
                         }
 
                         @Override
@@ -260,7 +263,8 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByCloth/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-
+                            if (e instanceof ConnectException)
+                                showConfirmDialog("链接超时");
                         }
 
                         @Override
@@ -493,6 +497,8 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventoryByVatNo", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @Override
                 public void onError(Request request, Exception e) {
+                    if (e instanceof ConnectException)
+                        showConfirmDialog("链接超时");
                     if (App.LOGCAT_SWITCH) {
                         showToast("缸号查询失败");
                     }
@@ -536,6 +542,8 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getErpSum", new OkHttpClientManager.ResultCallback<JSONObject>() {
                 @Override
                 public void onError(Request request, Exception e) {
+                    if (e instanceof ConnectException)
+                        showConfirmDialog("链接超时");
                     if (App.LOGCAT_SWITCH) {
                         showToast("缸号查询失败");
                     }
