@@ -193,7 +193,6 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
                         }
                         try {
                             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/static/arrangePallets.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                                @SuppressLint("LongLogTag")
                                 @Override
                                 public void onError(Request request, Exception e) {
                                     if (e instanceof ConnectException)
@@ -278,11 +277,8 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
             final String json = jsonObject.toString();
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getCarrier.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                    @SuppressLint("LongLogTag")
                     @Override
                     public void onError(Request request, Exception e) {
-                        if (e instanceof ConnectException)
-                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getCarrier;" + e.getMessage());
                         }

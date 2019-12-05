@@ -181,8 +181,6 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/inputAssist/sumQty.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
-                        if (e instanceof ConnectException)
-                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("扫描查布区布匹失败");

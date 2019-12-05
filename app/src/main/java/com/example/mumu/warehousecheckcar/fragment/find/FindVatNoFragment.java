@@ -187,8 +187,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByVatNo/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-                            if (e instanceof ConnectException)
-                                showConfirmDialog("链接超时");
                         }
 
                         @Override
@@ -225,8 +223,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByColor/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-                            if (e instanceof ConnectException)
-                                showConfirmDialog("链接超时");
                         }
 
                         @Override
@@ -263,8 +259,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                     OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/vatNo/findByCloth/" + str, new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-                            if (e instanceof ConnectException)
-                                showConfirmDialog("链接超时");
                         }
 
                         @Override

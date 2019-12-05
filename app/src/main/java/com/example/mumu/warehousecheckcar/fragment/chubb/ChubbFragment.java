@@ -311,8 +311,6 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/getCheckByEpc", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
-                        if (e instanceof ConnectException)
-                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取库位信息失败");

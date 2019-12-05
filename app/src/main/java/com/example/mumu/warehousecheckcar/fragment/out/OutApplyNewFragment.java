@@ -614,8 +614,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-                            if (e instanceof ConnectException)
-                                showConfirmDialog("链接超时");
                             if (App.LOGCAT_SWITCH) {
                                 Log.i(TAG, "getEpc;" + e.getMessage());
                                 Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();

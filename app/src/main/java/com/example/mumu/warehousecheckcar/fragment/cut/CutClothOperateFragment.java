@@ -1,7 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.content.Context;
-import android.content.Entity;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +16,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
@@ -65,6 +65,8 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
  */
 public class CutClothOperateFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
 
+
+    public final static String LIST_KEY = "NOLIST";
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.text3)
@@ -75,8 +77,6 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
     Button button1;
     @Bind(R.id.button2)
     Button button2;
-
-    public final static String LIST_KEY = "NOLIST";
     private ArrayList<BarCode> myList;
     private ScanResultHandler scanResultHandler;
     private Map<String, CutClothFlag> dataKey;
@@ -87,12 +87,13 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
     public static CutClothOperateFragment newInstance() {
         return new CutClothOperateFragment();
     }
+
     private RecycleAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.cut_cloth_operate_layout, container);
+        View view = inflater.inflate(R.layout.cut_cloth_operate_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -116,11 +117,13 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
+        text2.setText(String.valueOf(noList.size()));
     }
 
     @Override
     protected void addListener() {
         scanResultHandler = new ScanResultHandler(this);
+        initRFID();
     }
 
     private void clearData() {
@@ -130,6 +133,17 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
         keyList.clear();
     }
 
+    private void initRFID() {
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
+        }
+    }
+
+    private void disRFID() {
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
+        }
+    }
     @Override
     public void rfidResult(final String epc) {
         if (epc.startsWith("3035A537") && !epcList.contains(epc)) {
@@ -141,8 +155,6 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
                         @Override
                         public void onError(Request request, Exception e) {
-                            if (e instanceof ConnectException)
-                                showConfirmDialog("链接超时");
                             if (App.LOGCAT_SWITCH) {
                                 showToast("获取库位信息失败");
                             }
@@ -161,10 +173,11 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
                                                 epcList.add(epc);
                                                 cutClothFlag.setFlag(true);
                                                 cutClothFlag.setEpc(epc);
-                                                cutClothFlag.setFabRool(cutClothFlag.getFabRool());
+                                                cutClothFlag.setFabRool(response.getFabRool());
+                                                cutClothFlag.setWeight(response.getWeight());
+                                                mAdapter.notifyDataSetChanged();
+                                                break;
                                             }
-                                            mAdapter.notifyDataSetChanged();
-                                            break;
                                         }
                                     }
                                 }
@@ -254,12 +267,14 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        disRFID();
     }
 
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 clearData();
                 downLoadData();
                 break;
@@ -274,12 +289,14 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
                             Map.Entry<String, CutClothFlag> entry = entries.next();
                             String key = entry.getKey();
                             CutClothFlag value = entry.getValue();
-                            if (mapList.containsKey(key.replaceAll(value.getProduct_applypid(), ""))) {
-                                mapList.get(key.replaceAll(value.getProduct_applypid(), "")).add(value);
-                            } else {
-                                List<CutClothFlag> list = new ArrayList<>();
-                                list.add(value);
-                                mapList.put(key.replaceAll(value.getProduct_applypid(), ""), list);
+                            if (keyList.contains(key)) {
+                                if (mapList.containsKey(key.replaceAll(value.getProduct_applypid(), ""))) {
+                                    mapList.get(key.replaceAll(value.getProduct_applypid(), "")).add(value);
+                                } else {
+                                    List<CutClothFlag> list = new ArrayList<>();
+                                    list.add(value);
+                                    mapList.put(key.replaceAll(value.getProduct_applypid(), ""), list);
+                                }
                             }
                         }
                         JSONObject jsonObject = new JSONObject();
@@ -353,7 +370,7 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
         private String epc;
         private String fabRool;
         private String product_applypid;
-
+        private double weight;
         public CutClothFlag(String product_applypid, String vat_no) {
             this.product_applypid = product_applypid;
             this.vat_no = vat_no;
@@ -365,6 +382,15 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
             cut_weight = 0;
             epc = "";
             fabRool = "";
+            weight = 0;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public void setWeight(double weight) {
+            this.weight = weight;
         }
 
         public String getProduct_applypid() {
@@ -442,7 +468,6 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
                             if (keyList.contains(key))
                                 keyList.remove(key);
                         }
-                        notifyDataSetChanged();
                     }
                 });
                 final EditText editText = holder.getView(R.id.edittext1);
@@ -480,14 +505,23 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
                 MsgView msgView2 = holder.getView(R.id.msgText2);
                 MsgView msgView3 = holder.getView(R.id.msgText3);
                 MsgView msgView4 = holder.getView(R.id.msgText4);
-                checkBox.setChecked(keyList.contains(key));
+                LinearLayout linearLayout = holder.getView(R.id.layout2);
                 if (dataKey.get(key).isFlag()) {
                     button.setVisibility(View.VISIBLE);
                     editText.setEnabled(true);
+                    holder.setText(R.id.item1, dataKey.get(key).getFabRool());
+                    holder.setText(R.id.item2, String.valueOf(dataKey.get(key).getWeight()));
+                    editText.setText(String.valueOf(dataKey.get(key).getCut_weight()));
+                    linearLayout.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                 } else {
                     button.setVisibility(View.GONE);
                     editText.setEnabled(false);
+                    holder.setText(R.id.item1, "");
+                    holder.setText(R.id.item2, "");
+                    editText.setText("");
+                    linearLayout.setBackgroundColor(getResources().getColor(R.color.colorZERO));
                 }
+                checkBox.setChecked(keyList.contains(key));
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -498,11 +532,10 @@ public class CutClothOperateFragment extends BaseFragment implements UHFCallback
                     }
                 });
                 holder.setText(R.id.text1, "申请单号：" + item.getOut_no());
-                holder.setText(R.id.text1, "配货编号：" + item.getOutp_id());
-                msgView1.setMsgText(item.getVat_no());
-                msgView2.setMsgText(item.getSel_color());
-                msgView3.setMsgText("");
-                msgView4.setMsgText("");
+                msgView1.setMsgText(item.getOutp_id());
+                msgView2.setMsgText(item.getVat_no());
+                msgView3.setMsgText(String.valueOf(item.getQty_kg()));
+                msgView4.setMsgText(String.valueOf(item.getYard_out()));
             }
         }
     }

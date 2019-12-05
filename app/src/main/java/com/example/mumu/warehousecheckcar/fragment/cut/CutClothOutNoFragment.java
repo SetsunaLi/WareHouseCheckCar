@@ -2,9 +2,9 @@ package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,26 +15,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
-import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,14 +45,17 @@ public class CutClothOutNoFragment extends BaseFragment implements RXCallback, O
     @Bind(R.id.button2)
     Button button2;
 
+
     public static CutClothOutNoFragment newInstance() {
         if (fragment == null) ;
         fragment = new CutClothOutNoFragment();
         return fragment;
     }
+
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -104,6 +99,7 @@ public class CutClothOutNoFragment extends BaseFragment implements RXCallback, O
             showToast(getResources().getString(R.string.hint_2d_mistake));
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -121,29 +117,6 @@ public class CutClothOutNoFragment extends BaseFragment implements RXCallback, O
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
-
-    @OnClick({R.id.imgbutton, R.id.button2})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.imgbutton:
-                myList.add("");
-                mAdapter.select(myList.size() - 1);
-                mAdapter.setId(myList.size() - 1);
-                mAdapter.notifyDataSetChanged();
-                recyle.scrollToPosition(myList.size()-1);
-                break;
-            case R.id.button2:
-//                EventBus.getDefault().postSticky(new EventBusMsg(0x04, myList));
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList(CutClothOperateFragment.LIST_KEY, myList);
-                Fragment fragment = CutClothOperateFragment.newInstance();
-                fragment.setArguments(bundle);
-                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-                break;
-        }
-    }
-
     @Override
     public void callback(byte[] bytes) {
         Message msg = scanResultHandler.obtainMessage();
@@ -158,6 +131,32 @@ public class CutClothOutNoFragment extends BaseFragment implements RXCallback, O
         int id = mAdapter.getId();
         myList.set(id, code);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick({R.id.imgbutton, R.id.button2})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.imgbutton:
+                myList.add("");
+                mAdapter.select(myList.size() - 1);
+                mAdapter.setId(myList.size() - 1);
+                mAdapter.notifyDataSetChanged();
+                recyle.scrollToPosition(myList.size() - 1);
+                break;
+            case R.id.button2:
+//                EventBus.getDefault().postSticky(new EventBusMsg(0x04, myList));
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList(CutClothOperateFragment.LIST_KEY, myList);
+                Fragment fragment = CutClothOperateFragment.newInstance();
+                fragment.setArguments(bundle);
+                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+//                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+//                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+//                transaction.show(fragment);
+//                transaction.commit();
+                break;
+        }
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
@@ -235,7 +234,7 @@ public class CutClothOutNoFragment extends BaseFragment implements RXCallback, O
 
                 }
             });
-            ImageButton imageButton=(ImageButton)holder.getView(R.id.imagebutton1);
+            ImageButton imageButton = (ImageButton) holder.getView(R.id.imagebutton1);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -317,8 +317,6 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<ArrayList<InCheckDetail>>() {
                     @Override
                     public void onError(Request request, Exception e) {
-                        if (e instanceof ConnectException)
-                            showConfirmDialog("链接超时");
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取epc信息失败");

@@ -200,8 +200,6 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getEpcListByPallet", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override
                             public void onError(Request request, Exception e) {
-                                if (e instanceof ConnectException)
-                                    showConfirmDialog("链接超时");
                                 if (App.LOGCAT_SWITCH) {
                                     Toast.makeText(getActivity(), "托盘号查询失败！" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }

@@ -36,6 +36,7 @@ public class ScanResultHandler extends Handler {
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
         String code = (String) msg.obj;
+        code = code.replaceAll(" ", "");
         switch (msg.what) {
             case CODE: {
                 if (App.MUSIC_SWITCH) {
