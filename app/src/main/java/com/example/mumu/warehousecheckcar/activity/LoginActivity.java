@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
@@ -40,6 +41,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -109,13 +111,13 @@ public class LoginActivity extends AppCompatActivity {
         App.IP = "http://47.106.157.255";
         App.PORT = "80";
 //        测试服
-//        App.IP = "http://120.79.56.119";
+//        App.IP = "http://w";
 //        App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
 //        App.IP="http://192.168.1.118";
 //        App.PORT="80";
-//        App.IP = "http://192.168.1.121";
+//        App.IP = "http://192.168.1.127";
 //        App.PORT = "8080";
     }
 
@@ -343,9 +345,12 @@ public class LoginActivity extends AppCompatActivity {
                         String username = (String) message.get("username");
                         String msg = (String) message.get("msg");
                         int auth = (int) message.get("auth");
+                        JSONArray jsonArray = message.getJSONArray("app_auth");
+                        String jsonStr = JSONObject.toJSONString(jsonArray);
+                        List<User.Power> list = JSONObject.parseArray(jsonStr, User.Power.class);
                         User user = User.newInstance();
 //                        user.setUser(id, username, msg, code,0);
-                        user.setUser(id, username, msg, code, auth);
+                        user.setUser(id, username, msg, code, auth, list);
                         return true;
                     }
                   /*  case 1003:{//密码不正确

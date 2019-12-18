@@ -65,8 +65,6 @@ public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackL
     EditText edittext1;
     @Bind(R.id.edittext2)
     EditText edittext2;
-    @Bind(R.id.button1)
-    Button button1;
 
 
     private static PutawayCarrierFragment fragment;
@@ -220,7 +218,7 @@ public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackL
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
-    @OnClick({R.id.button2, R.id.button1})
+    @OnClick({R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button2:
@@ -273,11 +271,6 @@ public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackL
                     }
                 } else
                     showToast("请扫描库位硬标签");
-                break;
-            case R.id.button1:
-                App.CARRIER.clear();
-                App.CARRIER.setLocationNo("临时入库区");
-                edittext2.setText("临时入库区");
                 break;
         }
     }

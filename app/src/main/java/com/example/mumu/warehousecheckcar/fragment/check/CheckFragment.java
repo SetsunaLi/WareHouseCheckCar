@@ -96,6 +96,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
     private List<Inventory> dataList;
     private List<String> dataKEY;
     private List<String> epcList;
+    private List<String> epcData;
     private ScanResultHandler scanResultHandler;
 
     @Nullable
@@ -103,7 +104,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.check_layout_upgrade, container, false);
         ButterKnife.bind(this, view);
-        downLoadData();
         return view;
     }
 
@@ -116,6 +116,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
         epcList = new ArrayList<>();
         keyValue = new HashMap<>();
         dataKEY = new ArrayList<>();
+        epcData = new ArrayList<>();
         if (App.CARRIER != null) {
             if (!TextUtils.isEmpty(App.CARRIER.getLocationNo()))
                 text2.setText(App.CARRIER.getLocationNo());
@@ -208,7 +209,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                                 response = jsonArray.toJavaList(Inventory.class);
                                 if (response != null && response.size() != 0) {
                                     for (Inventory obj : response) {
-                                        if (obj != null && obj.getVatNo() != null) {
+                                        if (obj != null && obj.getVatNo() != null && !epcData.contains(obj.getEpc())) {
                                             if (keyValue.containsKey(obj.getVatNo())) {//里面有
                                                 myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
                                             } else {//里面没有
@@ -219,6 +220,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                                                 keyValue.put(obj.getVatNo(), myList.size() - 1);
                                             }
                                             obj.setFlag(0);//默认为0//0为盘亏
+                                            epcData.add(obj.getEpc());
                                             dataList.add(obj);
                                         }
                                     }

@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.fragment.car.CarFragment;
 import com.example.mumu.warehousecheckcar.fragment.car.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.check.CheckPlanFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpCarrierFragment;
@@ -312,7 +313,6 @@ public class Main2Activity extends AppCompatActivity
         }
         FragmentManager fragmentManager = getFragmentManager();
         if (fragment instanceof HomeFragment) {
-
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
         } else if (fragment != null) {

@@ -461,7 +461,15 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                 allList.add(oneNoList);
             }
         }
-        if ((User.newInstance().getAuth() != 10 || (User.newInstance().getAuth() == 10 && isPush)) && allList.size() > 0) {
+        int outAuth6 = -1;
+        int outAuth7 = -1;
+        for (User.Power power : User.newInstance().getApp_auth()) {
+            if (power.getAuth_type() == 6)
+                outAuth6 = power.getFlag();
+            if (power.getAuth_type() == 7)
+                outAuth7 = power.getFlag();
+        }
+        if ((outAuth7 != 0 || (outAuth6 != 0 && isPush)) && allList.size() > 0) {
             for (ArrayList<Output> jsocList : allList) {
                 if (jsocList.size() > 0) {
                     JSONObject jsonObject = new JSONObject();

@@ -97,86 +97,72 @@ public class HomeFragment extends BaseFragment {
                             homeButton.getIndex(), 64),
                     null,
                     null);
-            button.setVisibility(View.GONE);
         }
         if (user != null) {
-            switch (user.getAuth()) {
-//                目前认为GONE是最好的，INVISIBLE会占有位置
-                case 5:
-                    button1.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-                    break;
-                case 6:
-                    button3.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-                    break;
-                case 7:
-                    button2.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-                    break;
-                case 8:
-                    button11.setVisibility(View.VISIBLE);
-                    button12.setVisibility(View.VISIBLE);
-                    button14.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-
-                    break;
-                case 9:
-                    button9.setVisibility(View.VISIBLE);
-                    button10.setVisibility(View.VISIBLE);
-                    button13.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-                    break;
-                case 10:
-                    button1.setVisibility(View.VISIBLE);
-                    button3.setVisibility(View.VISIBLE);
-                    button7.setVisibility(View.VISIBLE);
-                    button8.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button11.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-                    break;
-                case 11:
-                    button1.setVisibility(View.VISIBLE);
-                    button3.setVisibility(View.VISIBLE);
-                    button7.setVisibility(View.VISIBLE);
-                    button8.setVisibility(View.VISIBLE);
-                    button5.setVisibility(View.VISIBLE);
-                    button6.setVisibility(View.VISIBLE);
-                    button15.setVisibility(View.VISIBLE);
-                    button16.setVisibility(View.VISIBLE);
-                    break;
-             /*   case 12:
-                    for (HomeButton homeButton : HomeButton.values()) {
-                        Button button = (Button) getView().findViewById(homeButton.getId());
+            for (User.Power power : user.getApp_auth()) {
+                Button button;
+                switch (power.getAuth_type()) {
+                    case 0:
+                        button = button1;
+                        break;
+                    case 1:
+                        button = button2;
+                        break;
+                    case 2:
+                        button = button3;
+                        break;
+                    case 3:
+                        button = button4;
+                        break;
+                    case 4:
+                        button = button5;
+                        break;
+                    case 5:
+                        button = button6;
+                        break;
+                    case 6:
+                        button = button7;
+                        break;
+                    case 7:
+                        button = button7;
+                        break;
+                    case 8:
+                        button = button8;
+                        break;
+                    case 9:
+                        button = button9;
+                        break;
+                    case 10:
+                        button = button10;
+                        break;
+                    case 11:
+                        button = button11;
+                        break;
+                    case 12:
+                        button = button12;
+                        break;
+                    case 13:
+                        button = button13;
+                        break;
+                    case 14:
+                        button = button14;
+                        break;
+                    case 15:
+                        button = button15;
+                        break;
+                    case 16:
+                        button = button17;
+                        break;
+                    default:
+                        button = null;
+                }
+                if (button != null) {
+                    if (power.getFlag() == 0)
+                        button.setVisibility(View.GONE);
+                    else
                         button.setVisibility(View.VISIBLE);
-                    }
-                    break;*/
-                default:
-                    for (HomeButton homeButton : HomeButton.values()) {
-                        Button button = (Button) getView().findViewById(homeButton.getId());
-                        button.setVisibility(View.VISIBLE);
-                    }
-                    break;
+                }
             }
-
         }
     }
 
