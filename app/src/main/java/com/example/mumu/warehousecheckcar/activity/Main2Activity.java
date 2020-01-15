@@ -40,7 +40,6 @@ import com.example.mumu.warehousecheckcar.fragment.car.CarFragment;
 import com.example.mumu.warehousecheckcar.fragment.car.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckFragment;
-import com.example.mumu.warehousecheckcar.fragment.check.CheckPlanFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpCarrierFragment;

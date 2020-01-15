@@ -99,6 +99,7 @@ public class HomeFragment extends BaseFragment {
                     null);
         }
         if (user != null) {
+            boolean outFlag = false;
             for (User.Power power : user.getApp_auth()) {
                 Button button;
                 switch (power.getAuth_type()) {
@@ -122,9 +123,14 @@ public class HomeFragment extends BaseFragment {
                         break;
                     case 6:
                         button = button7;
+                        if (power.getFlag() != 0)
+                            outFlag = true;
                         break;
                     case 7:
-                        button = button7;
+                        if (outFlag)
+                            button = null;
+                        else
+                            button = button7;
                         break;
                     case 8:
                         button = button8;
