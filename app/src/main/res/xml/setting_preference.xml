@@ -7,7 +7,7 @@
             <PreferenceCategory android:title="用户信息">
                 <!--<com.example.mumu.warehousecheckcar.view.UserHeadPreference
                     android:key="@string/user_message_key"
-                    android:layout="@layout/user_item1"/>-->
+                    android:plan_add_item="@plan_add_item/user_item1"/>-->
                 <EditTextPreference
                     android:key="@string/user_name_key"
                     android:summary="@string/user_name_summary"

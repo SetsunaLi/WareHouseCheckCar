@@ -205,6 +205,8 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                                     for (int i = 0; i < response.size(); i++) {
                                         RetIn output = response.get(i);
                                         output.setSh_no(no.getOut_no());
+//                                        新建列表
+
                                         output.setInd(new ArrayList<RetInd>());
                                         if (!dataKey.contains(output.getSh_no())) {
                                             dataKey.add(output.getSh_no());

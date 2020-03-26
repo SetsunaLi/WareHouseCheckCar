@@ -86,7 +86,7 @@
 //    @Nullable
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.cutcloth_out_layout, container, false);
+//        View view = inflater.inflate(R.plan_add_item.cutcloth_out_layout, container, false);
 //        ButterKnife.bind(this, view);
 //        return view;
 //    }
@@ -102,7 +102,7 @@
 //
 //    @Override
 //    protected void initView(View view) {
-//        mAdapter = new RecycleAdapter(recyle, myList, R.layout.cutcloth_out_item);
+//        mAdapter = new RecycleAdapter(recyle, myList, R.plan_add_item.cutcloth_out_item);
 //        mAdapter.setContext(getActivity());
 //        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
 //        setAdaperHeader();
@@ -130,7 +130,7 @@
 //    }
 //
 //    private void setAdaperHeader() {
-//        View view = LayoutInflater.from(getActivity()).inflate(R.layout.cutcloth_out_head, null);
+//        View view = LayoutInflater.from(getActivity()).inflate(R.plan_add_item.cutcloth_out_head, null);
 //        mAdapter.setHeader(view);
 //    }
 //

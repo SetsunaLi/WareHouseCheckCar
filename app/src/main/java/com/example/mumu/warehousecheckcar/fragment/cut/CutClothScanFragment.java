@@ -66,7 +66,7 @@
 //    @Nullable
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.cut_cloth_barcode_layout, container, false);
+//        View view = inflater.inflate(R.plan_add_item.cut_cloth_barcode_layout, container, false);
 //        getActivity().setTitle(getResources().getString(R.string.cut_scanner));
 //        ButterKnife.bind(this, view);
 //        return view;
