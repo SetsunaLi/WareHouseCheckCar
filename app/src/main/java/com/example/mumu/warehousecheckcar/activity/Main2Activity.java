@@ -60,7 +60,7 @@ import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
-import com.example.mumu.warehousecheckcar.picture.CutToBitmap;
+import com.example.mumu.warehousecheckcar.utils.CutToBitmapUtil;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.rfid.RFIDReaderHelper;
 
@@ -151,7 +151,7 @@ public class Main2Activity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ImageView iv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView);
-        iv.setImageBitmap(CutToBitmap.changeToBitmap(getResources(), iv, R.mipmap.user_head));
+        iv.setImageBitmap(CutToBitmapUtil.changeToBitmap(getResources(), iv, R.mipmap.user_head));
         TextView tv1 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView1);
         tv1.setText(user.getUsername());
         TextView tv2 = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textView2);

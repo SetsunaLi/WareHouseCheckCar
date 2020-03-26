@@ -1,4 +1,4 @@
-package com.example.mumu.warehousecheckcar.picture;
+package com.example.mumu.warehousecheckcar.utils;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -9,7 +9,7 @@ import android.view.View;
  * Created by mumu on 2018/8/11.
  */
 
-public class CutToBitmap {
+public class CutToBitmapUtil {
 
     /** 图片转化Bitmap 按照控件大小**/
     public static Bitmap changeToBitmap(Resources res,View view, int resId) {

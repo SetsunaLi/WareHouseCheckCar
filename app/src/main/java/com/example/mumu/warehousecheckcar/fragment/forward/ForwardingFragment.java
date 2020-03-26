@@ -59,6 +59,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -239,6 +240,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         if (App.LOGCAT_SWITCH) {
                             Log.i(TAG, "getEpc;" + e.getMessage());
                             showToast("获取申请单信息失败");
+
                         }
                     }
 
