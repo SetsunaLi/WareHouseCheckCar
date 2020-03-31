@@ -71,7 +71,7 @@ public class CarFragment extends BaseFragment {
             case R.id.button2:
                 //叉车下架
             {
-                Fragment fragment = CarSoldOutCarrierFragment.newInstance();
+                Fragment fragment = CarOutNoFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);
