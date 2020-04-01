@@ -256,7 +256,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
                             public void onResponse(BaseReturn response) {
                                 try {
                                     try {
-                                        AppLog.write(getActivity(), "outapply", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                        AppLog.write(getActivity(), "carstock", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -267,6 +267,8 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
 //                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                         if (response != null && response.getStatus() == 1) {
                                             showToast("上传成功");
+                                            clearData();
+                                            mAdapter.notifyDataSetChanged();
                                         } else {
                                             showToast("上传失败");
                                             showConfirmDialog("上传失败，" + response.getMessage());
@@ -407,6 +409,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
 //                    }
                 });
                 cb.setChecked(outNoList.contains(outNoList.contains(itemList.get(0).getOut_no())));
+                holder.setText(R.id.text1, itemList.get(0).getOut_no());
                 LinearLayout linearLayout = holder.getView(R.id.layout1);
                 linearLayout.removeAllViews();
                 linearLayout.addView(LayoutInflater.from(context).inflate(R.layout.car_stock_add_item, linearLayout, false));

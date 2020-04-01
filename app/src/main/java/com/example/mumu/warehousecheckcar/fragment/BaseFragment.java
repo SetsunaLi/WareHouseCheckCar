@@ -93,11 +93,13 @@ public abstract class BaseFragment extends Fragment {
      * 显示提示Dialog
      */
     protected void showConfirmDialog(String msg) {
-        if (confirmDialog == null) {
+       /* if (confirmDialog == null) {
             confirmDialog = ConfirmDialog.newInstance(msg);
         } else {
             confirmDialog.changeText(msg);
-        }
+        }*/
+        confirmDialog = ConfirmDialog.newInstance(msg);
+
         confirmDialog.show(getChildFragmentManager(), "confirm");
     }
 

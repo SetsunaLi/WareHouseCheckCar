@@ -166,10 +166,20 @@ public class CutPlanFragemnt extends BaseFragment {
             if (item != null) {
                 LinearLayout linearLayout = holder.getView(R.id.layout1);
                 linearLayout.removeAllViews();
+                View view0 = LayoutInflater.from(context).inflate(R.layout.plan_add_item, linearLayout, false);
+                linearLayout.addView(view0);
                 for (OutputDetail outputDetail : item.getList()) {
                     View view = LayoutInflater.from(context).inflate(R.layout.plan_add_item, linearLayout, false);
                     TextView textView1 = (TextView) view.findViewById(R.id.item1);
+                    TextView textView2 = (TextView) view.findViewById(R.id.item2);
+                    TextView textView3 = (TextView) view.findViewById(R.id.item3);
+                    TextView textView4 = (TextView) view.findViewById(R.id.item4);
+                    TextView textView5 = (TextView) view.findViewById(R.id.item5);
                     textView1.setText(outputDetail.getFabRool());
+                    textView2.setText(outputDetail.getFabRool());
+                    textView3.setText(outputDetail.getFabRool());
+                    textView4.setText(outputDetail.getFabRool());
+                    textView5.setText(outputDetail.getFabRool());
                     linearLayout.addView(view);
                 }
             }
