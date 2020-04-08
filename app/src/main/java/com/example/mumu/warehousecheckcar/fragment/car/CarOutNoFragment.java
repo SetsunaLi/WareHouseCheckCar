@@ -1,6 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment.car;
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
@@ -138,8 +139,10 @@ public class CarOutNoFragment extends BaseFragment implements RXCallback, OnCode
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("NO", myList);
                 fragment.setArguments(bundle);
-                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction().add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                transaction.show(fragment);
+                transaction.commit();
                 break;
         }
     }

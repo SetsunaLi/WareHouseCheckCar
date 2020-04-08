@@ -6,7 +6,7 @@ import java.util.List;
  *created by 
  *on 2020/3/27
  */
-public class ResultBean<T> {
+public class ResultBeanArray<T> {
 
     /**
      * status : 1
