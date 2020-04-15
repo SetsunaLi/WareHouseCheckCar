@@ -205,6 +205,8 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
         scrollView.setFillViewport(true);
+        text3.setText(String.valueOf(0));
+
     }
 
     @Override
@@ -387,6 +389,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
                                         if (isBlueTooth & isConnect)
                                             onOffWeight(true);
                                         mAdapter.setPosition(myList.size() - 1);
+                                        text3.setText(String.valueOf(myList.size() - 1));
                                         mAdapter.notifyDataSetChanged();
                                     }
                                 }
