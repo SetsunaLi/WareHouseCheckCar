@@ -172,4 +172,5 @@ public abstract class BaseFragment extends Fragment {
      * 添加监听器
      */
     protected abstract void addListener();
+
 }

@@ -34,6 +34,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.ClothPlan;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.ResultBeanArray;
 import com.example.mumu.warehousecheckcar.entity.ResultBeanObject;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
@@ -231,6 +232,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
+                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 clearData();
                 downLoadData();
                 break;
@@ -264,7 +266,8 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                         jsonArray.add(object);
                     }
                 }
-                map.put(list.get(0).getOut_no(), jsonArray);
+                if (jsonArray.size() > 0)
+                    map.put(list.get(0).getOut_no(), jsonArray);
             }
         }
         jsonObject.put("data", map);
@@ -284,27 +287,18 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                 @Override
                 public void onResponse(BaseReturn response) {
                     try {
-                        try {
-                            AppLog.write(getActivity(), "carstock", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            uploadDialog.openView();
-                            hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
-//                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                            if (response.getStatus() == 1) {
-                                showToast("上传成功");
-                                clearData();
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                showToast("上传失败");
-                                showConfirmDialog("上传失败，" + response.getMessage());
-                                Sound.faillarm();
-                            }
-                        } catch (Exception e) {
-
+                        AppLog.write(getActivity(), "cutplan", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                        uploadDialog.openView();
+                        hideUploadDialog();
+                        scanResultHandler.removeCallbacks(r);
+                        if (response.getStatus() == 1) {
+                            showToast("上传成功");
+                            clearData();
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            showToast("上传失败");
+                            showConfirmDialog("上传失败，" + response.getMessage());
+                            Sound.faillarm();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -327,7 +321,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
             obj.put("epc", epc);
             final String json = obj.toJSONString();
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/rfid/getEpc.sh", new OkHttpClientManager.ResultCallback<JSONArray>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cutOut/hasInvSumByEpc", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (App.LOGCAT_SWITCH) {
@@ -337,28 +331,35 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                     }
 
                     @Override
-                    public void onResponse(JSONArray jsonArray) {
+                    public void onResponse(JSONObject jsonObject) {
                         try {
-                            List<Cloth> arry = jsonArray.toJavaList(Cloth.class);
-                            if (arry != null && arry.size() > 0) {
-                                Cloth value = arry.get(0);
-                                if (value != null) {
-                                    if (!epcs.contains(value.getEpc())) {
-                                        epcs.add(value.getEpc());
-                                        cloths.add(value);
-                                        for (List<ClothPlan> list : myList) {
-                                            for (ClothPlan clothPlan : list) {
-                                                if (clothPlan.getVat_no().equals(value.getVatNo())) {
-                                                    String epc = outId_epc.get(clothPlan.getOutp_id());
-                                                    if (epc.equals("")) {
-                                                        outId_epc.put(clothPlan.getOutp_id(), value.getEpc());
-                                                        mAdapter.notifyDataSetChanged();
+                            if (jsonObject.getInteger("status") == 1) {
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                List<Cloth> arry = jsonArray.toJavaList(Cloth.class);
+                                if (arry != null && arry.size() > 0) {
+                                    Cloth value = arry.get(0);
+                                    if (value != null) {
+                                        if (!epcs.contains(value.getEpc())) {
+                                            epcs.add(value.getEpc());
+                                            cloths.add(value);
+                                            for (List<ClothPlan> list : myList) {
+                                                for (ClothPlan clothPlan : list) {
+                                                    if (clothPlan.getVat_no().equals(value.getVatNo())) {
+                                                        String epc = outId_epc.get(clothPlan.getOutp_id());
+                                                        if (epc.equals("")) {
+                                                            outId_epc.put(clothPlan.getOutp_id(), value.getEpc());
+                                                            mAdapter.notifyDataSetChanged();
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                            } else {
+                                String msg = jsonObject.getString("message");
+                                String data = jsonObject.getString("data");
+                                showToast(msg + data);
                             }
                         } catch (Exception e) {
 
