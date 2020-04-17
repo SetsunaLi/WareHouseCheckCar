@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.entity.HomeButton;
+import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.Imgutil;
 
@@ -98,9 +99,9 @@ public class HomeFragment extends BaseFragment {
                     null,
                     null);
         }
-        if (user != null) {
+        if (user != null&&user.getApp_auth()!=null) {
             boolean outFlag = false;
-            for (User.Power power : user.getApp_auth()) {
+            for (Power power : user.getApp_auth()) {
                 Button button;
                 switch (power.getAuth_type()) {
                     case 0:

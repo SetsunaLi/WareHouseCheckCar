@@ -30,6 +30,7 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.UpdateApk;
@@ -108,11 +109,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initDate() {
 //         正式服
-//        App.IP = "http://47.106.157.255";
-//        App.PORT = "80";
+        App.IP = "http://47.106.157.255";
+        App.PORT = "80";
 //        测试服
-        App.IP = "http://120.79.56.119";
-        App.PORT = "8080";
+//        App.IP = "http://120.79.56.119";
+//        App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
 //        App.IP="http://192.168.1.118";
@@ -347,7 +348,7 @@ public class LoginActivity extends AppCompatActivity {
                         int auth = (int) message.get("auth");
                         JSONArray jsonArray = message.getJSONArray("app_auth");
                         String jsonStr = JSONObject.toJSONString(jsonArray);
-                        List<User.Power> list = JSONObject.parseArray(jsonStr, User.Power.class);
+                        List<Power> list = JSONObject.parseArray(jsonStr, Power.class);
                         User user = User.newInstance();
 //                        user.setUser(id, username, msg, code,0);
                         user.setUser(id, username, msg, code, auth, list);
