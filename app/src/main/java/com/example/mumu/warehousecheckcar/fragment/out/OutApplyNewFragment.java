@@ -43,6 +43,7 @@ import com.example.mumu.warehousecheckcar.entity.Inventory;
 import com.example.mumu.warehousecheckcar.entity.Output;
 import com.example.mumu.warehousecheckcar.entity.OutputDetail;
 import com.example.mumu.warehousecheckcar.entity.OutputFlag;
+import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
@@ -463,7 +464,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
         }
         int outAuth6 = -1;
         int outAuth7 = -1;
-        for (User.Power power : User.newInstance().getApp_auth()) {
+        for (Power power : User.newInstance().getApp_auth()) {
             if (power.getAuth_type() == 6)
                 outAuth6 = power.getFlag();
             if (power.getAuth_type() == 7)

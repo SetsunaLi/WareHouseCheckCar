@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
@@ -108,18 +109,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initDate() {
-//         正式服
-        App.IP = "http://47.106.157.255";
-        App.PORT = "80";
-//        测试服
-//        App.IP = "http://120.79.56.119";
-//        App.PORT = "8080";
-//        App.IP = "http://192.168.1.243";
-//        App.PORT = "80";
-//        App.IP="http://192.168.1.118";
-//        App.PORT="80";
-//       App.IP = "http://192.168.1.161";
-//        App.PORT = "8080";
+        App.IP = Constant.IP;
+        App.PORT = Constant.PORT;
     }
 
     @Override

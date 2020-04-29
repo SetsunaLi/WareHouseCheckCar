@@ -111,6 +111,7 @@ public class UploadDialog extends DialogFragment {
     }
 
     public void changeText(String msg) {
+
         dialogText.setText(msg);
     }
 

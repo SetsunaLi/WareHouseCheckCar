@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.dialog.ConfirmDialog;
 import com.example.mumu.warehousecheckcar.dialog.LoadingDialog;
 import com.example.mumu.warehousecheckcar.dialog.UploadDialog;
@@ -116,11 +118,7 @@ public abstract class BaseFragment extends Fragment {
      * 显示上传Dialog
      */
     protected void showUploadDialog(String msg) {
-        if (uploadDialog == null) {
-            uploadDialog = UploadDialog.newInstance(msg);
-        } else {
-            uploadDialog.changeText(msg);
-        }
+        uploadDialog = UploadDialog.newInstance(msg);
         uploadDialog.setCancelable(false);
         uploadDialog.show(getChildFragmentManager(), "upload");
     }

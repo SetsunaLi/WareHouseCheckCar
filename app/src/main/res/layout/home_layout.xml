@@ -247,6 +247,16 @@
             android:orientation="horizontal"
             android:layout_marginBottom="18dp"
             >
+
+            <Button
+                android:id="@+id/button18"
+                style="@style/DashboardButton"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_marginRight="@dimen/home_button_margin2"
+                android:layout_weight="1"
+                android:onClick="click18"
+                android:text="@string/btn_click18" />
             <Button
                 android:id="@+id/button16"
                 style="@style/DashboardButton"

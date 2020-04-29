@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="false"
-            android:focusableInTouchMode="true"></android.support.v7.widget.RecyclerView>
+            android:focusableInTouchMode="true" />
     </RelativeLayout>
     <View style="@style/view_item_bottom" />
     <LinearLayout

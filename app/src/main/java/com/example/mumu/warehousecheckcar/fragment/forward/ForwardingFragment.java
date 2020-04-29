@@ -43,11 +43,13 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.Forwarding;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.ResultBeanObject;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
+import com.example.mumu.warehousecheckcar.utils.SpModel;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -71,6 +73,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.mumu.warehousecheckcar.Constant.APP_OUTP_ID;
+import static com.example.mumu.warehousecheckcar.Constant.APP_TABLE_NAME;
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
@@ -119,7 +123,8 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     private ScanResultHandler scanResultHandler;
     private boolean returnWhere = false;
     private boolean flag = true;
-
+    private SpModel sql;
+    private int transport_output_id = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -194,7 +199,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                     break;
                 case 0xfe:
                     epcKeyList.clear();
-                    epcKeyList = (HashMap<String, ForwardingFlag>) ((HashMap<String, ForwardingFlag>) msg.getPositionObj(0)).clone();
                     epcKeyList.putAll((HashMap<String, ForwardingFlag>) msg.getPositionObj(0));
                     for (ForwardingList forwardingList : myList) {
                         forwardingList.setMatchCount(0);
@@ -211,6 +215,35 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                     mAdapter.notifyDataSetChanged();
                     break;
             }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (sql == null) {
+            sql = SpModel.getInstance(getActivity(), APP_TABLE_NAME);
+        }
+        if ((boolean) sql.getData(carMsg.getCarNo(), false)) {
+            showUploadDialog(carMsg.getCarNo() + "还有未完成的发运是否继续？");
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (view.getId()) {
+                        case R.id.dialog_no:
+                            transport_output_id = 0;
+                            hideUploadDialog();
+                            break;
+                        case R.id.dialog_yes:
+                            transport_output_id = (int) sql.getData(APP_OUTP_ID, 0);
+                            hideUploadDialog();
+                            break;
+                    }
+                }
+            };
+            setUploadYesClickListener(onClickListener);
+            setUploadNoClickListener(onClickListener);
+        } else
+            transport_output_id = 0;
     }
 
     @Override
@@ -232,7 +265,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             jsonObject.put("applyNo", no);
             final String json = jsonObject.toJSONString();
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/pullDespatch.sh", new OkHttpClientManager.ResultCallback<List<Forwarding>>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/pullDespatch", new OkHttpClientManager.ResultCallback<List<Forwarding>>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
@@ -337,11 +370,12 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         }
     }
 
-    private void upLoading(boolean isFinish) {
+    private void upLoading(final boolean isFinish) {
         JSONObject jsonObject = new JSONObject();
         int id = User.newInstance().getId();
         jsonObject.put("userId", id);
         jsonObject.put("carMsg", carMsg);
+        jsonObject.put("cc_transport_output_id", transport_output_id);
 //        false是0，true是1
         if (!isFinish)
             jsonObject.put("status", 0);
@@ -366,7 +400,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             e.printStackTrace();
         }
         try {
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/setTransport_out.sh", new OkHttpClientManager.ResultCallback<JSONObject>() {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<ResultBeanObject<JSONObject>>() {
                 @Override
                 public void onError(Request request, Exception e) {
                     if (e instanceof ConnectException)
@@ -378,7 +412,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 }
 
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(ResultBeanObject<JSONObject> response) {
                     try {
                         AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
                     } catch (IOException e) {
@@ -388,8 +422,16 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         uploadDialog.openView();
                         hideUploadDialog();
                         scanResultHandler.removeCallbacks(r);
-                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
-                        if (baseReturn != null && baseReturn.getStatus() == 1) {
+                        if (response.getStatus() == 1) {
+                            JSONObject jsonObject = response.getData();
+                            int cc_transport_output_id = jsonObject.getInteger("cc_transport_output_id");
+                            if (isFinish) {
+                                sql.deleteData(APP_OUTP_ID);
+                                sql.deleteData(carMsg.getCarNo());
+                            } else {
+                                sql.putData(carMsg.getCarNo(), true);
+                                sql.putData(APP_OUTP_ID, cc_transport_output_id);
+                            }
                             showToast("上传成功");
                             clearData();
                             mAdapter.notifyDataSetChanged();

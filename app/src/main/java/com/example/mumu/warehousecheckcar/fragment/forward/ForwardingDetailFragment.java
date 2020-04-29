@@ -68,6 +68,7 @@ public class ForwardingDetailFragment extends BaseFragment {
     protected void initData() {
         myList = new ArrayList<>();
         myList.add(new Forwarding("", "", "", "", "", 0.0, ""));//增加一个为头部
+        dataList = new HashMap<>();
     }
 
     @Override
@@ -94,7 +95,6 @@ public class ForwardingDetailFragment extends BaseFragment {
             switch (msg.getStatus()) {
                 case 0x02:
                     myList.addAll((List<Forwarding>) msg.getPositionObj(0));
-                    dataList = (HashMap<String, ForwardingFragment.ForwardingFlag>) ((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1)).clone();
                     dataList.putAll((HashMap<String, ForwardingFragment.ForwardingFlag>) msg.getPositionObj(1));
                     break;
             }
@@ -222,20 +222,17 @@ public class ForwardingDetailFragment extends BaseFragment {
                 if (position != 0) {
                     if (TextUtils.isEmpty(item.getFabRool())) {
                         cb.setChecked(false);
-                        if (cb.isEnabled() != false)
+                        if (cb.isEnabled())
                             cb.setEnabled(false);
                     } else {
                         if (dataList.containsKey(item.getEpc())) {
                             if (!cb.isEnabled())
                                 cb.setEnabled(true);
+                            cb.setChecked(dataList.get(item.getEpc()).isStatus());
                         } else {
                             if (cb.isEnabled())
                                 cb.setEnabled(false);
                         }
-                        if (dataList.containsKey(item.getEpc()))
-                            cb.setChecked(true);
-                        else
-                            cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (!dataList.get(item.getEpc()).isFind()) {
