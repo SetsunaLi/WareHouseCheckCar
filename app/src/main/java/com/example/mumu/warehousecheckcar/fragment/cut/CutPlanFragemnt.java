@@ -34,8 +34,7 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.ClothPlan;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.ResultBeanArray;
-import com.example.mumu.warehousecheckcar.entity.ResultBeanObject;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -189,14 +188,14 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("userId", User.newInstance().getId());
             String json = jsonObject.toJSONString();
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cutOut/getWorkInfoByUserId", new OkHttpClientManager.ResultCallback<ResultBeanObject<JSONObject>>() {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cutOut/getWorkInfoByUserId", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
                 @Override
                 public void onError(Request request, Exception e) {
 
                 }
 
                 @Override
-                public void onResponse(ResultBeanObject<JSONObject> response) {
+                public void onResponse(BaseReturnObject<JSONObject> response) {
                     hideLoadingDialog();
                     if (response != null && response.getStatus() == 1) {
                         JSONObject jsonObject = (JSONObject) response.getData();

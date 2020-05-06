@@ -40,6 +40,7 @@ import com.example.mumu.warehousecheckcar.fragment.car.CarFragment;
 import com.example.mumu.warehousecheckcar.fragment.car.CarPutawayFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.check.CheckFragment;
+import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbClothGetFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpCarrierFragment;
@@ -306,6 +307,9 @@ public class Main2Activity extends AppCompatActivity
             case 17:
                 fragment = ReturnGoodsInNoFragment.newInstance();
                 break;
+            case 18:
+                fragment = ChubbClothGetFragment.newInstance();
+                break;
             default:
                 fragment = AboutFragment.newInstance();
                 break;
@@ -439,6 +443,13 @@ public class Main2Activity extends AppCompatActivity
      */
     public void click17(View view) {
         selectItem(17);
+    }
+
+    /**
+     * 查布接收
+     */
+    public void click18(View view) {
+        selectItem(18);
     }
 
     //返回键监听

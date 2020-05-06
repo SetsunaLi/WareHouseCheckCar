@@ -1,14 +1,10 @@
 package com.example.mumu.warehousecheckcar.fragment.forward;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,13 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -31,19 +25,16 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.Forwarding;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
-import com.example.mumu.warehousecheckcar.entity.ResultBeanObject;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -61,7 +52,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -400,7 +390,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             e.printStackTrace();
         }
         try {
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<ResultBeanObject<JSONObject>>() {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
                 @Override
                 public void onError(Request request, Exception e) {
                     if (e instanceof ConnectException)
@@ -412,7 +402,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 }
 
                 @Override
-                public void onResponse(ResultBeanObject<JSONObject> response) {
+                public void onResponse(BaseReturnObject<JSONObject> response) {
                     try {
                         AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
                     } catch (IOException e) {

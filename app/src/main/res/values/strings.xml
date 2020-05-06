@@ -43,6 +43,7 @@
     <string name="btn_click15_1">入库辅助</string>
     <string name="btn_click16">系统设置</string>
     <string name="btn_click17">退库入库</string>
+    <string name="btn_click18">查布接收</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
 
@@ -87,6 +88,7 @@
         <item>入库辅助</item>
         <item>系统设置</item>
         <item>退库入库</item>
+        <item>查布接收</item>
         <item>关于</item>
     </string-array>
     <!--导航栏的选项名称-->

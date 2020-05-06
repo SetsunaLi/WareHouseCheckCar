@@ -4,17 +4,19 @@ import java.util.List;
 
 /***
  *created by 
- *on 2020/4/3
+ *on 2020/3/27
  */
-public class ResultBeanObject<T> {
+public class BaseReturnArray<T> {
+
     /**
      * status : 1
      * message : 查找成功
+     * data : []
      */
 
     private int status;
     private String message;
-    private T data;
+    private List<T> data;
 
     public int getStatus() {
         return status;
@@ -32,11 +34,11 @@ public class ResultBeanObject<T> {
         this.message = message;
     }
 
-    public T getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 }

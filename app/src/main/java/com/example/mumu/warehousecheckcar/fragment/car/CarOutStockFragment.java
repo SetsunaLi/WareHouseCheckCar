@@ -31,7 +31,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.CarOutBean;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
-import com.example.mumu.warehousecheckcar.entity.ResultBeanArray;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -149,7 +149,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
             object.put("applyNo", no);
             final String json = object.toJSONString();
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/static/getInfoByApplyNo", new OkHttpClientManager.ResultCallback<ResultBeanArray<CarOutBean>>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/static/getInfoByApplyNo", new OkHttpClientManager.ResultCallback<BaseReturnArray<CarOutBean>>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
@@ -161,7 +161,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
                     }
 
                     @Override
-                    public void onResponse(ResultBeanArray<CarOutBean> resultBean) {
+                    public void onResponse(BaseReturnArray<CarOutBean> resultBean) {
                         if (resultBean.getStatus() == 1) {
                             a:
                             for (CarOutBean carOutBean : resultBean.getData()) {

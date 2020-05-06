@@ -1,11 +1,7 @@
 package com.example.mumu.warehousecheckcar.fragment;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,6 +60,8 @@ public class HomeFragment extends BaseFragment {
     Button button2;
     @Bind(R.id.button17)
     Button button17;
+    @Bind(R.id.button18)
+    Button button18;
 
 
     public static HomeFragment newInstance() {
@@ -159,6 +157,9 @@ public class HomeFragment extends BaseFragment {
                         break;
                     case 16:
                         button = button17;
+                        break;
+                    case 17:
+                        button = button18;
                         break;
                     default:
                         button = null;

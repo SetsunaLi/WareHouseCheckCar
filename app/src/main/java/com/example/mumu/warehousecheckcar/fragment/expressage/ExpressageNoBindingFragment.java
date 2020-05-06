@@ -1,10 +1,7 @@
-package com.example.mumu.warehousecheckcar.fragment.out;
+package com.example.mumu.warehousecheckcar.fragment.expressage;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,22 +12,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
-import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
 
 import java.util.ArrayList;
@@ -40,14 +34,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
-/**
- * Created by mumu on 2018/12/8.
+/***
+ *created by 快递单号绑定
+ *on 2020/4/18
  */
-
-public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
-
-    private final String TAG = "OutApplyNoFragment";
+public class ExpressageNoBindingFragment extends BaseFragment implements RXCallback, OnCodeResult {
+    @Bind(R.id.fixeedittext1)
+    FixedEditText fixeedittext1;
+    @Bind(R.id.text1)
+    TextView text1;
+    @Bind(R.id.headNo)
+    LinearLayout headNo;
     @Bind(R.id.imgbutton)
     ImageButton imgbutton;
     @Bind(R.id.recyle)
@@ -55,24 +52,15 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
     @Bind(R.id.button2)
     Button button2;
 
-    private static OutApplyNoFragment fragment;
-
-    public static OutApplyNoFragment newInstance() {
-        if (fragment == null) ;
-        fragment = new OutApplyNoFragment();
-        return fragment;
-    }
-
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.out_ins_layout, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.expressage_no_binding_layout, container, false);
         ButterKnife.bind(this, view);
-        getActivity().setTitle("出库");
         return view;
     }
 
@@ -112,28 +100,10 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mAdapter.setId(0);
-        mAdapter.select(0);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
         disConnect2D();
-    }
-
-    protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
     }
 
     @OnClick({R.id.imgbutton, R.id.button2})
@@ -144,17 +114,19 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
                 mAdapter.select(myList.size() - 1);
                 mAdapter.setId(myList.size() - 1);
                 mAdapter.notifyDataSetChanged();
-                recyle.scrollToPosition(myList.size()-1);
+                recyle.scrollToPosition(myList.size() - 1);
                 break;
             case R.id.button2:
-                Fragment fragment = OutApplyNewFragment.newInstance();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("NO", myList);
-                fragment.setArguments(bundle);
-                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                 break;
         }
+    }
+
+    @Override
+    public void callback(byte[] bytes) {
+        Message msg = scanResultHandler.obtainMessage();
+        msg.what = ScanResultHandler.CODE;
+        msg.obj = new String(bytes);
+        scanResultHandler.sendMessage(msg);
     }
 
     @Override
@@ -167,6 +139,13 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;
+        private int position = -255;
+        private int id = -255;
+
+        public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
+            super(v, datas, itemLayoutId);
+
+        }
 
         public void setContext(Context context) {
             this.context = context;
@@ -176,8 +155,6 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
             super.setHeader(mHeaderView);
         }
 
-        private int position = -255;
-
         public void select(int position) {
             this.position = position;
         }
@@ -186,19 +163,12 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
             return position;
         }
 
-        private int id = -255;
-
         public int getId() {
             return id;
         }
 
         public void setId(int id) {
             this.id = id;
-        }
-
-        public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
-            super(v, datas, itemLayoutId);
-
         }
 
         @Override
@@ -240,7 +210,7 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
 
                 }
             });
-            ImageButton imageButton=(ImageButton)holder.getView(R.id.imagebutton1);
+            ImageButton imageButton = (ImageButton) holder.getView(R.id.imagebutton1);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

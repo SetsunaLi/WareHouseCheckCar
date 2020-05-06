@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.5">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </HorizontalScrollView>
+
+    </RelativeLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单次扫描数量：" />
+
+        <TextView
+            android:id="@+id/text1"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical"
+            android:text="" />
+
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button1"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/home_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="刷新" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/button_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="确定" />
+
+
+    </LinearLayout>
+</LinearLayout>
