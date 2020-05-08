@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
@@ -46,7 +47,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
     @Bind(R.id.button2)
     Button button2;
     private RecycleAdapter mAdapter;
-    private ArrayList<Integer> myList;
+    private ArrayList<ClothGetGroup> myList;
 
     public static ChubbClothGetFragment newInstance() {
         return new ChubbClothGetFragment();
@@ -86,7 +87,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
     }
 
     private void downLoad() {
-        OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/getCheckReceiveGroup", new OkHttpClientManager.ResultCallback<BaseReturnArray<Integer>>() {
+        OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/getCheckReceiveGroup", new OkHttpClientManager.ResultCallback<BaseReturnArray<ClothGetGroup>>() {
             @Override
             public void onError(Request request, Exception e) {
                 if (e instanceof ConnectException)
@@ -99,7 +100,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
             }
 
             @Override
-            public void onResponse(BaseReturnArray<Integer> response) {
+            public void onResponse(BaseReturnArray<ClothGetGroup> response) {
                 try {
                     if (response != null && response.getStatus() == 1) {
                         myList.addAll(response.getData());
@@ -145,7 +146,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
     @Override
     public void onItemClick(View view, Object data, int position) {
         Bundle bundle = new Bundle();
-        bundle.putInt("into", myList.get(position));
+        bundle.putInt("into", myList.get(position).check_group);
         Fragment fragment = ChubbClothGetDetailFragment.newInstance();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
@@ -154,10 +155,10 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
         transaction.commit();
     }
 
-    class RecycleAdapter extends BasePullUpRecyclerAdapter<Integer> {
+    class RecycleAdapter extends BasePullUpRecyclerAdapter<ClothGetGroup> {
         private Context context;
 
-        public RecycleAdapter(RecyclerView v, Collection<Integer> datas, int itemLayoutId) {
+        public RecycleAdapter(RecyclerView v, Collection<ClothGetGroup> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
 
         }
@@ -167,8 +168,31 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
         }
 
         @Override
-        public void convert(RecyclerHolder holder, Integer item, final int position) {
-            holder.setText(R.id.item1, "第" + item + "组");
+        public void convert(RecyclerHolder holder, ClothGetGroup item, final int position) {
+            holder.setText(R.id.item1, "第" + item.getCheck_group() + "组");
+            LinearLayout layout = holder.getView(R.id.layout1);
+            layout.setBackgroundColor(item.getCheck_status() == 1 ? getResources().getColor(R.color.colorDialogTitleBG) : getResources().getColor(R.color.colorZERO));
+        }
+    }
+
+    class ClothGetGroup {
+        int check_group;
+        int check_status;
+
+        public int getCheck_status() {
+            return check_status;
+        }
+
+        public void setCheck_status(int check_status) {
+            this.check_status = check_status;
+        }
+
+        public int getCheck_group() {
+            return check_group;
+        }
+
+        public void setCheck_group(int check_group) {
+            this.check_group = check_group;
         }
     }
 }

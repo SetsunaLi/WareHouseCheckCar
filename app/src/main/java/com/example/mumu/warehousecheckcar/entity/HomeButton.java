@@ -8,7 +8,7 @@ public enum HomeButton {
     Button7(R.id.button7,R.mipmap.click7_l),Button8(R.id.button8,R.mipmap.click8_l),Button9(R.id.button9,R.mipmap.click9_l),
     Button10(R.id.button10,R.mipmap.click10_l),Button11(R.id.button11,R.mipmap.click11_l),Button12(R.id.button12,R.mipmap.click12_l),
     Button13(R.id.button13,R.mipmap.click13_l),Button14(R.id.button14,R.mipmap.click14_l),Button15(R.id.button15,R.mipmap.click15_l),
-    Button16(R.id.button16,R.mipmap.setting_l),Button17(R.id.button17,R.mipmap.backin_l);
+    Button16(R.id.button16, R.mipmap.setting_l), Button17(R.id.button17, R.mipmap.backin_l), Button18(R.id.button18, R.mipmap.chubb_get_l);
     private int id;
     private int index;
     private HomeButton(int id,int index){
