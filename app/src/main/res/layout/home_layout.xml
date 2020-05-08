@@ -40,17 +40,7 @@
                 android:layout_weight="1"
                 android:onClick="click2"
                 android:text="@string/btn_click8" />
-         <!--   <Button
-                android:id="@+id/button2"
 
-                style="@style/DashboardButton"
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_marginLeft="@dimen/home_button_margin2"
-                android:layout_weight="1"
-                android:onClick="click2"
-                android:text="@string/btn_click2" />
--->
 
         </LinearLayout>
 
