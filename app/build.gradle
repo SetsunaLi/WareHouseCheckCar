@@ -1,15 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-//    编译版本，就是运行我们这个项目的需要的SDK
-    signingConfigs {
-        warehouse {
-            keyAlias 'key'
-            keyPassword '00000000'
-            storeFile file('D:/AndroidStudio/apk/warehouse_key')
-            storePassword 'ridko2019'
-        }
-    }
+
     compileSdkVersion 26
 //    构建工具的版本，其中包括了打包工具aapt、dx等等。
     buildToolsVersion '28.0.3'

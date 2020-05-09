@@ -152,8 +152,8 @@ public class ChubbClothGetDetailFragment extends BaseFragment {
         public void convert(RecyclerHolder holder, ChubbGetCloth item, int position) {
             if (position != 0) {
                 if (item != null) {
-//                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-//                    ll.setBackgroundColor(true ? getResources().getColor(R.color.colorDialogTitleBG) : getResources().getColor(R.color.colorZERO));
+                    LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
+                    ll.setBackgroundColor(!item.getLocation_name().contains("查布") ? getResources().getColor(R.color.colorDialogTitleBG) : getResources().getColor(R.color.colorZERO));
                     holder.setText(R.id.item1, item.getVat_no());
                     holder.setText(R.id.item2, item.getCloth_name());
                     holder.setText(R.id.item3, item.getInv_serial());
