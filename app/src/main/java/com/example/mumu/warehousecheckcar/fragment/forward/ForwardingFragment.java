@@ -24,17 +24,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.Forwarding;
 import com.example.mumu.warehousecheckcar.entity.Inventory;
-import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -115,6 +115,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     private boolean flag = true;
     private SpModel sql;
     private int transport_output_id = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -373,75 +374,87 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             jsonObject.put("status", 1);
         jsonObject.put("applyNo", fatherNoList);
         ArrayList<Forwarding> list = new ArrayList<>();
+        boolean flag = true;
         for (Forwarding forwarding : dataList) {
             String key = forwarding.getApplyNo() + forwarding.getVatNo();
             if (dataKey.containsKey(forwarding.getApplyNo()))
                 if (dataKey.get(forwarding.getApplyNo()).contains(key)) {
+                    if (getKeyValue.containsKey(key)) {
+                        ForwardingList forwardingList = myList.get(getKeyValue.get(key));
+                        if (forwardingList.isFlag() && forwardingList.getApplyCount() != forwardingList.getMatchCount()) {
+                            flag = false;
+                            break;
+                        }
+                    }
                     if (epcKeyList.containsKey(forwarding.getEpc()))
                         if (epcKeyList.get(forwarding.getEpc()).isStatus())
                             list.add(forwarding);
                 }
         }
-        jsonObject.put("data", list);
-        final String json = jsonObject.toJSONString();
-        try {
-            AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
-                @Override
-                public void onError(Request request, Exception e) {
-                    if (e instanceof ConnectException)
-                        showConfirmDialog("链接超时");
-                    if (App.LOGCAT_SWITCH) {
-                        Log.i(TAG, "postInventory;" + e.getMessage());
-                        showToast("上传信息失败");
-                    }
-                }
-
-                @Override
-                public void onResponse(BaseReturnObject<JSONObject> response) {
-                    try {
-                        AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        uploadDialog.openView();
-                        hideUploadDialog();
-                        scanResultHandler.removeCallbacks(r);
-                        if (response.getStatus() == 1) {
-                            JSONObject jsonObject = response.getData();
-                            int cc_transport_output_id = jsonObject.getInteger("cc_transport_output_id");
-                            if (isFinish) {
-                                sql.deleteData(APP_OUTP_ID);
-                                sql.deleteData(carMsg.getCarNo());
-                            } else {
-                                sql.putData(carMsg.getCarNo(), true);
-                                sql.putData(APP_OUTP_ID, cc_transport_output_id);
-                            }
-                            showToast("上传成功");
-                            clearData();
-                            mAdapter.notifyDataSetChanged();
-                            onBack();
-                        } else {
-                            showToast("上传失败");
-                            showConfirmDialog("上传失败");
-                            Sound.faillarm();
+        if (flag) {
+            jsonObject.put("data", list);
+            final String json = jsonObject.toJSONString();
+            try {
+                AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "postInventory;" + e.getMessage());
+                            showToast("上传信息失败");
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
-            }, json);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+                    @Override
+                    public void onResponse(BaseReturnObject<JSONObject> response) {
+                        try {
+                            AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            uploadDialog.openView();
+                            hideUploadDialog();
+                            scanResultHandler.removeCallbacks(r);
+                            if (response.getStatus() == 1) {
+                                JSONObject jsonObject = response.getData();
+                                int cc_transport_output_id = jsonObject.getInteger("cc_transport_output_id");
+                                if (isFinish) {
+                                    sql.deleteData(APP_OUTP_ID);
+                                    sql.deleteData(carMsg.getCarNo());
+                                } else {
+                                    sql.putData(carMsg.getCarNo(), true);
+                                    sql.putData(APP_OUTP_ID, cc_transport_output_id);
+                                }
+                                showToast("上传成功");
+                                clearData();
+                                mAdapter.notifyDataSetChanged();
+                                onBack();
+                            } else {
+                                showToast("上传失败");
+                                showConfirmDialog("上传失败");
+                                Sound.faillarm();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, json);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Sound.faillarm();
+            showConfirmDialog("上传失败，申请单内扫描条数必须与申请条数一致！");
         }
+
     }
 
     private void onBack() {
