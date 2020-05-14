@@ -29,6 +29,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
@@ -51,6 +52,7 @@ import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
+import com.rfid.RFIDReaderHelper;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -111,6 +113,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
     private boolean is2D = false;
+    private RFIDReaderHelper rfidHander;
 
     @Nullable
     @Override
@@ -154,6 +157,14 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     protected void addListener() {
         scanResultHandler = new ScanResultHandler(this, this);
+        try {
+            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
+            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 0x07);
+        } catch (Exception e) {
+            showToast("设置功率失败");
+            e.printStackTrace();
+        }
+
         initRFID();
         mAdapter.setOnItemClickListener(this);
         ComeBack.getInstance().setCallbackLiatener(this);
@@ -254,6 +265,10 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (rfidHander != null)
+            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
+        else
+            showToast("设置功率失败");
         disRFID();
         if (is2D)
             disConnect2D();
@@ -688,7 +703,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
             }
         }
     }
-
 
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Output> {

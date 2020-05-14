@@ -453,6 +453,9 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         } else {
             Sound.faillarm();
             showConfirmDialog("上传失败，申请单内扫描条数必须与申请条数一致！");
+            uploadDialog.openView();
+            hideUploadDialog();
+            scanResultHandler.removeCallbacks(r);
         }
 
     }

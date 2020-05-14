@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -153,7 +154,8 @@ public class ChubbClothGetDetailFragment extends BaseFragment {
             if (position != 0) {
                 if (item != null) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    ll.setBackgroundColor(!item.getLocation_name().contains("查布") ? getResources().getColor(R.color.colorDialogTitleBG) : getResources().getColor(R.color.colorZERO));
+                    if (!TextUtils.isEmpty(item.getLocation_name()))
+                        ll.setBackgroundColor(!item.getLocation_name().contains("查布") ? getResources().getColor(R.color.colorDialogTitleBG) : getResources().getColor(R.color.colorZERO));
                     holder.setText(R.id.item1, item.getVat_no());
                     holder.setText(R.id.item2, item.getCloth_name());
                     holder.setText(R.id.item3, item.getInv_serial());

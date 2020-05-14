@@ -27,6 +27,8 @@ import com.squareup.okhttp.Request;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -104,6 +106,17 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
                 try {
                     if (response != null && response.getStatus() == 1) {
                         myList.addAll(response.getData());
+                        Collections.sort(myList, new Comparator<ClothGetGroup>() {
+                            @Override
+                            public int compare(ClothGetGroup obj1, ClothGetGroup obj2) {
+                                if (obj1.getCheck_group() > obj2.getCheck_group()) {
+                                    return -1;
+                                } else if (obj1.getCheck_group() < obj2.getCheck_group()) {
+                                    return 1;
+                                } else
+                                    return 0;
+                            }
+                        });
                         mAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {

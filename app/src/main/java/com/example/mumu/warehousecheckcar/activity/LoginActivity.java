@@ -150,18 +150,19 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-
-                updateBean = response.toJavaObject(UpdateBean.class);
-                /**更新版本入口*/
-                String nowCode = getResources().getString(R.string.app_version);//手机端的版本
-                String newCode = updateBean.getVersion_no();
-                if (!nowCode.equals(newCode)) {//小于最新版本号
-                    UpdateApk.UpdateVersion(LoginActivity.this, updateBean);
-                } else {
-                    if (checkbox2.isChecked() && !username.getText().toString().equals("") && !password.getText().toString().equals("") && !exit)
-                        onViewClicked(loginButton);
-                    Log.e("MA", "已经是最新版本");
+                if (response != null) {
+                    updateBean = response.toJavaObject(UpdateBean.class);
+                    /**更新版本入口*/
+                    String nowCode = getResources().getString(R.string.app_version);//手机端的版本
+                    String newCode = updateBean.getVersion_no();
+                    if (!nowCode.equals(newCode)) {//小于最新版本号
+                        UpdateApk.UpdateVersion(LoginActivity.this, updateBean);
+                    } else {
+                        if (checkbox2.isChecked() && !username.getText().toString().equals("") && !password.getText().toString().equals("") && !exit)
+                            onViewClicked(loginButton);
+                        Log.e("MA", "已经是最新版本");
 //            ToastUtils.showMessage("已经是最新的版本");
+                    }
                 }
             }
         });
