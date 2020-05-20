@@ -45,12 +45,11 @@ import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbExceptionFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpFragment;
-import com.example.mumu.warehousecheckcar.fragment.cut.BlueToothConnectFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CutClothFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CuttingClothPutwayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.find.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.find.FindVatNoFragment;
-import com.example.mumu.warehousecheckcar.fragment.forward.ForwardingMsgFragment;
+import com.example.mumu.warehousecheckcar.fragment.forward.ForwardingListFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InAssistFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InCheckCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.in.InCheckFragment;
@@ -61,8 +60,8 @@ import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
-import com.example.mumu.warehousecheckcar.utils.CutToBitmapUtil;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.CutToBitmapUtil;
 import com.rfid.RFIDReaderHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -272,7 +271,7 @@ public class Main2Activity extends AppCompatActivity
                 break;
             case 8:
 ////              发运
-                fragment = ForwardingMsgFragment.newInstance();
+                fragment = ForwardingListFragment.newInstance();
                 break;
             case 9:
 //                剪布操作
@@ -467,7 +466,7 @@ public class Main2Activity extends AppCompatActivity
                     || fragment instanceof OutApplyNoFragment || fragment instanceof CheckCarrierFragment
                     || fragment instanceof FindVatNoFragment || fragment instanceof FindTpNoFragmentf
                     || fragment instanceof WeightChangeFragment || fragment instanceof ChubbExceptionFragment
-                    || fragment instanceof ForwardingMsgFragment || fragment instanceof CuttingClothPutwayCarrierFragment
+                    || fragment instanceof ForwardingListFragment || fragment instanceof CuttingClothPutwayCarrierFragment
                     || fragment instanceof CutClothFragment || fragment instanceof InAssistFragment) {
                 if (fragment instanceof HomeFragment) {
                     askForOut();

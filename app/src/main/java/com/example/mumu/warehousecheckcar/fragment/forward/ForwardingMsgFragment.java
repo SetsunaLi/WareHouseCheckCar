@@ -4,21 +4,31 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.adapter.FilterAdapter;
+import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.example.mumu.warehousecheckcar.view.FixedEditText;
+import com.example.mumu.warehousecheckcar.fragment.find.FindVatNoFragment;
+import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,14 +37,13 @@ import butterknife.OnClick;
 public class ForwardingMsgFragment extends BaseFragment {
     final String TAG = "ForwardingMsgFragment";
     private static ForwardingMsgFragment fragment;
-    @Bind(R.id.fixeedittext1)
-    FixedEditText fixeedittext1;
-    @Bind(R.id.fixeedittext2)
-    FixedEditText fixeedittext2;
-    @Bind(R.id.fixeedittext3)
-    FixedEditText fixeedittext3;
+
     @Bind(R.id.button1)
     Button button1;
+    @Bind(R.id.autoText1)
+    AutoCompleteTextView autoText1;
+    @Bind(R.id.autoText2)
+    AutoCompleteTextView autoText2;
 
     public static ForwardingMsgFragment newInstance() {
         if (fragment == null) ;
@@ -42,6 +51,8 @@ public class ForwardingMsgFragment extends BaseFragment {
         return fragment;
     }
 
+    private FilterAdapter carAdapter;
+    private FilterAdapter peoAdapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,71 +69,132 @@ public class ForwardingMsgFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        fixeedittext1.setFixedText("车牌号：\t");
-        fixeedittext2.setFixedText("姓名：\t");
-        fixeedittext3.setFixedText("电话：\t");
-
+        carAdapter = new FilterAdapter(getActivity());
+        autoText1.setAdapter(carAdapter);
+        peoAdapter = new FilterAdapter(getActivity());
+        autoText2.setAdapter(peoAdapter);
     }
 
     @Override
     protected void addListener() {
-        fixeedittext3.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        autoText1.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE) {
-                    onViewClicked();
-                    return true;
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                final String str = charSequence.toString().replaceAll(" ", "");
+                if (!TextUtils.isEmpty(str) && str.length() >= 2) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/getLicensePlateList?licensePlate=" + str, new OkHttpClientManager.ResultCallback<BaseReturnArray<String>>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                        }
+
+                        @Override
+                        public void onResponse(BaseReturnArray<String> baseReturnArray) {
+                            try {
+                                if (baseReturnArray != null && baseReturnArray.getStatus() == 1) {
+                                    if (baseReturnArray.getData() != null && baseReturnArray.getData().size() > 0) {
+                                        carAdapter.transforData(baseReturnArray.getData());
+                                    }
+                                }
+
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+
                 }
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
-     /*   if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);*/
+        autoText2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
+                final String str = charSequence.toString().replaceAll(" ", "");
+                if (!TextUtils.isEmpty(str) && str.length() >= 1) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/getDriverNameList?driverName=" + str, new OkHttpClientManager.ResultCallback<BaseReturnArray<String>>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                        }
+
+                        @Override
+                        public void onResponse(BaseReturnArray<String> baseReturnArray) {
+                            try {
+                                if (baseReturnArray != null && baseReturnArray.getStatus() == 1) {
+                                    if (baseReturnArray.getData() != null && baseReturnArray.getData().size() > 0) {
+                                        peoAdapter.transforData(baseReturnArray.getData());
+                                    }
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+        });
     }
 
-    /* @Subscribe(threadMode = ThreadMode.MAIN)
-     public void getEventMsg(EventBusMsg message) {
-
-     }*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
 //        EventBus.getDefault().unregister(this);
     }
+
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
+
     @OnClick(R.id.button1)
     public void onViewClicked() {
-        String carNo=fixeedittext1.getText().toString()+"";
-        String name=fixeedittext2.getText().toString()+"";
-        String phoneNo=fixeedittext3.getText().toString()+"";
-        carNo=carNo.replaceAll(" ","");
-        name=name.replaceAll(" ","");
-        phoneNo=phoneNo.replaceAll(" ","");
-        if (carNo!=null&&!carNo.equals("")){
-            EventBus.getDefault().postSticky(new EventBusMsg(0x00,new CarMsg(carNo,name,phoneNo)));
+        String carNo = autoText1.getText().toString() + "";
+        String name = autoText2.getText().toString() + "";
+        carNo = carNo.replaceAll(" ", "");
+        name = name.replaceAll(" ", "");
+        if (carNo != null && !carNo.equals("")) {
+            EventBus.getDefault().postSticky(new EventBusMsg(0x00, new CarMsg(carNo, name), 0));
             Fragment fragment = ForwardingNoFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);
             transaction.commit();
-        }else
-            Toast.makeText(getActivity(),"车牌号不能为空",Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getActivity(), "车牌号不能为空", Toast.LENGTH_SHORT).show();
     }
 
 
-    static class CarMsg{
-        /**车牌号*/
+    static class CarMsg {
+        /**
+         * 车牌号
+         */
         private String carNo;
-        /**s司机姓名*/
+        /**
+         * s司机姓名
+         */
         private String carName;
-        /**电话号码*/
-        private String phoneNo;
 
-        public CarMsg(String carNo, String carName, String phoneNo) {
+
+        public CarMsg(String carNo, String carName) {
             this.carNo = carNo;
             this.carName = carName;
-            this.phoneNo = phoneNo;
         }
 
         public String getCarNo() {
@@ -139,14 +211,6 @@ public class ForwardingMsgFragment extends BaseFragment {
 
         public void setCarName(String carName) {
             this.carName = carName;
-        }
-
-        public String getPhoneNo() {
-            return phoneNo;
-        }
-
-        public void setPhoneNo(String phoneNo) {
-            this.phoneNo = phoneNo;
         }
     }
 }

@@ -68,6 +68,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
+    private int transport_output_id = 0;
 
     @Nullable
     @Override
@@ -133,9 +134,10 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                 if (carMsg != null)
                     this.carMsg = carMsg;
                 else {
-                    this.carMsg = new ForwardingMsgFragment.CarMsg("", "", "");
+                    this.carMsg = new ForwardingMsgFragment.CarMsg("", "");
                     showToast("车牌号为空");
                 }
+                transport_output_id = (int) eventBusMsg.getPositionObj(1);
                 break;
         }
     }
@@ -173,7 +175,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     if (scannerFlag)
                         disConnect2D();
                     scannerFlag = false;
-                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList));
+                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList, transport_output_id));
                     Fragment fragment = ForwardingFragment.newInstance();
                     getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getActivity().getFragmentManager().beginTransaction()

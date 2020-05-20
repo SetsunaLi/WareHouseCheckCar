@@ -111,9 +111,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     private ArrayList<String> dateNo;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
-    private boolean returnWhere = false;
-    private boolean flag = true;
-    private SpModel sql;
     private int transport_output_id = 0;
 
     @Nullable
@@ -146,6 +143,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -154,6 +152,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         initRFID();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+
     }
 
     public void clearData() {
@@ -187,6 +186,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 case 0x01:
                     carMsg = (ForwardingMsgFragment.CarMsg) msg.getPositionObj(0);
                     fatherNoList = (ArrayList<String>) msg.getPositionObj(1);
+                    transport_output_id = (int) msg.getPositionObj(2);
                     break;
                 case 0xfe:
                     epcKeyList.clear();
@@ -209,45 +209,12 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (sql == null) {
-            sql = SpModel.getInstance(getActivity(), APP_TABLE_NAME);
-        }
-        if ((boolean) sql.getData(carMsg.getCarNo(), false)) {
-            showUploadDialog(carMsg.getCarNo() + "还有未完成的发运是否继续？");
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switch (view.getId()) {
-                        case R.id.dialog_no:
-                            transport_output_id = 0;
-                            hideUploadDialog();
-                            break;
-                        case R.id.dialog_yes:
-                            transport_output_id = (int) sql.getData(APP_OUTP_ID, 0);
-                            hideUploadDialog();
-                            break;
-                    }
-                }
-            };
-            setUploadYesClickListener(onClickListener);
-            setUploadNoClickListener(onClickListener);
-        } else
-            transport_output_id = 0;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        if (flag) {
-            flag = false;
-            clearData();
-            downLoadData();
-            text2.setText(String.valueOf(fatherNoList.size()));
-            text3.setText(String.valueOf(carMsg.getCarNo()));
-            text4.setText(String.valueOf(carMsg.getCarName()));
-        }
+        downLoadData();
+        text2.setText(String.valueOf(fatherNoList.size()));
+        text3.setText(String.valueOf(carMsg.getCarNo()));
+        text4.setText(String.valueOf(carMsg.getCarName()));
     }
 
     private void downLoadData() {
@@ -315,12 +282,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (!returnWhere) {
-            EventBus.getDefault().postSticky(new EventBusMsg(0x00, carMsg));
-            Fragment fragment = ForwardingNoFragment.newInstance();
-            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-        }
         EventBus.getDefault().unregister(this);
         disRFID();
         clearData();
@@ -338,17 +299,16 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                showUploadDialog("是否完成装车");
+                showUploadDialog("是否上传装车");
                 setUploadNoClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        upLoading(false);
-                        returnWhere = false;
+                        upLoading();
                         uploadDialog.lockView();
                         scanResultHandler.postDelayed(r, TIME);
                     }
                 });
-                setUploadYesClickListener(new View.OnClickListener() {
+         /*       setUploadYesClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         returnWhere = true;
@@ -356,22 +316,19 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         uploadDialog.lockView();
                         scanResultHandler.postDelayed(r, TIME);
                     }
-                });
+                });*/
                 break;
         }
     }
 
-    private void upLoading(final boolean isFinish) {
+    private void upLoading() {
         JSONObject jsonObject = new JSONObject();
         int id = User.newInstance().getId();
         jsonObject.put("userId", id);
         jsonObject.put("carMsg", carMsg);
         jsonObject.put("cc_transport_output_id", transport_output_id);
 //        false是0，true是1
-        if (!isFinish)
-            jsonObject.put("status", 0);
-        else
-            jsonObject.put("status", 1);
+        jsonObject.put("status", 0);
         jsonObject.put("applyNo", fatherNoList);
         ArrayList<Forwarding> list = new ArrayList<>();
         boolean flag = true;
@@ -423,19 +380,9 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                             hideUploadDialog();
                             scanResultHandler.removeCallbacks(r);
                             if (response.getStatus() == 1) {
-                                JSONObject jsonObject = response.getData();
-                                int cc_transport_output_id = jsonObject.getInteger("cc_transport_output_id");
-                                if (isFinish) {
-                                    sql.deleteData(APP_OUTP_ID);
-                                    sql.deleteData(carMsg.getCarNo());
-                                } else {
-                                    sql.putData(carMsg.getCarNo(), true);
-                                    sql.putData(APP_OUTP_ID, cc_transport_output_id);
-                                }
                                 showToast("上传成功");
                                 clearData();
                                 mAdapter.notifyDataSetChanged();
-                                onBack();
                             } else {
                                 showToast("上传失败");
                                 showConfirmDialog("上传失败");
@@ -458,15 +405,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             scanResultHandler.removeCallbacks(r);
         }
 
-    }
-
-    private void onBack() {
-        if (returnWhere) {
-            Fragment fragment = ForwardingMsgFragment.newInstance();
-            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-        } else
-            getActivity().onBackPressed();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
