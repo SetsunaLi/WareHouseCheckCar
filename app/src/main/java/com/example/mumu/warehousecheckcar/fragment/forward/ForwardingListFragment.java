@@ -219,7 +219,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                     jsonObject.put("cc_transport_output_id", item.getId());
                                     final String json = jsonObject.toJSONString();
                                     try {
-                                        AppLog.write(getActivity(), "finishF", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
+                                        AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -236,7 +236,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                         @Override
                                         public void onResponse(JSONObject response) {
                                             try {
-                                                AppLog.write(getActivity(), "finishF", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                                AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             }

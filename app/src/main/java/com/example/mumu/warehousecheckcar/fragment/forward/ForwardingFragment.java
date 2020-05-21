@@ -383,6 +383,10 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                                 showToast("上传成功");
                                 clearData();
                                 mAdapter.notifyDataSetChanged();
+                                Fragment fragment = ForwardingListFragment.newInstance();
+                                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                getActivity().getFragmentManager().beginTransaction()
+                                        .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
                             } else {
                                 showToast("上传失败");
                                 showConfirmDialog("上传失败");
