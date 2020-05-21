@@ -300,7 +300,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 break;
             case R.id.button2:
                 showUploadDialog("是否上传装车");
-                setUploadNoClickListener(new View.OnClickListener() {
+                setUploadYesClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         upLoading();

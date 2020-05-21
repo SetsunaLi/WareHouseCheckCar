@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment.forward;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
@@ -26,6 +27,7 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.check.CheckDetailFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.xdl2d.scanner.callback.RXCallback;
@@ -177,9 +179,10 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     scannerFlag = false;
                     EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList, transport_output_id));
                     Fragment fragment = ForwardingFragment.newInstance();
-                    getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getFragmentManager().beginTransaction()
-                            .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                    transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                    transaction.show(fragment);
+                    transaction.commit();
                 } else {
                     showToast(getResources().getString(R.string.forwarding_toast_msg));
                 }
