@@ -137,18 +137,19 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        String carNo = myList.get(position).getLicense_plate();
-        String name = myList.get(position).getDriver();
-        carNo = carNo.replaceAll(" ", "");
-        name = name.replaceAll(" ", "");
-        EventBus.getDefault().postSticky(new EventBusMsg(0x00, new ForwardingMsgFragment.CarMsg(carNo, name), myList.get(position).getId()));
-        Fragment fragment = ForwardingNoFragment.newInstance();
-        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-        transaction.show(fragment);
-        transaction.commit();
+        if (position > 0) {
+            String carNo = myList.get(position).getLicense_plate();
+            String name = myList.get(position).getDriver();
+            carNo = carNo.replaceAll(" ", "");
+            name = name.replaceAll(" ", "");
+            EventBus.getDefault().postSticky(new EventBusMsg(0x00, new ForwardingMsgFragment.CarMsg(carNo, name), myList.get(position).getId()));
+            Fragment fragment = ForwardingNoFragment.newInstance();
+            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+            transaction.show(fragment);
+            transaction.commit();
+        }
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
