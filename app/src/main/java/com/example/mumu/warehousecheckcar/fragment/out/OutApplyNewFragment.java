@@ -113,7 +113,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
     private boolean is2D = false;
-    private RFIDReaderHelper rfidHander;
 
     @Nullable
     @Override
@@ -157,14 +156,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     protected void addListener() {
         scanResultHandler = new ScanResultHandler(this, this);
-        try {
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) 0x07);
-        } catch (Exception e) {
-            showToast("设置功率失败");
-            e.printStackTrace();
-        }
-
         initRFID();
         mAdapter.setOnItemClickListener(this);
         ComeBack.getInstance().setCallbackLiatener(this);
@@ -265,10 +256,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (rfidHander != null)
-            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
-        else
-            showToast("设置功率失败");
         disRFID();
         if (is2D)
             disConnect2D();

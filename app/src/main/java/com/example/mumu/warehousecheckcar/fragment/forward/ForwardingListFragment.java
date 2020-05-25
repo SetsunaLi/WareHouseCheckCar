@@ -101,6 +101,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
     private void clearData() {
         myList.clear();
+        myList.add(new ForwardingListBean());
     }
 
     @Override
@@ -110,6 +111,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
     }
 
     private void downLoad() {
+        showLoadingDialog();
         OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/getTransportOutList", new OkHttpClientManager.ResultCallback<BaseReturnArray<ForwardingListBean>>() {
             @Override
             public void onError(Request request, Exception e) {
@@ -124,7 +126,9 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
             @Override
             public void onResponse(BaseReturnArray<ForwardingListBean> response) {
                 try {
+                    hideLoadingDialog();
                     if (response != null && response.getStatus() == 1) {
+                        clearData();
                         myList.addAll(response.getData());
                         mAdapter.notifyDataSetChanged();
                     }
@@ -161,7 +165,6 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                myList.add(new ForwardingListBean());
                 mAdapter.notifyDataSetChanged();
                 downLoad();
                 break;

@@ -89,6 +89,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
     }
 
     private void downLoad() {
+        showLoadingDialog();
         OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/check/getCheckReceiveGroup", new OkHttpClientManager.ResultCallback<BaseReturnArray<ClothGetGroup>>() {
             @Override
             public void onError(Request request, Exception e) {
@@ -104,7 +105,9 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
             @Override
             public void onResponse(BaseReturnArray<ClothGetGroup> response) {
                 try {
+                    hideLoadingDialog();
                     if (response != null && response.getStatus() == 1) {
+                        clearData();
                         myList.addAll(response.getData());
                         Collections.sort(myList, new Comparator<ClothGetGroup>() {
                             @Override
