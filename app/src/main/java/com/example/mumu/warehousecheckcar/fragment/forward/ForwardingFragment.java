@@ -470,7 +470,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                     }
                     int count = 0;
                     for (ForwardingFlag o : epcKeyList.values()) {
-                        if (o.isFind)
+                        if (o.isFind && !o.getApplyNo().equals("非申请单"))
                             count++;
                     }
                     text1.setText(String.valueOf(count));
@@ -520,12 +520,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                                                 } else {
                                                     myList.get(getKeyValue.get(key)).addScannerCount();
                                                 }
-                                                int count = 0;
-                                                for (ForwardingFlag o : epcKeyList.values()) {
-                                                    if (o.isFind)
-                                                        count++;
-                                                }
-                                                text1.setText(String.valueOf(count));
                                             }
                                         }
                                         mAdapter.notifyDataSetChanged();

@@ -249,7 +249,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                                 handler.removeCallbacks(r);
                                                 if (response != null && response.getInteger("status") == 1) {
                                                     showToast("上传成功");
-                                                    onClick(button2);
+                                                    onViewClicked(button1);
                                                 } else {
                                                     showToast("上传失败");
                                                     showConfirmDialog("上传失败");
