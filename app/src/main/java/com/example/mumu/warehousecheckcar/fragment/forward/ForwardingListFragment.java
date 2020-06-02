@@ -262,6 +262,17 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                     }, json);
                                 } catch (IOException e) {
                                 }
+
+                                OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/screen/noticeCarNo?carNo=" + item.getLicense_plate(), new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                    }
+
+                                    @Override
+                                    public void onResponse(JSONObject object) {
+
+                                    }
+                                });
                             }
                         });
 
