@@ -248,7 +248,7 @@
                 android:onClick="click18"
                 android:text="@string/btn_click18" />
             <Button
-                android:id="@+id/button16"
+                android:id="@+id/button0"
                 style="@style/DashboardButton"
                 android:layout_width="0dp"
                 android:layout_height="90dp"
