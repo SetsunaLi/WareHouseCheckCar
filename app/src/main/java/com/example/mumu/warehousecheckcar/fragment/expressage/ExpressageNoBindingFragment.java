@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,15 +18,18 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.xdl2d.scanner.callback.RXCallback;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +59,11 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
+    private int flag = 0;//0为空，1为快点单，2为申请单
+
+    public static ExpressageNoBindingFragment newInstance() {
+        return new ExpressageNoBindingFragment();
+    }
 
     @Nullable
     @Override
@@ -85,6 +94,13 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     protected void addListener() {
         scanResultHandler = new ScanResultHandler(this);
         init2D();
+        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Log.i("onFocusChange", String.valueOf(b));
+                flag = 1;
+            }
+        });
     }
 
     private void init2D() {
@@ -117,6 +133,13 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                 recyle.scrollToPosition(myList.size() - 1);
                 break;
             case R.id.button2:
+                String expressNo = fixeedittext1.getText().toString();
+                if (!TextUtils.isEmpty(expressNo)) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("expressNo", expressNo);
+                    jsonObject.put("applicationFrom", myList);
+                    jsonObject.put("userId", User.newInstance().getId());
+                }
                 break;
         }
     }
@@ -132,9 +155,13 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     @Override
     public void codeResult(String code) {
         code = code.replaceAll(" ", "");
-        int id = mAdapter.getId();
-        myList.set(id, code);
-        mAdapter.notifyDataSetChanged();
+        if (flag == 1) {
+            fixeedittext1.setText(code);
+        } else if (flag == 2) {
+            int id = mAdapter.getId();
+            myList.set(id, code);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
@@ -189,6 +216,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                 @Override
                 public void onFocusChange(View view, boolean b) {
                     if (b) {
+                        flag = 2;
                         setId(position);
                     }
                 }
