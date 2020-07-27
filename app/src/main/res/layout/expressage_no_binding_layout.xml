@@ -10,7 +10,9 @@
         style="@style/edit_style2"
         android:layout_width="match_parent"
         android:layout_height="60dip"
-        android:layout_margin="27dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginRight="27dp"
         android:hint="快递单号"
         android:imeOptions="actionDone"
         android:maxLines="1"
@@ -19,7 +21,7 @@
     <LinearLayout
         android:id="@+id/headNo"
         android:layout_width="match_parent"
-        android:layout_height="50dip"
+        android:layout_height="45dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:descendantFocusability="blocksDescendants"
@@ -46,7 +48,7 @@
         style="@style/view_border"
         android:layout_width="match_parent"
         android:layout_height="60dip"
-        android:layout_margin="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:scaleType="center"
@@ -65,7 +67,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.5"
+        android:layout_weight="1.5"
         android:gravity="center">
 
         <Button

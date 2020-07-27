@@ -8,6 +8,7 @@ public class BaseReturn {
     private int status;
     private String message;
     private String data;
+    private int code;
 
     public String getData() {
         return data;
@@ -31,5 +32,13 @@ public class BaseReturn {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.entity.HomeButton;
 import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.Imgutil;
@@ -62,6 +62,10 @@ public class HomeFragment extends BaseFragment {
     Button button17;
     @Bind(R.id.button18)
     Button button18;
+    @Bind(R.id.button19)
+    Button button19;
+    @Bind(R.id.button20)
+    Button button20;
 
 
     public static HomeFragment newInstance() {
@@ -71,13 +75,8 @@ public class HomeFragment extends BaseFragment {
     }
 
     private User user;
-    private Button[] buttons = new Button[]{button0, button1, button2, button3, button4, button5, button6, button7, button8,
-            button9, button10, button11, button12, button13, button14, button15, button17, button18};
-    private int[] imgs = new int[]{
-            R.mipmap.setting_l, R.mipmap.click1_l, R.mipmap.click2_l, R.mipmap.click3_l, R.mipmap.click4_l, R.mipmap.click5_l
-            , R.mipmap.click6_l, R.mipmap.click7_l, R.mipmap.click8_l, R.mipmap.click9_l, R.mipmap.click10_l, R.mipmap.click11_l
-            , R.mipmap.click12_l, R.mipmap.click13_l, R.mipmap.click14_l, R.mipmap.click15_l, R.mipmap.backin_l, R.mipmap.chubb_get_l
-    };
+    private Button[] buttons;
+    private int[] imgs;
 
     @Nullable
     @Override
@@ -91,6 +90,14 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initData() {
         user = User.newInstance();
+        buttons = new Button[]{button0, button1, button2, button3, button4, button5, button6, button7, button8,
+                button9, button10, button11, button12, button13, button14, button15, button17, button18, button19, button20};
+        imgs = new int[]{
+                R.mipmap.setting_l, R.mipmap.click1_l, R.mipmap.click2_l, R.mipmap.click3_l, R.mipmap.click4_l, R.mipmap.click5_l
+                , R.mipmap.click6_l, R.mipmap.click7_l, R.mipmap.click8_l, R.mipmap.click9_l, R.mipmap.click10_l, R.mipmap.click11_l
+                , R.mipmap.click12_l, R.mipmap.click13_l, R.mipmap.click14_l, R.mipmap.click15_l, R.mipmap.backin_l, R.mipmap.chubb_get_l
+                , R.mipmap.chubb_get_l, R.mipmap.chubb_get_l
+        };
     }
 
     @Override
@@ -167,6 +174,11 @@ public class HomeFragment extends BaseFragment {
                             break;
                         case 17:
                             button = button18;
+                            break;
+                        case 18:
+                            button = button19;
+                        case 19:
+                            button = button20;
                             break;
                         default:
                             button = null;

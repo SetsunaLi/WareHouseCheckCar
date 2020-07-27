@@ -14,6 +14,7 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.dialog.ConfirmDialog;
 import com.example.mumu.warehousecheckcar.dialog.LoadingDialog;
 import com.example.mumu.warehousecheckcar.dialog.UploadDialog;
+import com.example.mumu.warehousecheckcar.view.CustomToast;
 
 /***
  *created by mumu
@@ -69,7 +70,7 @@ public abstract class BaseFragment extends Fragment {
      * 显示Toast
      */
     protected void showToast(String text) {
-        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+        CustomToast.showToast(getActivity(), text, Toast.LENGTH_SHORT);
     }
 
     /**
