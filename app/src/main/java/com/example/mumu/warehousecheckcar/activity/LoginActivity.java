@@ -111,6 +111,8 @@ public class LoginActivity extends AppCompatActivity {
     private void initDate() {
         App.IP = Constant.IP;
         App.PORT = Constant.PORT;
+        App.CLOUD_IP = Constant.CLOUD_IP;
+        App.CLOUD_PORT = Constant.CLOUD_PORT;
     }
 
     @Override
@@ -144,7 +146,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(Request request, Exception e) {
                 if (App.LOGCAT_SWITCH) {
-                    Toast.makeText(getBaseContext(), "获取托盘信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 

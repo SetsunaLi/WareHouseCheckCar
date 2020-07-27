@@ -32,6 +32,11 @@ public class FixedEditText extends android.support.v7.widget.AppCompatEditText {
     public void setDrawableClick(OnClickListener listener) {
         this.mListener = listener;
     }
+
+    public String getFixedText() {
+        return fixedText;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

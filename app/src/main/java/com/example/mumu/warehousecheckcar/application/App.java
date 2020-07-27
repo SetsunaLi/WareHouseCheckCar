@@ -47,23 +47,27 @@ public class App extends Application {
     public  static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     public static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 
-//    车牌号缓存
-    public static String carNo="";
-//系统版本
-    public static String SYSTEM_VERSION="";
-//    系统IP
-    public static String IP="";
-//    系统端口
-    public static String PORT="";
-//设备号
-    public static String DEVICE_NO="";
-    public static String DEVICE_ID="";
-//    读写声音
-    public static boolean MUSIC_SWITCH=false;
-//    系统日志
-    public static boolean LOGCAT_SWITCH=false;
-//    功率
-    public static int PROWER=0;
+    //    车牌号缓存
+    public static String carNo = "";
+    //系统版本
+    public static String SYSTEM_VERSION = "";
+    //    系统IP
+    public static String IP = "";
+    //    系统端口
+    public static String PORT = "";
+    //    系统IP
+    public static String CLOUD_IP = "";
+    //    系统端口
+    public static String CLOUD_PORT = "";
+    //设备号
+    public static String DEVICE_NO = "";
+    public static String DEVICE_ID = "";
+    //    读写声音
+    public static boolean MUSIC_SWITCH = false;
+    //    系统日志
+    public static boolean LOGCAT_SWITCH = false;
+    //    功率
+    public static int PROWER = 0;
 
 //    入库缓存详细列表
     public static List<InCheckDetail> IN_DETAIL_LIST=new ArrayList<>();

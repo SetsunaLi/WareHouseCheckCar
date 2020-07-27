@@ -64,6 +64,8 @@ public class HomeFragment extends BaseFragment {
     Button button18;
     @Bind(R.id.button19)
     Button button19;
+    @Bind(R.id.button20)
+    Button button20;
 
 
     public static HomeFragment newInstance() {
@@ -89,12 +91,12 @@ public class HomeFragment extends BaseFragment {
     protected void initData() {
         user = User.newInstance();
         buttons = new Button[]{button0, button1, button2, button3, button4, button5, button6, button7, button8,
-                button9, button10, button11, button12, button13, button14, button15, button17, button18, button19};
+                button9, button10, button11, button12, button13, button14, button15, button17, button18, button19, button20};
         imgs = new int[]{
                 R.mipmap.setting_l, R.mipmap.click1_l, R.mipmap.click2_l, R.mipmap.click3_l, R.mipmap.click4_l, R.mipmap.click5_l
                 , R.mipmap.click6_l, R.mipmap.click7_l, R.mipmap.click8_l, R.mipmap.click9_l, R.mipmap.click10_l, R.mipmap.click11_l
                 , R.mipmap.click12_l, R.mipmap.click13_l, R.mipmap.click14_l, R.mipmap.click15_l, R.mipmap.backin_l, R.mipmap.chubb_get_l
-                , R.mipmap.chubb_get_l
+                , R.mipmap.chubb_get_l, R.mipmap.chubb_get_l
         };
     }
 
@@ -175,6 +177,8 @@ public class HomeFragment extends BaseFragment {
                             break;
                         case 18:
                             button = button19;
+                        case 19:
+                            button = button20;
                             break;
                         default:
                             button = null;

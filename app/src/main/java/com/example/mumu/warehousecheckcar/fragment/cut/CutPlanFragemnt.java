@@ -435,7 +435,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                 View view0 = View.inflate(context, R.layout.plan_add_item, null);
                 linearLayout.addView(view0);
                 for (final ClothPlan clothPlan : list) {
-//                    View view = LayoutInflater.from(context).inflate(R.layout.plan_add_item, linearLayout, false);
+//                    View view = LayoutInflater.from(context).inflate(R.outsource_no_layout.plan_add_item, linearLayout, false);
                     View view = View.inflate(context, R.layout.plan_add_item, null);
                     TextView textView1 = (TextView) view.findViewById(R.id.item1);
                     TextView textView2 = (TextView) view.findViewById(R.id.item2);
