@@ -5,6 +5,98 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/headNo"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:descendantFocusability="blocksDescendants"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkbox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:checked="true" />
+
+        <View
+            android:layout_width="50dip"
+            android:layout_height="3dp"
+            android:background="@drawable/view_dash_line"
+            android:layerType="software" />
+
+        <TextView
+            android:id="@+id/text1"
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="送货单号：" />
+
+        <TextView
+            android:id="@+id/text4"
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Po：" />
+
+        <View style="@style/view_line" />
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="布号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="色号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="颜色" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="120dip"
+            android:layout_height="match_parent"
+            android:text="缸号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="数量" />
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="50dip"
@@ -15,8 +107,7 @@
             android:id="@+id/item1"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="布号" />
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -24,8 +115,7 @@
             android:id="@+id/item2"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="色号" />
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -33,8 +123,7 @@
             android:id="@+id/item3"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="颜色" />
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -42,8 +131,7 @@
             android:id="@+id/item4"
             style="@style/text_item"
             android:layout_width="120dip"
-            android:layout_height="match_parent"
-            android:text="缸号" />
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -51,8 +139,7 @@
             android:id="@+id/item5"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="数量" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />

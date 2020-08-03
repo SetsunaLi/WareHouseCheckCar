@@ -17,26 +17,40 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.entity.Outsource;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.outsource_in.OutsourceInFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
+import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
 
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static org.greenrobot.eventbus.EventBus.TAG;
 
 /***
  *created by 快递单号绑定
@@ -103,6 +117,11 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         });
     }
 
+    private void clearData() {
+        myList.clear();
+        fixeedittext1.setText("");
+    }
+
     private void init2D() {
         if (!PdaController.init2D(this)) {
             showToast(getResources().getString(R.string.hint_2d_mistake));
@@ -133,14 +152,63 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                 recyle.scrollToPosition(myList.size() - 1);
                 break;
             case R.id.button2:
-                String expressNo = fixeedittext1.getText().toString();
-                if (!TextUtils.isEmpty(expressNo)) {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("expressNo", expressNo);
-                    jsonObject.put("applicationFrom", myList);
-                    jsonObject.put("userId", User.newInstance().getId());
-                }
+                showUploadDialog("是否确上传快递单");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        submit();
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
+                    }
+                });
+
                 break;
+        }
+    }
+
+    private void submit() {
+        String expressNo = fixeedittext1.getText().toString();
+        if (!TextUtils.isEmpty(expressNo)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("outNo", expressNo);
+            jsonObject.put("courierNo", myList);
+            jsonObject.put("userId", User.newInstance().getId());
+            final String json = jsonObject.toJSONString();
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/express/expressBoundOutNo", new OkHttpClientManager.ResultCallback<BaseReturn>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
+                        if (App.LOGCAT_SWITCH) {
+                            Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(BaseReturn response) {
+                        try {
+                            AppLog.write(getActivity(), "expressBoundOutNo", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                            uploadDialog.openView();
+                            hideUploadDialog();
+                            scanResultHandler.removeCallbacks(r);
+                            if (response.getStatus() == 1) {
+                                showToast("上传成功");
+                                clearData();
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                showToast("上传失败");
+                                showConfirmDialog("上传失败，" + response.getMessage());
+                                Sound.faillarm();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, json);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

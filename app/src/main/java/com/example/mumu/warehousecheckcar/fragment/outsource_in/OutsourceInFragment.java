@@ -14,8 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,18 +81,11 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
     Button button1;
     @Bind(R.id.button2)
     Button button2;
-    @Bind(R.id.text1)
-    TextView text1;
-    @Bind(R.id.headNo)
-    LinearLayout headNo;
-    @Bind(R.id.layout_title)
-    LinearLayout layoutTitle;
-    @Bind(R.id.text4)
-    TextView text4;
 
-    private String no, po;
+
     private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
+    private ArrayList<String> titles;
     private ArrayList<VatGloud> myList;
     private ArrayList<Outsource> dates;
     private ArrayList<String> epcs;
@@ -112,10 +106,7 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
 
     @Override
     protected void initData() {
-        po = getArguments().getString("po");
-        no = getArguments().getString("no");
-        text1.setText("送货单号：" + no);
-        text4.setText("PO号：" + po);
+        titles = new ArrayList<>();
         myList = new ArrayList<>();
         dates = new ArrayList<>();
         epcs = new ArrayList<>();
@@ -155,6 +146,7 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
     }
 
     private void clearData() {
+        titles.clear();
         myList.clear();
         dates.clear();
         epcs.clear();
@@ -177,7 +169,6 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
         if (!epcs.contains(epc)) {
             List<String> list = new ArrayList<>();
             list.add(epc);
-//            list.add("3035A5370001000000005258");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("userId", Constant.USERNAME);
             jsonObject.put("password", Constant.PRASSWORD);
@@ -196,24 +187,25 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
                     public void onResponse(BaseReturnArray<Outsource> returnArray) {
                         if (returnArray != null) {
                             for (Outsource outsource : returnArray.getData()) {
-                                if (!TextUtils.isEmpty(outsource.getCust_po()) && TextUtils.isEmpty(outsource.getDeliverNo()) && !epcs.contains(outsource.getEpc())) {
-                                    epcs.add(outsource.getEpc());
-                                    if (outsource.getCust_po().equals(po) && outsource.getDeliverNo().equals(no)) {
-                                        dates.add(outsource);
-                                        boolean flag = true;
+                                if (!TextUtils.isEmpty(outsource.getCust_po()) && TextUtils.isEmpty(outsource.getDeliverNo()) && TextUtils.isEmpty(outsource.getVat_no()) && !epcs.contains(outsource.getEpc())) {
+
+                                    if (!titles.contains(outsource.getCust_po() + outsource.getDeliverNo() + outsource.getVat_no())) {
+                                        titles.add(outsource.getCust_po() + outsource.getDeliverNo() + outsource.getVat_no());
+                                        myList.add(new VatGloud(outsource.getVatNo(), outsource.getProduct_no(), outsource.getColor_code(), outsource.getColor_name()
+                                                , outsource.getCust_po(), outsource.getDeliverNo(), true, outsource.getEpc()));
+                                    } else {
                                         for (VatGloud vatGloud : myList) {
-                                            if (vatGloud.getVatNo().equals(outsource.getVatNo())) {
+                                            if ((vatGloud.getCust_po() + vatGloud.getDeliverNo() + vatGloud.getVatNo())
+                                                    .equals(outsource.getCust_po() + outsource.getDeliverNo() + outsource.getVatNo())) {
                                                 vatGloud.getEpcs().add(outsource.getEpc());
-                                                flag = false;
                                                 break;
                                             }
                                         }
-                                        if (flag)
-                                            myList.add(new VatGloud(outsource.getVatNo(), outsource.getProduct_no(), outsource.getColor_code(), outsource.getColor_name()
-                                                    , outsource.getCust_po(), outsource.getDeliverNo(), true, outsource.getEpc()));
-                                        text2.setText(String.valueOf(epcs.size()));
-                                        mAdapter.notifyDataSetChanged();
                                     }
+                                    epcs.add(outsource.getEpc());
+                                    dates.add(outsource);
+                                    text2.setText(String.valueOf(epcs.size()));
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
@@ -252,7 +244,6 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
         super.onDestroyView();
         scanResultHandler.removeMessages(ScanResultHandler.RFID);
         disRFID();
-        EventBus.getDefault().post(new EventBusMsg(0x88));
         EventBus.getDefault().unregister(this);
         ButterKnife.unbind(this);
     }
@@ -280,10 +271,11 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
     }
 
     private void submit() {
-       /* ArrayList<Outsource> list = new ArrayList<>();
+        ArrayList<Outsource> list = new ArrayList<>();
         ArrayList<String> epcs = new ArrayList<>();
         for (VatGloud vatGloud : myList) {
-            epcs.addAll(vatGloud.getEpcs());
+            if (vatGloud.isFlag())
+                epcs.addAll(vatGloud.getEpcs());
         }
         for (Outsource outsource : dates) {
             if (epcs.contains(outsource.getEpc()))
@@ -300,7 +292,7 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
                     if (App.LOGCAT_SWITCH) {
-                        Log.i(TAG, "inventIn;" + e.getMessage());
+                        Log.i(TAG, "new_inv_sum_trans;" + e.getMessage());
                         Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -318,7 +310,7 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
                             mAdapter.notifyDataSetChanged();
                         } else {
                             showToast("上传失败");
-                            showConfirmDialog("上传失败，" + response.getMessage());
+                            showConfirmDialog("WMS上传失败，" + response.getMessage());
                             Sound.faillarm();
                         }
                     } catch (Exception e) {
@@ -326,20 +318,14 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
                     }
                 }
             }, json);
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
-        ArrayList<String> epcs = new ArrayList<>();
-        for (VatGloud vatGloud : myList) {
-            epcs.addAll(vatGloud.getEpcs());
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", Constant.USERNAME);
-        jsonObject.put("password", Constant.PRASSWORD);
-        jsonObject.put("epcs", epcs);
-        final String json = jsonObject.toJSONString();
+        JSONObject jsonObject2 = new JSONObject();
+        jsonObject2.put("userId", Constant.USERNAME);
+        jsonObject2.put("password", Constant.PRASSWORD);
+        jsonObject2.put("epcs", epcs);
+        final String json2 = jsonObject2.toJSONString();
         try {
             OkHttpClientManager.postJsonAsyn(App.CLOUD_IP + ":" + App.CLOUD_PORT + "/a/bas/basLabelApi/inventIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
                 @Override
@@ -365,14 +351,14 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
                             mAdapter.notifyDataSetChanged();
                         } else {
                             showToast("上传失败");
-                            showConfirmDialog("上传失败，" + response.getMessage());
+                            showConfirmDialog("标签云上传失败，" + response.getMessage());
                             Sound.faillarm();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }, json);
+            }, json2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -412,8 +398,18 @@ public class OutsourceInFragment extends BaseFragment implements UHFCallbackLiat
         @Override
         public void convert(RecyclerHolder holder, final VatGloud item, final int position) {
             if (item != null) {
+                CheckBox checkBox = holder.getView(R.id.checkbox1);
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        item.setFlag(b);
+                    }
+                });
+                checkBox.setChecked(item.isFlag());
+                holder.setText(R.id.text1, "送货单号：" + item.getDeliverNo() + "  ");
+                holder.setText(R.id.text4, "PO：" + item.getCust_po());
                 holder.setText(R.id.item1, item.getProduct_no());
-                holder.setText(R.id.item2, item.getColor_code().replaceAll(" ", ""));
+                holder.setText(R.id.item2, item.getColor_code());
                 holder.setText(R.id.item3, item.getColor_name());
                 holder.setText(R.id.item4, item.getVatNo());
                 holder.setText(R.id.item5, String.valueOf(item.getEpcs().size()));
