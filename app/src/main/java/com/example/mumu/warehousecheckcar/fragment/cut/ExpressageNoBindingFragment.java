@@ -38,6 +38,7 @@ import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
 
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -166,10 +167,15 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         String expressNo = fixeedittext1.getText().toString();
         if (!TextUtils.isEmpty(expressNo)) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("outNo", expressNo);
-            jsonObject.put("courierNo", myList);
+            jsonObject.put("courierNo", expressNo);
+            jsonObject.put("outNo", myList);
             jsonObject.put("userId", User.newInstance().getId());
             final String json = jsonObject.toJSONString();
+            try {
+                AppLog.write(getActivity(), "expressBoundOutNo", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/express/expressBoundOutNo", new OkHttpClientManager.ResultCallback<BaseReturn>() {
                     @Override
