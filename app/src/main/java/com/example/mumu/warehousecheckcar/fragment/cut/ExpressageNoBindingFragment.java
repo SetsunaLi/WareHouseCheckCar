@@ -1,4 +1,4 @@
-package com.example.mumu.warehousecheckcar.fragment.expressage;
+package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -30,10 +29,8 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.Outsource;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.example.mumu.warehousecheckcar.fragment.outsource_in.OutsourceInFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
@@ -50,7 +47,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
-import static org.greenrobot.eventbus.EventBus.TAG;
 
 /***
  *created by 快递单号绑定

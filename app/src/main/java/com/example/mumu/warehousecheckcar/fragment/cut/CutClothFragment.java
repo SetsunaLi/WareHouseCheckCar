@@ -2,11 +2,8 @@ package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +24,8 @@ public class CutClothFragment extends BaseFragment {
     Button button1;
     @Bind(R.id.button3)
     Button button3;
+    @Bind(R.id.button2)
+    Button button2;
 
     public static CutClothFragment newInstance() {
         if (fragment == null) ;
@@ -63,6 +62,12 @@ public class CutClothFragment extends BaseFragment {
                 null,
                 null,
                 null);
+        button2.setCompoundDrawables(
+                Imgutil.findImgAsSquare(getActivity(),
+                        R.mipmap.expressage_l, 64),
+                null,
+                null,
+                null);
     }
 
     @Override
@@ -91,6 +96,14 @@ public class CutClothFragment extends BaseFragment {
             break;
             case R.id.button3: {
                 Fragment fragment = BlueToothConnectFragment.newInstance();
+                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                transaction.show(fragment);
+                transaction.commit();
+            }
+            break;
+            case R.id.button2: {
+                Fragment fragment = ExpressageNoBindingFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
                 transaction.show(fragment);

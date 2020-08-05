@@ -96,7 +96,7 @@ public class HomeFragment extends BaseFragment {
                 R.mipmap.setting_l, R.mipmap.click1_l, R.mipmap.click2_l, R.mipmap.click3_l, R.mipmap.click4_l, R.mipmap.click5_l
                 , R.mipmap.click6_l, R.mipmap.click7_l, R.mipmap.click8_l, R.mipmap.click9_l, R.mipmap.click10_l, R.mipmap.click11_l
                 , R.mipmap.click12_l, R.mipmap.click13_l, R.mipmap.click14_l, R.mipmap.click15_l, R.mipmap.backin_l, R.mipmap.chubb_get_l
-                , R.mipmap.chubb_get_l, R.mipmap.chubb_get_l
+                , R.mipmap.chubb_get_l, R.mipmap.outsource_in_l
         };
     }
 

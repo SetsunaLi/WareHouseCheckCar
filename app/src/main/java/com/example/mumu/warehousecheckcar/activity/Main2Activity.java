@@ -48,7 +48,6 @@ import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.chubb.ChubbUpFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CutClothFragment;
 import com.example.mumu.warehousecheckcar.fragment.cut.CuttingClothPutwayCarrierFragment;
-import com.example.mumu.warehousecheckcar.fragment.expressage.ExpressageNoBindingFragment;
 import com.example.mumu.warehousecheckcar.fragment.find.FindTpNoFragmentf;
 import com.example.mumu.warehousecheckcar.fragment.find.FindVatNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.forward.ForwardingListFragment;
@@ -325,7 +324,7 @@ public class Main2Activity extends AppCompatActivity
                 fragment = ChubbClothGetFragment.newInstance();
                 break;
             case 19:
-                fragment = ExpressageNoBindingFragment.newInstance();
+//                fragment = ExpressageNoBindingFragment.newInstance();
                 break;
             case 20:
                 fragment = OutsourceInFragment.newInstance();
@@ -473,10 +472,10 @@ public class Main2Activity extends AppCompatActivity
     }
 
     /**
-     * 快递单号绑定
+     * 无
      */
     public void click19(View view) {
-        selectItem(19);
+//        selectItem(19);
     }
 
     /**
