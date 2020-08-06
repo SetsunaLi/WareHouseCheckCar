@@ -128,6 +128,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
 
     private void clearData() {
         myList.clear();
+        myList.add("");
         fixeedittext1.setText("");
     }
 
@@ -240,9 +241,9 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
             fixeedittext1.setText(code);
         } else if (flag == 2) {
             int position = mAdapter.getPosition();
-            myList.set(position, code);
+            if (position < myList.size())
+                myList.set(position, code);
             mAdapter.notifyDataSetChanged();
-//            mAdapter.notifyItemChanged(position);
         }
     }
 
@@ -313,8 +314,12 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    myList.remove(position);
-                    mAdapter.notifyDataSetChanged();
+                    if (myList.size() != 1) {
+                        myList.remove(position);
+                        RecycleAdapter.this.position = -255;
+                        flag = 0;
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
             });
         }
