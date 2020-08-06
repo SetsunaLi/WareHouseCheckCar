@@ -419,8 +419,10 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
         public void convert(RecyclerHolder holder, final List<ClothPlan> list, final int position) {
             if (list != null) {
                 CheckBox checkBox = holder.getView(R.id.checkbox1);
-                if (list.size() > 0)
+                if (list.size() > 0) {
                     checkBox.setChecked(list.get(0).isUpLoad());
+                    holder.setText(R.id.text1, "申请单号：" + list.get(0).getOut_no());
+                }
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
