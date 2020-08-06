@@ -83,7 +83,7 @@ public class CutClothFragment extends BaseFragment {
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
-    @OnClick({R.id.button1, R.id.button3})
+    @OnClick({R.id.button1, R.id.button3, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1: {

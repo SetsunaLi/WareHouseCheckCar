@@ -212,13 +212,11 @@ public class Main2Activity extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.i("onKeyDown", String.valueOf(keyCode));
         return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        Log.i("onKeyUp", String.valueOf(keyCode));
         return super.onKeyUp(keyCode, event);
     }
 

@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -70,7 +72,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
-    private int flag = 0;//0为空，1为快点单，2为申请单
+    private int flag = 1;//0为空，1为快点单，2为申请单
 
     public static ExpressageNoBindingFragment newInstance() {
         return new ExpressageNoBindingFragment();
@@ -101,15 +103,25 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         recyle.setAdapter(mAdapter);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void addListener() {
         scanResultHandler = new ScanResultHandler(this);
         init2D();
-        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+/*        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Log.i("onFocusChange", String.valueOf(b));
+                if (b)
                 flag = 1;
+            }
+        });*/
+        fixeedittext1.setFocusable(true);//设置输入框可聚集
+        fixeedittext1.setFocusableInTouchMode(true);//设置触摸聚焦
+        fixeedittext1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                flag = 1;
+                return false;
             }
         });
     }
@@ -144,7 +156,6 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
             case R.id.imgbutton:
                 myList.add("");
                 mAdapter.select(myList.size() - 1);
-                mAdapter.setId(myList.size() - 1);
                 mAdapter.notifyDataSetChanged();
                 recyle.scrollToPosition(myList.size() - 1);
                 break;
@@ -164,10 +175,10 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     }
 
     private void submit() {
-        String expressNo = fixeedittext1.getText().toString();
-        if (!TextUtils.isEmpty(expressNo)) {
+        String courierNo = fixeedittext1.getText().toString();
+        if (!TextUtils.isEmpty(courierNo)) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("courierNo", expressNo);
+            jsonObject.put("courierNo", courierNo);
             jsonObject.put("outNo", myList);
             jsonObject.put("userId", User.newInstance().getId());
             final String json = jsonObject.toJSONString();
@@ -228,16 +239,16 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         if (flag == 1) {
             fixeedittext1.setText(code);
         } else if (flag == 2) {
-            int id = mAdapter.getId();
-            myList.set(id, code);
+            int position = mAdapter.getPosition();
+            myList.set(position, code);
             mAdapter.notifyDataSetChanged();
+//            mAdapter.notifyItemChanged(position);
         }
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;
         private int position = -255;
-        private int id = -255;
 
         public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
@@ -260,34 +271,23 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
             return position;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
         @Override
         public void convert(RecyclerHolder holder, final String item, final int position) {
             final FixedEditText editNo = (FixedEditText) holder.getView(R.id.fixeedittext1);
-            editNo.setTag(position);
-            editNo.setText(item);
-            if (position == this.position) {
-                editNo.setFocusable(true);//设置输入框可聚集
-                editNo.setFocusableInTouchMode(true);//设置触摸聚焦
-                editNo.requestFocus();//请求焦点
-                editNo.findFocus();//获取焦点
-                editNo.setCursorVisible(true);
+            editNo.setFocusable(true);//设置输入框可聚集
+            editNo.setFocusableInTouchMode(true);//设置触摸聚焦
+            editNo.clearFocus();
+            if (this.position == position) {
+                editNo.requestFocus();
                 editNo.setSelection(editNo.getText().length());
-                showKeyBoard(editNo);
             }
             editNo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
                     if (b) {
+                        editNo.setSelection(editNo.getText().length());
                         flag = 2;
-                        setId(position);
+                        select(position);
                     }
                 }
             });
@@ -299,7 +299,6 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                    Log.i("onTextChanged", "onTextChanged");
                     myList.set(position, charSequence.toString());
                 }
 
@@ -308,6 +307,8 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
 
                 }
             });
+            editNo.setTag(position);
+            editNo.setText(item);
             ImageButton imageButton = (ImageButton) holder.getView(R.id.imagebutton1);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
