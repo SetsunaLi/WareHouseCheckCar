@@ -230,6 +230,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
 
     private void clearData() {
         myList.clear();
+        myList.add(new CutOutBean());
         noList.clear();
     }
 
@@ -256,8 +257,11 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                scanResultHandler.removeMessages(ScanResultHandler.CODE);
                 clearData();
+                onOffWeight(false);
+                mAdapter.setPosition(-255);
+                mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
                 showUploadDialog("是否确认出库？");
@@ -288,7 +292,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
             button3.setText("拒收");
             showToast("打开蓝牙接收");
         } else {
-            isGetWeight = false;
+            isGetWeight = flag;
             button3.setText("接收");
             showToast("关闭蓝牙接收");
         }
@@ -515,8 +519,10 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
                     break;
                 case 3:
                     int position = fragment.mAdapter.getPosition();
-                    fragment.myList.get(position).setCut_weight(fragment.weight);
-                    fragment.mAdapter.notifyDataSetChanged();
+                    if (position > 0 && position < fragment.myList.size()) {
+                        fragment.myList.get(position).setCut_weight(fragment.weight);
+                        fragment.mAdapter.notifyDataSetChanged();
+                    }
                     break;
                 default:
                     break;
@@ -526,7 +532,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<CutOutBean> {
         private Context context;
-        private int position;
+        private int position = -255;
 
         public RecycleAdapter(RecyclerView v, Collection<CutOutBean> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
