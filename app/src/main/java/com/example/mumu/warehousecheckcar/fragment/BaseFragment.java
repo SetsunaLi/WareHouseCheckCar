@@ -41,6 +41,18 @@ public abstract class BaseFragment extends Fragment {
         addListener();
     }
 
+    public void openView(View view) {
+        if (view != null && !view.isEnabled()) {
+            view.setEnabled(true);
+        }
+    }
+
+    public void lockView(View view) {
+        if (view != null && !view.isEnabled()) {
+            view.setEnabled(false);
+        }
+    }
+
     /**
      * 初始化输入法
      */
@@ -80,7 +92,8 @@ public abstract class BaseFragment extends Fragment {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog.newInstance();
         }
-        loadingDialog.show(getChildFragmentManager(), "loading");
+        if (!loadingDialog.isResumed())
+            loadingDialog.show(getChildFragmentManager(), "loading");
     }
 
     /**

@@ -86,6 +86,8 @@ public class BlueToothConnectFragment extends BaseFragment implements BRecyclerA
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(getResources().getString(R.string.cut_out));
+
         View view = inflater.inflate(R.layout.bluetooth_connect_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;

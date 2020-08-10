@@ -91,6 +91,8 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(getResources().getString(R.string.cut_pai));
+
         getActivity().setTitle(getResources().getString(R.string.cut_os));
         View view = inflater.inflate(R.layout.cut_plan_layout, container, false);
         ButterKnife.bind(this, view);

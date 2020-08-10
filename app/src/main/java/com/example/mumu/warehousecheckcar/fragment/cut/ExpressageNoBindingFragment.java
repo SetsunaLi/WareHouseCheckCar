@@ -81,6 +81,8 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setTitle(getResources().getString(R.string.cut_scanner));
+
         View view = inflater.inflate(R.layout.expressage_no_binding_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
