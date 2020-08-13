@@ -518,13 +518,9 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                                         clearData();
                                         mAdapter.notifyDataSetChanged();
 //                                            blinkDialog2(true);
-                                    } else if (baseReturn != null && baseReturn.getStatus() == 0) {
-                                        Toast.makeText(getActivity(), "出库失败", Toast.LENGTH_LONG).show();
-                                        showConfirmDialog(baseReturn.getData() + "出库失败，请在ERP出库");
-                                        Sound.faillarm();
                                     } else {
-                                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_LONG).show();
-                                        showConfirmDialog("上传失败");
+                                        Toast.makeText(getActivity(), baseReturn.getMessage(), Toast.LENGTH_LONG).show();
+                                        showConfirmDialog(baseReturn.getMessage());
                                         Sound.faillarm();
                                     }
                                 } catch (Exception e) {

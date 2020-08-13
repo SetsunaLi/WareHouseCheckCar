@@ -58,6 +58,7 @@ import com.example.mumu.warehousecheckcar.fragment.in.ReturnGoodsInNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
+import com.example.mumu.warehousecheckcar.fragment.outsource_in.In_OutSourceFragment;
 import com.example.mumu.warehousecheckcar.fragment.outsource_in.OutsourceInFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
@@ -325,7 +326,7 @@ public class Main2Activity extends AppCompatActivity
 //                fragment = ExpressageNoBindingFragment.newInstance();
                 break;
             case 20:
-                fragment = OutsourceInFragment.newInstance();
+                fragment = In_OutSourceFragment.newInstance();
                 break;
             default:
                 fragment = AboutFragment.newInstance();

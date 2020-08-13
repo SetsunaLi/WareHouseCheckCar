@@ -42,12 +42,12 @@ public class Outsource implements Serializable {
     @SerializedName(value = "width_side", alternate = "widthSide")
     private String width_side;
     @SerializedName(value = "weight_f", alternate = "widthF")
-    private BigDecimal weight_f;
-    private BigDecimal weight;
+    private double weight_f;
+    private double weight;
     @SerializedName(value = "weight_kj", alternate = "widthKj")
-    private BigDecimal weight_kj;
+    private double weight_kj;
     @SerializedName(value = "weight_zg", alternate = "widthZg")
-    private BigDecimal weight_zg;
+    private double weight_zg;
     private String deliverNo;
     @SerializedName(value = "sup_name", alternate = "supName")
     private String sup_name;
@@ -147,27 +147,27 @@ public class Outsource implements Serializable {
         this.vat_no = vat_no;
     }
 
-    public BigDecimal getWeight_f() {
+    public double getWeight_f() {
         return weight_f;
     }
 
-    public void setWeight_f(BigDecimal weight_f) {
+    public void setWeight_f(double weight_f) {
         this.weight_f = weight_f;
     }
 
-    public BigDecimal getWeight_kj() {
+    public double getWeight_kj() {
         return weight_kj;
     }
 
-    public void setWeight_kj(BigDecimal weight_kj) {
+    public void setWeight_kj(double weight_kj) {
         this.weight_kj = weight_kj;
     }
 
-    public BigDecimal getWeight_zg() {
+    public double getWeight_zg() {
         return weight_zg;
     }
 
-    public void setWeight_zg(BigDecimal weight_zg) {
+    public void setWeight_zg(double weight_zg) {
         this.weight_zg = weight_zg;
     }
 
@@ -259,11 +259,11 @@ public class Outsource implements Serializable {
         this.width_side = width_side;
     }
 
-    public BigDecimal getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(BigDecimal weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
