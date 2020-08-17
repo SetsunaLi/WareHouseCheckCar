@@ -145,6 +145,11 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:ellipsize">marquee</item>
     </style>
+    <!--item-文字-->
+    <style name="title_item" parent="text_item">
+        <item name="android:textColor">@color/colorREAD</item>
+    </style>
+
     <style name="edit_style2">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorEditNoTextSelect</item>
@@ -152,6 +157,7 @@
         <item name="android:background">@drawable/fixed_edittext_style</item>
         <item name="android:padding">15dp</item>
     </style>
+
     <style name="edit_style3">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorREAD</item>

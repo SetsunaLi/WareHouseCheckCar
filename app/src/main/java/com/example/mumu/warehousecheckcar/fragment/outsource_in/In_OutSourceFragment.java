@@ -106,7 +106,8 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
     private ArrayList<String> epcCheck;
     private String cust_po = "", sup_name = "", color_code = "", deliverNo = "", product_no = "",
             sel_color = "", vat_no = "", color_name = "", width = "", gram = "";
-    private double weight_zg, weight_kj, weight, count;
+    private double weight_zg, weight_kj, weight;
+    private int count;
 
     public static In_OutSourceFragment newInstance() {
         if (fragment == null) ;
@@ -173,7 +174,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
         weight_zg = 0.0;
         weight_kj = 0.0;
         weight = 0.0;
-        count = 0.0;
+        count = 0;
     }
 
     private void setData(Outsource outsource) {
@@ -456,7 +457,6 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
                             double a = Double.parseDouble(weight);
                             item.setWeight(a);
                         } else {
-                            editText.setText("0");
                             item.setWeight(0.0);
                         }
                     } catch (Exception e) {

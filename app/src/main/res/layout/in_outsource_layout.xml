@@ -18,12 +18,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dp"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="PO" />
@@ -31,7 +31,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="染厂名称" />
@@ -39,7 +39,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="染厂色号" />
@@ -47,7 +47,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="送货单号" />
@@ -55,7 +55,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="布号" />
@@ -67,7 +67,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal">
 
@@ -116,12 +116,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
                 android:descendantFocusability="blocksDescendants"
+                android:fillViewport="true"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="销售色号" />
@@ -129,7 +130,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="缸号" />
@@ -137,7 +138,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="颜色" />
@@ -145,7 +146,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="封度" />
@@ -153,7 +154,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="克重" />
@@ -165,7 +166,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal">
 
@@ -214,12 +215,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="纸管" />
@@ -227,7 +228,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="空加" />
@@ -235,7 +236,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="总实重" />
@@ -243,7 +244,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent"
                     android:text="扫描数量" />
@@ -251,7 +252,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="100dip"
                     android:layout_height="match_parent" />
 
@@ -262,7 +263,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal">
 
@@ -310,7 +311,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal">
 
@@ -324,7 +325,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="180dip"
                     android:layout_height="match_parent"
                     android:text="布票号" />
@@ -332,7 +333,7 @@
                 <View style="@style/view_item_mid" />
 
                 <TextView
-                    style="@style/text_item"
+                    style="@style/title_item"
                     android:layout_width="180dip"
                     android:layout_height="match_parent"
                     android:text="入库重量" />
