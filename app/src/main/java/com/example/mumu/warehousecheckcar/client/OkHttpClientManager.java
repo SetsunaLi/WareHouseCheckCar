@@ -116,14 +116,26 @@ public class OkHttpClientManager {
      * @param url
      * @param callback
      */
-    private void _getAsyn(String url, final ResultCallback callback)
-    {
+    private void _getAsyn(String url, final ResultCallback callback) {
         final Request request = new Request.Builder()
                 .url(url)
                 .build();
         deliveryResult(callback, request);
     }
 
+    /**
+     * 异步的get带JSON请求
+     *
+     * @param url
+     * @param callback
+     */
+    private void _getAsyn(String url, final ResultCallback callback, String json) {
+        RequestBody requestBody = RequestBody.create(JSON, json);
+        final Request request = new Request.Builder()
+                .url(url)
+                .build();
+        deliveryResult(callback, request);
+    }
 
     /**
      * 同步的Post请求
@@ -132,8 +144,7 @@ public class OkHttpClientManager {
      * @param params post的参数
      * @return
      */
-    private Response _post(String url, Param... params) throws IOException
-    {
+    private Response _post(String url, Param... params) throws IOException {
         Request request = buildPostRequest(url, params);
         Response response = mOkHttpClient.newCall(request).execute();
         return response;

@@ -177,6 +177,7 @@ public class HomeFragment extends BaseFragment {
                             break;
                         case 18:
                             button = button19;
+                            break;
                         case 19:
                             button = button20;
                             break;

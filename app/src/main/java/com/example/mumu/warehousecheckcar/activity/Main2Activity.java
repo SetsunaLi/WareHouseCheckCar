@@ -59,9 +59,9 @@ import com.example.mumu.warehousecheckcar.fragment.out.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.outsource_in.In_OutSourceFragment;
-import com.example.mumu.warehousecheckcar.fragment.outsource_in.OutsourceInFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
+import com.example.mumu.warehousecheckcar.fragment.repaif_in.RepaifInNoFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.CutToBitmapUtil;
@@ -323,7 +323,7 @@ public class Main2Activity extends AppCompatActivity
                 fragment = ChubbClothGetFragment.newInstance();
                 break;
             case 19:
-//                fragment = ExpressageNoBindingFragment.newInstance();
+                fragment = RepaifInNoFragment.newInstance();
                 break;
             case 20:
                 fragment = In_OutSourceFragment.newInstance();
@@ -474,7 +474,7 @@ public class Main2Activity extends AppCompatActivity
      * 无
      */
     public void click19(View view) {
-//        selectItem(19);
+        selectItem(19);
     }
 
     /**

@@ -10,17 +10,18 @@
         android:layout_height="0dp"
         android:layout_weight="2" />
 
-    <com.example.mumu.warehousecheckcar.view.FixedEditText
-        android:id="@+id/fixeedittext1"
+    <AutoCompleteTextView
+        android:id="@+id/autoText1"
         style="@style/edit_style2"
         android:layout_width="match_parent"
         android:layout_height="60dip"
         android:layout_marginLeft="27dp"
         android:layout_marginTop="17dp"
         android:layout_marginRight="27dp"
-        android:hint="PO:"
+        android:completionThreshold="1"
         android:imeOptions="actionDone"
         android:maxLines="1"
+        android:hint="染厂名称"
         android:singleLine="true" />
 
     <com.example.mumu.warehousecheckcar.view.FixedEditText
