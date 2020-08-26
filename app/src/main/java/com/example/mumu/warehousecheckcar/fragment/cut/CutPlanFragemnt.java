@@ -92,8 +92,6 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle(getResources().getString(R.string.cut_pai));
-
-        getActivity().setTitle(getResources().getString(R.string.cut_os));
         View view = inflater.inflate(R.layout.cut_plan_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -206,9 +204,11 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                             JSONArray jsonArray = jsonObject.getJSONArray(key);
                             String jsonStr = JSONObject.toJSONString(jsonArray);
                             List<ClothPlan> jsonArr = JSONObject.parseArray(jsonStr, ClothPlan.class);
-                            myList.add(jsonArr);
-                            for (ClothPlan clothPlan : jsonArr) {
-                                outId_epc.put(clothPlan.getOutp_id(), "");
+                            if (jsonArr.size() > 0) {
+                                myList.add(jsonArr);
+                                for (ClothPlan clothPlan : jsonArr) {
+                                    outId_epc.put(clothPlan.getOutp_id(), "");
+                                }
                             }
                         }
                         mAdapter.notifyDataSetChanged();
@@ -317,6 +317,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
     @Override
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
+//        epc = "epc.replaceAll(" ", "")";
         if (epc.startsWith("3035A537") && !epcs.contains(epc)) {
             JSONObject obj = new JSONObject();
             obj.put("epc", epc);
