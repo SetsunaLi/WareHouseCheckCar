@@ -18,7 +18,7 @@ public final class Constant {
 //    public static final String PORT = "8081";
     public static final String IP = "http://47.106.157.255";
     public static final String PORT = "80";
-    public static final String CLOUD_IP = "http://112.74.97.186";
+    public static final String CLOUD_IP = "http://yun.label1.cn";
     public static final String CLOUD_PORT = "8983";
     public static final String USERNAME = "bukeng";
     public static final String PRASSWORD = "123456";

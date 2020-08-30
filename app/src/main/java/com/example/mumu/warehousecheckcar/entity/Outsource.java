@@ -11,7 +11,8 @@ import java.util.Date;
  *on 2020/7/23
  */
 public class Outsource implements Serializable {
-    private boolean flag=true;
+    private boolean flag = true;
+    private boolean scan = false;
     private String id;
     private boolean isNewRecord;
     @SerializedName(value = "createDate", alternate = "transDate")
@@ -76,6 +77,14 @@ public class Outsource implements Serializable {
         this.weight_kj = weight_kj;
         this.weight_zg = weight_zg;
         this.deliverNo = deliverNo;
+    }
+
+    public boolean isScan() {
+        return scan;
+    }
+
+    public void setScan(boolean scan) {
+        this.scan = scan;
     }
 
     public boolean isFlag() {

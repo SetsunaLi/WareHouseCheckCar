@@ -12,15 +12,19 @@ public class OutsourceGroup extends Outsource {
     private int outCount;
     private boolean stutas=false;
 
-    public OutsourceGroup(Outsource outsource, double allWeightF, double allWeight, double allScanWeight, int scanCount, int outCount, boolean stutas) {
-        super(outsource.isFlag(), outsource.getTransNo(),outsource.getVat_no(), outsource.getProduct_no(), outsource.getProduct_name(),outsource.getColor_code(), outsource.getSel_color()
-                ,outsource.getColor_name(),outsource.getCust_po(),outsource.getWidth_side(),outsource.getWeight_kj(),outsource.getWeight_zg(),outsource.getDeliverNo());
-        this.allWeightF = allWeightF;
-        this.allWeight = allWeight;
-        this.allScanWeight = allScanWeight;
-        this.scanCount = scanCount;
+    public OutsourceGroup(Outsource outsource, int outCount) {
+        super(outsource.isFlag(), outsource.getTransNo(), outsource.getVat_no(), outsource.getProduct_no(), outsource.getProduct_name(), outsource.getColor_code(), outsource.getSel_color()
+                , outsource.getColor_name(), outsource.getCust_po(), outsource.getWidth_side(), outsource.getWeight_kj(), outsource.getWeight_zg(), outsource.getDeliverNo());
+        this.allWeightF = 0;
+        this.allWeight = 0;
+        this.allScanWeight = 0;
+        this.scanCount = 0;
         this.outCount = outCount;
-        this.stutas = stutas;
+        this.stutas = false;
+    }
+
+    public void addScanCount() {
+        scanCount++;
     }
 
     public double getAllWeightF() {

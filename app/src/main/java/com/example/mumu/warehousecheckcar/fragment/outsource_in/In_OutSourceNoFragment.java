@@ -2,6 +2,7 @@ package com.example.mumu.warehousecheckcar.fragment.outsource_in;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
@@ -39,6 +40,8 @@ import java.util.Collection;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRAGMENT;
 
 /***
  *created by 
@@ -113,8 +116,8 @@ public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void getEventMsg(EventBusMsg eventBusMsg) {
         switch (eventBusMsg.getStatus()) {
-            case 0x00:
-
+            case 0x02:
+                init2D();
                 break;
         }
     }
@@ -140,12 +143,15 @@ public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, 
                 recyle.scrollToPosition(myList.size() - 1);
                 break;
             case R.id.button2:
+                disConnect2D();
                 Fragment fragment = In_OutSourceNewFragment.newInstance();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("NO", myList);
                 fragment.setArguments(bundle);
-                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                transaction.show(fragment);
+                transaction.commit();
                 break;
         }
     }
@@ -163,6 +169,14 @@ public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, 
         code = code.replaceAll(" ", "");
         int id = mAdapter.getId();
         myList.set(id, code);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.setId(0);
+        mAdapter.select(0);
         mAdapter.notifyDataSetChanged();
     }
 
