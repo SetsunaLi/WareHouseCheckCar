@@ -11,13 +11,17 @@ import java.util.Date;
  *on 2020/7/23
  */
 public class Outsource implements Serializable {
+    private boolean flag=true;
     private String id;
     private boolean isNewRecord;
+    @SerializedName(value = "createDate", alternate = "transDate")
     private String createDate;
     private String createBy;
     private String updateDate;
     private String status;
     private String updateBy;
+    private String transNo;
+    private int isSend;
     private String epc;
     @SerializedName(value = "vat_no", alternate = "vatNo")
     private String vat_no;
@@ -41,12 +45,12 @@ public class Outsource implements Serializable {
     private String width;
     @SerializedName(value = "width_side", alternate = "widthSide")
     private String width_side;
-    @SerializedName(value = "weight_f", alternate = "widthF")
+    @SerializedName(value = "weight_f", alternate = "weightF")
     private double weight_f;
     private double weight;
-    @SerializedName(value = "weight_kj", alternate = "widthKj")
+    @SerializedName(value = "weight_kj", alternate = "weightKj")
     private double weight_kj;
-    @SerializedName(value = "weight_zg", alternate = "widthZg")
+    @SerializedName(value = "weight_zg", alternate = "weightZg")
     private double weight_zg;
     private String deliverNo;
     @SerializedName(value = "sup_name", alternate = "supName")
@@ -58,13 +62,44 @@ public class Outsource implements Serializable {
     public Outsource() {
     }
 
-    public Outsource(String vat_no, String product_no, String color_code, String color_name, String cust_po, String deliverNo) {
+    public Outsource(boolean flag, String transNo, String vat_no, String product_no, String product_name, String color_code, String sel_color, String color_name, String cust_po, String width_side, double weight_kj, double weight_zg, String deliverNo) {
+        this.flag = flag;
+        this.transNo = transNo;
         this.vat_no = vat_no;
         this.product_no = product_no;
+        this.product_name = product_name;
         this.color_code = color_code;
+        this.sel_color = sel_color;
         this.color_name = color_name;
         this.cust_po = cust_po;
+        this.width_side = width_side;
+        this.weight_kj = weight_kj;
+        this.weight_zg = weight_zg;
         this.deliverNo = deliverNo;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public String getTransNo() {
+        return transNo;
+    }
+
+    public void setTransNo(String transNo) {
+        this.transNo = transNo;
+    }
+
+    public int getIsSend() {
+        return isSend;
+    }
+
+    public void setIsSend(int isSend) {
+        this.isSend = isSend;
     }
 
     public String getId() {

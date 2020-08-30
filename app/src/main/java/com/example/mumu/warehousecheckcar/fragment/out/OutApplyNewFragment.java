@@ -74,7 +74,6 @@ import butterknife.OnClick;
 public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener
         , RXCallback, OnCodeResult, OnRfidResult {
     private final String TAG = "OutApplyNewFragment";
-    private static OutApplyNewFragment fragment;
     @Bind(R.id.recyle)
     RecyclerView recyle;
     @Bind(R.id.text1)
@@ -88,6 +87,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Bind(R.id.edit1)
     EditText edit1;
 
+    private static OutApplyNewFragment fragment;
     public static OutApplyNewFragment newInstance() {
         if (fragment == null) ;
         fragment = new OutApplyNewFragment();

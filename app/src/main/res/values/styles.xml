@@ -116,6 +116,7 @@
         <item name="android:textColor">@color/colorHomeButton2</item>
         <item name="android:textSize">18sp</item>
         <item name="android:gravity">center</item>
+
     </style>
     <style name="dialog_title">
         <item name="android:textSize">25sp</item>
@@ -144,6 +145,11 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:ellipsize">marquee</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
     </style>
     <!--item-文字-->
     <style name="title_item" parent="text_item">
