@@ -13,6 +13,7 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="common_dialog" parent="android:style/Theme.Dialog">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@color/colorTableLine</item>
@@ -25,9 +26,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
-    </style>
-
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar"></style>
 
 
     <style name="button_login_style1">
@@ -88,6 +87,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
     </style>
+
     <style name="style_medium_font">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -99,11 +99,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
+
     <style name="text_style1">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">26sp</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="text_style3">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">18sp</item>
@@ -118,6 +120,7 @@
         <item name="android:gravity">center</item>
 
     </style>
+
     <style name="dialog_title">
         <item name="android:textSize">25sp</item>
         <item name="android:textColor">@color/colorAboutText</item>
@@ -145,15 +148,18 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:ellipsize">marquee</item>
+    </style>
+    <!--item-文字-->
+    <style name="title_item" parent="text_item">
+        <item name="android:textColor">@color/colorREAD</item>
+    </style>
+
+    <style name="title_item_lx" parent="text_item">
         <item name="android:scrollHorizontally">true</item>
         <item name="android:singleLine">true</item>
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
-    </style>
-    <!--item-文字-->
-    <style name="title_item" parent="text_item">
-        <item name="android:textColor">@color/colorREAD</item>
     </style>
 
     <style name="edit_style2">
@@ -170,19 +176,22 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="dialog_content_text">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorDialogContent</item>
     </style>
+
     <style name="layout_style1">
         <!-- <item name="android:layout_marginLeft">18dp</item>-->
         <item name="android:layout_marginTop">@dimen/home_margin</item>
         <item name="android:background">@drawable/text_style_bg</item>
     </style>
+
     <style name="head_margin">
         <item name="android:layout_marginLeft">@dimen/home_margin</item>
     </style>
-<!--分割线-->
+    <!--分割线-->
     <style name="view_item_mid">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -190,6 +199,7 @@
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:background">@color/colorTableLine</item>
     </style>
+
     <style name="view_item_bottom">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -206,6 +216,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="view_line">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
