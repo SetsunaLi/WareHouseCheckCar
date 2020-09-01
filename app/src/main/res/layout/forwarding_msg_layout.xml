@@ -27,6 +27,7 @@
             android:singleLine="true"
             android:inputType="text"/>
 
+
         <AutoCompleteTextView
             android:id="@+id/autoText2"
             style="@style/edit_style2"

@@ -76,7 +76,7 @@ public class FilterAdapter extends BaseAdapter implements Filterable {
         return mFilter;
     }
 
-    class ViewHolder {
+    static class ViewHolder {
         TextView content;
     }
 

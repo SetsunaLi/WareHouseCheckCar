@@ -19,7 +19,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.adapter.FilterAdapter;
+import com.example.mumu.warehousecheckcar.adapter.SearchAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
@@ -47,7 +47,7 @@ public class RepaifInNoFragment extends BaseFragment implements RXCallback, OnCo
     @Bind(R.id.autoText1)
     AutoCompleteTextView autoText1;
     private ScanResultHandler scanResultHandler;
-    private FilterAdapter adapter;
+    private SearchAdapter adapter;
 
     public static RepaifInNoFragment newInstance() {
         if (fragment == null) ;
@@ -71,7 +71,7 @@ public class RepaifInNoFragment extends BaseFragment implements RXCallback, OnCo
 
     @Override
     protected void initView(View view) {
-        adapter = new FilterAdapter(getActivity());
+        adapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
         autoText1.setAdapter(adapter);
     }
 
@@ -98,7 +98,7 @@ public class RepaifInNoFragment extends BaseFragment implements RXCallback, OnCo
                             try {
                                 List<String> arry = response.toJavaList(String.class);
                                 if (arry != null && arry.size() > 0) {
-                                    adapter.transforData(arry);
+                                    adapter.updataList(arry);
                                 }
                             } catch (Exception e) {
 

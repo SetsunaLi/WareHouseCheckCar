@@ -22,10 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -42,6 +39,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.adapter.SearchAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.FindVatNo;
@@ -122,9 +120,12 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
     //    查询
     private ArrayList<String> findList;
 
-    private FilterAdapter vatAdapter;
-    private FilterAdapter colorAdapter;
-    private FilterAdapter clothAdapter;
+    //    private FilterAdapter vatAdapter;
+//    private FilterAdapter colorAdapter;
+//    private FilterAdapter clothAdapter;
+    private SearchAdapter vatAdapter;
+    private SearchAdapter colorAdapter;
+    private SearchAdapter clothAdapter;
     private RFIDReaderHelper rfidHander;
     private ScanResultHandler scanResultHandler;
 
@@ -150,6 +151,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
         dataList = new ArrayList<>();
         dataEpc = new ArrayList<>();
         findList = new ArrayList<>();
+
     }
 
     @Override
@@ -162,12 +164,20 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
-        vatAdapter = new FilterAdapter(getActivity());
-        autoText1.setAdapter(vatAdapter);
+/*        vatAdapter = new FilterAdapter(getActivity());
+//        autoText1.setAdapter(vatAdapter);
         colorAdapter = new FilterAdapter(getActivity());
         autoText2.setAdapter(colorAdapter);
         clothAdapter = new FilterAdapter(getActivity());
+        autoText3.setAdapter(clothAdapter);*/
+
+        vatAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
+        autoText1.setAdapter(vatAdapter);
+        colorAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
+        autoText2.setAdapter(colorAdapter);
+        clothAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
         autoText3.setAdapter(clothAdapter);
+
     }
 
     @Override
@@ -194,7 +204,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                             try {
                                 List<String> arry = response.toJavaList(String.class);
                                 if (arry != null && arry.size() > 0) {
-                                    vatAdapter.transforData(arry);
+                                    vatAdapter.updataList(arry);
                                 }
                             } catch (Exception e) {
 
@@ -230,7 +240,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                             try {
                                 List<String> arry = response.toJavaList(String.class);
                                 if (arry != null && arry.size() > 0) {
-                                    colorAdapter.transforData(arry);
+                                    colorAdapter.updataList(arry);
                                 }
                             } catch (Exception e) {
 
@@ -266,7 +276,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                             try {
                                 List<String> arry = response.toJavaList(String.class);
                                 if (arry != null && arry.size() > 0) {
-                                    clothAdapter.transforData(arry);
+                                    clothAdapter.updataList(arry);
                                 }
                             } catch (Exception e) {
 
@@ -657,7 +667,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
         }
     }
 
-    class FilterAdapter extends BaseAdapter implements Filterable {
+  /*  class FilterAdapter extends BaseAdapter implements Filterable {
         private Context mContext;
         private List<String> mItems;
         private List<String> fData;
@@ -751,5 +761,5 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                 }
             }
         }
-    }
+    }*/
 }

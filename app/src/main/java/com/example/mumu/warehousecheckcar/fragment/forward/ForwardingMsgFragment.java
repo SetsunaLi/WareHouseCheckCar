@@ -14,21 +14,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.adapter.FilterAdapter;
+import com.example.mumu.warehousecheckcar.adapter.SearchAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.example.mumu.warehousecheckcar.fragment.find.FindVatNoFragment;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,8 +46,9 @@ public class ForwardingMsgFragment extends BaseFragment {
         return fragment;
     }
 
-    private FilterAdapter carAdapter;
-    private FilterAdapter peoAdapter;
+    private SearchAdapter carAdapter;
+    private SearchAdapter peoAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,9 +65,9 @@ public class ForwardingMsgFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        carAdapter = new FilterAdapter(getActivity());
+        carAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
         autoText1.setAdapter(carAdapter);
-        peoAdapter = new FilterAdapter(getActivity());
+        peoAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
         autoText2.setAdapter(peoAdapter);
     }
 
@@ -97,7 +93,7 @@ public class ForwardingMsgFragment extends BaseFragment {
                             try {
                                 if (baseReturnArray != null && baseReturnArray.getStatus() == 1) {
                                     if (baseReturnArray.getData() != null && baseReturnArray.getData().size() > 0) {
-                                        carAdapter.transforData(baseReturnArray.getData());
+                                        carAdapter.updataList(baseReturnArray.getData());
                                     }
                                 }
 
@@ -135,7 +131,7 @@ public class ForwardingMsgFragment extends BaseFragment {
                             try {
                                 if (baseReturnArray != null && baseReturnArray.getStatus() == 1) {
                                     if (baseReturnArray.getData() != null && baseReturnArray.getData().size() > 0) {
-                                        peoAdapter.transforData(baseReturnArray.getData());
+                                        peoAdapter.updataList(baseReturnArray.getData());
                                     }
                                 }
                             } catch (Exception e) {
