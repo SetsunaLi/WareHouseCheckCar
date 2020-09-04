@@ -22,9 +22,9 @@ import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.entity.Output;
-import com.example.mumu.warehousecheckcar.entity.OutputDetail;
-import com.example.mumu.warehousecheckcar.entity.OutputFlag;
+import com.example.mumu.warehousecheckcar.entity.out.Output;
+import com.example.mumu.warehousecheckcar.entity.out.OutputDetail;
+import com.example.mumu.warehousecheckcar.entity.out.OutputFlag;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 

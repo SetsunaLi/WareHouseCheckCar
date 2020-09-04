@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.Forwarding;
+import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 

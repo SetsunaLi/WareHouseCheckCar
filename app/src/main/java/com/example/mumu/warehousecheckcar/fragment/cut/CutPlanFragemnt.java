@@ -32,7 +32,7 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
-import com.example.mumu.warehousecheckcar.entity.ClothPlan;
+import com.example.mumu.warehousecheckcar.entity.cutCloth.ClothPlan;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.User;

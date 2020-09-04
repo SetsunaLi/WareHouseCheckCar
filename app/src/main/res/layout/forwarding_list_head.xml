@@ -5,47 +5,60 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="50dip"
-        android:descendantFocusability="blocksDescendants"
-        android:orientation="horizontal">
+        android:layout_height="51dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="horizontal">
 
 
-        <TextView
-            android:id="@+id/item1"
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="车牌号" />
+            <TextView
+                style="@style/text_item"
+                android:layout_width="100dip"
+                android:layout_height="match_parent"
+                android:text="车牌号" />
 
-        <View style="@style/view_item_mid" />
+            <View style="@style/view_item_mid" />
 
 
-        <TextView
-            android:id="@+id/item2"
-            style="@style/text_item"
-            android:layout_width="60dip"
-            android:layout_height="match_parent"
-            android:text="条数" />
+            <TextView
+                style="@style/text_item"
+                android:layout_width="60dip"
+                android:layout_height="match_parent"
+                android:text="条数" />
 
-        <View style="@style/view_item_mid" />
+            <View style="@style/view_item_mid" />
 
-        <TextView
-            android:id="@+id/item3"
-            style="@style/text_item"
-            android:layout_width="120dip"
-            android:layout_height="match_parent"
-            android:text="录入时间" />
+            <TextView
+                style="@style/text_item"
+                android:layout_width="120dip"
+                android:layout_height="match_parent"
+                android:text="录入时间" />
 
-        <View style="@style/view_item_mid" />
+            <View style="@style/view_item_mid" />
 
-        <TextView
-            android:id="@+id/item4"
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="确认发运" />
+            <TextView
+                style="@style/text_item"
+                android:layout_width="100dip"
+                android:layout_height="match_parent"
+                android:text="发运" />
+
+            <View style="@style/view_item_mid" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="120dip"
+                android:layout_height="match_parent"
+                android:text="付运表插入" />
+        </LinearLayout>
+
+        <View style="@style/view_item_bottom" />
+
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />

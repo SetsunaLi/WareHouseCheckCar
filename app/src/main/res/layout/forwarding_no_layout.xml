@@ -60,16 +60,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7"
+        android:layout_weight="8.5"
         android:gravity="center">
+
+        <Button
+            android:id="@+id/button1"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/home_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="大布" />
 
         <Button
             android:id="@+id/button2"
             style="@style/button_style1"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_marginLeft="@dimen/button_margin"
-            android:layout_marginRight="@dimen/home_margin"
-            android:text="@string/button_find" />
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="剪板" />
     </LinearLayout>
 </LinearLayout>

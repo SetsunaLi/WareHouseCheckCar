@@ -31,16 +31,16 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.dialog.CommandDailog;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.Forwarding;
-import com.example.mumu.warehousecheckcar.entity.Inventory;
+import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
+import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
-import com.example.mumu.warehousecheckcar.utils.SpModel;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -63,8 +63,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.Constant.APP_OUTP_ID;
-import static com.example.mumu.warehousecheckcar.Constant.APP_TABLE_NAME;
 import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
@@ -112,6 +110,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
     private int transport_output_id = 0;
+    private CommandDailog commandDailog;
 
     @Nullable
     @Override
@@ -133,18 +132,12 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         dataList = new ArrayList<>();
     }
 
-    @Override
-    protected void initView(View view) {
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_item);
-        mAdapter.setContext(getActivity());
-        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        mAdapter.setOnItemClickListener(this);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyle.setLayoutManager(llm);
-        recyle.setAdapter(mAdapter);
-
-    }
+    public Runnable run = new Runnable() {
+        @Override
+        public void run() {
+            commandDailog.openView();
+        }
+    };
 
     @Override
     protected void addListener() {
@@ -288,6 +281,21 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         fatherNoList.clear();
     }
 
+    @Override
+    protected void initView(View view) {
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_item);
+        mAdapter.setContext(getActivity());
+        mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
+        mAdapter.setOnItemClickListener(this);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyle.setLayoutManager(llm);
+        recyle.setAdapter(mAdapter);
+
+        commandDailog = CommandDailog.newInstance("请输入口令发运");
+        commandDailog.setCancelable(false);
+    }
+
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -299,29 +307,12 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
-                showUploadDialog("是否上传装车");
-                setUploadYesClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        upLoading();
-                        uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
-                    }
-                });
-         /*       setUploadYesClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        returnWhere = true;
-                        upLoading(true);
-                        uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
-                    }
-                });*/
+                submit();
                 break;
         }
     }
 
-    private void upLoading() {
+    private void submit() {
         JSONObject jsonObject = new JSONObject();
         int id = User.newInstance().getId();
         jsonObject.put("userId", id);
@@ -340,7 +331,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         ForwardingList forwardingList = myList.get(getKeyValue.get(key));
                         if (forwardingList.isFlag() && forwardingList.getApplyCount() != forwardingList.getMatchCount()) {
                             flag = false;
-                            break;
                         }
                     }
                     if (epcKeyList.containsKey(forwarding.getEpc()))
@@ -348,67 +338,85 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                             list.add(forwarding);
                 }
         }
+        jsonObject.put("data", list);
+        final String json = jsonObject.toJSONString();
         if (flag) {
-            jsonObject.put("data", list);
-            final String json = jsonObject.toJSONString();
-            try {
-                AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
-                    @Override
-                    public void onError(Request request, Exception e) {
-                        if (e instanceof ConnectException)
-                            showConfirmDialog("链接超时");
-                        if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "postInventory;" + e.getMessage());
-                            showToast("上传信息失败");
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(BaseReturnObject<JSONObject> response) {
-                        try {
-                            AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            uploadDialog.openView();
-                            hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
-                            if (response.getStatus() == 1) {
-                                showToast("上传成功");
-                                clearData();
-                                mAdapter.notifyDataSetChanged();
-                                Fragment fragment = ForwardingListFragment.newInstance();
-                                getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                getActivity().getFragmentManager().beginTransaction()
-                                        .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-                            } else {
-                                showToast("上传失败");
-                                showConfirmDialog("上传失败");
-                                Sound.faillarm();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, json);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            showUploadDialog("是否上传装车");
+            setUploadYesClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    upLoading(json);
+                    uploadDialog.lockView();
+                    scanResultHandler.postDelayed(r, TIME);
+                }
+            });
         } else {
-            Sound.faillarm();
-            showConfirmDialog("上传失败，申请单内扫描条数必须与申请条数一致！");
-            uploadDialog.openView();
-            hideUploadDialog();
-            scanResultHandler.removeCallbacks(r);
+            commandDailog.show(getChildFragmentManager(), "upload");
+            commandDailog.setOnYesClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (commandDailog.getPassword().equals("1234")) {
+                        upLoading(json);
+                        commandDailog.lockView();
+                        scanResultHandler.postDelayed(run, TIME);
+                    }
+                }
+            });
         }
+    }
 
+    private void upLoading(String json) {
+        try {
+            AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    if (e instanceof ConnectException)
+                        showConfirmDialog("链接超时");
+                    if (App.LOGCAT_SWITCH) {
+                        Log.i(TAG, "postInventory;" + e.getMessage());
+                        showToast("上传信息失败");
+                    }
+                }
+
+                @Override
+                public void onResponse(BaseReturnObject<JSONObject> response) {
+                    try {
+                        AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        uploadDialog.openView();
+                        commandDailog.openView();
+                        hideUploadDialog();
+                        scanResultHandler.removeCallbacks(r);
+                        if (response.getStatus() == 1) {
+                            showToast("上传成功");
+                            clearData();
+                            mAdapter.notifyDataSetChanged();
+                            Fragment fragment = ForwardingListFragment.newInstance();
+                            getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            getActivity().getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
+                        } else {
+                            showToast("上传失败");
+                            showConfirmDialog("上传失败");
+                            Sound.faillarm();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, json);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";

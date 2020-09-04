@@ -20,28 +20,40 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.example.mumu.warehousecheckcar.fragment.check.CheckDetailFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
+import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class ForwardingNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
     final String TAG = "ForwardingNoFragment";
@@ -54,8 +66,11 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
     TextView text1;
     @Bind(R.id.text2)
     TextView text2;
+    @Bind(R.id.button1)
+    Button button1;
     @Bind(R.id.button2)
     Button button2;
+
 
     private ForwardingMsgFragment.CarMsg carMsg;
 
@@ -155,7 +170,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
-    @OnClick({R.id.imgbutton, R.id.button2})
+    @OnClick({R.id.imgbutton, R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imgbutton:
@@ -165,19 +180,20 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                 mAdapter.notifyDataSetChanged();
                 recyle.scrollToPosition(myList.size() - 1);
                 break;
-            case R.id.button2:
+            case R.id.button1:
                 mAdapter.select(-255);
                 mAdapter.notifyDataSetChanged();
-                boolean flag = false;
-                for (String str : myList) {
-                    if (!TextUtils.isEmpty(str))
-                        flag = true;
+                ArrayList<String> nos = new ArrayList<>();
+                for (String no : myList) {
+                    if (!TextUtils.isEmpty(no) && !nos.contains(no)) {
+                        nos.add(no);
+                    }
                 }
-                if (flag) {
+                if (nos.size() != 0) {
                     if (scannerFlag)
                         disConnect2D();
                     scannerFlag = false;
-                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, myList, transport_output_id));
+                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, nos, transport_output_id));
                     Fragment fragment = ForwardingFragment.newInstance();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -187,7 +203,82 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     showToast(getResources().getString(R.string.forwarding_toast_msg));
                 }
                 break;
+            case R.id.button2:
+                showUploadDialog("是否剪板发运？");
+                setUploadYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        submit();
+                        uploadDialog.lockView();
+                        scanResultHandler.postDelayed(r, TIME);
+                    }
+                });
+                break;
         }
+    }
+
+    private void submit() {
+        ArrayList<String> nos = new ArrayList<>();
+        for (String no : myList) {
+            if (!TextUtils.isEmpty(no) && !nos.contains(no)) {
+                nos.add(no);
+            }
+        }
+        if (nos.size() != 0) {
+            JSONObject jsonObject = new JSONObject();
+            int id = User.newInstance().getId();
+            jsonObject.put("userId", id);
+            jsonObject.put("carMsg", carMsg);
+            jsonObject.put("cc_transport_output_id", transport_output_id);
+            jsonObject.put("status", 0);
+            jsonObject.put("applyNo", nos);
+            jsonObject.put("data", new ArrayList<>());
+            String json = jsonObject.toJSONString();
+            try {
+                AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<BaseReturnObject<JSONObject>>() {
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        if (e instanceof ConnectException)
+                            showConfirmDialog("链接超时");
+                        if (App.LOGCAT_SWITCH) {
+                            Log.i(TAG, "postInventory;" + e.getMessage());
+                            showToast("上传信息失败");
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(BaseReturnObject<JSONObject> response) {
+                        try {
+                            AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            uploadDialog.openView();
+                            hideUploadDialog();
+                            scanResultHandler.removeCallbacks(r);
+                            if (response.getStatus() == 1) {
+                                showToast("上传成功");
+                            } else {
+                                showToast("上传失败");
+                                showConfirmDialog("上传失败");
+                                Sound.faillarm();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else
+            showToast(getResources().getString(R.string.forwarding_toast_msg));
     }
 
     @Override
@@ -205,6 +296,13 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
         myList.set(id, code);
         mAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;

@@ -15,12 +15,20 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:animateLayoutChanges="false"
-                android:focusableInTouchMode="true" />
+                android:orientation="vertical">
+
+                <include layout="@layout/forwarding_list_head" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="false"
+                    android:focusableInTouchMode="true" />
+            </LinearLayout>
         </HorizontalScrollView>
     </RelativeLayout>
 

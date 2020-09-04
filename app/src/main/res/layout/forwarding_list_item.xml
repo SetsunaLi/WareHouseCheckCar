@@ -41,12 +41,24 @@
         <View style="@style/view_item_mid" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button1"
             android:layout_width="100dip"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:background="@drawable/button_no_select"
             android:text="确认"
+            android:textColor="@color/colorREAD"
+            android:textSize="20sp" />
+
+        <View style="@style/view_item_mid" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="120dip"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:background="@drawable/button_no_select"
+            android:text="扫描"
             android:textColor="@color/colorREAD"
             android:textSize="20sp" />
     </LinearLayout>

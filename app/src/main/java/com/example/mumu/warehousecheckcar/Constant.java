@@ -16,6 +16,8 @@ public final class Constant {
 //        App.PORT = "80";
 //    public static final String IP = "http://192.168.1.88";
 //    public static final String PORT = "8081";
+//    public static final String IP = "http://192.168.1.222";
+//    public static final String PORT = "8080";
     public static final String IP = "http://47.106.157.255";
     public static final String PORT = "80";
     public static final String CLOUD_IP = "http://yun.label1.cn";

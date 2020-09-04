@@ -25,6 +25,8 @@ import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -177,7 +179,7 @@ public class ForwardingMsgFragment extends BaseFragment {
     }
 
 
-    static class CarMsg {
+    static class CarMsg implements Serializable {
         /**
          * 车牌号
          */

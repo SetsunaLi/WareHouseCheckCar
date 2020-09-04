@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +20,13 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
-import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.ForwardingListBean;
+import com.example.mumu.warehousecheckcar.entity.forwarding.ForwardingListBean;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.squareup.okhttp.Request;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -78,7 +73,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
     @Override
     protected void initData() {
         myList = new ArrayList<>();
-        myList.add(new ForwardingListBean());
+
     }
 
     @Override
@@ -86,7 +81,6 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
         mAdapter = new RecycleAdapter(recyle, myList, R.layout.forwarding_list_item);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
-        mAdapter.setHeader(LayoutInflater.from(getActivity()).inflate(R.layout.forwarding_list_head, null));
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
@@ -101,7 +95,6 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
     private void clearData() {
         myList.clear();
-        myList.add(new ForwardingListBean());
     }
 
     @Override
@@ -127,7 +120,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
             public void onResponse(BaseReturnArray<ForwardingListBean> response) {
                 try {
                     hideLoadingDialog();
-                    if (response != null && response.getStatus() == 1) {
+                    if (response != null && response.getStatus() == 1 && response.getData().size() > 0) {
                         clearData();
                         myList.addAll(response.getData());
                         mAdapter.notifyDataSetChanged();
@@ -141,19 +134,22 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        if (position > 0) {
-            String carNo = myList.get(position).getLicense_plate();
-            String name = myList.get(position).getDriver();
-            carNo = carNo.replaceAll(" ", "");
-            name = name.replaceAll(" ", "");
-            EventBus.getDefault().postSticky(new EventBusMsg(0x00, new ForwardingMsgFragment.CarMsg(carNo, name), myList.get(position).getId()));
-            Fragment fragment = ForwardingNoFragment.newInstance();
-            FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
-            transaction.show(fragment);
-            transaction.commit();
-        }
+        String carNo = myList.get(position).getLicense_plate();
+        String name = myList.get(position).getDriver();
+        carNo = carNo.replaceAll(" ", "");
+        name = name.replaceAll(" ", "");
+        Bundle bundle = new Bundle();
+        bundle.putInt("bas_transport_type", myList.get(position).getId());
+        bundle.putSerializable("carMsg", new ForwardingMsgFragment.CarMsg(carNo, name));
+        Fragment fragment = ApplyNoListFragment.newInstance();
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+        transaction.show(fragment);
+        transaction.commit();
+
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -186,10 +182,6 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
         }
 
-        public void setHeader(View mHeaderView) {
-            super.setHeader(mHeaderView);
-        }
-
         public void setContext(Context context) {
             this.context = context;
         }
@@ -197,88 +189,101 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
         @Override
         public void convert(RecyclerHolder holder, final ForwardingListBean item, final int position) {
-            if (position != 0) {
-                holder.setText(R.id.item1, item.getLicense_plate());
-                holder.setText(R.id.item2, String.valueOf(item.getQty()));
-                holder.setText(R.id.item3, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(item.getCreatedatetime()));
-                Button button = holder.getView(R.id.button);
-                if (item.getOutput_status() == 0)
-                    button.setEnabled(true);
-                else
-                    button.setEnabled(false);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showUploadDialog("是否结束装车？");
-                        setUploadYesClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                uploadDialog.lockView();
-                                handler.postDelayed(r, TIME);
+            holder.setText(R.id.item1, item.getLicense_plate());
+            holder.setText(R.id.item2, String.valueOf(item.getQty()));
+            holder.setText(R.id.item3, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(item.getCreatedatetime()));
+            Button button = (Button) holder.getView(R.id.button1);
+            if (item.getOutput_status() == 0)
+                button.setEnabled(true);
+            else
+                button.setEnabled(false);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showUploadDialog("是否结束装车？");
+                    setUploadYesClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            uploadDialog.lockView();
+                            handler.postDelayed(r, TIME);
+                            try {
+                                JSONObject jsonObject = new JSONObject();
+                                jsonObject.put("userId", User.newInstance().getId());
+                                jsonObject.put("status", 1);
+                                jsonObject.put("cc_transport_output_id", item.getId());
+                                final String json = jsonObject.toJSONString();
                                 try {
-                                    JSONObject jsonObject = new JSONObject();
-                                    jsonObject.put("userId", User.newInstance().getId());
-                                    jsonObject.put("status", 1);
-                                    jsonObject.put("cc_transport_output_id", item.getId());
-                                    final String json = jsonObject.toJSONString();
-                                    try {
-                                        AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<JSONObject>() {
-                                        @Override
-                                        public void onError(Request request, Exception e) {
-                                            if (e instanceof ConnectException)
-                                                showConfirmDialog("链接超时");
-                                            if (App.LOGCAT_SWITCH) {
-                                                showToast("上传信息失败");
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                            try {
-                                                AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            try {
-                                                uploadDialog.openView();
-                                                hideUploadDialog();
-                                                handler.removeCallbacks(r);
-                                                if (response != null && response.getInteger("status") == 1) {
-                                                    showToast("上传成功");
-                                                    onViewClicked(button1);
-                                                } else {
-                                                    showToast("上传失败");
-                                                    showConfirmDialog("上传失败");
-                                                    Sound.faillarm();
-                                                }
-                                            } catch (Exception e) {
-
-                                            }
-                                        }
-                                    }, json);
+                                    AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
                                 } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-
-                                OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/screen/noticeCarNo?carNo=" + item.getLicense_plate(), new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/postTransportOut", new OkHttpClientManager.ResultCallback<JSONObject>() {
                                     @Override
                                     public void onError(Request request, Exception e) {
+                                        if (e instanceof ConnectException)
+                                            showConfirmDialog("链接超时");
+                                        if (App.LOGCAT_SWITCH) {
+                                            showToast("上传信息失败");
+                                        }
                                     }
 
                                     @Override
-                                    public void onResponse(JSONObject object) {
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        try {
+                                            uploadDialog.openView();
+                                            hideUploadDialog();
+                                            handler.removeCallbacks(r);
+                                            if (response != null && response.getInteger("status") == 1) {
+                                                showToast("上传成功");
+                                                onViewClicked(button1);
+                                            } else {
+                                                showToast("上传失败");
+                                                showConfirmDialog("上传失败");
+                                                Sound.faillarm();
+                                            }
+                                        } catch (Exception e) {
 
+                                        }
                                     }
-                                });
+                                }, json);
+                            } catch (IOException e) {
                             }
-                        });
 
-                    }
-                });
-            }
+                            OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/screen/noticeCarNo?carNo=" + item.getLicense_plate(), new OkHttpClientManager.ResultCallback<JSONObject>() {
+                                @Override
+                                public void onError(Request request, Exception e) {
+                                }
+
+                                @Override
+                                public void onResponse(JSONObject object) {
+
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+            Button button2 = (Button) holder.getView(R.id.button2);
+            button2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("bas_transport_type", item.getId());
+                    bundle.putSerializable("carMsg", new ForwardingMsgFragment.CarMsg(item.getLicense_plate(), item.getDriver()));
+                    Fragment fragment = ShipmentNoFragment.newInstance();
+                    fragment.setArguments(bundle);
+                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                    transaction.show(fragment);
+                    transaction.commit();
+                }
+            });
         }
     }
 

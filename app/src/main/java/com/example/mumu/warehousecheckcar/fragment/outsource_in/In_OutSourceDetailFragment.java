@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.Outsource;
+import com.example.mumu.warehousecheckcar.entity.out.Outsource;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 
@@ -200,7 +200,7 @@ public class In_OutSourceDetailFragment extends BaseFragment {
                     }
                 }
             });
-            holder.setText(R.id.item1, "null");
+            holder.setText(R.id.item1, item.getFab_roll());
             holder.setText(R.id.edittext1, String.valueOf(item.getWeight()));
 
         }

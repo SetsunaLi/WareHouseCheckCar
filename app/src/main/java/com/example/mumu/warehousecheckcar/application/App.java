@@ -2,22 +2,16 @@ package com.example.mumu.warehousecheckcar.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.ArrayRes;
 
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.entity.Carrier;
-import com.example.mumu.warehousecheckcar.entity.ChubbUp;
-import com.example.mumu.warehousecheckcar.entity.InCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.Input;
-import com.example.mumu.warehousecheckcar.entity.Inventory;
-import com.example.mumu.warehousecheckcar.entity.OutCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.Output;
-import com.example.mumu.warehousecheckcar.entity.OutputDetail;
+import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
+import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.in.Input;
+import com.example.mumu.warehousecheckcar.entity.out.OutCheckDetail;
+import com.example.mumu.warehousecheckcar.entity.out.Output;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mumu on 2018/12/8.
