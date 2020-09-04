@@ -120,7 +120,7 @@ public class ShipmentOutNoFragment extends BaseFragment {
             jsonObject.put("data", data);
             String json = jsonObject.toJSONString();
             try {
-                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "shYf/sh/payCarry/getApplyByPayNo", new OkHttpClientManager.ResultCallback<BaseReturnArray<ApplyByPayNo>>() {
+                OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/payCarry/getApplyByPayNo", new OkHttpClientManager.ResultCallback<BaseReturnArray<ApplyByPayNo>>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
@@ -132,7 +132,7 @@ public class ShipmentOutNoFragment extends BaseFragment {
                         try {
                             if (returnArray != null && returnArray.getStatus() == 1 && returnArray.getData().size() > 0) {
                                 for (int i = 0; i < returnArray.getData().size(); i++) {
-                                    ApplyByPayNo applyByPayNo = returnArray.getData().get(0);
+                                    ApplyByPayNo applyByPayNo = returnArray.getData().get(i);
                                     applyByPayNo.setFlag(true);
                                     applyByPayNo.setPay_no(no);
                                     if (i == 0)

@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:checked="false"
-            android:visibility="invisible" />
+             />
 
         <View style="@style/view_item_mid" />
 

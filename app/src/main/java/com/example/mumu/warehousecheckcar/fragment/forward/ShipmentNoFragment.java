@@ -56,15 +56,16 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
 
     private int bas_transport_type;
     private ForwardingMsgFragment.CarMsg carMsg;
-    private ArrayList<String> myList;
-    private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
 
     public static ShipmentNoFragment newInstance() {
         if (fragment == null) ;
         fragment = new ShipmentNoFragment();
         return fragment;
     }
+
+    private ArrayList<String> myList;
+    private RecycleAdapter mAdapter;
+    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
@@ -199,13 +200,6 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;
-        private int position = -255;
-        private int id = -255;
-
-        public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
-            super(v, datas, itemLayoutId);
-
-        }
 
         public void setContext(Context context) {
             this.context = context;
@@ -215,6 +209,8 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
             super.setHeader(mHeaderView);
         }
 
+        private int position = -255;
+
         public void select(int position) {
             this.position = position;
         }
@@ -223,12 +219,19 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
             return position;
         }
 
+        private int id = -255;
+
         public int getId() {
             return id;
         }
 
         public void setId(int id) {
             this.id = id;
+        }
+
+        public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
+            super(v, datas, itemLayoutId);
+
         }
 
         @Override
