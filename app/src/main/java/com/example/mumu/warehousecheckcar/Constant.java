@@ -31,5 +31,5 @@ public final class Constant {
     public static final String APP_CAR_NAME = "car_no";
     public static final String APP_OUTP_ID = "output_id";
 
-
+    public static final int REQUEST_CAMERA_CODE = 1001;
 }

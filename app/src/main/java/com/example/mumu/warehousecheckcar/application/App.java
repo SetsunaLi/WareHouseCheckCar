@@ -3,6 +3,7 @@ package com.example.mumu.warehousecheckcar.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class App extends Application {
     private static App INSTANCE;
+    public static boolean isPDA = true;
 
     public static App getInstance() {
         return INSTANCE;
@@ -33,6 +35,8 @@ public class App extends Application {
         super.onCreate();
         INSTANCE = this;
         Sound.init(getContext());
+        isPDA = new PdaController().getIsPhone();
+
     }
 
     public  static final boolean APPLOGGER=true;

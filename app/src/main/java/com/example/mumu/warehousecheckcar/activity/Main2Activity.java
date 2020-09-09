@@ -103,8 +103,8 @@ public class Main2Activity extends AppCompatActivity
         mTitle = getTitle();
         initDate();
         initView();
-        initRFID();
-        init2D();
+//        initRFID();
+//        init2D();
         selectItem(0);
         comeBack = ComeBack.getInstance();
 
@@ -166,7 +166,7 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
-    private RFIDReaderHelper rfidHander;
+/*    private RFIDReaderHelper rfidHander;
 
     //    private TDScannerHelper scannerHander;
     private void initRFID() {
@@ -209,7 +209,7 @@ public class Main2Activity extends AppCompatActivity
         } catch (Exception e) {
 
         }
-    }
+    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -225,8 +225,8 @@ public class Main2Activity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        disConnectRFID();
-        disConnect2D();
+//        disConnectRFID();
+//        disConnect2D();
         clearAllData();
 //        销毁日志事务
         AppLog.clearFormat();

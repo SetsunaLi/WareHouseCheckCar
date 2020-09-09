@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.Window;
 
 import com.example.mumu.warehousecheckcar.R;
@@ -36,4 +37,6 @@ public class LoadingDialog extends DialogFragment {
         }
         return dialog;
     }
+
+
 }

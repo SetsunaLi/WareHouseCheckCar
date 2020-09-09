@@ -1,7 +1,9 @@
 package com.example.mumu.warehousecheckcar.fragment.cut;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -10,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -36,9 +38,9 @@ import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
+import com.example.mumu.warehousecheckcar.zxing.CaptureActivity;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
-
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -68,6 +70,8 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     RecyclerView recyle;
     @Bind(R.id.button2)
     Button button2;
+    @Bind(R.id.imagebutton2)
+    ImageButton imagebutton2;
 
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
@@ -103,11 +107,19 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
+        imagebutton2.setVisibility(App.isPDA ? View.GONE : View.VISIBLE);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void addListener() {
+        mAdapter.setCameraClick(new OnCameraClick() {
+            @Override
+            public void startCamera(int count, Object t) {
+//                startActivity(new Intent(getActivity(), CaptureActivity.class));
+                startActivityForResult(new Intent(getActivity(), CaptureActivity.class), Constant.REQUEST_CAMERA_CODE);
+            }
+        });
         scanResultHandler = new ScanResultHandler(this);
         init2D();
 /*        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -147,13 +159,36 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            switch (requestCode) {
+                case Constant.REQUEST_CAMERA_CODE:
+//                    CaptureActivity.KEY_DATA
+                    String code = data.getStringExtra(CaptureActivity.KEY_DATA);
+                    code = code.replaceAll(" ", "");
+                    if (flag == 1) {
+                        fixeedittext1.setText(code);
+                    } else if (flag == 2) {
+                        int position = mAdapter.getPosition();
+                        if (position < myList.size())
+                            myList.set(position, code);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
         disConnect2D();
     }
 
-    @OnClick({R.id.imgbutton, R.id.button2})
+    @OnClick({R.id.imgbutton, R.id.button2, R.id.imagebutton2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imgbutton:
@@ -172,7 +207,10 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                         scanResultHandler.postDelayed(r, TIME);
                     }
                 });
-
+                break;
+            case R.id.imagebutton2:
+                flag = 1;
+                startActivityForResult(new Intent(getActivity(), CaptureActivity.class), Constant.REQUEST_CAMERA_CODE);
                 break;
         }
     }
@@ -249,9 +287,19 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         }
     }
 
+
+    interface OnCameraClick {
+        public void startCamera(int count, Object t);
+    }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {
         private Context context;
         private int position = -255;
+        private OnCameraClick cameraClick;
+
+        public void setCameraClick(OnCameraClick cameraClick) {
+            this.cameraClick = cameraClick;
+        }
 
         public RecycleAdapter(RecyclerView v, Collection<String> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
@@ -322,6 +370,20 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                         flag = 0;
                         mAdapter.notifyDataSetChanged();
                     }
+                }
+            });
+            ImageButton imageButton2 = (ImageButton) holder.getView(R.id.imagebutton2);
+            if (!App.isPDA) {
+                imageButton2.setVisibility(View.VISIBLE);
+            } else
+                imageButton2.setVisibility(View.GONE);
+            imageButton2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    flag = 2;
+                    select(position);
+                    if (cameraClick != null)
+                        cameraClick.startCamera(position, item);
                 }
             });
         }

@@ -207,8 +207,12 @@
     <string name="update_name">版本名称</string>
     <string name="update_no">版本号</string>
     <string name="update_msg">版本描述</string>
-<!--发运-->
+    <!--发运-->
     <string name="forwarding_toast_msg">请输入有效单号进行操作！</string>
 
+    <!-- zxing -->
+    <string name="button_ok">确定</string>
+    <string name="msg_camera_framework_bug">很遗憾，Android 相机出现问题。你可能需要重启设备。</string>
+    <string name="msg_default_status">请将条码置于取景框内扫描。  </string>
 
 </resources>
