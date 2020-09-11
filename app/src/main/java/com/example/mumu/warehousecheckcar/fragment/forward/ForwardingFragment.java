@@ -359,7 +359,8 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         upLoading(json);
                         commandDailog.lockView();
                         scanResultHandler.postDelayed(run, TIME);
-                    }
+                    } else
+                        showToast("口令不正确");
                 }
             });
         }
@@ -391,10 +392,20 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         e.printStackTrace();
                     }
                     try {
-                        uploadDialog.openView();
-                        commandDailog.openView();
-                        hideUploadDialog();
-                        scanResultHandler.removeCallbacks(r);
+                        if (uploadDialog != null) {
+                            uploadDialog.openView();
+                            hideUploadDialog();
+                            scanResultHandler.removeCallbacks(r);
+
+                        }
+                        if (commandDailog != null) {
+                            commandDailog.openView();
+                            if (commandDailog != null && !commandDailog.isHidden()) {
+                                commandDailog.dismiss();
+                                commandDailog.setOnYesClickListener(null);
+                            }
+                            scanResultHandler.removeCallbacks(run);
+                        }
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();
