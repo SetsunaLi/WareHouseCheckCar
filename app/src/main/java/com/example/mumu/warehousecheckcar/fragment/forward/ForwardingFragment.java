@@ -345,7 +345,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             setUploadYesClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    upLoading(json);
+                    upLoading(json, true);
                     uploadDialog.lockView();
                     scanResultHandler.postDelayed(r, TIME);
                 }
@@ -356,7 +356,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 @Override
                 public void onClick(View view) {
                     if (commandDailog.getPassword().equals("1234")) {
-                        upLoading(json);
+                        upLoading(json, false);
                         commandDailog.lockView();
                         scanResultHandler.postDelayed(run, TIME);
                     } else
@@ -366,7 +366,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         }
     }
 
-    private void upLoading(String json) {
+    private void upLoading(String json, final boolean flag) {
         try {
             AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
         } catch (IOException e) {
@@ -392,13 +392,12 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         e.printStackTrace();
                     }
                     try {
-                        if (uploadDialog != null) {
+                        if (flag) {
                             uploadDialog.openView();
                             hideUploadDialog();
                             scanResultHandler.removeCallbacks(r);
 
-                        }
-                        if (commandDailog != null) {
+                        } else {
                             commandDailog.openView();
                             if (commandDailog != null && !commandDailog.isHidden()) {
                                 commandDailog.dismiss();
