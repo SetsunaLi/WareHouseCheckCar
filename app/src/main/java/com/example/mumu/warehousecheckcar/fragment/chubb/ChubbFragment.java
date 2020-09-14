@@ -303,7 +303,7 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
         if ((imgview.getVisibility() == View.VISIBLE))
             imgview.setVisibility(View.GONE);
         epc = epc.replace(" ", "");
-        if (epc.startsWith("3035A537") && !epcList.contains(epc)) {
+        if (!epcList.contains(epc)) {
             JSONObject obj = new JSONObject();
             obj.put("epc", epc);
             String json = obj.toJSONString();

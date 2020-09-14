@@ -410,7 +410,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
     @Override
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
-        if (epc.startsWith("3035A537") && !epcList.contains(epc)) {
+        if (!epcList.contains(epc)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("epc", epc);
             final String json = jsonObject.toJSONString();

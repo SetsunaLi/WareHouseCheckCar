@@ -301,7 +301,7 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
     @Override
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
-        if (epc.startsWith("3035A537") && !dataEPC.contains(epc)) {
+        if (!dataEPC.contains(epc)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("epc", epc);
             final String json = jsonObject.toJSONString();

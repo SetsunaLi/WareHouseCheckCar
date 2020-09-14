@@ -582,7 +582,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void rfidResult(String epc) {
         final String EPC = epc.replaceAll(" ", "");
-        if (EPC.startsWith("3035A537") && epcKeyList.containsKey(EPC)) {
+        if (epcKeyList.containsKey(EPC)) {
             if (!epcKeyList.get(EPC).isFind()) {
                 epcKeyList.get(EPC).setFind(true);
                 epcKeyList.get(EPC).setStatus(true);
@@ -610,7 +610,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                 text1.setText(count + "");
                 mAdapter.notifyDataSetChanged();
             }
-        } else if (EPC.startsWith("3035A537") && !epcKeyList.containsKey(EPC) && !epcList.contains(EPC)) {
+        } else if (!epcKeyList.containsKey(EPC) && !epcList.contains(EPC)) {
             JSONObject epcJson = new JSONObject();
             epcJson.put("epc", EPC);
             final String json = epcJson.toJSONString();

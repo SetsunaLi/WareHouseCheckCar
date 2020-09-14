@@ -172,7 +172,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
     @Override
     public void rfidResult(String epcCode) {
         final String epc = epcCode.replaceAll(" ", "");
-        if (epc.startsWith("3035A537") && !dataEPC.contains(epc)) {
+        if (!dataEPC.contains(epc)) {
             JSONObject obj = new JSONObject();
             obj.put("epc", epc);
             final String json = obj.toJSONString();

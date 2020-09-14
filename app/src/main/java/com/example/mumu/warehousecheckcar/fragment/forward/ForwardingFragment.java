@@ -475,7 +475,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
         if (!epcList.contains(epc)) {
-            if (epc.startsWith("3035A537") && epcKeyList.containsKey(epc)) {
+            if (epcKeyList.containsKey(epc)) {
                 epcList.add(epc);
                 if (!epcKeyList.get(epc).isFind) {
                     epcKeyList.get(epc).setFind(true);
@@ -494,7 +494,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                     text1.setText(String.valueOf(count));
                     mAdapter.notifyDataSetChanged();
                 }
-            } else if (epc.startsWith("3035A537") && !epcKeyList.containsKey(epc)) {
+            } else if (!epcKeyList.containsKey(epc)) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("epc", epc);
                 final String json = jsonObject.toJSONString();

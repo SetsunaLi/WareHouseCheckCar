@@ -226,7 +226,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
     @Override
     public void rfidResult(String epc) {
         final String EPC = epc.replaceAll(" ", "");
-        if (EPC.startsWith("3035A537") && !epcList.contains(EPC)) {
+        if (!epcList.contains(EPC)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("epc", EPC);
             final String json = jsonObject.toJSONString();

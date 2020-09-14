@@ -318,7 +318,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
 //        epc = "epc.replaceAll(" ", "")";
-        if (epc.startsWith("3035A537") && !epcs.contains(epc)) {
+        if (!epcs.contains(epc)) {
             JSONObject obj = new JSONObject();
             obj.put("epc", epc);
             final String json = obj.toJSONString();

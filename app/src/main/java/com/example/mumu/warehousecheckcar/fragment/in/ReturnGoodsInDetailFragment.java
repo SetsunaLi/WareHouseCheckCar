@@ -370,7 +370,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
     @Override
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
-        if (epc.startsWith("3035A537") && !scanEpcList.contains(epc)) {
+        if (!scanEpcList.contains(epc)) {
             scanEpcList.add(epc);
             if (getEpcList.size() < oldData.getPs() && (!chooseEpcList.containsKey(epc) || chooseEpcList.get(epc).equals(oldData.getSh_no()))) {
                 for (RetInd r : myList) {

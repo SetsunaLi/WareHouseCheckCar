@@ -319,7 +319,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void rfidResult(String epc) {
         final String EPC = epc.replaceAll(" ", "");
-        if (EPC.startsWith("3035A537") && !epcList.contains(EPC)) {
+        if (!epcList.contains(EPC)) {
             JSONObject epcJson = new JSONObject();
             epcJson.put("epc", EPC);
             final String json = epcJson.toJSONString();
