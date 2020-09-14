@@ -37,7 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -50,11 +50,11 @@ import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRA
 public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
     final String TAG = "ForwardingNoFragment";
     private static In_OutSourceNoFragment fragment;
-    @Bind(R.id.imgbutton)
+    @BindView(R.id.imgbutton)
     ImageButton imgbutton;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
 
@@ -125,7 +125,7 @@ public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().unregister(this);
         disConnect2D();
     }
@@ -183,7 +183,7 @@ public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {

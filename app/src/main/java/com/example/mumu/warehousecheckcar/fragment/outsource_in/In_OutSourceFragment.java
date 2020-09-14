@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,41 +63,41 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  */
 public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     private static In_OutSourceFragment fragment;
-    @Bind(R.id.item1)
+    @BindView(R.id.item1)
     TextView item1;
-    @Bind(R.id.item2)
+    @BindView(R.id.item2)
     TextView item2;
-    @Bind(R.id.item3)
+    @BindView(R.id.item3)
     TextView item3;
-    @Bind(R.id.item4)
+    @BindView(R.id.item4)
     TextView item4;
-    @Bind(R.id.item5)
+    @BindView(R.id.item5)
     TextView item5;
-    @Bind(R.id.item6)
+    @BindView(R.id.item6)
     TextView item6;
-    @Bind(R.id.item7)
+    @BindView(R.id.item7)
     TextView item7;
-    @Bind(R.id.item8)
+    @BindView(R.id.item8)
     TextView item8;
-    @Bind(R.id.item9)
+    @BindView(R.id.item9)
     TextView item9;
-    @Bind(R.id.item10)
+    @BindView(R.id.item10)
     TextView item10;
-    @Bind(R.id.item11)
+    @BindView(R.id.item11)
     TextView item11;
-    @Bind(R.id.item12)
+    @BindView(R.id.item12)
     TextView item12;
-    @Bind(R.id.item13)
+    @BindView(R.id.item13)
     TextView item13;
-    @Bind(R.id.item14)
+    @BindView(R.id.item14)
     TextView item14;
-    @Bind(R.id.checkbox1)
+    @BindView(R.id.checkbox1)
     CheckBox checkbox1;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
@@ -226,7 +226,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

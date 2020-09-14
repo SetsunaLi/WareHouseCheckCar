@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,13 +63,13 @@ import static com.example.mumu.warehousecheckcar.application.App.IN_DETAIL_LIST;
 
 public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener, BRecyclerAdapter.OnItemClickListener, OnRfidResult {
     private final String TAG = "InCheckFragment";
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     private static InCheckFragment fragment;
@@ -188,7 +188,7 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

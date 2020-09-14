@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -42,11 +42,11 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  *on 2020/4/28
  */
 public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener {
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private RecycleAdapter mAdapter;
     private ArrayList<ClothGetGroup> myList;
@@ -138,7 +138,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     @OnClick({R.id.button1, R.id.button2})

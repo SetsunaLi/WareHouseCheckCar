@@ -65,24 +65,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiatener, FragmentCallBackListener, BasePullUpRecyclerAdapter.OnItemClickListener
         , RXCallback, OnCodeResult, OnRfidResult {
     private final String TAG = "OutApplyNewFragment";
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.edit1)
+    @BindView(R.id.edit1)
     EditText edit1;
 
     private static OutApplyNewFragment fragment;
@@ -335,7 +335,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     @Override

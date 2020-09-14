@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /***
@@ -40,21 +40,21 @@ import butterknife.ButterKnife;
 public class RepaifInDetailFragment extends BaseFragment {
 
     private static RepaifInDetailFragment fragment;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.checkbox1)
+    @BindView(R.id.checkbox1)
     CheckBox checkbox1;
-    @Bind(R.id.item1)
+    @BindView(R.id.item1)
     TextView item1;
-    @Bind(R.id.edit1)
+    @BindView(R.id.edit1)
     EditText edit1;
-    @Bind(R.id.item3)
+    @BindView(R.id.item3)
     TextView item3;
-    @Bind(R.id.layout1)
+    @BindView(R.id.layout1)
     LinearLayout layout1;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
     private RecycleAdapter mAdapter;
     private ArrayList<RepaifIn> myList;
@@ -140,7 +140,7 @@ public class RepaifInDetailFragment extends BaseFragment {
         super.onDestroyView();
         EventBus.getDefault().post(new EventBusMsg(0x02, dataList));
         EventBus.getDefault().unregister(this);
-        ButterKnife.unbind(this);
+
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<RepaifIn> {

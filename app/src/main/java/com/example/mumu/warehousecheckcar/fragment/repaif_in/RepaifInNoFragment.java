@@ -29,7 +29,7 @@ import com.xdl2d.scanner.callback.RXCallback;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -40,11 +40,11 @@ import butterknife.OnClick;
 public class RepaifInNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
 
     private static RepaifInNoFragment fragment;
-    @Bind(R.id.fixeedittext2)
+    @BindView(R.id.fixeedittext2)
     FixedEditText fixeedittext2;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.autoText1)
+    @BindView(R.id.autoText1)
     AutoCompleteTextView autoText1;
     private ScanResultHandler scanResultHandler;
     private SearchAdapter adapter;
@@ -137,7 +137,7 @@ public class RepaifInNoFragment extends BaseFragment implements RXCallback, OnCo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disConnect2D();
     }
 

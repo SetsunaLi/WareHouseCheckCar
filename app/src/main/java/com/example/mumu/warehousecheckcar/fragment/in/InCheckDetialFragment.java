@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -41,11 +41,11 @@ import butterknife.ButterKnife;
 
 public class InCheckDetialFragment extends BaseFragment {
     private static InCheckDetialFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
     private final String TAG="InCheckDetialFragment";
     private List<InCheckDetail> myList;
@@ -217,7 +217,7 @@ public class InCheckDetialFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         myList.clear();
         dataList.clear();
         App.OUTDETAIL_LIST.clear();

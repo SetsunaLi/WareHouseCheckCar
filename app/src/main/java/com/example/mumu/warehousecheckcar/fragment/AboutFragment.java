@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.application.App;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -26,31 +26,31 @@ import butterknife.ButterKnife;
 
 public class AboutFragment extends BaseFragment {
 
-    @Bind(R.id.appTitle)
+    @BindView(R.id.appTitle)
     TextView appTitle;
-    @Bind(R.id.companyTitle)
+    @BindView(R.id.companyTitle)
     TextView companyTitle;
-    @Bind(R.id.appVersionTitle)
+    @BindView(R.id.appVersionTitle)
     TextView appVersionTitle;
-    @Bind(R.id.periodicReport)
+    @BindView(R.id.periodicReport)
     TextView periodicReport;
-    @Bind(R.id.appVersionRow)
+    @BindView(R.id.appVersionRow)
     TableRow appVersionRow;
-    @Bind(R.id.sledTitle)
+    @BindView(R.id.sledTitle)
     TextView sledTitle;
-    @Bind(R.id.moduleVersionTitle)
+    @BindView(R.id.moduleVersionTitle)
     TextView moduleVersionTitle;
-    @Bind(R.id.moduleVersion)
+    @BindView(R.id.moduleVersion)
     TextView moduleVersion;
-    @Bind(R.id.moduleVersionRow)
+    @BindView(R.id.moduleVersionRow)
     TableRow moduleVersionRow;
-    @Bind(R.id.radioVersionTitle)
+    @BindView(R.id.radioVersionTitle)
     TextView radioVersionTitle;
-    @Bind(R.id.radioVersion)
+    @BindView(R.id.radioVersion)
     TextView radioVersion;
-    @Bind(R.id.radioVersionRow)
+    @BindView(R.id.radioVersionRow)
     TableRow radioVersionRow;
-    @Bind(R.id.copyRight)
+    @BindView(R.id.copyRight)
     TextView copyRight;
 
     private static AboutFragment fragment;
@@ -86,7 +86,7 @@ public class AboutFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     @Override

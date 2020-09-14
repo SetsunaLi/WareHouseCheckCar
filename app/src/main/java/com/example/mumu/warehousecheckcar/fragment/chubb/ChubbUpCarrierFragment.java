@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -53,13 +53,13 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackLiatener, RXCallback, OnCodeResult, OnRfidResult {
     private static ChubbUpCarrierFragment fragment;
-    @Bind(R.id.edittext1)
+    @BindView(R.id.edittext1)
     EditText edittext1;
-    @Bind(R.id.edittext2)
+    @BindView(R.id.edittext2)
     EditText edittext2;
-    @Bind(R.id.relativelayout)
+    @BindView(R.id.relativelayout)
     LinearLayout relativelayout;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
 
@@ -197,7 +197,7 @@ public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         if (flagRFID) {
             disRFID();
             flagRFID = false;

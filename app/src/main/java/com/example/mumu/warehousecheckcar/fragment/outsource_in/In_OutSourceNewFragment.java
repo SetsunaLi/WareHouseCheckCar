@@ -52,9 +52,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,17 +65,17 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
 import static org.greenrobot.eventbus.EventBus.TAG;
 
 /***
- *created by 
+ *created by
  *on 2020/8/29
  */
 public class In_OutSourceNewFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult, BRecyclerAdapter.OnItemClickListener {
 
     private static In_OutSourceNewFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     public static In_OutSourceNewFragment newInstance() {
@@ -189,19 +191,35 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
 
     @Override
     public void rfidResult(String epc) {
+//        epc="30A5A5AF6400004000000633";
         if (dataEpcs.contains(epc) && !epcs.contains(epc)) {
             epcs.add(epc);
             for (Outsource outsource : dataList) {
                 if (outsource.getEpc().equals(epc)) {
-                    for (OutsourceGroup group : myList) {
+                    /*for (OutsourceGroup group : myList) {
                         if (group.getDeliverNo().equals(outsource.getDeliverNo())) {
                             group.addScanCount();
                             group.setAllScanWeight(ArithUtil.add(group.getAllScanWeight(), outsource.getWeight()));
                             outsource.setScan(true);
                             outsource.setFlag(true);
-                            myList.remove(group);
-                            myList.add(0, group);
+
                         }
+                    }*/
+                    OutsourceGroup group = null;
+                    Iterator<OutsourceGroup> iterator = myList.iterator();
+                    while (iterator.hasNext()) {
+                        group = iterator.next();
+                        if (group.getDeliverNo().equals(outsource.getDeliverNo())) {
+                            group.addScanCount();
+                            group.setAllScanWeight(ArithUtil.add(group.getAllScanWeight(), outsource.getWeight()));
+                            outsource.setScan(true);
+                            outsource.setFlag(true);
+                            iterator.remove();
+                        } else
+                            group = null;
+                    }
+                    if (group != null) {
+                        myList.add(0, group);
                     }
                     break;
                 }
@@ -301,7 +319,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
         EventBus.getDefault().post(new EventBusMsg(0x02));
         EventBus.getDefault().unregister(this);
@@ -314,7 +332,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 clearData();
                 mAdapter.notifyDataSetChanged();
                 download();
-
+//                rfidResult("");
                 break;
             case R.id.button2:
 

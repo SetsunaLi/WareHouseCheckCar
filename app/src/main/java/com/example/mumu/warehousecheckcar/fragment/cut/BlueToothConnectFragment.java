@@ -36,7 +36,7 @@ import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -54,11 +54,11 @@ public class BlueToothConnectFragment extends BaseFragment implements BRecyclerA
     private static final int MESSAGE_SCAN_CHANGE = 1;
     private static final int MESSAGE_LIST_CHANGE = 2;
     private final String TAG = BlueToothConnectFragment.class.getSimpleName();
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button3)
+    @BindView(R.id.button3)
     Button button3;
-    @Bind(R.id.list)
+    @BindView(R.id.list)
     RecyclerView list;
     private boolean enable = true;//判断设备能不能用蓝牙
     private Handler delayHandler;//设置延迟用的handler
@@ -147,7 +147,7 @@ public class BlueToothConnectFragment extends BaseFragment implements BRecyclerA
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         if (flag) {
             bluetoothAdapter.stopLeScan(scanCallback);
             flag = false;

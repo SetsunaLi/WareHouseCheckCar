@@ -60,7 +60,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -70,35 +70,35 @@ import butterknife.OnClick;
 
 public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
     private static FindVatNoFragment fragment;
-    @Bind(R.id.layout2)
+    @BindView(R.id.layout2)
     LinearLayout layout2;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.scrollView)
+    @BindView(R.id.scrollView)
     HorizontalScrollView scrollView;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.text4)
+    @BindView(R.id.text4)
     TextView text4;
-    @Bind(R.id.button0)
+    @BindView(R.id.button0)
     Button button0;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.autoText1)
+    @BindView(R.id.autoText1)
     AutoCompleteTextView autoText1;
-    @Bind(R.id.autoText2)
+    @BindView(R.id.autoText2)
     AutoCompleteTextView autoText2;
-    @Bind(R.id.autoText3)
+    @BindView(R.id.autoText3)
     AutoCompleteTextView autoText3;
-    @Bind(R.id.button10)
+    @BindView(R.id.button10)
     Button button10;
-    @Bind(R.id.button9)
+    @BindView(R.id.button9)
     Button button9;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout dlAssets;
 
 
@@ -343,7 +343,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         clearData();
         myList.clear();
         disRFID();

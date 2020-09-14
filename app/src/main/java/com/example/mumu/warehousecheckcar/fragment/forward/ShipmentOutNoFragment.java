@@ -36,7 +36,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -48,11 +48,11 @@ import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRA
  */
 public class ShipmentOutNoFragment extends BaseFragment {
     private static ShipmentOutNoFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private ArrayList<ApplyByPayNo> myList;
     private RecycleAdapter mAdapter;
@@ -155,7 +155,7 @@ public class ShipmentOutNoFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().post(new EventBusMsg(0x31));
     }
 

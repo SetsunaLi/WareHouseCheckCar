@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -60,13 +60,13 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     private static EmptyShelfFragment fragment;
 
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     public static EmptyShelfFragment newInstance() {
@@ -164,7 +164,7 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
     public void onDestroyView() {
         super.onDestroyView();
         disRFID();
-        ButterKnife.unbind(this);
+
     }
 
     @OnClick({R.id.button1, R.id.button2})

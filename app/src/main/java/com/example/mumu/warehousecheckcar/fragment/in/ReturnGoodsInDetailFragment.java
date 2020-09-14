@@ -62,7 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -72,13 +72,13 @@ import butterknife.OnClick;
  */
 public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     private final String TAG = ReturnGoodsInDetailFragment.class.getName();
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
 
     public static ReturnGoodsInDetailFragment newInstance() {
@@ -304,7 +304,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().unregister(this);
         disRFID();
         clearData();

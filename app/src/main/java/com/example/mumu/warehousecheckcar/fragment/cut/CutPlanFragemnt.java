@@ -55,7 +55,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -68,11 +68,11 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  */
 public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     private static CutPlanFragemnt fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     private RecycleAdapter mAdapter;
@@ -225,7 +225,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

@@ -16,18 +16,18 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.utils.Imgutil;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CarFragment extends BaseFragment {
 
     private static CarFragment fragment;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.button3)
+    @BindView(R.id.button3)
     Button button3;
 
     public static CarFragment newInstance() {
@@ -50,7 +50,7 @@ public class CarFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";

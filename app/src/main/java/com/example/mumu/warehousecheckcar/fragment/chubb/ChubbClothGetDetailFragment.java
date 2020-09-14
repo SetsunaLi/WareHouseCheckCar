@@ -29,7 +29,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static org.greenrobot.eventbus.EventBus.TAG;
@@ -39,11 +39,11 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  *on 2020/4/29
  */
 public class ChubbClothGetDetailFragment extends BaseFragment {
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
     private ArrayList<ChubbGetCloth> myList;
     private RecycleAdapter mAdapter;
@@ -94,7 +94,7 @@ public class ChubbClothGetDetailFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     private void download() {

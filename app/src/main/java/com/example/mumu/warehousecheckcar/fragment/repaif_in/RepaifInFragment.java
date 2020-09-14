@@ -49,7 +49,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,23 +63,23 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  */
 public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult, BRecyclerAdapter.OnItemClickListener {
     private static RepaifInFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.scrollView)
+    @BindView(R.id.scrollView)
     HorizontalScrollView scrollView;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.headNo)
+    @BindView(R.id.headNo)
     LinearLayout headNo;
-    @Bind(R.id.layout_title)
+    @BindView(R.id.layout_title)
     LinearLayout layoutTitle;
     String fact_name;
     String sh_no;
@@ -252,7 +252,7 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

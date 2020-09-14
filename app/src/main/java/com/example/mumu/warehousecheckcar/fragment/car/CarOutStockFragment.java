@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -60,15 +60,15 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  */
 public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     private static CarOutStockFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private ArrayList<List<CarOutBean>> myList;
     private ArrayList<String> noList;
@@ -197,7 +197,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
 
     }

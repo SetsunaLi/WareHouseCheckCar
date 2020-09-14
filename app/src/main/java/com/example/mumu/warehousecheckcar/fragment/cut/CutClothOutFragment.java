@@ -62,7 +62,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -79,19 +79,19 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
     public static String HEART_RATE_MEASUREMENT = "0000ffe1-0000-1000-8000-00805f9b34fb";
     //蓝牙特征值
     private static BluetoothGattCharacteristic target_chara = null;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.scrollView)
+    @BindView(R.id.scrollView)
     HorizontalScrollView scrollView;
-    @Bind(R.id.button3)
+    @BindView(R.id.button3)
     Button button3;
     private ArrayList<CutOutBean> myList;
     private ScanResultHandler scanResultHandler;
@@ -249,7 +249,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disConnect2D();
     }
 

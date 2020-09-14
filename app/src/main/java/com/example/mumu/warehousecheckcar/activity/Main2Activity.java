@@ -71,17 +71,17 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Bind(R.id.content_frame)
+    @BindView(R.id.content_frame)
     FrameLayout mFrame;
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView navView;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     private final String TAG = "Main2Activity";
     private CharSequence mTitle;
@@ -224,7 +224,7 @@ public class Main2Activity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+
 //        disConnectRFID();
 //        disConnect2D();
         clearAllData();

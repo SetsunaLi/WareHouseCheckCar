@@ -38,7 +38,7 @@ import com.xdl2d.scanner.callback.RXCallback;
 import java.io.IOException;
 import java.net.ConnectException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -50,13 +50,13 @@ public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackL
 
     private final String TAG = "CheckCarrierFragment";
 
-    @Bind(R.id.relativelayout)
+    @BindView(R.id.relativelayout)
     LinearLayout relativelayout;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.edittext1)
+    @BindView(R.id.edittext1)
     EditText edittext1;
-    @Bind(R.id.edittext2)
+    @BindView(R.id.edittext2)
     EditText edittext2;
 
 
@@ -198,7 +198,7 @@ public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         if (flagRFID) {
             disRFID();
             flagRFID = false;

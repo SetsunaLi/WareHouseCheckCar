@@ -16,7 +16,7 @@ import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.Imgutil;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -26,45 +26,45 @@ import butterknife.ButterKnife;
 public class HomeFragment extends BaseFragment {
 
     private static HomeFragment fragment;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button3)
+    @BindView(R.id.button3)
     Button button3;
-    @Bind(R.id.button4)
+    @BindView(R.id.button4)
     Button button4;
-    @Bind(R.id.button5)
+    @BindView(R.id.button5)
     Button button5;
-    @Bind(R.id.button6)
+    @BindView(R.id.button6)
     Button button6;
-    @Bind(R.id.button7)
+    @BindView(R.id.button7)
     Button button7;
-    @Bind(R.id.button8)
+    @BindView(R.id.button8)
     Button button8;
-    @Bind(R.id.button9)
+    @BindView(R.id.button9)
     Button button9;
-    @Bind(R.id.button10)
+    @BindView(R.id.button10)
     Button button10;
-    @Bind(R.id.button11)
+    @BindView(R.id.button11)
     Button button11;
-    @Bind(R.id.button12)
+    @BindView(R.id.button12)
     Button button12;
-    @Bind(R.id.button13)
+    @BindView(R.id.button13)
     Button button13;
-    @Bind(R.id.button14)
+    @BindView(R.id.button14)
     Button button14;
-    @Bind(R.id.button15)
+    @BindView(R.id.button15)
     Button button15;
-    @Bind(R.id.button0)
+    @BindView(R.id.button0)
     Button button0;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.button17)
+    @BindView(R.id.button17)
     Button button17;
-    @Bind(R.id.button18)
+    @BindView(R.id.button18)
     Button button18;
-    @Bind(R.id.button19)
+    @BindView(R.id.button19)
     Button button19;
-    @Bind(R.id.button20)
+    @BindView(R.id.button20)
     Button button20;
 
 
@@ -217,6 +217,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 }

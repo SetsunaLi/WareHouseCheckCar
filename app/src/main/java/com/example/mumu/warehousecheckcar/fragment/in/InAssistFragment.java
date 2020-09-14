@@ -47,7 +47,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -58,13 +58,13 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
  *on 2019/9/19
  */
 public class InAssistFragment extends BaseFragment implements UHFCallbackLiatener, BRecyclerAdapter.OnItemClickListener, OnRfidResult {
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     public static InAssistFragment newInstance() {
@@ -124,7 +124,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

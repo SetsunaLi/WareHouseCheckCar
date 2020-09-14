@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -55,25 +55,25 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
 
 public class WeightChangeFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
     private final String TAG = "WeightChangeFragment";
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.text4)
+    @BindView(R.id.text4)
     TextView text4;
-    @Bind(R.id.layout1)
+    @BindView(R.id.layout1)
     LinearLayout layout1;
-    @Bind(R.id.edittext1)
+    @BindView(R.id.edittext1)
     EditText edittext1;
-    @Bind(R.id.edittext2)
+    @BindView(R.id.edittext2)
     EditText edittext2;
-    @Bind(R.id.spinner1)
+    @BindView(R.id.spinner1)
     Spinner spinner1;
-    @Bind(R.id.relativelayout)
+    @BindView(R.id.relativelayout)
     LinearLayout relativelayout;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     private static WeightChangeFragment fragment;
@@ -207,7 +207,7 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

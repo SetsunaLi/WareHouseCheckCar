@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -35,11 +35,11 @@ public class ForwardingMsgFragment extends BaseFragment {
     final String TAG = "ForwardingMsgFragment";
     private static ForwardingMsgFragment fragment;
 
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.autoText1)
+    @BindView(R.id.autoText1)
     AutoCompleteTextView autoText1;
-    @Bind(R.id.autoText2)
+    @BindView(R.id.autoText2)
     AutoCompleteTextView autoText2;
 
     public static ForwardingMsgFragment newInstance() {
@@ -155,7 +155,7 @@ public class ForwardingMsgFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
 //        EventBus.getDefault().unregister(this);
     }
 

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /***
@@ -40,19 +40,19 @@ import butterknife.ButterKnife;
  */
 public class In_OutSourceDetailFragment extends BaseFragment {
     private static In_OutSourceDetailFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.text4)
+    @BindView(R.id.text4)
     TextView text4;
-    @Bind(R.id.checkbox1)
+    @BindView(R.id.checkbox1)
     CheckBox checkbox1;
-    @Bind(R.id.edittext1)
+    @BindView(R.id.edittext1)
     EditText edittext1;
 
     public static In_OutSourceDetailFragment newInstance() {
@@ -136,7 +136,7 @@ public class In_OutSourceDetailFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().post(new EventBusMsg(0x00, position, myList));
         EventBus.getDefault().unregister(this);
     }

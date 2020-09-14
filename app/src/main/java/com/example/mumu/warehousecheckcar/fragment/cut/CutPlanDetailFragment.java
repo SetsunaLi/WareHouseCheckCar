@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /***
@@ -34,11 +34,11 @@ import butterknife.ButterKnife;
  *on 2020/4/2
  */
 public class CutPlanDetailFragment extends BaseFragment {
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
     private ArrayList<Cloth> myList;
     private RecycleAdapter mAdapter;
@@ -85,7 +85,7 @@ public class CutPlanDetailFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().post(new EventBusMsg(0x00, epc, outp_id));
         EventBus.getDefault().unregister(this);
     }

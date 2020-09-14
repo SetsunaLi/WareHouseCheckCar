@@ -40,7 +40,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -52,19 +52,19 @@ import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRA
  */
 public class ApplyNoListFragment extends BaseFragment {
     private static ApplyNoListFragment fragment;
-    @Bind(R.id.checkbox1)
+    @BindView(R.id.checkbox1)
     CheckBox checkbox1;
-    @Bind(R.id.item1)
+    @BindView(R.id.item1)
     TextView item1;
-    @Bind(R.id.item2)
+    @BindView(R.id.item2)
     TextView item2;
-    @Bind(R.id.layout1)
+    @BindView(R.id.layout1)
     LinearLayout layout1;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private ArrayList<ApplyNo> myList;
     private RecycleAdapter mAdapter;
@@ -164,7 +164,7 @@ public class ApplyNoListFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().post(new EventBusMsg(0x31));
     }
 

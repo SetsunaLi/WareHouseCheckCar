@@ -31,17 +31,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ForwardingDetailFragment extends BaseFragment {
     final String TAG = "ForwardingDetailFragment";
     private static ForwardingDetailFragment fragment;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
 
 
@@ -159,7 +159,7 @@ public class ForwardingDetailFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         HashMap<String, ForwardingFragment.ForwardingFlag> msg = new HashMap<>();
         msg.putAll(dataList);
         EventBus.getDefault().post(new EventBusMsg(0xfe, msg));

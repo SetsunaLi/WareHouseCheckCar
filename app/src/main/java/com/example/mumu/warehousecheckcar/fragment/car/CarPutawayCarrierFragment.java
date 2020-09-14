@@ -51,24 +51,24 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CarPutawayCarrierFragment extends BaseFragment implements UHFCallbackLiatener, RXCallback, OnCodeResult, OnRfidResult {
     private final String TAG = "CarPutawayCarrierFragment";
 
-    @Bind(R.id.relativelayout)
+    @BindView(R.id.relativelayout)
     LinearLayout relativelayout;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.edittext1)
+    @BindView(R.id.edittext1)
     EditText edittext1;
-    @Bind(R.id.edittext2)
+    @BindView(R.id.edittext2)
     EditText edittext2;
-    @Bind(R.id.line1)
+    @BindView(R.id.line1)
     LinearLayout line1;
-    @Bind(R.id.spinner1)
+    @BindView(R.id.spinner1)
     Spinner spinner1;
 
     private static CarPutawayCarrierFragment fragment;
@@ -268,7 +268,7 @@ public class CarPutawayCarrierFragment extends BaseFragment implements UHFCallba
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         if (flagRFID) {
             disRFID();
             flagRFID = false;

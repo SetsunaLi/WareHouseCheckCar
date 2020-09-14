@@ -47,7 +47,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -58,19 +58,19 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
  *on 2020/4/18
  */
 public class ExpressageNoBindingFragment extends BaseFragment implements RXCallback, OnCodeResult {
-    @Bind(R.id.fixeedittext1)
+    @BindView(R.id.fixeedittext1)
     FixedEditText fixeedittext1;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.headNo)
+    @BindView(R.id.headNo)
     LinearLayout headNo;
-    @Bind(R.id.imgbutton)
+    @BindView(R.id.imgbutton)
     ImageButton imgbutton;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.imagebutton2)
+    @BindView(R.id.imagebutton2)
     ImageButton imagebutton2;
 
     private ArrayList<String> myList;
@@ -184,7 +184,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disConnect2D();
     }
 

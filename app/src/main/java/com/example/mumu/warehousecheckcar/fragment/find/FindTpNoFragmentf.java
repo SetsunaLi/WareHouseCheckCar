@@ -62,37 +62,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, AdapterView.OnItemClickListener, OnRfidResult {
     private static FindTpNoFragmentf fragment;
-    @Bind(R.id.fixeedittext1)
+    @BindView(R.id.fixeedittext1)
     FixedEditText fixeedittext1;
-    @Bind(R.id.buttonAdd)
+    @BindView(R.id.buttonAdd)
     Button buttonAdd;
-    @Bind(R.id.button)
+    @BindView(R.id.button)
     Button button;
-    @Bind(R.id.layout2)
+    @BindView(R.id.layout2)
     LinearLayout layout2;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.scrollView)
+    @BindView(R.id.scrollView)
     HorizontalScrollView scrollView;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     TextView text3;
-    @Bind(R.id.button0)
+    @BindView(R.id.button0)
     Button button0;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.layout1)
+    @BindView(R.id.layout1)
     LinearLayout layout1;
-    @Bind(R.id.listview)
+    @BindView(R.id.listview)
     ListView listview;
 
 
@@ -307,7 +307,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         clearData();
         myList.clear();
         disRFID();

@@ -15,6 +15,7 @@ import android.preference.SwitchPreference;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
@@ -31,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.example.mumu.warehousecheckcar.application.App.PROWER;
+import static com.example.mumu.warehousecheckcar.utils.AppUtil.showToast;
 
 
 /**
@@ -49,10 +51,13 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         return fragment;
     }
 
-    private EditTextPreference userName, userId, systemVersion, systemIP, systemPort, deviceNumber,prowerText;
+    private EditTextPreference userName, userId, systemVersion, systemIP, systemPort, deviceNumber, prowerText;
     private SwitchPreference music, logcat;
     private SeekBarPreferenceVolume prower;
     private ListPreference statuslist;
+
+    boolean connectSuccess = false;
+    boolean flag = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,24 +75,38 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         music = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.system_music_key));
         logcat = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.logcat_ket));
         prower = (SeekBarPreferenceVolume) getPreferenceScreen().findPreference(getString(R.string.device_prower_key));
-        prowerText=(EditTextPreference)getPreferenceScreen().findPreference(getString(R.string.prower_edit_key));
+        prowerText = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.prower_edit_key));
         prowerText.setOnPreferenceClickListener(this);
         prower.setProgress(PROWER);
         statuslist = (ListPreference) getPreferenceScreen().findPreference(getString(R.string.user_status_key));
         initView();
-        getRFID();
+        initRFID();
         UHFResult.getInstance().setCallbackLiatener(this);
     }
-    boolean flag=false;
-    private RFIDReaderHelper rfidHander;
 
-    private void getRFID() {
-        try {
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-            RFID_2DHander.getInstance().on_RFID();
-            flag=true;
-        } catch (Exception e) {
-            e.printStackTrace();
+    /*  private RFIDReaderHelper rfidHander;
+
+      private void getRFID() {
+          try {
+              rfidHander = RFID_2DHander.getInstance().getRFIDReader();
+              RFID_2DHander.getInstance().on_RFID();
+              flag=true;
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }*/
+    private void initRFID() {
+        if (!PdaController.initRFID(this)) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
+        } else {
+            flag = true;
+            connectSuccess = true;
+        }
+    }
+
+    private void disRFID() {
+        if (!PdaController.disRFID()) {
+            showToast(getResources().getString(R.string.hint_rfid_mistake));
         }
     }
 
@@ -120,19 +139,21 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 break;
             case Config.PORT_KEY:
                 setEditTextPre(systemPort);
-                App.PORT=systemIP.getText();
+                App.PORT = systemIP.getText();
                 break;
             case Config.DEVICE_NUMBER_KEY:
                 setEditTextPre(deviceNumber);
-                App.DEVICE_NO=deviceNumber.getText();
+                App.DEVICE_NO = deviceNumber.getText();
                 break;
             case Config.USER_PROWER_KEY:
-                PROWER=getPrower(getActivity());
+                PROWER = getPrower(getActivity());
                 byte p = (byte) PROWER;
-                if (rfidHander != null&&p!=0) {
-                    int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, p);
+                if (PdaController.getRfidHandler() != null && p != 0 && connectSuccess) {
+                    int i = PdaController.getRfidHandler().setOutputPower(RFID_2DHander.getInstance().btReadId, p);
                     if (i != 0)
                         Toast.makeText(getActivity(), "设置功率失败", Toast.LENGTH_SHORT).show();
+                    else
+                        flag = true;
                 }
                 break;
             case Config.MUSIC:
@@ -190,7 +211,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RFID_2DHander.getInstance().off_RFID();
+        disRFID();
     }
 
     /**
@@ -252,9 +273,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if (rfidHander != null)
-            rfidHander.getOutputPower(RFID_2DHander.getInstance().btReadId);
-        flag=true;
+        if (PdaController.getRfidHandler() != null && connectSuccess)
+            PdaController.getRfidHandler().getOutputPower(RFID_2DHander.getInstance().btReadId);
+        flag = true;
         return false;
     }
 }

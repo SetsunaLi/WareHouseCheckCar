@@ -45,7 +45,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -53,19 +53,19 @@ import butterknife.OnClick;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-    @Bind(R.id.login_progress)
+    @BindView(R.id.login_progress)
     ProgressBar loginProgress;
-    @Bind(R.id.username)
+    @BindView(R.id.username)
     AutoCompleteTextView username;
-    @Bind(R.id.password)
+    @BindView(R.id.password)
     EditText password;
-    @Bind(R.id.login_button)
+    @BindView(R.id.login_button)
     Button loginButton;
-    @Bind(R.id.email_login_form)
+    @BindView(R.id.email_login_form)
     LinearLayout emailLoginForm;
-    @Bind(R.id.checkbox1)
+    @BindView(R.id.checkbox1)
     CheckBox checkbox1;
-    @Bind(R.id.checkbox2)
+    @BindView(R.id.checkbox2)
     CheckBox checkbox2;
     private UserLoginTask mAuthTask = null;
     private String unStr;
@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().unregister(this);
     }
 

@@ -57,19 +57,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
 public class ChubbUpFragment extends BaseFragment implements UHFCallbackLiatener, FragmentCallBackListener, OnRfidResult {
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     private static ChubbUpFragment fragment;
@@ -210,7 +210,7 @@ public class ChubbUpFragment extends BaseFragment implements UHFCallbackLiatener
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         clearData();
         myList.clear();
         disRFID();

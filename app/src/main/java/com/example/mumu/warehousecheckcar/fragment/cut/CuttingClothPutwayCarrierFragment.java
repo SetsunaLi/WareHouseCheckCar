@@ -36,7 +36,7 @@ import com.xdl2d.scanner.callback.RXCallback;
 import java.io.IOException;
 import java.net.ConnectException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -45,11 +45,11 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
     public final String TAG = "CuttingClothCarrier";
 
     private static CuttingClothPutwayCarrierFragment fragment;
-    @Bind(R.id.edittext2)
+    @BindView(R.id.edittext2)
     EditText edittext2;
-    @Bind(R.id.relativelayout)
+    @BindView(R.id.relativelayout)
     LinearLayout relativelayout;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     private String[] data_list;
@@ -205,7 +205,7 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         if (flag2D) {
             disConnect2D();
             flag2D = false;

@@ -49,7 +49,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -58,17 +58,17 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
 public class ForwardingNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
     final String TAG = "ForwardingNoFragment";
     private static ForwardingNoFragment fragment;
-    @Bind(R.id.imgbutton)
+    @BindView(R.id.imgbutton)
     ImageButton imgbutton;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     TextView text2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
 
@@ -162,7 +162,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+
         EventBus.getDefault().unregister(this);
         if (scannerFlag)
             disConnect2D();
@@ -300,7 +300,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
 

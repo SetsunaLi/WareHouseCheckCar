@@ -36,7 +36,7 @@ import com.xdl2d.scanner.callback.RXCallback;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -48,11 +48,11 @@ import butterknife.OnClick;
 public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
 
     private final String TAG = "OutApplyNoFragment";
-    @Bind(R.id.imgbutton)
+    @BindView(R.id.imgbutton)
     ImageButton imgbutton;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
 
     private static OutApplyNoFragment fragment;
@@ -122,7 +122,7 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disConnect2D();
     }
 

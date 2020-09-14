@@ -48,7 +48,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -60,13 +60,13 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  *on 2020/4/29
  */
 public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.text1)
+    @BindView(R.id.text1)
     TextView text1;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private RecycleAdapter mAdapter;
     private List<Cloth> myList;
@@ -139,7 +139,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

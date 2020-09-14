@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -47,11 +47,11 @@ import static com.example.mumu.warehousecheckcar.application.App.TIME;
  */
 public class ForwardingListFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener {
 
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
     private RecycleAdapter mAdapter;
     private ArrayList<ForwardingListBean> myList;
@@ -153,7 +153,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     @OnClick({R.id.button1, R.id.button2})

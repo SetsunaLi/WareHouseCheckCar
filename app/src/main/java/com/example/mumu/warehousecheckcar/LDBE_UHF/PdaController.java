@@ -10,8 +10,12 @@ import com.xdl2d.scanner.callback.RXCallback;
  *on 2019/11/14
  */
 public class PdaController {
-    private static RFIDReaderHelper rfidHandler;
+    public static RFIDReaderHelper rfidHandler;
     private boolean isPhone = false;
+
+    public static RFIDReaderHelper getRfidHandler() {
+        return rfidHandler;
+    }
 
     public static boolean initRFID(UHFCallbackLiatener callbackLiatener) {
         try {

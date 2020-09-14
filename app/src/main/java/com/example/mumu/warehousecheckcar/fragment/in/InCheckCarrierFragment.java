@@ -33,18 +33,18 @@ import com.squareup.okhttp.Request;
 
 import java.io.IOException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
-    @Bind(R.id.edittext1)
+    @BindView(R.id.edittext1)
     EditText edittext1;
-    @Bind(R.id.edittext2)
+    @BindView(R.id.edittext2)
     EditText edittext2;
-    @Bind(R.id.relativelayout)
+    @BindView(R.id.relativelayout)
     LinearLayout relativelayout;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
     private final String TAG = "InCheckCarrierFragment";
 
@@ -145,7 +145,7 @@ public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
         disRFID();
     }
 

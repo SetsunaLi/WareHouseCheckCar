@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -40,11 +40,11 @@ import butterknife.OnClick;
  */
 public class CheckPlanFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener {
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
-    @Bind(R.id.button1)
+    @BindView(R.id.button1)
     Button button1;
-    @Bind(R.id.button2)
+    @BindView(R.id.button2)
     Button button2;
-    @Bind(R.id.recyle)
+    @BindView(R.id.recyle)
     RecyclerView recyle;
     private RecycleAdapter mAdapter;
     private ArrayList<CheckPlan> myList;
@@ -126,7 +126,7 @@ public class CheckPlanFragment extends BaseFragment implements BRecyclerAdapter.
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+
     }
 
     @OnClick({R.id.button1, R.id.button2})
