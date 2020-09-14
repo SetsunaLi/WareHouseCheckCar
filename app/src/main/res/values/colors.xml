@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#B98563</color>
+    <color name="colorZERO">#00000000</color>
+    <color name="darkGray">#A9A9A9</color>
+    <color name="colorchange0">#8284F8</color>
+    <color name="colorchange100">#5D97FF</color>
+    <color name="blue">#0000ff</color><!--蓝色 -->
+    <color name="colorREAD">#FF4081</color>
+    <color name="colorStyle">#252A2F</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorLoginLeft">#57EAAB</color>
+    <color name="colorLoginCentet">#4EE1C5</color>
+    <color name="colorDataYesText">#00fffc</color>
+    <color name="colorLoginRight">#45D7DF</color>
+    <color name="colorAboutText">#adb9e5</color>
+    <color name="colorHomeButton2">#adb9e5</color>
+    <color name="colorDialogContent">#3a4e7b</color>
+    <color name="colorDialogContent2">#314672</color>
+    <color name="colorTableLine">#0a132c</color>
+    <color name="colerUserText">#555555</color>
+    <color name="colorEditText">#04a0ff</color>
+    <color name="colorDialogTitleBG">#0078ff</color>
+    <color name="colorDialogButtonYes1">#489eff</color>
+    <color name="colorDataNoText">#ffff4c</color>
+    <color name="colorEditNoTextSelect">#90a0cd</color>
+    <color name="colorEditNoBgSelect">#151c32</color>
+
+    <!--Zxing相关-->
+    <color name="contents_text">#ff000000</color>
+    <color name="encode_view">#ffffffff</color>
+    <color name="possible_result_points">#c0ffbd21</color> <!-- Android standard ICS color -->
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c099cc00</color> <!-- Android standard ICS color -->
+    <color name="result_text">#ffffffff</color>
+    <color name="result_view">#b0000000</color>
+    <color name="status_text">#ffffffff</color>
+    <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="transparent">#00000000</color>
+
+</resources>

@@ -1,0 +1,982 @@
+[
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_view_dash_border.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\view_dash_border.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_adapter_mytopactionbar_spinner.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\adapter_mytopactionbar_spinner.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_car_up_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\car_up_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_shipment_no_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\shipment_no_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_backin_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\backin_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_find_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\find_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_activity_login.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_check_item_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_check_item_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_command.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\dialog_command.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_apply_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_apply_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_putaway_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\putaway_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_list_head.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_list_head.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_shipment_out_no_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\shipment_out_no_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_ring_volume_prefs.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\ring_volume_prefs.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_home_text_style.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_home_text_style.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_returngoods_in_detail_fragment.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\returngoods_in_detail_fragment.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_activity_capture.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\activity_capture.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_close_no.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\close_no.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_loard_bg.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\loard_bg.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_outsource_in_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\outsource_in_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_apply_no_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\apply_no_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_no_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_no_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_bg_top.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\bg_top.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_view_dash_line.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\view_dash_line.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_wait_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\wait_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_content_main2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\content_main2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_nav_header_main2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\nav_header_main2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_detail_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_home_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\home_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_new_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_new_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_bg_layout.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\bg_layout.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_plan_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_plan_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_view_dividers_horizon.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\view_dividers_horizon.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_bg2.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\bg2.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_empty_shelf_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\empty_shelf_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_weight_change.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\dialog_weight_change.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_sync_black_24dp.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\ic_sync_black_24dp.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_kong_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\kong_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_detail_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_cloth_get_fragment_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_cloth_get_fragment_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_stock_add_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_stock_add_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_add.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_add.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_putaway_carrier_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_putaway_carrier_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_returngoods_in_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\returngoods_in_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_adapter_mytopactionbar_spinner_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\adapter_mytopactionbar_spinner_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_shipment_out_no_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\shipment_out_no_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_apply_father_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_apply_father_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_msg_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_msg_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_plan_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_plan_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_check_detail_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_check_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_carrier_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_carrier_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_apply_no_list_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\apply_no_list_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_carrier_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_carrier_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_text_style_bg.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\text_style_bg.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_putaway_carrier_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\putaway_carrier_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubbup_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubbup_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_exception_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_exception_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_expressage_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\expressage_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_fuzzy_query_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\fuzzy_query_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_wait_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\wait_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click8_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click8_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_plan_detail_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_plan_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_jdme_scan_corner_top_right.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\jdme_scan_corner_top_right.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_user_head_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\user_head_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_plan_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_plan_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click2_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click2_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_dialog_button_no.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\dialog_button_no.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_outsource_in_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\outsource_in_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_table_padding.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\table_padding.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_putaway_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_putaway_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_notifications_black_24dp.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\ic_notifications_black_24dp.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_update_dialog_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\update_dialog_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_jdme_scan_corner_top_left.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\jdme_scan_corner_top_left.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_list_fragment.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_list_fragment.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_empty_shelf_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\empty_shelf_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_find.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\find.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_cloth_get_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_cloth_get_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_out_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_out_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_edit_text_style.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\edit_text_style.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_img_style_1.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\img_style_1.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click10_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click10_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_setprower_dialog_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\setprower_dialog_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click12_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click12_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\xml_filepaths.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\xml\\filepaths.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_out_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_out_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_bluetooth_connect_fragment.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\bluetooth_connect_fragment.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_car_up_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\car_up_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_yes_select.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_yes_select.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click14_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click14_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_putaway_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_putaway_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_in_check.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\dialog_in_check.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_cloth_get_new_fragment_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_cloth_get_new_fragment_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_camera.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\ic_camera.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_car_down_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\car_down_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_plan_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_plan_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_repaif_in_no_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\repaif_in_no_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_home_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_home_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_return_goodsin_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\return_goodsin_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\menu_activity_main2_drawer.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\menu\\activity_main2_drawer.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click15_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click15_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_about_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\about_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_inassist_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\inassist_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_no_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_no_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click13_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click13_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click11_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click11_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_title_divider.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\title_divider.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click4_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click4_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_login_bg1.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_login_bg1.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_soldout_carrier_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_soldout_carrier_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_new_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_new_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_home_style.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_home_style.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_menu_selected2.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\menu_selected2.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_returngoods_in_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\returngoods_in_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click6_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click6_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\raw_duka3.wav.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\raw\\duka3.wav"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_loard_bg2.jpg.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\loard_bg2.jpg"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_cut_scan_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\cut_scan_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_add.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\add.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_fixed_edittext_style.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\fixed_edittext_style.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_car_down_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\car_down_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_cut_weight_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\cut_weight_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_find_vatno_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\find_vatno_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_btn_back.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\btn_back.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_loading.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\dialog_loading.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_login_bg2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_login_bg2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_plus_circle.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\plus_circle.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\menu_main2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\menu\\main2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_setting_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\setting_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_update_dialog_bg.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\update_dialog_bg.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_find_tpno_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\find_tpno_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click1_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click1_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_repaif_in_detail_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\repaif_in_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_find.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_find.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_user_head.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\user_head.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click2_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click2_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_add_selected.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\add_selected.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click3_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click3_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click5_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click5_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_stock_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_stock_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click4_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click4_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_cut_scan_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\cut_scan_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click7_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click7_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_find_selected.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\find_selected.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click6_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click6_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_forwarding_list_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\forwarding_list_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_backin_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\backin_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_weight_change_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\weight_change_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click8_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click8_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_jdme_scan_corner_bottom_left.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\jdme_scan_corner_bottom_left.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_login_selector.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_login_selector.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_cloth_get_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_cloth_get_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click9_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click9_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_outsource_in_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\outsource_in_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_cut_cloth_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\cut_cloth_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_repaif_in_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\repaif_in_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\xml_setting_preference.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\xml\\setting_preference.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_apply_new_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_apply_new_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_no_select.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_no_select.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_apply_item_layout_1.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\apply_item_layout_1.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_putaway_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\putaway_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_ins_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_ins_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_cut_out_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\cut_out_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_screen.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\screen.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_check_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_check_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_jdme_scan_laser.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\jdme_scan_laser.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_app_bar_main2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\app_bar_main2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_cut_out_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\cut_out_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_text_msg_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\text_msg_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_side_nav_bar.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\side_nav_bar.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubbup_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubbup_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_repaif_in_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\repaif_in_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_apply_child_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_apply_child_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_outsource_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_outsource_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click9_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click9_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_shape_gradient_bg.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\shape_gradient_bg.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_chubb_get_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\chubb_get_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_style_2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_style_2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click1_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click1_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_text_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\text_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_activity_main2.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\activity_main2.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_item_address_list.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\item_address_list.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_menu_default.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\menu_default.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_style_select.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_style_select.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_fuzzy_padding.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\fuzzy_padding.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-hdpi_bg8.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-hdpi\\bg8.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_plan_add_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\plan_add_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_putaway_detail_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\putaway_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_put_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_put_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_cloth_get_new_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_cloth_get_new_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_inassist_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\inassist_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_out_applyno_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\out_applyno_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_expressage_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\expressage_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_home_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\home_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_about_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\about_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_car_out_stock_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\car_out_stock_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\raw_upload_fail.mp3.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\raw\\upload_fail.mp3"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_cut_weight_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\cut_weight_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_find_vatno_content.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\find_vatno_content.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_kong_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\kong_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_chubb_cloth_get_detail_fragment.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\chubb_cloth_get_detail_fragment.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_expressage_no_binding_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\expressage_no_binding_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_about_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\about_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_plan_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_plan_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_prower_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\prower_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_button_style_1.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\button_style_1.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click13_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click13_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click11_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click11_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_putaway_detail_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\putaway_detail_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_click15_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\click15_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_view_dividers_vertical.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\view_dividers_vertical.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_info_black_24dp.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\ic_info_black_24dp.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_find_tp_item.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\find_tp_item.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_jdme_scan_corner_bottom_right.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\jdme_scan_corner_bottom_right.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_in_check_detail_item_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\in_check_detail_item_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_check_layout_upgrade.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\check_layout_upgrade.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_setting_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\setting_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click3_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click3_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\layout_carout_no_layout.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\layout\\carout_no_layout.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click5_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click5_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xhdpi_chubb_get_s.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xhdpi\\chubb_get_s.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click14_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click14_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click10_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click10_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click7_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click7_l.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\drawable_dialog_button_yes.xml.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\drawable\\dialog_button_yes.xml"
+    },
+    {
+        "merged": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\res\\merged\\release\\mipmap-mdpi_click12_l.png.flat",
+        "source": "D:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\src\\main\\res\\mipmap-mdpi\\click12_l.png"
+    }
+]

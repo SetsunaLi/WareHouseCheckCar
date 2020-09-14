@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:descendantFocusability="beforeDescendants"
+        android:fastScrollEnabled="false"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkbox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:checked="false" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item1"
+            style="@style/text_item"
+            android:layout_width="60dip"
+            android:layout_height="match_parent"
+            android:text="布票号"
+            android:textColor="@color/colorDataYesText" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item2"
+            style="@style/text_item"
+            android:layout_width="120dip"
+            android:layout_height="match_parent"
+            android:text="缸号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item3"
+            style="@style/text_item"
+            android:layout_width="120dip"
+            android:layout_height="match_parent"
+            android:text="色号号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item4"
+            style="@style/text_item"
+            android:layout_width="90dip"
+            android:layout_height="match_parent"
+            android:text="库存重量" />
+
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+</LinearLayout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.mumu.warehousecheckcar.view.BaseDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="end">
+
+    <include
+        android:id="@+id/icContent"
+        layout="@layout/find_vatno_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@mipmap/bg2"
+        android:clickable="true"
+        android:fitsSystemWindows="true"
+        android:focusable="true">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    style="@style/text_style3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="缸号"
+                    android:textSize="22sp"
+                    android:layout_margin="5dp"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoText1"
+                    style="@style/edit_style2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dropDownSelector="@color/colorDialogTitleBG"
+                    android:completionThreshold="4"/>
+                <TextView
+                    style="@style/text_style3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="色号"
+                    android:textSize="22sp"
+                    android:layout_margin="5dp"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoText2"
+                    style="@style/edit_style2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dropDownSelector="@color/colorDialogTitleBG"
+                    android:completionThreshold="4"/>
+                <TextView
+                    style="@style/text_style3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="布号"
+                    android:textSize="22sp"
+                    android:layout_margin="5dp"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoText3"
+                    style="@style/edit_style2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dropDownSelector="@color/colorDialogTitleBG"
+                    android:completionThreshold="4"/>
+                <LinearLayout
+                    android:id="@+id/layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dip"
+                    android:orientation="vertical"/>
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/button10"
+            style="@style/BlueButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="刷新"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button9"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/button9"
+            style="@style/BlueButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="搜索"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button10" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</com.example.mumu.warehousecheckcar.view.BaseDrawerLayout>

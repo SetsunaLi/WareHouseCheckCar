@@ -1,0 +1,173 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.mumu.warehousecheckcar"
+4    android:versionCode="1"
+5    android:versionName="19.10.09" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="26" />
+9-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+10
+11    <!-- To auto-complete the email text field in the login form with the user's emails -->
+12    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+12-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:7:5-71
+12-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:7:22-68
+13    <uses-permission android:name="android.permission.READ_PROFILE" />
+13-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:8:5-71
+13-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:8:22-68
+14    <uses-permission android:name="android.permission.READ_CONTACTS" />
+14-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:9:5-72
+14-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:9:22-69
+15    <uses-permission android:name="android.permission.BLUETOOTH" />
+15-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:10:5-68
+15-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:10:22-65
+16    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+16-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:11:5-74
+16-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:11:22-71
+17    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+17-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:12:5-13:47
+17-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:12:22-76
+18    <uses-permission android:name="android.permission.VIBRATE" />
+18-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:14:5-66
+18-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:14:22-63
+19    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+19-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:15:5-81
+19-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:15:22-78
+20    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+20-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:16:5-17:47
+20-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:16:22-81
+21    <!-- 允许应用程序改变网络状态 -->
+22    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+22-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:19:5-79
+22-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:19:22-76
+23    <!-- 允许应用程序改变WIFI连接状态 -->
+24    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+24-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:21:5-76
+24-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:21:22-73
+25
+26    <!-- 允许应用程序访问有关的网络信息 -->
+27    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+27-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:24:5-79
+27-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:24:22-76
+28
+29    <!-- 允许应用程序访问WIFI网卡的网络信息 -->
+30    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+30-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:27:5-76
+30-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:27:22-73
+31
+32    <!-- 允许应用程序完全使用网络 -->
+33    <uses-permission android:name="android.permission.INTERNET" />
+33-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:30:5-67
+33-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:30:22-64
+34    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+34-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:31:5-75
+34-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:31:22-72
+35    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+35-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:15:5-81
+35-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:15:22-78
+36    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+36-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:33:5-79
+36-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:33:22-76
+37    <uses-permission android:name="android.permission.CAMERA" />
+37-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:34:5-65
+37-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:34:22-62
+38
+39    <application
+39-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:36:5-79:19
+40        android:name="com.example.mumu.warehousecheckcar.application.App"
+40-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:43:9-40
+41        android:allowBackup="true"
+41-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:37:9-35
+42        android:debuggable="true"
+43        android:icon="@mipmap/ic_launcher"
+43-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:38:9-43
+44        android:label="@string/app_name"
+44-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:39:9-41
+45        android:roundIcon="@mipmap/ic_launcher_round"
+45-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:40:9-54
+46        android:supportsRtl="true"
+46-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:41:9-35
+47        android:testOnly="true"
+48        android:theme="@style/AppTheme" >
+48-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:42:9-40
+49        <activity
+49-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:44:9-53:20
+50            android:name="com.example.mumu.warehousecheckcar.activity.LoginActivity"
+50-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:45:13-51
+51            android:label="@string/app_name"
+51-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:46:13-45
+52            android:windowSoftInputMode="adjustPan" >
+52-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:47:13-52
+53            <intent-filter>
+53-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:48:13-52:29
+54                <action android:name="android.intent.action.MAIN" />
+54-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:49:17-69
+54-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:49:25-66
+55
+56                <category android:name="android.intent.category.LAUNCHER" />
+56-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:51:17-77
+56-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:51:27-74
+57            </intent-filter>
+58        </activity>
+59        <activity
+59-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:54:9-58:54
+60            android:name="com.example.mumu.warehousecheckcar.activity.Main2Activity"
+60-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:55:13-51
+61            android:label="@string/title_activity_main2"
+61-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:56:13-57
+62            android:theme="@style/AppTheme.NoActionBar"
+62-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:57:13-56
+63            android:windowSoftInputMode="adjustPan" />
+63-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:58:13-52
+64        <activity
+64-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:59:9-62:54
+65            android:name="com.example.mumu.warehousecheckcar.zxing.CaptureActivity"
+65-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:60:13-50
+66            android:screenOrientation="portrait"
+66-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:61:13-49
+67            android:windowSoftInputMode="adjustPan" />
+67-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:62:13-52
+68        <!-- 定义FileProvider 7.0版本更新 -->
+69        <provider
+69-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:64:9-72:20
+70            android:name="android.support.v4.content.FileProvider"
+70-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:65:13-67
+71            android:authorities="com.ma.update.fileprovider"
+71-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:66:13-61
+72            android:exported="false"
+72-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:67:13-37
+73            android:grantUriPermissions="true" >
+73-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:68:13-47
+74            <meta-data
+74-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:69:13-71:53
+75                android:name="android.support.FILE_PROVIDER_PATHS"
+75-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:70:17-67
+76                android:resource="@xml/filepaths" />
+76-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:71:17-50
+77        </provider>
+78
+79        <service
+79-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:74:9-78:19
+80            android:name="com.example.mumu.warehousecheckcar.service.BluetoothLeService"
+80-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:75:13-55
+81            android:enabled="true" >
+81-->D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:76:13-35
+82        </service>
+83
+84        <meta-data
+84-->[com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:26:9-28:38
+85            android:name="android.support.VERSION"
+85-->[com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:27:13-51
+86            android:value="26.1.0" />
+86-->[com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:28:13-35
+87        <meta-data
+87-->[android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:25:9-27:47
+88            android:name="android.arch.lifecycle.VERSION"
+88-->[android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:26:13-58
+89            android:value="27.0.0-SNAPSHOT" />
+89-->[android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:27:13-44
+90    </application>
+91
+92</manifest>

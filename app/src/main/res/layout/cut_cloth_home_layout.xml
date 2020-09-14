@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/bg2">
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="80dip"
+        android:layout_margin="50dp"
+        android:layout_gravity="center"
+        style="@style/button_style1"
+        android:text="剪板绑定" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="80dip"
+        android:layout_margin="50dp"
+        android:layout_gravity="center"
+        style="@style/button_style1"
+        android:text="剪板出库" />
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/button_style1"
+        android:layout_width="match_parent"
+        android:layout_height="80dip"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:text="快递单绑定" />
+
+</LinearLayout>

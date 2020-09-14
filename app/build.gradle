@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    compileSdkVersion 26
+//    构建工具的版本，其中包括了打包工具aapt、dx等等。
+    buildToolsVersion '28.0.3'
+    defaultConfig {
+        applicationId "com.example.mumu.warehousecheckcar"
+//        最小的SDK版本。
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "19.10.09"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation files('libs/fastjson-1.2.37.jar')
+    implementation files('libs/socket.io-client-1.0.0.jar')
+    //    使用butterknife先下载插件再加下面这句即可
+    //    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    implementation('com.github.nkzawa:socket.io-client:0.3.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+    implementation 'com.android.support:appcompat-v7:26.+'
+    implementation 'com.android.support:design:26.+'
+    implementation 'cz.msebera.android:httpclient:4.4.1.1'
+    implementation 'com.squareup.okhttp:okhttp:2.4.0'
+    implementation 'com.squareup.okio:okio:1.5.0'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    implementation 'com.github.machinarius:preferencefragment:0.1.1'
+    implementation 'com.android.support:support-v4:26.+'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    testImplementation 'junit:junit:4.12'
+    implementation files('libs/Serialport-module.jar')
+    implementation files('libs/xdl2d&RFID.jar')
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okio:okio:1.7.0'
+//    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.orhanobut:logger:2.1.1'
+    implementation 'com.android.support:recyclerview-v7:26.+'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.zxing:core:3.3.3'
+//    implementation 'pub.devrel:easypermissions:3.0.0'
+}

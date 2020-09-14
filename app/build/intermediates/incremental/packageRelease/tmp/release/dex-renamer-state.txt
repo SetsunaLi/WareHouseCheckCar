@@ -1,0 +1,4 @@
+#Sun Sep 13 11:45:44 CST 2020
+base.0=D\:\\yifeng\\CODE_GitHub\\WareHouseCheckCar-master\\WareHouseCheckCar-master\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

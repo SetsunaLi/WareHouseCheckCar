@@ -1,0 +1,218 @@
+<resources>
+    <string name="app_name">仓库APP</string>
+    <string name="title_activity_main2">仓库APP</string>
+    <string name="app_version">20.9.11</string>
+    <string name="app_download_url">warehouse.apk</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+
+    <!--登录页面-->
+    <string name="login_username">用户名</string>
+    <string name="login_prassword">密码</string>
+    <string name="login">登录</string>
+    <!--主页-->
+    <string name="options_username"></string>
+    <string name="options_welcome">亿锋公司欢迎您！</string>
+    <string name="options_id">YF-0000&#8195;</string>
+    <string name="options_login_time">2018/11/20&#8196;12:02&#8195;</string>
+    <string name="options_online_time">00:00&#8195;</string>
+    <string name="options_work">仓库管理员&#8195;</string>
+    <string name="options_status">在线&#8195;</string>
+    <string name="btn_click1">入库检验</string>
+    <string name="btn_click2">出库校验</string>
+    <string name="btn_click3">上架</string>
+    <string name="btn_click4">叉车操作</string>
+    <string name="btn_click5">查布</string>
+    <string name="btn_click6">查布上架</string>
+    <string name="btn_click7">出库</string>
+    <string name="btn_click8">盘点</string>
+    <string name="btn_click9">寻找布匹</string>
+    <string name="btn_click10">寻找托盘</string>
+    <string name="btn_click11">调整库存重量</string>
+    <string name="btn_click12">查布异常</string>
+    <string name="btn_click13">付运表发运</string>
+    <string name="btn_click14">办布上架</string>
+    <string name="btn_click15">剪布操作</string>
+    <string name="btn_click15_1">入库辅助</string>
+    <string name="btn_click16">系统设置</string>
+    <string name="btn_click17">退库入库</string>
+    <string name="btn_click18">查布接收</string>
+    <string name="btn_click19">返修入仓</string>
+    <string name="btn_click20">委外入仓</string>
+    <string name="btn_yes">确认</string>
+    <string name="btn_no">取消</string>
+
+    <!--叉车操作-->
+    <string name="btn_car_up">转仓</string>
+    <string name="btn_car_down">叉车下架</string>
+    <string name="btn_car_tuo">空托整理</string>
+
+    <!--转仓-->
+    <string name="toast_msg">该托盘库存布匹大于20，不允许转仓</string>
+
+    <!--出库校验-->
+    <string name="edittext_title">请输入申请单号</string>
+    <string name="button_find">搜索</string>
+    <string name="button_scnner">扫描条形码</string>
+<!--入库校验-->
+    <string name="dialog_text">提醒</string>
+    <string name="dialog_in_check">是否确认入库？</string>
+
+
+    <!--hint-->
+    <string name="hint_void">申请单号为空！</string>
+    <string name="hint_rfid_mistake">读写器异常，请退出或者重启设备！</string>
+    <string name="hint_2d_mistake">读头异常，请退出或者重启设备！</string>
+    <!--导航栏的选项名称-->
+    <string-array name="options_array">
+        <item>主页</item>
+        <item>入库检验</item>
+        <item>盘点</item>
+        <item>上架</item>
+        <item>叉车上架</item>
+        <item>寻找布匹</item>
+        <item>寻找托盘</item>
+        <item>出库</item>
+        <item>付运表发运</item>
+        <item>剪布操作</item>
+        <item>办布上架</item>
+        <item>查布</item>
+        <item>查布上架</item>
+        <item>调整库存重量</item>
+        <item>查布异常</item>
+        <item>入库辅助</item>
+        <item>系统设置</item>
+        <item>退库入库</item>
+        <item>查布接收</item>
+        <item>关于</item>
+    </string-array>
+    <!--导航栏的选项名称-->
+    <string-array name="change_cause_array">
+        <item>库龄久</item>
+        <item>染厂重量差异</item>
+        <item>剪布调整</item>
+    </string-array>
+
+    <!--Setting-->
+    <string name="user_managment_group">用户管理</string>
+    <string name="user_managment_title">个人信息</string>
+    <string name="user_jurisdiction_summary">用户</string>
+    <string name="user_message_key">message_key</string>
+    <string name="user_in_storage_key">in_storage_key</string>
+    <string name="user_stock_up_key">stock_up_key</string>
+    <string name="user_out_storage_key">out_storage_key</string>
+    <string name="user_move_key">move_key</string>
+    <string name="user_name_key">name_key</string>
+    <string name="user_name_summary">User Name</string>
+    <string name="user_name_title">用户名</string>
+    <string name="user_id_key">id_key</string>
+    <string name="user_id_summary">User ID</string>
+    <string name="user_id_title">用户ID</string>
+    <string name="user_status_key">status_key</string>
+    <string name="user_status_summary">User Status</string>
+    <string name="user_status_title">用户状态</string>
+    <array name="status">
+        <item>在线</item>
+        <item>离线</item>
+        <item>忙碌</item>
+        <item>登出</item>
+    </array>
+
+    <string name="system_managment_group">设备管理</string>
+    <string name="system_managment_title">系统</string>
+    <string name="system_version_key">version_key</string>
+    <string name="system_version_summary">20181215</string>
+    <string name="system_version_title">系统配置</string>
+    <string name="system_ip_key">ip_key</string>
+    <string name="system_ip_summary">http://47.107.112.133</string>
+    <string name="system_ip_title">系统IP</string>
+    <string name="system_port_key">port_key</string>
+    <string name="system_port_summary">8088</string>
+    <string name="system_port_title">系统端口</string>
+    <string name="system_device_number_key">device_number_key</string>
+    <string name="system_device_number_summary">YiFeng-001</string>
+    <string name="system_device_number_title">设备号</string>
+    <string name="system_music_key">music_key</string>
+    <string name="system_music_summaryON">打开扫码声音</string>
+    <string name="system_music_summaryOFF">关闭扫码声音</string>
+    <string name="system_music_title">系统声音</string>
+    <string name="device_managment_title">设备</string>
+    <string name="device_prower_key">prower_key</string>
+    <string name="device_prower_title">功率</string>
+    <string name="device_work_time_key">work_time_key</string>
+    <string name="device_interval_time_key">interval_time_key</string>
+    <string name="all_volume_title">Title</string>
+    <string name="logcat_title">系统日志</string>
+    <string name="logcat_ket">logcat_ket</string>
+    <string name="logcat_title_on">显示日志</string>
+    <string name="logcat_title_off">隐藏日志</string>
+    <string name="prower_edit_key">get_prower_key</string>
+    <string name="prower_edit_summary">20</string>
+    <string name="putaway_assistant">协助人：</string>
+
+    <!--about-->
+    <string name="RFID_demo_app">WareHouse Application</string>
+    <string name="moto_solutions">RIDKO Technologies</string>
+    <string name="app_version_title">Application Version</string>
+    <string name="colon">:</string>
+    <string name="system_version">系统版本</string>
+    <string name="device_number_title">Device Number</string>
+    <string name="device_number">JiaQian_01</string>
+    <string name="system_sled">System Sled</string>
+    <string name="copyright_info">Copyright © 2019</string>
+    <!--<string name="app_version_name">龙的传人</string>-->
+
+    <!--check-->
+    <string name="button_start">开始</string>
+
+
+
+    <!--抽屉状态形容文字-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!--右上角item文字-->
+    <string name="action_settings">退出登录</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!--cuttingScanResultHandler.NO_MUSIC_RFID-->
+    <string name="cut_carroer">剪板区</string>
+    <string name="cut_os">剪板操作</string>
+    <string name="cut_pai">剪板派工</string>
+    <string name="cut_scanner">剪板绑定</string>
+    <string name="cut_weight">剪板称重</string>
+    <string name="cut_out">剪板出库</string>
+    <!--空加-->
+    <string-array name="change_Empty_array">
+        <item>0KG</item>
+        <item>0.2KG</item>
+        <item>0.3KG</item>
+        <item>0.5KG</item>
+    </string-array>
+    <!--纸管重-->
+    <string-array name="change_paper_array">
+        <item>0KG</item>
+        <item>0.6KG</item>
+        <item>0.8KG</item>
+        <item>1KG</item>
+        <item>1.2KG</item>
+    </string-array>
+    <!--自动更新-->
+    <string name="update_name">版本名称</string>
+    <string name="update_no">版本号</string>
+    <string name="update_msg">版本描述</string>
+    <!--发运-->
+    <string name="forwarding_toast_msg">请输入有效单号进行操作！</string>
+
+    <!-- zxing -->
+    <string name="button_ok">确定</string>
+    <string name="msg_camera_framework_bug">很遗憾，Android 相机出现问题。你可能需要重启设备。</string>
+    <string name="msg_default_status">请将条码置于取景框内扫描。  </string>
+
+</resources>

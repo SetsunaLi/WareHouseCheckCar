@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="数量："/>
+        <TextView
+            android:id="@+id/text1"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical"
+            android:text=""/>
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="缸号："/>
+        <TextView
+            android:id="@+id/text2"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical"/>
+    </LinearLayout>
+</LinearLayout>

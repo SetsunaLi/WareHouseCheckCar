@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="61dip">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dip"
+        android:layout_gravity="center"
+        >
+        <com.example.mumu.warehousecheckcar.view.FixedEditText
+            android:id="@+id/fixeedittext1"
+            style="@style/edit_style2"
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:hint="请输入申请单号"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/imagebutton1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@mipmap/close_no" />
+
+        <ImageButton
+            android:id="@+id/imagebutton2"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/imagebutton1"
+            android:src="@drawable/ic_camera"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>

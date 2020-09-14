@@ -1,0 +1,250 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorREAD</item>
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="common_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/colorTableLine</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme0" parent="AppTheme.Base">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar"></style>
+
+
+    <style name="button_login_style1">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_login_selector</item>
+    </style>
+    <!-- Button for Home Screen -->
+    <style name="DashboardButton">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/button_home_text_style</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/button_home_style</item>
+        <item name="android:paddingTop">@dimen/home_button_paddingTop</item>
+    </style>
+    <!--左边按钮-->
+    <style name="button_style1">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_style_select</item>
+        <item name="android:layout_marginTop">@dimen/home_margin</item>
+        <item name="android:layout_marginBottom">@dimen/home_margin</item>
+    </style>
+
+    <!--右边按钮-->
+    <style name="button_style2">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/dialog_button_yes</item>
+    </style>
+    <!--提示框左边按钮-->
+    <style name="dialog_button_no">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorDialogContent</item>
+        <item name="android:background">@drawable/button_no_select</item>
+    </style>
+    <!--提示框右边按钮-->
+    <style name="dialog_button_yes">
+        <item name="android:layout_height">50dip</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_yes_select</item>
+    </style>
+
+    <!--适用于整个应用程序的普通字体的样式 -->
+    <style name="style_normal_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+    </style>
+
+    <style name="style_medium_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+    <!--Style for the large font to be used in titles -->
+    <style name="style_large_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="text_style1">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="text_style3">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <!--首页信息-->
+    <style name="text_style2">
+        <item name="android:textColor">@color/colorHomeButton2</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+    <style name="dialog_title">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/colorAboutText</item>
+        <item name="android:text">@string/dialog_text</item>
+    </style>
+    <!--设置界面文字-->
+    <style name="texte_setting_style">
+        <item name="android:textColor">@color/colerUserText</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="BlueButton">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/shape_gradient_bg</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+    <!--item-文字-->
+    <style name="text_item">
+        <item name="android:textColor">@color/colorHomeButton2</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+    <!--item-文字-->
+    <style name="title_item" parent="text_item">
+        <item name="android:textColor">@color/colorREAD</item>
+    </style>
+
+    <style name="title_item_lx" parent="text_item">
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+    </style>
+
+    <style name="edit_style2">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorEditNoTextSelect</item>
+        <item name="android:textColorHint">@color/colorREAD</item>
+        <item name="android:background">@drawable/fixed_edittext_style</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="edit_style3">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorREAD</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="dialog_content_text">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorDialogContent</item>
+    </style>
+
+    <style name="layout_style1">
+        <!-- <item name="android:layout_marginLeft">18dp</item>-->
+        <item name="android:layout_marginTop">@dimen/home_margin</item>
+        <item name="android:background">@drawable/text_style_bg</item>
+    </style>
+
+    <style name="head_margin">
+        <item name="android:layout_marginLeft">@dimen/home_margin</item>
+    </style>
+    <!--分割线-->
+    <style name="view_item_mid">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:background">@color/colorTableLine</item>
+    </style>
+
+    <style name="view_item_bottom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:background">@color/colorTableLine</item>
+    </style>
+
+    <style name="view_border">
+        <item name="android:background">@drawable/view_dash_border</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="view_line">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">3dp</item>
+        <item name="android:background">@drawable/view_dash_line</item>
+        <item name="android:layerType">software</item>
+    </style>
+
+    <!-- style EditWeight -->
+    <style name="text_style4">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="edit_weight">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_style_1</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_marginTop">40dp</item>
+        <item name="android:layout_marginBottom">40dp</item>
+        <item name="android:paddingLeft">40dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">30dp</item>
+        <item name="android:paddingBottom">30dp</item>
+    </style>
+
+</resources>

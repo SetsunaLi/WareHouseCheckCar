@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/forwarding_list_head" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="false"
+                    android:focusableInTouchMode="true" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8.5"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/button1"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/home_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="刷新" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/button_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="新建" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,300 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+MERGED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.jakewharton:butterknife:8.4.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1ab25abef4dc87b97b73707bcfdd6586\butterknife-8.4.0\AndroidManifest.xml:2:1-7:12
+MERGED from [com.github.machinarius:preferencefragment:0.1.1] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cdefffb176e4a2519ab8817dbd419406\preferencefragment-0.1.1\AndroidManifest.xml:16:1-19:12
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.orhanobut:logger:2.1.1] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\096e0a42e4ab56348ff0c25638dcefd0\logger-2.1.1\AndroidManifest.xml:2:1-8:12
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cb1f032b0771b9d1e03133233a8ea1f3\constraint-layout-1.0.2\AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:17:1-31:12
+MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:17:1-30:12
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+	package
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:4:5-49
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:1-81:12
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:7:5-71
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:7:22-68
+uses-permission#android.permission.READ_PROFILE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:8:5-71
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:8:22-68
+uses-permission#android.permission.READ_CONTACTS
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:9:5-72
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:9:22-69
+uses-permission#android.permission.BLUETOOTH
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:10:5-68
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:10:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:11:5-74
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:11:22-71
+uses-permission#android.permission.BLUETOOTH_PRIVILEGED
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:12:5-13:47
+	tools:ignore
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:13:9-44
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:12:22-76
+uses-permission#android.permission.VIBRATE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:14:5-66
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:14:22-63
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:15:5-81
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:15:22-78
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:16:5-17:47
+	tools:ignore
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:17:9-44
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:16:22-81
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:19:5-79
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:19:22-76
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:21:5-76
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:21:22-73
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:24:5-79
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:24:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:27:5-76
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:27:22-73
+uses-permission#android.permission.INTERNET
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:30:5-67
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:30:22-64
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:31:5-75
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:31:22-72
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:33:5-79
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:33:22-76
+uses-permission#android.permission.CAMERA
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:34:5-65
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:34:22-62
+application
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:36:5-79:19
+MERGED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cb1f032b0771b9d1e03133233a8ea1f3\constraint-layout-1.0.2\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cb1f032b0771b9d1e03133233a8ea1f3\constraint-layout-1.0.2\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:25:5-29:19
+MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:24:5-28:19
+MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:24:5-28:19
+	android:supportsRtl
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:41:9-35
+	android:label
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:39:9-41
+	android:roundIcon
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:40:9-54
+	android:icon
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:38:9-43
+	android:allowBackup
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:37:9-35
+	android:theme
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:42:9-40
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:43:9-40
+activity#com.example.mumu.warehousecheckcar.activity.LoginActivity
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:44:9-53:20
+	android:label
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:46:13-45
+	android:windowSoftInputMode
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:47:13-52
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:45:13-51
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:48:13-52:29
+action#android.intent.action.MAIN
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:49:17-69
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:49:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:51:17-77
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:51:27-74
+activity#com.example.mumu.warehousecheckcar.activity.Main2Activity
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:54:9-58:54
+	android:label
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:56:13-57
+	android:windowSoftInputMode
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:58:13-52
+	android:theme
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:57:13-56
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:55:13-51
+activity#com.example.mumu.warehousecheckcar.zxing.CaptureActivity
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:59:9-62:54
+	android:screenOrientation
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:61:13-49
+	android:windowSoftInputMode
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:62:13-52
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:60:13-50
+provider#android.support.v4.content.FileProvider
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:64:9-72:20
+	android:grantUriPermissions
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:68:13-47
+	android:authorities
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:66:13-61
+	android:exported
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:67:13-37
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:65:13-67
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:69:13-71:53
+	android:resource
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:71:17-50
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:70:17-67
+service#com.example.mumu.warehousecheckcar.service.BluetoothLeService
+ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:74:9-78:19
+	android:enabled
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:76:13-35
+	android:name
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml:75:13-55
+uses-sdk
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+MERGED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:21:5-23:78
+MERGED from [com.jakewharton:butterknife:8.4.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1ab25abef4dc87b97b73707bcfdd6586\butterknife-8.4.0\AndroidManifest.xml:5:5-43
+MERGED from [com.jakewharton:butterknife:8.4.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1ab25abef4dc87b97b73707bcfdd6586\butterknife-8.4.0\AndroidManifest.xml:5:5-43
+MERGED from [com.github.machinarius:preferencefragment:0.1.1] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cdefffb176e4a2519ab8817dbd419406\preferencefragment-0.1.1\AndroidManifest.xml:18:5-42
+MERGED from [com.github.machinarius:preferencefragment:0.1.1] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cdefffb176e4a2519ab8817dbd419406\preferencefragment-0.1.1\AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:21:5-23:54
+MERGED from [com.orhanobut:logger:2.1.1] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\096e0a42e4ab56348ff0c25638dcefd0\logger-2.1.1\AndroidManifest.xml:6:5-43
+MERGED from [com.orhanobut:logger:2.1.1] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\096e0a42e4ab56348ff0c25638dcefd0\logger-2.1.1\AndroidManifest.xml:6:5-43
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cb1f032b0771b9d1e03133233a8ea1f3\constraint-layout-1.0.2\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\cb1f032b0771b9d1e03133233a8ea1f3\constraint-layout-1.0.2\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:21:5-23:58
+MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:20:5-22:41
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		ADDED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+		INJECTED from D:\yifeng\CODE_GitHub\WareHouseCheckCar-master\WareHouseCheckCar-master\app\src\main\AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\d83d1b2906b010fc2c13f0c9b7d3c61d\appcompat-v7-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:transition:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\049528a0c4d3bc45df81ad52e042c3ff\transition-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-v4:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\065e98bf999797f2f7b43b4a732c5f2c\support-v4-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:recyclerview-v7:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\f4be7a093a13af0e67d9d493ef074091\recyclerview-v7-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ae5c6e4569ede4533571a58679ece8c1\animated-vector-drawable-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-vector-drawable:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\5a48cc5d39b88214eaad05fd183cea3b\support-vector-drawable-26.1.0\AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\249e1a24d26337fe2c199cc43ac5a523\support-media-compat-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-fragment:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\dcb116767e5a5f07366853edba5522f8\support-fragment-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\66452b73c6addccc832c7b3c81d9e845\support-core-utils-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\1abf8dae3f1b604af87527d3407b3dbb\support-core-ui-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-compat:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\de5dab19474f7bc055bdbb01a97fc143\support-compat-26.1.0\AndroidManifest.xml:26:9-28:38
+	android:value
+		ADDED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:28:13-35
+	android:name
+		ADDED from [com.android.support:design:26.1.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\0f083e3ba4438f61066542dad3762175\design-26.1.0\AndroidManifest.xml:27:13-51
+meta-data#android.arch.lifecycle.VERSION
+ADDED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:25:9-27:47
+	android:value
+		ADDED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:27:13-44
+	android:name
+		ADDED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\13630\.gradle\wrapper\dists\gradle-6.1.1-all\caches\transforms-2\files-2.1\ad64e64e382a8943e8c32803e67dfeee\runtime-1.0.0\AndroidManifest.xml:26:13-58

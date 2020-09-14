@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button1"
+        style="@style/button_style1"
+        android:layout_width="match_parent"
+        android:layout_height="80dip"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="手动输入" />
+
+    <Button
+        android:id="@+id/button3"
+        style="@style/button_style1"
+        android:layout_width="match_parent"
+        android:layout_height="80dip"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="搜索设备" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp" />
+
+</LinearLayout>

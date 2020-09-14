@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="51dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="horizontal">
+
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="100dip"
+                android:layout_height="match_parent"
+                android:text="车牌号" />
+
+            <View style="@style/view_item_mid" />
+
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="60dip"
+                android:layout_height="match_parent"
+                android:text="条数" />
+
+            <View style="@style/view_item_mid" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="120dip"
+                android:layout_height="match_parent"
+                android:text="录入时间" />
+
+            <View style="@style/view_item_mid" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="100dip"
+                android:layout_height="match_parent"
+                android:text="发运" />
+
+            <View style="@style/view_item_mid" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="120dip"
+                android:layout_height="match_parent"
+                android:text="付运表插入" />
+        </LinearLayout>
+
+        <View style="@style/view_item_bottom" />
+
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+
+</LinearLayout>

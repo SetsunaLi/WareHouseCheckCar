@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg2"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="PO" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="染厂名称" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="染厂色号" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="送货单号" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="布号" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item1"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item2"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item3"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item4"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item5"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:descendantFocusability="blocksDescendants"
+                android:fillViewport="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="销售色号" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="缸号" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="颜色" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="封度" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="克重" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item6"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item7"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item8"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item9"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item10"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="纸管" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="空加" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="总实重" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent"
+                    android:text="扫描数量" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item11"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item12"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item13"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    android:id="@+id/item14"
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="100dip"
+                    android:layout_height="match_parent" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkbox1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:checked="false" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="180dip"
+                    android:layout_height="match_parent"
+                    android:text="布票号" />
+
+                <View style="@style/view_item_mid" />
+
+                <TextView
+                    style="@style/title_item"
+                    android:layout_width="180dip"
+                    android:layout_height="match_parent"
+                    android:text="入库重量" />
+
+                <View style="@style/view_item_mid" />
+            </LinearLayout>
+
+            <View style="@style/view_item_bottom" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button1"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/home_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="刷新" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/button_style1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/button_margin"
+            android:layout_marginRight="@dimen/button_margin"
+            android:layout_weight="1"
+            android:text="确定" />
+    </LinearLayout>
+</LinearLayout>

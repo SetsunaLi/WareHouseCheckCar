@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item1"
+            android:icon="@mipmap/home_s"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_item2"
+            android:icon="@mipmap/click1_s"
+            android:title="Gallery" />
+        <item
+            android:id="@+id/nav_item3"
+            android:icon="@mipmap/click2_s"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_item4"
+            android:icon="@mipmap/click3_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item5"
+            android:icon="@mipmap/click4_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item6"
+            android:icon="@mipmap/click5_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item7"
+            android:icon="@mipmap/click6_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item8"
+            android:icon="@mipmap/click7_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item9"
+            android:icon="@mipmap/click8_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item10"
+            android:icon="@mipmap/click9_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item11"
+            android:icon="@mipmap/click10_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item12"
+            android:icon="@mipmap/click11_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item13"
+            android:icon="@mipmap/click12_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item14"
+            android:icon="@mipmap/click13_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item15"
+            android:icon="@mipmap/click14_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item16"
+            android:icon="@mipmap/click15_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item17"
+            android:icon="@mipmap/backin_s"
+            android:title="Tools" />
+        <item
+            android:id="@+id/nav_item18"
+            android:icon="@mipmap/chubb_get_s"
+            android:title="Tools" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@mipmap/setting_s"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@mipmap/about_s"
+                android:title="Share" />
+
+        </menu>
+    </item>
+
+</menu>
