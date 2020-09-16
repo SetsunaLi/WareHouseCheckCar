@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -200,7 +201,7 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
 
                 @Override
                 public void onResponse(BaseReturnObject<RepaifIn> returnArray) {
-                    if (returnArray != null) {
+                    if (returnArray != null && !TextUtils.isEmpty(returnArray.getData().getVat_no())) {
                         if (!epcs.contains(returnArray.getData().getEpc())) {
                             epcs.add(returnArray.getData().getEpc());
                             dates.add(returnArray.getData());

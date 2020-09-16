@@ -304,7 +304,7 @@ public class ChubbUpFragment extends BaseFragment implements UHFCallbackLiatener
                             if (object.getJSONObject("data") != null) {
                                 final JSONObject obj = object.getJSONObject("data");
                                 ChubbUp value = obj.toJavaObject(ChubbUp.class);
-                                if (value != null) {
+                                if (value != null && !TextUtils.isEmpty(value.getVatNo())) {
                                     if (value.getEpc() != null && !value.getEpc().equals("") && !dataEPC.contains(value.getEpc())) {
                                         dataEPC.add(value.getEpc());
                                         myList.add(value);

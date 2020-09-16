@@ -260,7 +260,7 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
                     public void onClick(View view) {
                         ArrayList<Input> jsocList = new ArrayList<>();
                         for (Input obj : dataList) {
-                            if (obj.getVatNo() != null && dataKey.contains(obj.getVatNo())) {
+                            if (!TextUtils.isEmpty(obj.getVatNo()) && dataKey.contains(obj.getVatNo())) {
                                 obj.setCarrier(App.CARRIER);
                                 obj.setDevice(App.DEVICE_NO);
                                 jsocList.add(obj);
@@ -348,7 +348,7 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
                     public void onResponse(JSONArray jsonArray) {
                         try {
                             List<Input> arry = jsonArray.toJavaList(Input.class);
-                            if (arry != null && arry.size() > 0) {
+                            if (arry != null && arry.size() > 0 && !TextUtils.isEmpty(arry.get(0).getVatNo())) {
                                 Input response = arry.get(0);
                                 if (response != null) {
                                     if (response.getEpc() != null && !epcList.contains(response.getEpc())) {

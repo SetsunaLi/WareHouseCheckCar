@@ -323,7 +323,7 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
                             if (object.getJSONObject("data") != null) {
                                 JSONObject obj = object.getJSONObject("data");
                                 InCheckDetail value = obj.toJavaObject(InCheckDetail.class);
-                                if (value != null) {
+                                if (value != null && !TextUtils.isEmpty(value.getVatNo())) {
                                     if (!epcList.contains(value.getEpc())) {
                                         epcList.add(value.getEpc());
                                         myList.add(value);

@@ -429,7 +429,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                         try {
                             List<Inventory> arry;
                             arry = jsonArray.toJavaList(Inventory.class);
-                            if (arry != null && arry.size() > 0) {
+                            if (arry != null && arry.size() > 0 && !TextUtils.isEmpty(arry.get(0).getVatNo())) {
                                 Inventory response = arry.get(0);
                                 if (response != null && !epcList.contains(response.getEpc())) {
                                     if (!dataKEY.contains(response.getVatNo()))

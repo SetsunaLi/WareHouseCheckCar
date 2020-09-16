@@ -298,7 +298,7 @@ public class CuttingClothPutwayFragment extends BaseFragment implements BRecycle
                     public void onResponse(JSONArray jsonArray) {
                         if (jsonArray != null && jsonArray.size() > 0) {
                             Cut cut = jsonArray.getObject(0, Cut.class);
-                            if (cut != null && !epcList.contains(cut.getEpc())) {
+                            if (cut != null && !TextUtils.isEmpty(cut.getVatNo()) && !epcList.contains(cut.getEpc())) {
                                 epcList.add(cut.getEpc());
                                 myList.add(cut);
                             }

@@ -630,7 +630,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                             try {
                                 List<Inventory> arry;
                                 arry = jsonArray.toJavaList(Inventory.class);
-                                if (arry != null && arry.size() > 0) {
+                                if (arry != null && arry.size() > 0 && !TextUtils.isEmpty(arry.get(0).getVatNo())) {
                                     Inventory response = arry.get(0);
                                     if (!epcList.contains(response.getEpc())) {
                                         epcList.add(response.getEpc());

@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -514,7 +515,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                                 try {
                                     List<Inventory> arry;
                                     arry = jsonArray.toJavaList(Inventory.class);
-                                    if (arry != null && arry.size() > 0) {
+                                    if (arry != null && arry.size() > 0 && !TextUtils.isEmpty(arry.get(0).getVatNo())) {
                                         Inventory response = arry.get(0);
                                         if (response != null) {
                                             if (!epcList.contains(response.getEpc())) {

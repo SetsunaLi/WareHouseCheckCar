@@ -318,7 +318,7 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
                     @Override
                     public void onResponse(ArrayList<InCheckDetail> response) {
                         try {
-                            if (response != null && response.size() != 0) {
+                            if (response != null && response.size() != 0 && !TextUtils.isEmpty(response.get(0).getVatNo())) {
                                 InCheckDetail ocd = response.get(0);
                                 if (ocd != null) {
                                     if (ocd.getEpc() != null && !dataEPC.contains(ocd.getEpc())) {

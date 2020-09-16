@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -338,7 +339,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                             if (jsonObject.getInteger("status") == 1) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 List<Cloth> arry = jsonArray.toJavaList(Cloth.class);
-                                if (arry != null && arry.size() > 0) {
+                                if (arry != null && arry.size() > 0 && !TextUtils.isEmpty(arry.get(0).getVatNo())) {
                                     Cloth value = arry.get(0);
                                     if (value != null) {
                                         if (!epcs.contains(value.getEpc())) {

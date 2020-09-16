@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -340,20 +341,22 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
                             arry = jsonArray.toJavaList(Inventory.class);
                             if (arry != null && arry.size() > 0) {
                                 Inventory response = arry.get(0);
-                                if (!epcList.contains(response.getEpc())) {
-                                    epcList.add(response.getEpc());
-                                    a:
-                                    for (List<CarOutBean> list : myList) {
-                                        b:
-                                        for (CarOutBean carOutBean : list) {
-                                            if (response.getVatNo().equals(carOutBean.getVat_no())) {
-                                                carOutBean.setScan(true);
-                                                carOutBean.setEpc(response.getEpc());
+                                if (!TextUtils.isEmpty(response.getVatNo())) {
+                                    if (!epcList.contains(response.getEpc())) {
+                                        epcList.add(response.getEpc());
+                                        a:
+                                        for (List<CarOutBean> list : myList) {
+                                            b:
+                                            for (CarOutBean carOutBean : list) {
+                                                if (response.getVatNo().equals(carOutBean.getVat_no())) {
+                                                    carOutBean.setScan(true);
+                                                    carOutBean.setEpc(response.getEpc());
+                                                }
                                             }
                                         }
                                     }
+                                    mAdapter.notifyDataSetChanged();
                                 }
-                                mAdapter.notifyDataSetChanged();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -333,7 +333,7 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
                         try {
                             List<CheckWeight> arry;
                             arry = jsonArray.toJavaList(CheckWeight.class);
-                            if (arry != null && arry.size() > 0) {
+                            if (arry != null && arry.size() > 0 && !TextUtils.isEmpty(arry.get(0).getVatNo())) {
                                 cloth = arry.get(0);
                                 if (cloth != null) {
                                     cloth.setCause(String.valueOf(id + 1));

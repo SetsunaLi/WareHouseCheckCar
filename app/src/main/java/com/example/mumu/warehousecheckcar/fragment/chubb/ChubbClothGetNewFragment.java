@@ -246,7 +246,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
                             List<Cloth> arry = jsonArray.toJavaList(Cloth.class);
                             if (arry != null && arry.size() > 0) {
                                 Cloth response = arry.get(0);
-                                if (response != null) {
+                                if (response != null && !TextUtils.isEmpty(response.getVatNo())) {
                                     if (response.getEpc() != null && !epcList.contains(response.getEpc())) {
                                         epcList.add(EPC);
                                         myList.add(response);

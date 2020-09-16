@@ -281,7 +281,7 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
                             arry = jsonArray.toJavaList(Inventory.class);
                             if (arry != null && arry.size() > 0) {
                                 Inventory response = arry.get(0);
-                                if (response != null) {
+                                if (response != null && !TextUtils.isEmpty(response.getVatNo())) {
                                     if (response.getEpc() != null && !epcList.contains(response.getEpc())) {
                                         epcList.add(response.getEpc());
                                         myList.add(response);

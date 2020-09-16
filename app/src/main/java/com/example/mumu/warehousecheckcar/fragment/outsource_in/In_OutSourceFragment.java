@@ -276,21 +276,23 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
                     public void onResponse(BaseReturnArray<Outsource> returnArray) {
                         if (returnArray != null) {
                             for (Outsource outsource : returnArray.getData()) {
-                                if (myList.size() == 0) {
-                                    myList.add(outsource);
-                                    setData(outsource);
-                                } else {
-                                    if (epcs.contains(outsource.getEpc()))
-                                        return;
-                                    String key = outsource.getCust_po() + outsource.getProduct_no() + outsource.getVat_no();
-                                    if (key.equals(cust_po + product_no + vat_no)) {
+                                if (!TextUtils.isEmpty(outsource.getVat_no())) {
+                                    if (myList.size() == 0) {
                                         myList.add(outsource);
-                                        count = myList.size();
-                                        weight = ArithUtil.add(weight, outsource.getWeight());
+                                        setData(outsource);
+                                    } else {
+                                        if (epcs.contains(outsource.getEpc()))
+                                            return;
+                                        String key = outsource.getCust_po() + outsource.getProduct_no() + outsource.getVat_no();
+                                        if (key.equals(cust_po + product_no + vat_no)) {
+                                            myList.add(outsource);
+                                            count = myList.size();
+                                            weight = ArithUtil.add(weight, outsource.getWeight());
+                                        }
                                     }
+                                    epcs.add(outsource.getEpc());
+                                    epcCheck.add(outsource.getEpc());
                                 }
-                                epcs.add(outsource.getEpc());
-                                epcCheck.add(outsource.getEpc());
                             }
                             clearView();
                             mAdapter.notifyDataSetChanged();
