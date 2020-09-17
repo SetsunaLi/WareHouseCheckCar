@@ -33,6 +33,7 @@ public class ForwardingListBean implements Cloneable {
     private String license_plate;
     private String driver;
     private String phone;
+    private String company;
     private int qty;
     private String delivery_address;
     private int output_status;
@@ -79,6 +80,14 @@ public class ForwardingListBean implements Cloneable {
 
     public String getLicense_plate() {
         return license_plate;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public void setLicense_plate(String license_plate) {

@@ -136,11 +136,14 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
     public void onItemClick(View view, Object data, int position) {
         String carNo = myList.get(position).getLicense_plate();
         String name = myList.get(position).getDriver();
+        String company = myList.get(position).getCompany();
         carNo = carNo.replaceAll(" ", "");
         name = name.replaceAll(" ", "");
+        company = company.replaceAll(" ", "");
         Bundle bundle = new Bundle();
         bundle.putInt("bas_transport_type", myList.get(position).getId());
         bundle.putSerializable("carMsg", new ForwardingMsgFragment.CarMsg(carNo, name));
+        bundle.putString("company", company);
         Fragment fragment = ApplyNoListFragment.newInstance();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
@@ -276,6 +279,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                     Bundle bundle = new Bundle();
                     bundle.putInt("bas_transport_type", item.getId());
                     bundle.putSerializable("carMsg", new ForwardingMsgFragment.CarMsg(item.getLicense_plate(), item.getDriver()));
+                    bundle.putString("company", item.getCompany());
                     Fragment fragment = ShipmentNoFragment.newInstance();
                     fragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();

@@ -111,6 +111,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     private RecycleAdapter mAdapter;
     private ScanResultHandler scanResultHandler;
     private int transport_output_id = 0;
+    private String company;
     private CommandDailog commandDailog;
 
     @Nullable
@@ -181,6 +182,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                     carMsg = (ForwardingMsgFragment.CarMsg) msg.getPositionObj(0);
                     fatherNoList = (ArrayList<String>) msg.getPositionObj(1);
                     transport_output_id = (int) msg.getPositionObj(2);
+                    company = (String) msg.getPositionObj(3);
                     break;
                 case 0xfe:
                     epcKeyList.clear();
@@ -318,6 +320,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         int id = User.newInstance().getId();
         jsonObject.put("userId", id);
         jsonObject.put("carMsg", carMsg);
+        jsonObject.put("company", company);
         jsonObject.put("cc_transport_output_id", transport_output_id);
 //        false是0，true是1
         jsonObject.put("status", 0);

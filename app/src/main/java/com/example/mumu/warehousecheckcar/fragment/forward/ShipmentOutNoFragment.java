@@ -58,6 +58,7 @@ public class ShipmentOutNoFragment extends BaseFragment {
     private RecycleAdapter mAdapter;
     private int bas_transport_type;
     private ForwardingMsgFragment.CarMsg carMsg;
+    private String company;
     private ArrayList<String> nos;
 
     public static ShipmentOutNoFragment newInstance() {
@@ -80,6 +81,7 @@ public class ShipmentOutNoFragment extends BaseFragment {
         nos = new ArrayList<>();
         bas_transport_type = getArguments().getInt("bas_transport_type", 0);
         carMsg = (ForwardingMsgFragment.CarMsg) getArguments().getSerializable("carMsg");
+        company = getArguments().getString("company");
         for (String no : getArguments().getStringArrayList("no")) {
             if (!TextUtils.isEmpty(no) && !nos.contains(no)) {
                 nos.add(no);
@@ -171,7 +173,7 @@ public class ShipmentOutNoFragment extends BaseFragment {
                     if (applyByPayNo.isFlag())
                         list.add(applyByPayNo.getApply_no());
                 }
-                EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, list, bas_transport_type));
+                EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, list, bas_transport_type, company));
                 Fragment fragment = ForwardingFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);

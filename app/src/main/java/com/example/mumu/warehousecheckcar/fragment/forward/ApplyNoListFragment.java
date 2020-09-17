@@ -70,6 +70,7 @@ public class ApplyNoListFragment extends BaseFragment {
     private RecycleAdapter mAdapter;
     private int bas_transport_type;
     private ForwardingMsgFragment.CarMsg carMsg;
+    private String company;
     private ArrayList<String> nos;
 
     public static ApplyNoListFragment newInstance() {
@@ -91,6 +92,7 @@ public class ApplyNoListFragment extends BaseFragment {
         myList = new ArrayList<>();
         bas_transport_type = getArguments().getInt("bas_transport_type", 0);
         carMsg = (ForwardingMsgFragment.CarMsg) getArguments().getSerializable("carMsg");
+        company = getArguments().getString("company");
     }
 
     @Override
@@ -172,7 +174,7 @@ public class ApplyNoListFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
-                EventBus.getDefault().postSticky(new EventBusMsg(0x00, carMsg, bas_transport_type));
+                EventBus.getDefault().postSticky(new EventBusMsg(0x00, carMsg, company, bas_transport_type));
                 Fragment fragment = ForwardingNoFragment.newInstance();
                 FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);

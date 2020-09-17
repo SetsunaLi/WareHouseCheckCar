@@ -41,6 +41,8 @@ public class ForwardingMsgFragment extends BaseFragment {
     AutoCompleteTextView autoText1;
     @BindView(R.id.autoText2)
     AutoCompleteTextView autoText2;
+    @BindView(R.id.autoText3)
+    AutoCompleteTextView autoText3;
 
     public static ForwardingMsgFragment newInstance() {
         if (fragment == null) ;
@@ -50,6 +52,7 @@ public class ForwardingMsgFragment extends BaseFragment {
 
     private SearchAdapter carAdapter;
     private SearchAdapter peoAdapter;
+    private SearchAdapter compAdapter;
 
     @Nullable
     @Override
@@ -71,6 +74,8 @@ public class ForwardingMsgFragment extends BaseFragment {
         autoText1.setAdapter(carAdapter);
         peoAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
         autoText2.setAdapter(peoAdapter);
+        compAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
+        autoText3.setAdapter(compAdapter);
     }
 
     @Override
@@ -150,6 +155,44 @@ public class ForwardingMsgFragment extends BaseFragment {
             }
 
         });
+
+        autoText3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
+                final String str = charSequence.toString().replaceAll(" ", "");
+                if (!TextUtils.isEmpty(str) && str.length() >= 1) {
+                    OkHttpClientManager.getAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/getTransportCompany?company=" + str, new OkHttpClientManager.ResultCallback<BaseReturnArray<String>>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                        }
+
+                        @Override
+                        public void onResponse(BaseReturnArray<String> baseReturnArray) {
+                            try {
+                                if (baseReturnArray != null && baseReturnArray.getStatus() == 1) {
+                                    if (baseReturnArray.getData() != null && baseReturnArray.getData().size() > 0) {
+                                        compAdapter.updataList(baseReturnArray.getData());
+                                    }
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+        });
     }
 
     @Override
@@ -157,25 +200,28 @@ public class ForwardingMsgFragment extends BaseFragment {
         super.onDestroyView();
 
 //        EventBus.getDefault().unregister(this);
+
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick(R.id.button1)
     public void onViewClicked() {
-        String carNo = autoText1.getText().toString() + "";
-        String name = autoText2.getText().toString() + "";
+        String carNo = autoText1.getText().toString();
+        String name = autoText2.getText().toString();
+        String company = autoText3.getText().toString();
         carNo = carNo.replaceAll(" ", "");
         name = name.replaceAll(" ", "");
-        if (carNo != null && !carNo.equals("")) {
-            EventBus.getDefault().postSticky(new EventBusMsg(0x00, new CarMsg(carNo, name), 0));
+        company = company.replaceAll(" ", "");
+        if (!TextUtils.isEmpty(carNo) && !TextUtils.isEmpty(company)) {
+            EventBus.getDefault().postSticky(new EventBusMsg(0x00, new CarMsg(carNo, name), company, 0));
             Fragment fragment = ForwardingNoFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
             transaction.show(fragment);
             transaction.commit();
         } else
-            Toast.makeText(getActivity(), "车牌号不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "车牌号或调入公司不能为空", Toast.LENGTH_SHORT).show();
     }
 
 

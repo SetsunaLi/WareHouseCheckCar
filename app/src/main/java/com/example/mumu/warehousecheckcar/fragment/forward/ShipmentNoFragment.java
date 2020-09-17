@@ -56,6 +56,7 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
 
     private int bas_transport_type;
     private ForwardingMsgFragment.CarMsg carMsg;
+    private String company;
 
     public static ShipmentNoFragment newInstance() {
         if (fragment == null) ;
@@ -81,6 +82,7 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
         myList.add("");
         bas_transport_type = getArguments().getInt("bas_transport_type", 0);
         carMsg = (ForwardingMsgFragment.CarMsg) getArguments().getSerializable("carMsg");
+        company = getArguments().getString("company");
     }
 
     @Override
@@ -163,6 +165,7 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
                     bundle.putInt("bas_transport_type", bas_transport_type);
                     bundle.putSerializable("carMsg", carMsg);
                     bundle.putStringArrayList("no", myList);
+                    bundle.putString("company", company);
                     Fragment fragment = ShipmentOutNoFragment.newInstance();
                     fragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();

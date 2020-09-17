@@ -73,6 +73,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
 
 
     private ForwardingMsgFragment.CarMsg carMsg;
+    private String company;
 
 
     public static ForwardingNoFragment newInstance() {
@@ -148,13 +149,14 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
         switch (eventBusMsg.getStatus()) {
             case 0x00:
                 ForwardingMsgFragment.CarMsg carMsg = (ForwardingMsgFragment.CarMsg) eventBusMsg.getPositionObj(0);
+                company = (String) eventBusMsg.getPositionObj(1);
                 if (carMsg != null)
                     this.carMsg = carMsg;
                 else {
                     this.carMsg = new ForwardingMsgFragment.CarMsg("", "");
                     showToast("车牌号为空");
                 }
-                transport_output_id = (int) eventBusMsg.getPositionObj(1);
+                transport_output_id = (int) eventBusMsg.getPositionObj(2);
                 break;
         }
     }
@@ -193,7 +195,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     if (scannerFlag)
                         disConnect2D();
                     scannerFlag = false;
-                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, nos, transport_output_id));
+                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, company, nos, transport_output_id, company));
                     Fragment fragment = ForwardingFragment.newInstance();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
