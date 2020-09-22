@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -140,11 +141,7 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imgbutton:
-                myList.add("");
-                mAdapter.select(myList.size() - 1);
-                mAdapter.setId(myList.size() - 1);
-                mAdapter.notifyDataSetChanged();
-                recyle.scrollToPosition(myList.size()-1);
+                addItem();
                 break;
             case R.id.button2:
                 Fragment fragment = OutApplyNewFragment.newInstance();
@@ -157,12 +154,29 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
         }
     }
 
+    private void addItem() {
+        for (int i = 0; i < myList.size(); i++) {
+            if (TextUtils.isEmpty(myList.get(i))) {
+                mAdapter.select(i);
+                mAdapter.setId(i);
+                mAdapter.notifyDataSetChanged();
+                recyle.scrollToPosition(i);
+                return;
+            }
+        }
+        myList.add("");
+        mAdapter.select(myList.size() - 1);
+        mAdapter.setId(myList.size() - 1);
+        mAdapter.notifyDataSetChanged();
+        recyle.scrollToPosition(myList.size() - 1);
+    }
+
     @Override
     public void codeResult(String code) {
         code = code.replaceAll(" ", "");
         int id = mAdapter.getId();
         myList.set(id, code);
-        mAdapter.notifyDataSetChanged();
+        addItem();
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {

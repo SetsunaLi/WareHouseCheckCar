@@ -34,17 +34,18 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
+import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
+import com.example.mumu.warehousecheckcar.entity.Power;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.out.Output;
 import com.example.mumu.warehousecheckcar.entity.out.OutputDetail;
 import com.example.mumu.warehousecheckcar.entity.out.OutputFlag;
-import com.example.mumu.warehousecheckcar.entity.Power;
-import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
@@ -84,8 +85,12 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     Button button2;
     @BindView(R.id.edit1)
     EditText edit1;
+    @BindView(R.id.text3)
+    TextView text3;
 
     private static OutApplyNewFragment fragment;
+
+
     public static OutApplyNewFragment newInstance() {
         if (fragment == null) ;
         fragment = new OutApplyNewFragment();
@@ -149,6 +154,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -192,6 +198,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
         epcList.clear();
         getEpcKey.clear();
         vatKey.clear();
+        text3.setText(String.valueOf(0));
     }
 
     public void downLoadData() {
@@ -234,6 +241,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                                         }
                                         if (!dataKey.contains(output.getApplyNo()))
                                             dataKey.add(output.getApplyNo());
+                                        text3.setText(String.valueOf(Integer.parseInt(text3.getText().toString()) + output.getCountOut()));
                                     }
                                     myList.addAll(response);
                                 }
@@ -275,6 +283,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
             }
             text1.setText(String.valueOf(0));
             text2.setText(String.valueOf(fatherNoList.size()));
+            text3.setText(String.valueOf(0));
             downLoadData();
         }
     }
@@ -335,7 +344,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
     }
 
     @Override

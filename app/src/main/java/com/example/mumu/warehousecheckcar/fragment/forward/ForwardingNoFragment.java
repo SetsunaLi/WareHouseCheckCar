@@ -231,6 +231,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
             int id = User.newInstance().getId();
             jsonObject.put("userId", id);
             jsonObject.put("carMsg", carMsg);
+            jsonObject.put("company", company);
             jsonObject.put("cc_transport_output_id", transport_output_id);
             jsonObject.put("status", 0);
             jsonObject.put("applyNo", nos);
