@@ -35,7 +35,7 @@
             android:layout_marginTop="18dp"
             android:completionThreshold="1"
             android:dropDownSelector="@color/colorDialogTitleBG"
-            android:hint="亲输入调入公司"
+            android:hint="请输入调入公司"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"

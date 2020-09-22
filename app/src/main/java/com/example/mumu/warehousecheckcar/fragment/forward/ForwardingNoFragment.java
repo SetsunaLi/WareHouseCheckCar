@@ -195,7 +195,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     if (scannerFlag)
                         disConnect2D();
                     scannerFlag = false;
-                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, company, nos, transport_output_id, company));
+                    EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, nos, transport_output_id, company));
                     Fragment fragment = ForwardingFragment.newInstance();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
