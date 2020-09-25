@@ -145,11 +145,7 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imgbutton:
-                myList.add("");
-                mAdapter.select(myList.size() - 1);
-                mAdapter.setId(myList.size() - 1);
-                mAdapter.notifyDataSetChanged();
-                recyle.scrollToPosition(myList.size() - 1);
+                addItem();
                 break;
             case R.id.button2:
                 mAdapter.select(-255);
@@ -179,6 +175,23 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
         }
     }
 
+    private void addItem() {
+        for (int i = 0; i < myList.size(); i++) {
+            if (TextUtils.isEmpty(myList.get(i))) {
+                mAdapter.select(i);
+                mAdapter.setId(i);
+                mAdapter.notifyDataSetChanged();
+                recyle.scrollToPosition(i);
+                return;
+            }
+        }
+        myList.add("");
+        mAdapter.select(myList.size() - 1);
+        mAdapter.setId(myList.size() - 1);
+        mAdapter.notifyDataSetChanged();
+        recyle.scrollToPosition(myList.size() - 1);
+    }
+
     @Override
     public void callback(byte[] bytes) {
         Message msg = scanResultHandler.obtainMessage();
@@ -192,7 +205,7 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
         code = code.replaceAll(" ", "");
         int id = mAdapter.getId();
         myList.set(id, code);
-        mAdapter.notifyDataSetChanged();
+        addItem();
     }
 
     @Override

@@ -176,11 +176,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imgbutton:
-                myList.add("");
-                mAdapter.select(myList.size() - 1);
-                mAdapter.setId(myList.size() - 1);
-                mAdapter.notifyDataSetChanged();
-                recyle.scrollToPosition(myList.size() - 1);
+                addItem();
                 break;
             case R.id.button1:
                 mAdapter.select(-255);
@@ -217,6 +213,23 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                 });
                 break;
         }
+    }
+
+    private void addItem() {
+        for (int i = 0; i < myList.size(); i++) {
+            if (TextUtils.isEmpty(myList.get(i))) {
+                mAdapter.select(i);
+                mAdapter.setId(i);
+                mAdapter.notifyDataSetChanged();
+                recyle.scrollToPosition(i);
+                return;
+            }
+        }
+        myList.add("");
+        mAdapter.select(myList.size() - 1);
+        mAdapter.setId(myList.size() - 1);
+        mAdapter.notifyDataSetChanged();
+        recyle.scrollToPosition(myList.size() - 1);
     }
 
     private void submit() {
@@ -297,7 +310,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
         code = code.replaceAll(" ", "");
         int id = mAdapter.getId();
         myList.set(id, code);
-        mAdapter.notifyDataSetChanged();
+        addItem();
     }
 
     @Override
