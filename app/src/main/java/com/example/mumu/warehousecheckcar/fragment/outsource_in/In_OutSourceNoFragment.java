@@ -239,7 +239,7 @@ public class In_OutSourceNoFragment extends BaseFragment implements RXCallback, 
         @Override
         public void convert(RecyclerHolder holder, String item, final int position) {
             final FixedEditText editNo = (FixedEditText) holder.getView(R.id.fixeedittext1);
-            editNo.setHint("请输入送货单号");
+            editNo.setHint("请扫描染厂付运单号");
             editNo.setTag(position);
             editNo.setText(item);
             if (position == this.position) {

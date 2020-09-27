@@ -511,7 +511,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                     }
                 });
                 checkBox.setChecked(item.isStutas());
-                holder.setText(R.id.text1, "送货单号：" + item.getTransNo());
+                holder.setText(R.id.text1, "送货单号：" + item.getDeliverNo());
                 holder.setText(R.id.item1, item.getCust_po());
                 holder.setText(R.id.item2, item.getProduct_no());
                 holder.setText(R.id.item3, item.getProduct_name());
