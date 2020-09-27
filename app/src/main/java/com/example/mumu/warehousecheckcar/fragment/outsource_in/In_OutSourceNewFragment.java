@@ -358,7 +358,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 if (group.getOutCount() == group.getScanCount()) {
                     ArrayList<Outsource> outsources = new ArrayList<>();
                     for (Outsource outsource : dataList) {
-                        if (outsource.isFlag()) {
+                        if (!outsource.isFlag()) {
                             outsources.add(outsource);
                             epcs.add(outsource.getEpc());
                         }
@@ -371,7 +371,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
 
             }
         }
-        if (flag) {
+        if (flag && list.size() > 0) {
             uploadDialog.lockView();
             scanResultHandler.postDelayed(r, TIME);
             for (List<Outsource> outsources : list) {
@@ -459,7 +459,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 e.printStackTrace();
             }*/
         } else
-            showConfirmDialog("上传数据中扫描数量必须与发运数量相同");
+            showConfirmDialog("至少上传一条有效单号数据，且扫描数量必须与发运数量相同");
     }
 
     @Override
@@ -511,7 +511,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                     }
                 });
                 checkBox.setChecked(item.isStutas());
-                holder.setText(R.id.text1, "送货单号：" + item.getDeliverNo());
+                holder.setText(R.id.text1, "送货单号：" + item.getTransNo());
                 holder.setText(R.id.item1, item.getCust_po());
                 holder.setText(R.id.item2, item.getProduct_no());
                 holder.setText(R.id.item3, item.getProduct_name());
