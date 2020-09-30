@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">仓库APP</string>
     <string name="title_activity_main2">仓库APP</string>
-    <string name="app_version">20.9.25</string>
+    <string name="app_version">20.9.30</string>
     <string name="app_download_url">warehouse.apk</string>
 
 
@@ -46,6 +46,7 @@
     <string name="btn_click18">查布接收</string>
     <string name="btn_click19">返修入仓</string>
     <string name="btn_click20">委外入仓</string>
+    <string name="btn_click21">特殊委外入仓</string>
     <string name="btn_yes">确认</string>
     <string name="btn_no">取消</string>
 

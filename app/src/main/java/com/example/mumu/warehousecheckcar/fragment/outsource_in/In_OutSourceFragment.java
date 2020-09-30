@@ -274,7 +274,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
 
                     @Override
                     public void onResponse(BaseReturnArray<Outsource> returnArray) {
-                        if (returnArray != null) {
+                        if (returnArray != null && returnArray.getData() != null) {
                             for (Outsource outsource : returnArray.getData()) {
                                 if (!TextUtils.isEmpty(outsource.getVat_no())) {
                                     if (myList.size() == 0) {
@@ -373,7 +373,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JSONObject jsonObject2 = new JSONObject();
+ /*       JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("userId", Constant.USERNAME);
         jsonObject2.put("password", Constant.PRASSWORD);
         jsonObject2.put("epcs", epcCheck);
@@ -414,7 +414,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
             }, json2);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Outsource> {

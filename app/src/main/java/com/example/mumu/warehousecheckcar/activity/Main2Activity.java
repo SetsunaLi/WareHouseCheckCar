@@ -58,6 +58,7 @@ import com.example.mumu.warehousecheckcar.fragment.in.ReturnGoodsInNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyDetailFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNewFragment;
 import com.example.mumu.warehousecheckcar.fragment.out.OutApplyNoFragment;
+import com.example.mumu.warehousecheckcar.fragment.outsource_in.In_OutSourceFragment;
 import com.example.mumu.warehousecheckcar.fragment.outsource_in.In_OutSourceNoFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayCarrierFragment;
 import com.example.mumu.warehousecheckcar.fragment.putway.PutawayFragment;
@@ -328,6 +329,9 @@ public class Main2Activity extends AppCompatActivity
             case 20:
                 fragment = In_OutSourceNoFragment.newInstance();
                 break;
+            case 21:
+                fragment = In_OutSourceFragment.newInstance();
+                break;
             default:
                 fragment = AboutFragment.newInstance();
                 break;
@@ -482,6 +486,13 @@ public class Main2Activity extends AppCompatActivity
      */
     public void click20(View view) {
         selectItem(20);
+    }
+
+    /**
+     * 特殊委外入库
+     */
+    public void click21(View view) {
+        selectItem(21);
     }
 
     //返回键监听
