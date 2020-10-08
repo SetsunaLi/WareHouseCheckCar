@@ -11,13 +11,13 @@ import com.xdl2d.scanner.callback.RXCallback;
  */
 public class PdaController {
     public static RFIDReaderHelper rfidHandler;
-    private boolean isPhone = false;
+    private boolean isPDA = false;
 
     public static RFIDReaderHelper getRfidHandler() {
         return rfidHandler;
     }
 
-    public static boolean initRFID(UHFCallbackLiatener callbackLiatener) {
+    public static boolean  initRFID(UHFCallbackLiatener callbackLiatener) {
         try {
             if (App.isPDA) {
                 RFID_2DHander.getInstance().connectReader();
@@ -89,10 +89,12 @@ public class PdaController {
      * @return 是否是手机
      */
     public boolean getIsPhone() {
-        isPhone = initRFID(null);
-        if (!isPhone) {
+        isPDA = initRFID(null);
+        if (isPDA) {
             disRFID();
         }
-        return isPhone;
+        return isPDA;
+//                return false;
+
     }
 }

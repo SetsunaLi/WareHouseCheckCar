@@ -54,7 +54,7 @@ public class RFID_2DHander {
     /**
      * 连接RFID读写器
      */
-    public boolean connectReader() {
+    public boolean connectReader() throws Exception{
         if (connectRFID == null)
             connectRFID = new ReaderConnector();
         if (!connectRFID.isConnected())
@@ -68,7 +68,7 @@ public class RFID_2DHander {
      * true为断开连接
      * 否则为失败，有可能ModuleConnector为空
      */
-    public boolean disConnectReader() {
+    public boolean disConnectReader() throws Exception{
         if (connectRFID != null&&connectRFID.isConnected()) {
             connectRFID.disConnect();
             return true;

@@ -215,6 +215,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                             outsource.setScan(true);
                             outsource.setFlag(true);
                             iterator.remove();
+                            break;
                         } else
                             group = null;
                     }
@@ -335,13 +336,16 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
 //                rfidResult("");
                 break;
             case R.id.button2:
-
+              /*  rfidResult("30B5A5AF6400004000002337");
+                rfidResult("30B5A5AF6400004000002345");
+                rfidResult("30A5A5AF6400004000002407");
+                rfidResult("30A5A5AF6400004000002371");
+                rfidResult("30B5A5AF6400004000002459");*/
                 showUploadDialog("是否确认入库");
                 setUploadYesClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         submit();
-
                     }
                 });
                 break;
@@ -349,7 +353,6 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
     }
 
     private void submit() {
-        JSONObject jsonObject = new JSONObject();
         ArrayList<List<Outsource>> list = new ArrayList<>();
         ArrayList<String> epcs = new ArrayList<>();
         boolean flag = true;
@@ -358,7 +361,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 if (group.getOutCount() == group.getScanCount()) {
                     ArrayList<Outsource> outsources = new ArrayList<>();
                     for (Outsource outsource : dataList) {
-                        if (!outsource.isFlag()) {
+                        if (outsource.isFlag()) {
                             outsources.add(outsource);
                             epcs.add(outsource.getEpc());
                         }
@@ -375,6 +378,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
             uploadDialog.lockView();
             scanResultHandler.postDelayed(r, TIME);
             for (List<Outsource> outsources : list) {
+                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", User.newInstance().getId());
                 jsonObject.put("data", outsources);
                 final String json = jsonObject.toJSONString();
