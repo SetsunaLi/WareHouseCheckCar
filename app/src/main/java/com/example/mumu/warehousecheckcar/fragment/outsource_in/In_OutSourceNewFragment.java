@@ -361,7 +361,8 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 if (group.getOutCount() == group.getScanCount()) {
                     ArrayList<Outsource> outsources = new ArrayList<>();
                     for (Outsource outsource : dataList) {
-                        if (outsource.isFlag()) {
+                        if (outsource.isFlag()&&outsource.getVat_no().equals(group.getVat_no())&&outsource.getDeliverNo().equals(group.getDeliverNo())
+                        &&outsource.getTransNo().equals(group.getTransNo())) {
                             outsources.add(outsource);
                             epcs.add(outsource.getEpc());
                         }
