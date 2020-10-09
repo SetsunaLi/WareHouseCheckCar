@@ -14,6 +14,9 @@ android {
         versionName "19.10.09"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+        ndk {
+            abiFilters 'armeabi' ,'x86', 'armeabi-v7a', 'x86_64','arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -22,6 +25,8 @@ android {
         }
 
     }
+
+
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']

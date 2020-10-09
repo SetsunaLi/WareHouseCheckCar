@@ -54,12 +54,12 @@ public class RFID_2DHander {
     /**
      * 连接RFID读写器
      */
-    public boolean connectReader() throws Exception{
+    public boolean connectReader() {
         if (connectRFID == null)
             connectRFID = new ReaderConnector();
         if (!connectRFID.isConnected())
             //连接指定串口，返回true表示成功，false失败
-        return connectRFID.connectCom("dev/ttyS4", 115200);
+            return connectRFID.connectCom("dev/ttyS4", 115200);
         return true;
     }
 
@@ -68,8 +68,8 @@ public class RFID_2DHander {
      * true为断开连接
      * 否则为失败，有可能ModuleConnector为空
      */
-    public boolean disConnectReader() throws Exception{
-        if (connectRFID != null&&connectRFID.isConnected()) {
+    public boolean disConnectReader() {
+        if (connectRFID != null && connectRFID.isConnected()) {
             connectRFID.disConnect();
             return true;
         }

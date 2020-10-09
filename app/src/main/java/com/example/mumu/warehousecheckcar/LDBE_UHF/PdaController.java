@@ -20,12 +20,14 @@ public class PdaController {
     public static boolean  initRFID(UHFCallbackLiatener callbackLiatener) {
         try {
             if (App.isPDA) {
-                RFID_2DHander.getInstance().connectReader();
-                boolean flag = RFID_2DHander.getInstance().on_RFID();
-                rfidHandler = RFID_2DHander.getInstance().getRFIDReader();
-                rfidHandler.registerObserver(UHFResult.getInstance());
-                UHFResult.getInstance().setCallbackLiatener(callbackLiatener);
-                setPrower(App.PROWER);
+                boolean flag = false;
+                if (RFID_2DHander.getInstance().connectReader()) {
+                    flag = RFID_2DHander.getInstance().on_RFID();
+                    rfidHandler = RFID_2DHander.getInstance().getRFIDReader();
+                    rfidHandler.registerObserver(UHFResult.getInstance());
+                    UHFResult.getInstance().setCallbackLiatener(callbackLiatener);
+                    setPrower(App.PROWER);
+                }
                 return flag;
             } else
                 return false;
@@ -37,7 +39,6 @@ public class PdaController {
     public static boolean disRFID() {
         try {
             if (App.isPDA) {
-
                 boolean flag = RFID_2DHander.getInstance().off_RFID();
                 if (rfidHandler != null) {
                     rfidHandler.unRegisterObserver(UHFResult.getInstance());
@@ -94,7 +95,5 @@ public class PdaController {
             disRFID();
         }
         return isPDA;
-//                return false;
-
     }
 }

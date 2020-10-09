@@ -191,20 +191,10 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
 
     @Override
     public void rfidResult(String epc) {
-//        epc="30A5A5AF6400004000000633";
         if (dataEpcs.contains(epc) && !epcs.contains(epc)) {
             epcs.add(epc);
             for (Outsource outsource : dataList) {
                 if (outsource.getEpc().equals(epc)) {
-                    /*for (OutsourceGroup group : myList) {
-                        if (group.getDeliverNo().equals(outsource.getDeliverNo())) {
-                            group.addScanCount();
-                            group.setAllScanWeight(ArithUtil.add(group.getAllScanWeight(), outsource.getWeight()));
-                            outsource.setScan(true);
-                            outsource.setFlag(true);
-
-                        }
-                    }*/
                     OutsourceGroup group = null;
                     Iterator<OutsourceGroup> iterator = myList.iterator();
                     while (iterator.hasNext()) {
@@ -333,7 +323,6 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 clearData();
                 mAdapter.notifyDataSetChanged();
                 download();
-//                rfidResult("");
                 break;
             case R.id.button2:
               /*  rfidResult("30B5A5AF6400004000002337");
