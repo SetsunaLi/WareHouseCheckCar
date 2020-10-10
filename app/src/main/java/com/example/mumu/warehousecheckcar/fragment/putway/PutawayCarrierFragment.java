@@ -252,7 +252,7 @@ public class PutawayCarrierFragment extends BaseFragment implements UHFCallbackL
                                         transaction.show(fragment);
                                         transaction.commit();
                                     } else {
-                                        showToast("库位无效");
+                                        showConfirmDialog("库位无效");
                                     }
                                 } catch (Exception e) {
 
