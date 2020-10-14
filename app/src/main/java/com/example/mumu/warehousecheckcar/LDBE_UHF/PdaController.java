@@ -1,9 +1,14 @@
 package com.example.mumu.warehousecheckcar.LDBE_UHF;
 
+import android.os.Handler;
+import android.util.Log;
+
 import com.example.mumu.warehousecheckcar.application.App;
 import com.rfid.RFIDReaderHelper;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
+
+import java.util.logging.LogRecord;
 
 /***
  *created by 手持模块控制器
@@ -17,7 +22,19 @@ public class PdaController {
         return rfidHandler;
     }
 
-    public static boolean  initRFID(UHFCallbackLiatener callbackLiatener) {
+    private static Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                int prower = setPrower(App.PROWER);
+                Log.i("prower", String.valueOf(prower));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    public static boolean initRFID(UHFCallbackLiatener callbackLiatener) {
         try {
             if (App.isPDA) {
                 boolean flag = false;
@@ -26,7 +43,7 @@ public class PdaController {
                     rfidHandler = RFID_2DHander.getInstance().getRFIDReader();
                     rfidHandler.registerObserver(UHFResult.getInstance());
                     UHFResult.getInstance().setCallbackLiatener(callbackLiatener);
-                    setPrower(App.PROWER);
+                    new Handler().postDelayed(runnable, 200);
                 }
                 return flag;
             } else
@@ -96,4 +113,6 @@ public class PdaController {
         }
         return isPDA;
     }
+
+
 }
