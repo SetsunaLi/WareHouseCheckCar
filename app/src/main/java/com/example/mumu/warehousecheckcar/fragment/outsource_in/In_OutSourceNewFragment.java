@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
@@ -33,9 +34,9 @@ import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.out.Outsource;
 import com.example.mumu.warehousecheckcar.entity.out.OutsourceGroup;
-import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
@@ -50,11 +51,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.ConnectException;
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,6 +78,10 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
     Button button1;
     @BindView(R.id.button2)
     Button button2;
+    @BindView(R.id.text1)
+    TextView text1;
+    @BindView(R.id.text2)
+    TextView text2;
 
     public static In_OutSourceNewFragment newInstance() {
         if (fragment == null) ;
@@ -108,6 +113,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
     private ArrayList<String> dataEpcs;
 
     private ScanResultHandler scanResultHandler;
+    private int scanCount = 0, outCount = 0;
 
     @Nullable
     @Override
@@ -163,6 +169,11 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                             group.setAllScanWeight(ArithUtil.add(group.getAllScanWeight(), outsource.getWeight()));
                         }
                     }
+                    scanCount = 0;
+                    for (OutsourceGroup og : myList) {
+                        scanCount = scanCount + og.getScanCount();
+                    }
+                    text1.setText(String.valueOf(scanCount));
                     mAdapter.notifyDataSetChanged();
                     initRFID();
                     break;
@@ -175,6 +186,10 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
         epcs.clear();
         dataNos.clear();
         dataEpcs.clear();
+        scanCount = 0;
+        outCount = 0;
+        text1.setText(String.valueOf(scanCount));
+        text2.setText(String.valueOf(outCount));
     }
 
     private void initRFID() {
@@ -215,6 +230,11 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                     break;
                 }
             }
+            scanCount = 0;
+            for (OutsourceGroup og : myList) {
+                scanCount = scanCount + og.getScanCount();
+            }
+            text1.setText(String.valueOf(scanCount));
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -269,6 +289,11 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                                     }
                                 }
                             }
+                            outCount = 0;
+                            for (OutsourceGroup og : myList) {
+                                outCount = outCount + og.getOutCount();
+                            }
+                            text2.setText(String.valueOf(outCount));
                             mAdapter.notifyDataSetChanged();
                         }
                         showToast(jsonObject.getString("message"));
@@ -310,7 +335,6 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         disRFID();
         EventBus.getDefault().post(new EventBusMsg(0x02));
         EventBus.getDefault().unregister(this);
@@ -350,8 +374,8 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 if (group.getOutCount() == group.getScanCount()) {
                     ArrayList<Outsource> outsources = new ArrayList<>();
                     for (Outsource outsource : dataList) {
-                        if (outsource.isFlag()&&outsource.getVat_no().equals(group.getVat_no())&&outsource.getDeliverNo().equals(group.getDeliverNo())
-                        &&outsource.getTransNo().equals(group.getTransNo())) {
+                        if (outsource.isFlag() && outsource.getVat_no().equals(group.getVat_no()) && outsource.getDeliverNo().equals(group.getDeliverNo())
+                                && outsource.getTransNo().equals(group.getTransNo())) {
                             outsources.add(outsource);
                             epcs.add(outsource.getEpc());
                         }
@@ -368,7 +392,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
             uploadDialog.lockView();
             scanResultHandler.postDelayed(r, TIME);
             for (List<Outsource> outsources : list) {
-                 JSONObject jsonObject = new JSONObject();
+                JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", User.newInstance().getId());
                 jsonObject.put("data", outsources);
                 final String json = jsonObject.toJSONString();
@@ -506,21 +530,21 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 });
                 checkBox.setChecked(item.isStutas());
                 holder.setText(R.id.text1, "送货单号：" + item.getDeliverNo());
-                holder.setText(R.id.item1, item.getCust_po());
-                holder.setText(R.id.item2, item.getProduct_no());
-                holder.setText(R.id.item3, item.getProduct_name());
-                holder.setText(R.id.item4, item.getVat_no());
-                holder.setText(R.id.item5, item.getColor_name());
-                holder.setText(R.id.item6, item.getSel_color());
-                holder.setText(R.id.item7, item.getColor_code());
-                holder.setText(R.id.item8, item.getWidth_side());
-                holder.setText(R.id.item9, String.valueOf(item.getAllWeightF()));
-                holder.setText(R.id.item10, String.valueOf(item.getAllWeight()));
-                holder.setText(R.id.item11, String.valueOf(item.getAllScanWeight()));
-                holder.setText(R.id.item12, String.valueOf(item.getWeight_zg()));
-                holder.setText(R.id.item13, String.valueOf(item.getWeight_kj()));
-                holder.setText(R.id.item14, String.valueOf(item.getScanCount()));
-                holder.setText(R.id.item15, String.valueOf(item.getOutCount()));
+                holder.setText(R.id.item1, item.getVat_no());
+                holder.setText(R.id.item2, String.valueOf(item.getScanCount()));
+                holder.setText(R.id.item3, String.valueOf(item.getOutCount()));
+                holder.setText(R.id.item4, item.getColor_code());
+                holder.setText(R.id.item5, item.getSel_color());
+                holder.setText(R.id.item6, item.getColor_name());
+                holder.setText(R.id.item7, item.getProduct_name());
+                holder.setText(R.id.item8, item.getProduct_no());
+                holder.setText(R.id.item9, item.getWidth_side());
+                holder.setText(R.id.item10, String.valueOf(item.getAllScanWeight()));
+                holder.setText(R.id.item11, String.valueOf(item.getAllWeight()));
+                holder.setText(R.id.item12, String.valueOf(item.getAllWeightF()));
+                holder.setText(R.id.item13, String.valueOf(item.getWeight_zg()));
+                holder.setText(R.id.item14, String.valueOf(item.getWeight_kj()));
+                holder.setText(R.id.item15, item.getCust_po());
                 LinearLayout layout = holder.getView(R.id.layout1);
                 layout.setBackgroundColor(item.getOutCount() == item.getScanCount() ? getResources().getColor(R.color.colorDialogTitleBG) : getResources().getColor(R.color.colorZERO));
             }

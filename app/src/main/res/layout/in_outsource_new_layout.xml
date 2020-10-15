@@ -15,12 +15,49 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </HorizontalScrollView>
 
+    </LinearLayout>
+
+    <View style="@style/view_item_bottom" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="扫描总数量：" />
+
+        <TextView
+            android:id="@+id/text1"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical" />
+
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发运总数量：" />
+
+        <TextView
+            android:id="@+id/text2"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical" />
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />

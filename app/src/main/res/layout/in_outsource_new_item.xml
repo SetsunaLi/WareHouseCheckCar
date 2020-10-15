@@ -50,7 +50,55 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="客户PO" />
+            android:text="缸号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="扫描数量" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="发运数量" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="染厂色号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="销售色号" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="颜色" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="布种" />
 
         <View style="@style/view_item_mid" />
 
@@ -67,46 +115,6 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="布种" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="缸号" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="颜色" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="销售色号" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="染厂色号" />
-
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
             android:text="要求规格" />
 
         <View style="@style/view_item_mid" />
@@ -115,7 +123,7 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="总胚重" />
+            android:text="扫描成品重" />
 
         <View style="@style/view_item_mid" />
 
@@ -131,7 +139,7 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="扫描成品重" />
+            android:text="总胚重" />
 
         <View style="@style/view_item_mid" />
 
@@ -155,15 +163,8 @@
             style="@style/text_item"
             android:layout_width="100dip"
             android:layout_height="match_parent"
-            android:text="扫描数量" />
+            android:text="客户PO" />
 
-        <View style="@style/view_item_mid" />
-
-        <TextView
-            style="@style/text_item"
-            android:layout_width="100dip"
-            android:layout_height="match_parent"
-            android:text="发运数量" />
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />
@@ -187,7 +188,7 @@
             android:id="@+id/item2"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
 
         <View style="@style/view_item_mid" />
@@ -204,7 +205,7 @@
             android:id="@+id/item4"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -212,7 +213,7 @@
             android:id="@+id/item5"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -220,7 +221,7 @@
             android:id="@+id/item6"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -228,7 +229,7 @@
             android:id="@+id/item7"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -236,7 +237,7 @@
             android:id="@+id/item8"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -244,7 +245,7 @@
             android:id="@+id/item9"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -252,7 +253,7 @@
             android:id="@+id/item10"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -260,7 +261,7 @@
             android:id="@+id/item11"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -284,7 +285,7 @@
             android:id="@+id/item14"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View style="@style/view_item_mid" />
 
@@ -292,8 +293,7 @@
             android:id="@+id/item15"
             style="@style/text_item"
             android:layout_width="100dip"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />
