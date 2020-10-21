@@ -24,6 +24,9 @@ public final class Constant {
     public static final String CLOUD_PORT = "8983";
     public static final String USERNAME = "adminjiaqian";
     public static final String PRASSWORD = "123456";
+
+    //LogFileName
+    public static final String LOG_FILENAME = "/ChenCunLog";
     /**
      * SharedPreference
      */
