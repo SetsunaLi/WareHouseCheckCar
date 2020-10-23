@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
 
@@ -206,7 +207,7 @@ public class CarPutawayFragment extends BaseFragment {
                     obj.put("assistant", assistantID);
                     final String json = JSON.toJSONString(obj);
                     try {
-                        AppLog.write(getActivity(), "carputaway", json, AppLog.TYPE_INFO);
+                        LogUtil.i(getResources().getString(R.string.log_check), json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -216,9 +217,10 @@ public class CarPutawayFragment extends BaseFragment {
                             public void onError(Request request, Exception e) {
                                 if (e instanceof ConnectException)
                                     showConfirmDialog("链接超时");
-                                if (App.LOGCAT_SWITCH) {
-                                    Log.i(TAG, "postInventory;" + e.getMessage());
-                                    showToast("上传信息失败");
+                                try {
+                                    LogUtil.e(getResources().getString(R.string.log_carput_result), e.getMessage(), e.getCause());
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
                                 }
                             }
 
@@ -226,7 +228,7 @@ public class CarPutawayFragment extends BaseFragment {
                             public void onResponse(JSONObject response) {
                                 try {
                                     try {
-                                        AppLog.write(getActivity(), "carputaway", User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                        LogUtil.i(getResources().getString(R.string.log_check_result), "userId:" + User.newInstance().getId() + response.toString());
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }

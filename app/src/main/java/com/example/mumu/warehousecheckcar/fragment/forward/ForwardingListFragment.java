@@ -26,6 +26,7 @@ import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -216,7 +217,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                 jsonObject.put("cc_transport_output_id", item.getId());
                                 final String json = jsonObject.toJSONString();
                                 try {
-                                    AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
+                                    LogUtil.i(getResources().getString(R.string.log_forwarding), json);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -225,15 +226,17 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                     public void onError(Request request, Exception e) {
                                         if (e instanceof ConnectException)
                                             showConfirmDialog("链接超时");
-                                        if (App.LOGCAT_SWITCH) {
-                                            showToast("上传信息失败");
+                                        try {
+                                            LogUtil.e(getResources().getString(R.string.log_forwarding_result), e.getMessage(), e.getCause());
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
                                         }
                                     }
 
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         try {
-                                            AppLog.write(context, "finishF", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                            LogUtil.i(getResources().getString(R.string.log_forwarding_result), "userId:" + User.newInstance().getId() + response.toString());
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }

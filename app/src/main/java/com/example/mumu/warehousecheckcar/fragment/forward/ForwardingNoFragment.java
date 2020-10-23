@@ -36,6 +36,7 @@ import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
@@ -251,7 +252,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
             jsonObject.put("data", new ArrayList<>());
             String json = jsonObject.toJSONString();
             try {
-                AppLog.write(getActivity(), "forwarding", json, AppLog.TYPE_INFO);
+                LogUtil.i(getResources().getString(R.string.log_forwarding_car), json);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -261,16 +262,17 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
                             showConfirmDialog("链接超时");
-                        if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "postInventory;" + e.getMessage());
-                            showToast("上传信息失败");
+                        try {
+                            LogUtil.e(getResources().getString(R.string.log_forwarding_car_result), e.getMessage(), e.getCause());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onResponse(BaseReturnObject<JSONObject> response) {
                         try {
-                            AppLog.write(getActivity(), "forwarding", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                            LogUtil.i(getResources().getString(R.string.log_forwarding_car_result), "userId:" + User.newInstance().getId() + response.toString());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

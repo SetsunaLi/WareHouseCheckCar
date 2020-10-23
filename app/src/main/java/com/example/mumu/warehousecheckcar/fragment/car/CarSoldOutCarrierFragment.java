@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -255,7 +256,7 @@ public class CarSoldOutCarrierFragment extends BaseFragment implements UHFCallba
                 jsonObject.put("pallet",edittext1.getText());
                 final  String json = jsonObject.toJSONString();
                 try {
-                    AppLog.write(getActivity(),"carsoldout",json,AppLog.TYPE_INFO);
+                    LogUtil.i(getResources().getString(R.string.log_cardown), json);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -265,14 +266,16 @@ public class CarSoldOutCarrierFragment extends BaseFragment implements UHFCallba
                         public void onError(Request request, Exception e) {
                             if (e instanceof ConnectException)
                                 showConfirmDialog("链接超时");
-                            if (App.LOGCAT_SWITCH) {
-                                Toast.makeText(getActivity(),"叉车下架："+e.getMessage(), Toast.LENGTH_LONG).show();
+                            try {
+                                LogUtil.e(getResources().getString(R.string.log_cardown_result), e.getMessage(), e.getCause());
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
                             }
                         }
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                AppLog.write(getActivity(), "carsoldout", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                LogUtil.i(getResources().getString(R.string.log_cardown_result), "userId:" + User.newInstance().getId() + response.toString());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

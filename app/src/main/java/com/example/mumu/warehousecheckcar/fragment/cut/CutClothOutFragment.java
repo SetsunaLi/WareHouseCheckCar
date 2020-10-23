@@ -51,6 +51,7 @@ import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.service.BluetoothLeService;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 import com.xdl2d.scanner.callback.RXCallback;
 
@@ -322,21 +323,27 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
             jsonObject.put("data", arrayList);
             final String json = jsonObject.toJSONString();
             try {
+                LogUtil.i(getResources().getString(R.string.log_cut_out), json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cutOut/postCutOut", new OkHttpClientManager.ResultCallback<BaseReturn>() {
                     @Override
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
                             showConfirmDialog("链接超时");
-                        if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "postInventory;" + e.getMessage());
-                            Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        try {
+                            LogUtil.e(getResources().getString(R.string.log_cut_out_result), e.getMessage(), e.getCause());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onResponse(BaseReturn response) {
                         try {
-                            AppLog.write(getActivity(), "cutout", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                            LogUtil.i(getResources().getString(R.string.log_cut_out_result), "userId:" + User.newInstance().getId() + response.toString());
                             uploadDialog.openView();
                             hideUploadDialog();
                             scanResultHandler.removeCallbacks(r);

@@ -37,6 +37,7 @@ import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
@@ -251,7 +252,7 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                             for (ArrayList<RetIn> retInList : allList) {
                                 final String json = JSONObject.toJSONString(retInList);
                                 try {
-                                    AppLog.write(getActivity(), "returnIn", json, AppLog.TYPE_INFO);
+                                    LogUtil.i(getResources().getString(R.string.log_return_in), json);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -261,16 +262,17 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                                         public void onError(Request request, Exception e) {
                                             if (e instanceof ConnectException)
                                                 showConfirmDialog("链接超时");
-                                            if (App.LOGCAT_SWITCH) {
-                                                Log.i(TAG, "postInventory;" + e.getMessage());
-                                                showToast("上传信息失败");
+                                            try {
+                                                LogUtil.e(getResources().getString(R.string.log_return_in_result), e.getMessage(), e.getCause());
+                                            } catch (IOException ex) {
+                                                ex.printStackTrace();
                                             }
                                         }
 
                                         @Override
                                         public void onResponse(JSONObject response) {
                                             try {
-                                                AppLog.write(getActivity(), "returnIn", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                                LogUtil.i(getResources().getString(R.string.log_return_in_result), "userId:" + User.newInstance().getId() + response.toString());
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             }

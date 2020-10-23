@@ -37,6 +37,7 @@ import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -186,7 +187,7 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
                         jsonObject.put("pallets", dataKEY);
                         final String json = jsonObject.toString();
                         try {
-                            AppLog.write(getActivity(), "emptyshelf", json, AppLog.TYPE_INFO);
+                            LogUtil.i(getResources().getString(R.string.log_emp_shelf), json);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -196,15 +197,17 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
                                 public void onError(Request request, Exception e) {
                                     if (e instanceof ConnectException)
                                         showConfirmDialog("链接超时");
-                                    if (App.LOGCAT_SWITCH) {
-                                        Log.i(TAG, "arrangePallets;" + e.getMessage());
+                                    try {
+                                        LogUtil.e(getResources().getString(R.string.log_emp_shelf_result), e.getMessage(), e.getCause());
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
                                     }
                                 }
 
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        AppLog.write(getActivity(), "emptyshelf", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                        LogUtil.i(getResources().getString(R.string.log_emp_shelf_result), "userId:" + User.newInstance().getId() + response.toString());
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }

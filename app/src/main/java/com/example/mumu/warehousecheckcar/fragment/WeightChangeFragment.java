@@ -38,6 +38,7 @@ import com.example.mumu.warehousecheckcar.entity.check.CheckWeight;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -258,7 +259,7 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
                 jsonObject.put("userId", User.newInstance().getId());
                 final String json = JSON.toJSONString(jsonObject);
                 try {
-                    AppLog.write(getActivity(), "weightc", json, AppLog.TYPE_INFO);
+                    LogUtil.i(getResources().getString(R.string.log_weight_change), json);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -268,9 +269,10 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
                         public void onError(Request request, Exception e) {
                             if (e instanceof ConnectException)
                                 showConfirmDialog("链接超时");
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "postInventory;" + e.getMessage());
-                                showToast("上传信息失败");
+                            try {
+                                LogUtil.e(getResources().getString(R.string.log_weight_change_result), e.getMessage(), e.getCause());
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
                             }
                         }
 
@@ -278,7 +280,7 @@ public class WeightChangeFragment extends BaseFragment implements UHFCallbackLia
                         public void onResponse(JSONObject response) {
                             try {
                                 try {
-                                    AppLog.write(getActivity(), "weightc", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                    LogUtil.i(getResources().getString(R.string.log_weight_change_result), "userId:" + User.newInstance().getId() + response.toString());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

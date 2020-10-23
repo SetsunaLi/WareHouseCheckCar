@@ -37,6 +37,7 @@ import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.example.mumu.warehousecheckcar.zxing.CaptureActivity;
 import com.squareup.okhttp.Request;
@@ -224,7 +225,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
             jsonObject.put("userId", User.newInstance().getId());
             final String json = jsonObject.toJSONString();
             try {
-                AppLog.write(getActivity(), "expressBoundOutNo", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
+                LogUtil.i(getResources().getString(R.string.log_exp_binding), json);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -234,15 +235,17 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
                             showConfirmDialog("链接超时");
-                        if (App.LOGCAT_SWITCH) {
-                            Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        try {
+                            LogUtil.e(getResources().getString(R.string.log_exp_binding_result), e.getMessage(), e.getCause());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onResponse(BaseReturn response) {
                         try {
-                            AppLog.write(getActivity(), "expressBoundOutNo", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                            LogUtil.i(getResources().getString(R.string.log_exp_binding_result), "userId:" + User.newInstance().getId() + response.toString());
                             uploadDialog.openView();
                             hideUploadDialog();
                             scanResultHandler.removeCallbacks(r);

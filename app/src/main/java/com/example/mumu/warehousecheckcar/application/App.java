@@ -10,6 +10,7 @@ import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.in.Input;
 import com.example.mumu.warehousecheckcar.entity.out.OutCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.out.Output;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class App extends Application {
         INSTANCE = this;
         Sound.init(getContext());
         isPDA = new PdaController().getIsPhone();
-
+        LogUtil.init();
     }
 
     public  static final boolean APPLOGGER=true;

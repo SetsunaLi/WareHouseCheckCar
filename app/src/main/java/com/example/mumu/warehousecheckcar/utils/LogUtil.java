@@ -3,6 +3,7 @@ package com.example.mumu.warehousecheckcar.utils;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by WuXiaolong
@@ -33,48 +34,48 @@ public class LogUtil {
         LogUtil.log = log;
     }
 
-    public static void i(String msg) {
+    public static void i(String msg) throws IOException {
         i(tag, msg);
     }
 
-    public static void i(String tag, String msg) {
+    public static void i(String tag, String msg) throws IOException {
         if (log) {
             Log.i(tag, msg);
             saveToLocal(tag, msg);
         }
     }
 
-    public static void d(String msg) {
+    public static void d(String msg) throws IOException {
         d(tag, msg);
     }
 
-    public static void d(String tag, String msg) {
+    public static void d(String tag, String msg) throws IOException {
         if (log) {
             Log.d(tag, msg);
             saveToLocal(tag, msg);
         }
     }
 
-    public static void w(String msg) {
+    public static void w(String msg) throws IOException {
         w(tag, msg);
     }
 
-    public static void w(String tag, String msg) {
+    public static void w(String tag, String msg) throws IOException {
         w(tag, msg, null);
     }
 
-    public static void w(String tag, String msg, Throwable t) {
+    public static void w(String tag, String msg, Throwable t) throws IOException {
         if (log) {
             Log.w(tag, msg, t);
             saveToLocal(tag, msg);
         }
     }
 
-    public static void v(String msg) {
+    public static void v(String msg) throws IOException {
         v(tag, msg);
     }
 
-    public static void v(String tag, String msg) {
+    public static void v(String tag, String msg) throws IOException {
         if (log) {
             Log.v(tag, msg);
             saveToLocal(tag, msg);
@@ -89,18 +90,18 @@ public class LogUtil {
         Log.e(tag, msg);
     }
 
-    public static void e(String tag, String msg, Throwable t) {
+    public static void e(String tag, String msg, Throwable t) throws IOException {
         Log.e(tag, msg, t);
         saveToLocal(tag, msg);
     }
 
-    private static void saveToLocal(String tag, String content) {
+    private static void saveToLocal(String tag, String content) throws IOException {
         if (toLocal) {
             writeToLocal(tag, content);
         }
     }
 
-    private static void writeToLocal(String tag, String content) {
+    private static void writeToLocal(String tag, String content) throws IOException {
         String time = DateUtil.currentTime();
         String date = DateUtil.currentDate();
         String log = "-----Log Begin-----\n" +

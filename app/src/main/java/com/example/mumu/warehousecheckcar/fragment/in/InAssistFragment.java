@@ -37,6 +37,7 @@ import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -243,7 +244,7 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
                             jsonObject.put("data", jsocList);
                             final String json = JSON.toJSONString(jsonObject);
                             try {
-                                AppLog.write(getActivity(), "putaway", json, AppLog.TYPE_INFO);
+                                LogUtil.i(getResources().getString(R.string.log_in), json);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -253,16 +254,17 @@ public class InAssistFragment extends BaseFragment implements UHFCallbackLiatene
                                     public void onError(Request request, Exception e) {
                                         if (e instanceof ConnectException)
                                             showConfirmDialog("链接超时");
-                                        if (App.LOGCAT_SWITCH) {
-                                            Log.i(TAG, "postInventory;" + e.getMessage());
-                                            showToast("上传信息失败");
+                                        try {
+                                            LogUtil.e(getResources().getString(R.string.log_in_result), e.getMessage(), e.getCause());
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
                                         }
                                     }
 
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         try {
-                                            AppLog.write(getActivity(), "putaway", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                            LogUtil.i(getResources().getString(R.string.log_in_result), "userId:" + User.newInstance().getId() + response.toString());
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }

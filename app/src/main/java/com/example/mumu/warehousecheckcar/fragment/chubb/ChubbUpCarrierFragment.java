@@ -33,6 +33,7 @@ import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -228,7 +229,7 @@ public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackL
                     final String json = JSON.toJSONString(jsonObject);
                     final String CARRIER = JSON.toJSONString(App.CARRIER);
                     try {
-                        AppLog.write(getActivity(), "ccarrier", CARRIER + json, AppLog.TYPE_INFO);
+                        LogUtil.i(getResources().getString(R.string.log_chubb_cloth_up), json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -238,15 +239,17 @@ public class ChubbUpCarrierFragment extends BaseFragment implements UHFCallbackL
                             public void onError(Request request, Exception e) {
                                 if (e instanceof ConnectException)
                                     showConfirmDialog("链接超时");
-                                if (App.LOGCAT_SWITCH) {
-                                    showToast("获取库位信息失败");
+                                try {
+                                    LogUtil.e(getResources().getString(R.string.log_chubb_cloth_up_result), e.getMessage(), e.getCause());
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
                                 }
                             }
 
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    AppLog.write(getActivity(), "ccarrier", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                    LogUtil.i(getResources().getString(R.string.log_chubb_cloth_up_result), "userId:" + User.newInstance().getId() + response.toString());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

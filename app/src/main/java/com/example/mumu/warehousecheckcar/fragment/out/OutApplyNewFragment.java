@@ -52,6 +52,7 @@ import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -404,19 +405,11 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                 public void onError(Request request, Exception e) {
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
-                    if (App.LOGCAT_SWITCH) {
-                        Toast.makeText(getActivity(), "获取库位信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
                 }
 
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        try {
-                            AppLog.write(getActivity(), "ccarrier", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                             upLoad(location);
@@ -491,7 +484,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
 
                     final String json = jsonObject.toJSONString();
                     try {
-                        AppLog.write(getActivity(), "outapply", json, AppLog.TYPE_INFO);
+                        LogUtil.i(getResources().getString(R.string.log_out), json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -501,9 +494,10 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                             public void onError(Request request, Exception e) {
                                 if (e instanceof ConnectException)
                                     showConfirmDialog("链接超时");
-                                if (App.LOGCAT_SWITCH) {
-                                    Log.i(TAG, "postInventory;" + e.getMessage());
-                                    Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                try {
+                                    LogUtil.e(getResources().getString(R.string.log_out_result), e.getMessage(), e.getCause());
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
                                 }
                             }
 
@@ -511,7 +505,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                             public void onResponse(JSONObject response) {
                                 try {
                                     try {
-                                        AppLog.write(getActivity(), "outapply", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                        LogUtil.i(getResources().getString(R.string.log_out_result), "userId:" + User.newInstance().getId() + response.toString());
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }

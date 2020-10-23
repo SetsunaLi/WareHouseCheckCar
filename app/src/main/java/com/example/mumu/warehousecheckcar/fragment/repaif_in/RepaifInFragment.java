@@ -37,6 +37,7 @@ import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -46,6 +47,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -290,15 +292,16 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
         jsonObject.put("data", list);
         final String json = jsonObject.toJSONString();
         try {
-            AppLog.write(getActivity(), "pushBackRepairInfoToERP", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
+            LogUtil.i(getResources().getString(R.string.log_repaif_in), json);
             OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/back_repair/pushBackRepairInfoToERP", new OkHttpClientManager.ResultCallback<BaseReturnObject>() {
                 @Override
                 public void onError(Request request, Exception e) {
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
-                    if (App.LOGCAT_SWITCH) {
-                        Log.i(TAG, "new_inv_sum_trans;" + e.getMessage());
-                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    try {
+                        LogUtil.e(getResources().getString(R.string.log_repaif_in_result), e.getMessage(), e.getCause());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
 
@@ -307,7 +310,7 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
                     uploadDialog.openView();
                     hideUploadDialog();
                     try {
-                        AppLog.write(getActivity(), "pushBackRepairInfoToERP", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                        LogUtil.i(getResources().getString(R.string.log_repaif_in_result), "userId:" + User.newInstance().getId() + response.toString());
                         scanResultHandler.removeCallbacks(r);
                         if (response.getStatus() == 1) {
                             showToast("上传成功");

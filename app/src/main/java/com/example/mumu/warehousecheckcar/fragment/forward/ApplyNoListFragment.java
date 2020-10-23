@@ -31,6 +31,7 @@ import com.example.mumu.warehousecheckcar.entity.forwarding.ApplyNo;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
@@ -209,7 +210,7 @@ public class ApplyNoListFragment extends BaseFragment {
         }
         final String json = JSON.toJSONString(jsonObject);
         try {
-            AppLog.write(getActivity(), "removeTransportApplyNo", json, AppLog.TYPE_INFO);
+            LogUtil.i(getResources().getString(R.string.log_remove_no), json);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -219,12 +220,17 @@ public class ApplyNoListFragment extends BaseFragment {
                 public void onError(Request request, Exception e) {
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
+                    try {
+                        LogUtil.e(getResources().getString(R.string.log_remove_no_result), e.getMessage(), e.getCause());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        AppLog.write(getActivity(), "removeTransportApplyNo", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                        LogUtil.i(getResources().getString(R.string.log_remove_no_result), "userId:" + User.newInstance().getId() + response.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

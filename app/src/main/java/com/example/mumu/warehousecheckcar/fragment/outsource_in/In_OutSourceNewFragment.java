@@ -41,6 +41,7 @@ import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
+import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -50,6 +51,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.security.acl.Group;
 import java.util.ArrayList;
@@ -397,22 +399,23 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 jsonObject.put("data", outsources);
                 final String json = jsonObject.toJSONString();
                 try {
-                    AppLog.write(getActivity(), "inventIn", "userId:" + User.newInstance().getId() + json, AppLog.TYPE_INFO);
+                    LogUtil.i(getResources().getString(R.string.log_in_outSource), json);
                     OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cc_print_tag_line/new_inv_sum_trans", new OkHttpClientManager.ResultCallback<BaseReturn>() {
                         @Override
                         public void onError(Request request, Exception e) {
                             if (e instanceof ConnectException)
                                 showConfirmDialog("链接超时");
-                            if (App.LOGCAT_SWITCH) {
-                                Log.i(TAG, "new_inv_sum_trans;" + e.getMessage());
-                                Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            try {
+                                LogUtil.e(getResources().getString(R.string.log_in_outSource_result), e.getMessage(), e.getCause());
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
                             }
                         }
 
                         @Override
                         public void onResponse(BaseReturn response) {
                             try {
-                                AppLog.write(getActivity(), "inventIn", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
+                                LogUtil.i(getResources().getString(R.string.log_in_outSource_result), "userId:" + User.newInstance().getId() + response.toString());
                                 uploadDialog.openView();
                                 hideUploadDialog();
                                 scanResultHandler.removeCallbacks(r);
