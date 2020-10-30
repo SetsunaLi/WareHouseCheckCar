@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /***
  *created by 
@@ -341,5 +342,20 @@ public class Outsource implements Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Outsource outsource = (Outsource) o;
+        return vat_no.equals(outsource.vat_no) &&
+                transNo.equals(outsource.transNo) &&
+                deliverNo.equals(outsource.deliverNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vat_no, cust_po, deliverNo);
     }
 }

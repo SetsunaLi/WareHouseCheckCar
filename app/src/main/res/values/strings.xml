@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">仓库APP</string>
     <string name="title_activity_main2">仓库APP</string>
-    <string name="app_version">20.10.14</string>
+    <string name="app_version">20.10.30</string>
     <string name="app_download_url">warehouse.apk</string>
 
 

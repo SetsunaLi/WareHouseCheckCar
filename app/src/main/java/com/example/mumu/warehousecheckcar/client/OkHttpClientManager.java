@@ -348,6 +348,7 @@ public class OkHttpClientManager {
         int separatorIndex = path.lastIndexOf("/");
         return (separatorIndex < 0) ? path : path.substring(separatorIndex + 1, path.length());
     }
+
     /**
      * 异步基于post的JSON对象上传
      *

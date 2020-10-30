@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment.outsource_in;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -9,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -32,16 +31,13 @@ import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.application.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.client.SubmitTask;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.out.Outsource;
 import com.example.mumu.warehousecheckcar.entity.out.OutsourceGroup;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
-import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -51,9 +47,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
 import java.net.ConnectException;
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,8 +58,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRAGMENT;
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
-import static org.greenrobot.eventbus.EventBus.TAG;
 
 /***
  *created by
@@ -113,9 +105,9 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
      * 获取epc
      */
     private ArrayList<String> dataEpcs;
-
     private ScanResultHandler scanResultHandler;
     private int scanCount = 0, outCount = 0;
+    private SubmitTask<List<Outsource>> submitTask;
 
     @Nullable
     @Override
@@ -254,7 +246,6 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
             if (!TextUtils.isEmpty(no))
                 list.add(no);
         }
-        JSONObject jsonObject = new JSONObject();
         String json = JSONObject.toJSONString(list);
         try {
             OkHttpClientManager.postJsonAsyn(App.CLOUD_IP + ":" + App.CLOUD_PORT + "/a/bas/transportOutApi/outSourceStorage", new OkHttpClientManager.ResultCallback<JSONObject>() {
@@ -351,11 +342,6 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 download();
                 break;
             case R.id.button2:
-              /*  rfidResult("30B5A5AF6400004000002337");
-                rfidResult("30B5A5AF6400004000002345");
-                rfidResult("30A5A5AF6400004000002407");
-                rfidResult("30A5A5AF6400004000002371");
-                rfidResult("30B5A5AF6400004000002459");*/
                 showUploadDialog("是否确认入库");
                 setUploadYesClickListener(new View.OnClickListener() {
                     @Override
@@ -367,6 +353,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void submit() {
         ArrayList<List<Outsource>> list = new ArrayList<>();
         ArrayList<String> epcs = new ArrayList<>();
@@ -391,94 +378,42 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
             }
         }
         if (flag && list.size() > 0) {
-            uploadDialog.lockView();
-            scanResultHandler.postDelayed(r, TIME);
-            for (List<Outsource> outsources : list) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userId", User.newInstance().getId());
-                jsonObject.put("data", outsources);
-                final String json = jsonObject.toJSONString();
-                try {
-                    LogUtil.i(getResources().getString(R.string.log_in_outSource), json);
-                    OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/cc_print_tag_line/new_inv_sum_trans", new OkHttpClientManager.ResultCallback<BaseReturn>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            if (e instanceof ConnectException)
-                                showConfirmDialog("链接超时");
-                            try {
-                                LogUtil.e(getResources().getString(R.string.log_in_outSource_result), e.getMessage(), e.getCause());
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onResponse(BaseReturn response) {
-                            try {
-                                LogUtil.i(getResources().getString(R.string.log_in_outSource_result), "userId:" + User.newInstance().getId() + response.toString());
-                                uploadDialog.openView();
-                                hideUploadDialog();
-                                scanResultHandler.removeCallbacks(r);
-                                if (response.getStatus() == 1) {
-                                    showToast("上传成功");
-                                    clearData();
-                                    mAdapter.notifyDataSetChanged();
-                                } else {
-                                    showToast("上传失败");
-                                    showConfirmDialog("WMS上传失败，" + response.getMessage());
-                                    Sound.faillarm();
+            submitTask = new SubmitTask<List<Outsource>>(getActivity(), list.size()) {
+                @Override
+                protected void onPostExecute(List<List<Outsource>> result) {
+                    super.onPostExecute(result);
+                    submitTask = null;
+                    uploadDialog.openView();
+                    hideUploadDialog();
+                    Iterator<OutsourceGroup> iterator = myList.iterator();
+                    a:
+                    while (iterator.hasNext()) {
+                        OutsourceGroup group = iterator.next();
+                        if (group.isStutas() && group.getOutCount() == group.getScanCount()) {
+                            for (List<Outsource> outsources : result) {
+                                if (outsources.size() > 0 && outsources.get(0).equals(group)) {
+                                    continue a;
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
+                            iterator.remove();
                         }
-                    }, json);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    }
+                    if (result.size() > 0) {
+                        showToast("全部上传成功");
+                    } else {
+                        Sound.faillarm();
+                        StringBuilder msg = new StringBuilder();
+                        for (List<Outsource> outsources : result) {
+                            if (result.size() > 0)
+                                msg.append(",").append(outsources.get(0).getDeliverNo());
+                        }
+                        showConfirmDialog("上传失败" + msg + "推送失败");
+                    }
+                    mAdapter.notifyDataSetChanged();
                 }
-            }
-        /*    JSONObject jsonObject2 = new JSONObject();
-            jsonObject2.put("userId", Constant.USERNAME);
-            jsonObject2.put("password", Constant.PRASSWORD);
-            jsonObject2.put("epcs", epcs);
-            final String json2 = jsonObject2.toJSONString();
-            try {
-                AppLog.write(getActivity(), "inventIn", "userId:" + User.newInstance().getId() + json2, AppLog.TYPE_INFO);
-                OkHttpClientManager.postJsonAsyn(App.CLOUD_IP + ":" + App.CLOUD_PORT + "/a/bas/basLabelApi/inventIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
-                    @Override
-                    public void onError(Request request, Exception e) {
-                        if (e instanceof ConnectException)
-                            showConfirmDialog("链接超时");
-                        if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "inventIn;" + e.getMessage());
-                            Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(BaseReturn response) {
-                        try {
-                            AppLog.write(getActivity(), "inventIn", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                            uploadDialog.openView();
-                            hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
-                            if (response.getCode() == 1) {
-                                showToast("上传成功");
-                                clearData();
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                showToast("上传失败");
-                                showConfirmDialog("标签云上传失败，" + response.getMessage());
-                                Sound.faillarm();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, json2);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
+            };
+            submitTask.execute(App.IP + ":" + App.PORT + "/shYf/sh/cc_print_tag_line/new_inv_sum_trans", list, getResources().getString(R.string.log_in_outSource));
+            uploadDialog.lockView();
         } else
             showConfirmDialog("至少上传一条有效单号数据，且扫描数量必须与发运数量相同");
     }

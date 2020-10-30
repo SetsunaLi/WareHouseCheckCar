@@ -213,10 +213,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                     public void onError(Request request, Exception e) {
                         if (e instanceof ConnectException)
                             showConfirmDialog("链接超时");
-                        if (App.LOGCAT_SWITCH) {
-                            Log.i(TAG, "getEpc;" + e.getMessage());
-                            Toast.makeText(getActivity(), "获取申请单信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
                     }
 
                     @Override
