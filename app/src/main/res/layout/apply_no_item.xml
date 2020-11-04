@@ -37,6 +37,15 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:text="数量" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
+            android:id="@+id/item3"
+            style="@style/text_item"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="调入公司" />
     </LinearLayout>
 
     <View style="@style/view_item_bottom" />

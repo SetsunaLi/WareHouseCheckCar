@@ -22,15 +22,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
+import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.forwarding.ApplyNo;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
@@ -40,12 +41,13 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRAGMENT;
+import static com.example.mumu.warehousecheckcar.App.TAG_CONTENT_FRAGMENT;
 
 /***
  *created by 
@@ -72,7 +74,6 @@ public class ApplyNoListFragment extends BaseFragment {
     private int bas_transport_type;
     private ForwardingMsgFragment.CarMsg carMsg;
     private String company;
-    private ArrayList<String> nos;
 
     public static ApplyNoListFragment newInstance() {
         if (fragment == null) ;
@@ -136,7 +137,7 @@ public class ApplyNoListFragment extends BaseFragment {
         jsonObject.put("data", data);
         String json = jsonObject.toJSONString();
         try {
-            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/getTransportApplyNoByLicense", new OkHttpClientManager.ResultCallback<JSONObject>() {
+            OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/despatch/getTransportApplyNoByLicense", new OkHttpClientManager.ResultCallback<BaseReturnArray<ApplyNo>>() {
                 @Override
                 public void onError(Request request, Exception e) {
                     if (e instanceof ConnectException)
@@ -144,16 +145,14 @@ public class ApplyNoListFragment extends BaseFragment {
                 }
 
                 @Override
-                public void onResponse(JSONObject jsonObject) {
+                public void onResponse(BaseReturnArray<ApplyNo> baseReturn) {
                     try {
-                        if (jsonObject.getInteger("status") == 1) {
-                            JSONObject object = jsonObject.getJSONObject("data");
-                            for (String key : object.keySet()) {
-                                myList.add(new ApplyNo(key, false, object.getInteger(key)));
-                            }
+                        if (baseReturn != null && baseReturn.getStatus() == 1 && baseReturn.getData() != null) {
+                            List<ApplyNo> list = baseReturn.getData();
+                            myList.addAll(list);
                             mAdapter.notifyDataSetChanged();
                         } else
-                            showConfirmDialog(jsonObject.getString("message"));
+                            showConfirmDialog(baseReturn.getMessage());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -221,7 +220,7 @@ public class ApplyNoListFragment extends BaseFragment {
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
                     try {
-                        LogUtil.e(getResources().getString(R.string.log_remove_no_result), e.getMessage(), e.getCause());
+                        LogUtil.e(getResources().getString(R.string.log_remove_no_result), e.getMessage(), e);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -282,6 +281,7 @@ public class ApplyNoListFragment extends BaseFragment {
             checkBox.setChecked(item.isFlag());
             holder.setText(R.id.item1, item.getApplyNo());
             holder.setText(R.id.item2, String.valueOf(item.getCount()));
+            holder.setText(R.id.item3, item.getCompany());
         }
     }
 }

@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
@@ -34,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRAGMENT;
+import static com.example.mumu.warehousecheckcar.App.TAG_CONTENT_FRAGMENT;
 import static org.greenrobot.eventbus.EventBus.TAG;
 
 /***

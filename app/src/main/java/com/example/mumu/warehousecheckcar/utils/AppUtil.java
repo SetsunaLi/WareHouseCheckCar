@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.AppExecutors;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 
 import static android.os.VibrationEffect.DEFAULT_AMPLITUDE;
 

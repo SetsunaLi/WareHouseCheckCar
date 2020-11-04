@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,14 +26,13 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -53,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 import static org.greenrobot.eventbus.EventBus.TAG;
 
 /***
@@ -188,7 +186,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
                     try {
-                        LogUtil.e(getResources().getString(R.string.log_chubb_cloth_get_result), e.getMessage(), e.getCause());
+                        LogUtil.e(getResources().getString(R.string.log_chubb_cloth_get_result), e.getMessage(), e);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

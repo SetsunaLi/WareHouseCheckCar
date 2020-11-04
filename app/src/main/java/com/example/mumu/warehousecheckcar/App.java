@@ -1,4 +1,4 @@
-package com.example.mumu.warehousecheckcar.application;
+package com.example.mumu.warehousecheckcar;
 
 import android.app.Application;
 import android.content.Context;

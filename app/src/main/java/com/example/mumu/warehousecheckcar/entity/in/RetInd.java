@@ -11,19 +11,19 @@ import java.io.Serializable;
  * @date 2019/9/23
  */
 public class RetInd implements Serializable {
-    @SerializedName(value="fab_roll", alternate = "fabRool")
+    @SerializedName(value = "fab_roll", alternate = "fabRool")
     private String fab_roll;
-    @SerializedName(value="wms_epc", alternate = "epc")
+    @SerializedName(value = "wms_epc", alternate = "epc")
     private String wms_epc;
-    @SerializedName(value="weight_in", alternate = "weightIn")
-    private Double weight_in;
+    @SerializedName(value = "weight", alternate = "weight_inv")
+    private Double weight;
 
     @Override
     public String toString() {
         return "RetInd{" +
                 "fab_roll='" + fab_roll + '\'' +
                 ", wms_epc='" + wms_epc + '\'' +
-                ", weight_in=" + weight_in +
+                ", weight_in=" + weight +
                 '}';
     }
 
@@ -43,12 +43,12 @@ public class RetInd implements Serializable {
         this.wms_epc = wms_epc;
     }
 
-    public Double getWeight_in() {
-        return weight_in;
+    public Double getWeight() {
+        return weight;
     }
 
-    public void setWeight_in(Double weight_in) {
-        this.weight_in = weight_in;
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 
     public RetInd() {

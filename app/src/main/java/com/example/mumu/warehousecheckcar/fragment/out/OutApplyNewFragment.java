@@ -34,9 +34,8 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
-import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Power;
@@ -50,7 +49,6 @@ import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
@@ -491,7 +489,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                                 if (e instanceof ConnectException)
                                     showConfirmDialog("链接超时");
                                 try {
-                                    LogUtil.e(getResources().getString(R.string.log_out_result), e.getMessage(), e.getCause());
+                                    LogUtil.e(getResources().getString(R.string.log_out_result), e.getMessage(), e);
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
                                 }

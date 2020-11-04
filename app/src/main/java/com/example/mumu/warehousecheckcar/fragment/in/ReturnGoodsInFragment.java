@@ -25,7 +25,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
@@ -35,7 +35,6 @@ import com.example.mumu.warehousecheckcar.entity.in.RetInd;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
@@ -56,7 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 /***
  *created by ${mumu}
@@ -263,7 +262,7 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                                             if (e instanceof ConnectException)
                                                 showConfirmDialog("链接超时");
                                             try {
-                                                LogUtil.e(getResources().getString(R.string.log_return_in_result), e.getMessage(), e.getCause());
+                                                LogUtil.e(getResources().getString(R.string.log_return_in_result), e.getMessage(), e);
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
                                             }
@@ -406,7 +405,7 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                 holder.setText(R.id.item6, String.valueOf(item.getInd().size()));
                 double weight = 0;
                 for (RetInd retInd : item.getInd()) {
-                    weight = ArithUtil.add(weight, retInd.getWeight_in());
+                    weight = ArithUtil.add(weight, retInd.getWeight());
                 }
                 holder.setText(R.id.item7, String.valueOf(weight));
             }

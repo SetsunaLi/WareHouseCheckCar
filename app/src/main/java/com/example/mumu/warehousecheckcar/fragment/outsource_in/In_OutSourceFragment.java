@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.Constant;
@@ -28,7 +26,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
@@ -36,7 +34,6 @@ import com.example.mumu.warehousecheckcar.entity.out.Outsource;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
@@ -54,8 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
-import static org.greenrobot.eventbus.EventBus.TAG;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 /***
  *created by 
@@ -345,7 +341,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
                     if (e instanceof ConnectException)
                         showConfirmDialog("链接超时");
                     try {
-                        LogUtil.e(getResources().getString(R.string.log_in_outSource_result), e.getMessage(), e.getCause());
+                        LogUtil.e(getResources().getString(R.string.log_in_outSource_result), e.getMessage(), e);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

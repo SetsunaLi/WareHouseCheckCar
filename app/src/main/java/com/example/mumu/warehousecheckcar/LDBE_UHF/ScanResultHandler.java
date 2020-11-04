@@ -3,7 +3,7 @@ package com.example.mumu.warehousecheckcar.LDBE_UHF;
 import android.os.Handler;
 import android.os.Message;
 
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 
 
 /***

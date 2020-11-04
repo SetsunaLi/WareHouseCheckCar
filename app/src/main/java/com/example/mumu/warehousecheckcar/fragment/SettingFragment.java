@@ -20,10 +20,9 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFResult;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.config.Config;
 import com.example.mumu.warehousecheckcar.view.SeekBarPreferenceVolume;
-import com.rfid.RFIDReaderHelper;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.rfid.rxobserver.bean.RXOperationTag;
@@ -31,7 +30,7 @@ import com.rfid.rxobserver.bean.RXOperationTag;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.mumu.warehousecheckcar.application.App.PROWER;
+import static com.example.mumu.warehousecheckcar.App.PROWER;
 import static com.example.mumu.warehousecheckcar.utils.AppUtil.showToast;
 
 

@@ -3,12 +3,10 @@ package com.example.mumu.warehousecheckcar.LDBE_UHF;
 import android.os.Handler;
 import android.util.Log;
 
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.rfid.RFIDReaderHelper;
 import com.xdl2d.scanner.TDScannerHelper;
 import com.xdl2d.scanner.callback.RXCallback;
-
-import java.util.logging.LogRecord;
 
 /***
  *created by 手持模块控制器

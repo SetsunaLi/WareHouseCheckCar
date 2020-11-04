@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.SearchAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;

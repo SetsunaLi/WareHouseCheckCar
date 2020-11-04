@@ -2,19 +2,14 @@ package com.example.mumu.warehousecheckcar.LDBE_UHF;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.application.App;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import com.example.mumu.warehousecheckcar.App;
 
 import static android.os.VibrationEffect.DEFAULT_AMPLITUDE;
 

@@ -32,7 +32,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.in.RetIn;
@@ -191,7 +191,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                                                         getEpcList.add(retInd.getWms_epc());
                                                         for (RetInd oldRetInd : oldData.getInd()) {
                                                             if (oldRetInd.getWms_epc().equals(retInd.getWms_epc())) {
-                                                                retInd.setWeight_in(oldRetInd.getWeight_in());
+                                                                retInd.setWeight(oldRetInd.getWeight());
                                                             }
                                                         }
                                                     }
@@ -470,12 +470,12 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                             weight = weight.replaceAll(" ", "");
                             if (!TextUtils.isEmpty(weight)) {
                                 double a = Double.parseDouble(weight);
-                                item.setWeight_in(a);
+                                item.setWeight(a);
                             } else {
-                                item.setWeight_in(0d);
+                                item.setWeight(0d);
                             }
                         } catch (Exception e) {
-                            editText.setText(String.valueOf(item.getWeight_in()));
+                            editText.setText(String.valueOf(item.getWeight()));
                         }
                     }
 
@@ -494,7 +494,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                 checkBox.setChecked(getEpcList.contains(item.getWms_epc()));
                 holder.setText(R.id.item1, item.getFab_roll());
                 holder.setText(R.id.item2, item.getWms_epc());
-                holder.setText(R.id.edittext1, String.valueOf(item.getWeight_in()));
+                holder.setText(R.id.edittext1, String.valueOf(item.getWeight()));
             }
         }
     }

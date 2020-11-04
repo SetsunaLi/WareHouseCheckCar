@@ -74,7 +74,7 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, List<T>> 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                LogUtil.e(log + "异常", "userId:" + User.newInstance().getId() + e.getCause());
+                LogUtil.e(log + "异常", "userId:" + User.newInstance().getId() + e);
             }
             publishProgress(startSize, startSize - list.size());
         }

@@ -2,13 +2,10 @@ package com.example.mumu.warehousecheckcar.client;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.example.mumu.warehousecheckcar.application.App;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Types;
-import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -31,7 +28,6 @@ import java.net.CookiePolicy;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;

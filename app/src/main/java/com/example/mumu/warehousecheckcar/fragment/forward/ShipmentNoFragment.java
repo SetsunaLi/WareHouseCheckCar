@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRAGMENT;
+import static com.example.mumu.warehousecheckcar.App.TAG_CONTENT_FRAGMENT;
 
 /***
  *created by 

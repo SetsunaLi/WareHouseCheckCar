@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.Constant;
@@ -30,13 +29,12 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.example.mumu.warehousecheckcar.zxing.CaptureActivity;
@@ -52,7 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 /***
  *created by 快递单号绑定
@@ -236,7 +234,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                         if (e instanceof ConnectException)
                             showConfirmDialog("链接超时");
                         try {
-                            LogUtil.e(getResources().getString(R.string.log_exp_binding_result), e.getMessage(), e.getCause());
+                            LogUtil.e(getResources().getString(R.string.log_exp_binding_result), e.getMessage(), e);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }

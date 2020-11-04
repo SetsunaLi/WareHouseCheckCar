@@ -29,14 +29,13 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -53,7 +52,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 
 public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
@@ -198,7 +197,7 @@ public class EmptyShelfFragment extends BaseFragment implements BRecyclerAdapter
                                     if (e instanceof ConnectException)
                                         showConfirmDialog("链接超时");
                                     try {
-                                        LogUtil.e(getResources().getString(R.string.log_emp_shelf_result), e.getMessage(), e.getCause());
+                                        LogUtil.e(getResources().getString(R.string.log_emp_shelf_result), e.getMessage(), e);
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
                                     }

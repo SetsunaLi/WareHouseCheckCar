@@ -22,7 +22,7 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
@@ -30,7 +30,6 @@ import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
@@ -49,7 +48,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 public class CarPutawayFragment extends BaseFragment {
     private final String TAG = "CarPutawayFragment";
@@ -218,7 +217,7 @@ public class CarPutawayFragment extends BaseFragment {
                                 if (e instanceof ConnectException)
                                     showConfirmDialog("链接超时");
                                 try {
-                                    LogUtil.e(getResources().getString(R.string.log_carput_result), e.getMessage(), e.getCause());
+                                    LogUtil.e(getResources().getString(R.string.log_carput_result), e.getMessage(), e);
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
                                 }

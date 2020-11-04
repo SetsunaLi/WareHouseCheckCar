@@ -10,10 +10,12 @@ public class ApplyNo {
      * 申请单号
      */
     private String applyNo;
+    private String company;
     private boolean flag;
     private int count;
 
-    public ApplyNo(String applyNo, boolean flag, int count) {
+    public ApplyNo(String applyNo, boolean flag, int count, String company) {
+        this.company = company;
         this.applyNo = applyNo;
         this.flag = flag;
         this.count = count;
@@ -37,6 +39,14 @@ public class ApplyNo {
 
     public String getApplyNo() {
         return applyNo;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public void setApplyNo(String applyNo) {

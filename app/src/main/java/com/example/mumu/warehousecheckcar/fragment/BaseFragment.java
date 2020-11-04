@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.dialog.ConfirmDialog;
 import com.example.mumu.warehousecheckcar.dialog.LoadingDialog;
@@ -82,7 +83,7 @@ public abstract class BaseFragment extends Fragment {
      * 显示Toast
      */
     protected void showToast(String text) {
-        CustomToast.showToast(getActivity(), text, Toast.LENGTH_SHORT);
+        CustomToast.showToast(App.getContext(), text, Toast.LENGTH_SHORT);
     }
 
     /**

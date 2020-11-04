@@ -18,14 +18,13 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.forwarding.ForwardingListBean;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
@@ -39,8 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TAG_CONTENT_FRAGMENT;
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TAG_CONTENT_FRAGMENT;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 /***
  *created by 
@@ -227,7 +226,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                                         if (e instanceof ConnectException)
                                             showConfirmDialog("链接超时");
                                         try {
-                                            LogUtil.e(getResources().getString(R.string.log_forwarding_result), e.getMessage(), e.getCause());
+                                            LogUtil.e(getResources().getString(R.string.log_forwarding_result), e.getMessage(), e);
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
                                         }

@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
@@ -24,13 +23,12 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.application.App;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.example.mumu.warehousecheckcar.utils.AppLog;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.rfid.rxobserver.ReaderSetting;
 import com.rfid.rxobserver.bean.RXInventoryTag;
@@ -45,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.mumu.warehousecheckcar.application.App.TIME;
+import static com.example.mumu.warehousecheckcar.App.TIME;
 
 public class CarSoldOutCarrierFragment extends BaseFragment implements UHFCallbackLiatener, RXCallback, OnCodeResult, OnRfidResult {
 
@@ -267,7 +265,7 @@ public class CarSoldOutCarrierFragment extends BaseFragment implements UHFCallba
                             if (e instanceof ConnectException)
                                 showConfirmDialog("链接超时");
                             try {
-                                LogUtil.e(getResources().getString(R.string.log_cardown_result), e.getMessage(), e.getCause());
+                                LogUtil.e(getResources().getString(R.string.log_cardown_result), e.getMessage(), e);
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
