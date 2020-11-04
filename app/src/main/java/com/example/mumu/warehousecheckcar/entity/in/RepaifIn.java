@@ -2,6 +2,8 @@ package com.example.mumu.warehousecheckcar.entity.in;
 
 import android.annotation.SuppressLint;
 
+import com.google.gson.annotations.SerializedName;
+
 /***
  *created by 
  *on 2020/8/20
@@ -22,7 +24,7 @@ public class RepaifIn {
     private String vat_no = "";
     private String product_no = "";
     private String sel_color = "";
-    @SuppressLint("weight_inv")
+    @SerializedName(value = "weight", alternate = "weight_inv")
     private double weight;
     private String fab_roll = "";
     private String epc = "";

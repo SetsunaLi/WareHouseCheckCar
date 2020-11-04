@@ -405,7 +405,7 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                 holder.setText(R.id.item6, String.valueOf(item.getInd().size()));
                 double weight = 0;
                 for (RetInd retInd : item.getInd()) {
-                    weight = ArithUtil.add(weight, retInd.getWeight());
+                    weight = ArithUtil.add(weight, retInd.getWeight_in());
                 }
                 holder.setText(R.id.item7, String.valueOf(weight));
             }

@@ -15,15 +15,15 @@ public class RetInd implements Serializable {
     private String fab_roll;
     @SerializedName(value = "wms_epc", alternate = "epc")
     private String wms_epc;
-    @SerializedName(value = "weight", alternate = "weight_inv")
-    private Double weight;
+    @SerializedName(value = "weight_in", alternate = "weightIn")
+    private Double weight_in;
 
     @Override
     public String toString() {
         return "RetInd{" +
                 "fab_roll='" + fab_roll + '\'' +
                 ", wms_epc='" + wms_epc + '\'' +
-                ", weight_in=" + weight +
+                ", weight_in=" + weight_in +
                 '}';
     }
 
@@ -43,12 +43,12 @@ public class RetInd implements Serializable {
         this.wms_epc = wms_epc;
     }
 
-    public Double getWeight() {
-        return weight;
+    public Double getWeight_in() {
+        return weight_in;
     }
 
-    public void setWeight(Double weight) {
-        this.weight = weight;
+    public void setWeight_in(Double weight_in) {
+        this.weight_in = weight_in;
     }
 
     public RetInd() {
