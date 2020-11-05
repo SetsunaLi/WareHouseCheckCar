@@ -191,7 +191,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                                                         getEpcList.add(retInd.getWms_epc());
                                                         for (RetInd oldRetInd : oldData.getInd()) {
                                                             if (oldRetInd.getWms_epc().equals(retInd.getWms_epc())) {
-                                                                retInd.setWeight(oldRetInd.getWeight());
+                                                                retInd.setWeight_in(oldRetInd.getWeight_in());
                                                             }
                                                         }
                                                     }
@@ -470,12 +470,12 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                             weight = weight.replaceAll(" ", "");
                             if (!TextUtils.isEmpty(weight)) {
                                 double a = Double.parseDouble(weight);
-                                item.setWeight(a);
+                                item.setWeight_in(a);
                             } else {
-                                item.setWeight(0d);
+                                item.setWeight_in(0d);
                             }
                         } catch (Exception e) {
-                            editText.setText(String.valueOf(item.getWeight()));
+                            editText.setText(String.valueOf(item.getWeight_in()));
                         }
                     }
 
@@ -494,7 +494,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
                 checkBox.setChecked(getEpcList.contains(item.getWms_epc()));
                 holder.setText(R.id.item1, item.getFab_roll());
                 holder.setText(R.id.item2, item.getWms_epc());
-                holder.setText(R.id.edittext1, String.valueOf(item.getWeight()));
+                holder.setText(R.id.edittext1, String.valueOf(item.getWeight_in()));
             }
         }
     }
