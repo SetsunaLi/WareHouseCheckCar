@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -30,14 +31,13 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.dialog.CommandDailog;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
-import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.check.Inventory;
+import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -158,6 +158,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         epcList.clear();
         getKeyValue.clear();
         dataList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private void initRFID() {
@@ -305,7 +306,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
             case R.id.button1:
                 clearData();
                 downLoadData();
-                mAdapter.notifyDataSetChanged();
                 text1.setText("0");
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
@@ -413,7 +413,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();
-                            mAdapter.notifyDataSetChanged();
                             Fragment fragment = ForwardingListFragment.newInstance();
                             getActivity().getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                             getActivity().getFragmentManager().beginTransaction()

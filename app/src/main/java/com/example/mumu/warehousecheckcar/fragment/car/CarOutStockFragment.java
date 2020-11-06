@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -27,13 +28,12 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.car.CarOutBean;
-import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.car.CarOutBean;
+import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
@@ -124,6 +124,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
         myList.clear();
         epcList.clear();
         outNoList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private void initRFID() {
@@ -276,7 +277,6 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
                                         if (response != null && response.getStatus() == 1) {
                                             showToast("上传成功");
                                             clearData();
-                                            mAdapter.notifyDataSetChanged();
                                         } else {
                                             showToast("上传失败");
                                             showConfirmDialog("上传失败，" + response.getMessage());

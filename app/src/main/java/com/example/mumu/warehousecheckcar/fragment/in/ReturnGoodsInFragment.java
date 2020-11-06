@@ -20,19 +20,19 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.out.OutNo;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.in.RetIn;
 import com.example.mumu.warehousecheckcar.entity.in.RetInd;
-import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.out.OutNo;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -137,6 +137,7 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
         dateNo.clear();
         dataKey.clear();
         epcNoList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private boolean flag = true;
@@ -221,7 +222,6 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
             case R.id.button1:
                 clearData();
                 downLoadData();
-                mAdapter.notifyDataSetChanged();
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
@@ -283,7 +283,6 @@ public class ReturnGoodsInFragment extends BaseFragment implements BRecyclerAdap
                                                 if (baseReturn != null && baseReturn.getStatus() == 1) {
                                                     showToast("上传成功");
                                                     clearData();
-                                                    mAdapter.notifyDataSetChanged();
                                                 } else {
                                                     showToast("上传失败");
                                                     showConfirmDialog("上传失败");

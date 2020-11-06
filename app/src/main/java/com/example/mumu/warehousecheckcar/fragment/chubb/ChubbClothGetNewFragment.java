@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -26,7 +27,6 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
@@ -121,6 +121,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
         text1.setText(String.valueOf(myList.size() - 1));
         dataKey.clear();
         epcList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private void initRFID() {
@@ -147,7 +148,6 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                mAdapter.notifyDataSetChanged();
                 break;
             case R.id.button2:
                 showUploadDialog("是否上传数据");
@@ -207,7 +207,6 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();
-                            mAdapter.notifyDataSetChanged();
                         } else {
                             showToast("上传失败");
                             showConfirmDialog("上传失败");

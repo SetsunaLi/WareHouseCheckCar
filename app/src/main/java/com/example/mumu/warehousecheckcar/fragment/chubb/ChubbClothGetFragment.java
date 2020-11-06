@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
@@ -86,6 +86,7 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
 
     private void clearData() {
         myList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private void downLoad() {
@@ -146,7 +147,6 @@ public class ChubbClothGetFragment extends BaseFragment implements BRecyclerAdap
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                mAdapter.notifyDataSetChanged();
                 downLoad();
                 break;
             case R.id.button2:

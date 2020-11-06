@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
@@ -35,7 +36,6 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Power;
@@ -198,6 +198,7 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
         getEpcKey.clear();
         vatKey.clear();
         text3.setText(String.valueOf(0));
+        mAdapter.notifyDataSetChanged();
     }
 
     public void downLoadData() {
@@ -367,7 +368,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
             case R.id.button1:
                 clearData();
                 downLoadData();
-                mAdapter.notifyDataSetChanged();
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
@@ -510,7 +510,6 @@ public class OutApplyNewFragment extends BaseFragment implements UHFCallbackLiat
                                     if (baseReturn != null && baseReturn.getStatus() == 1) {
                                         Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_LONG).show();
                                         clearData();
-                                        mAdapter.notifyDataSetChanged();
 //                                            blinkDialog2(true);
                                     } else {
                                         Toast.makeText(getActivity(), baseReturn.getMessage(), Toast.LENGTH_LONG).show();

@@ -14,15 +14,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
-import com.example.mumu.warehousecheckcar.entity.forwarding.ForwardingListBean;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.forwarding.ForwardingListBean;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
@@ -95,6 +95,7 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
 
     private void clearData() {
         myList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -164,7 +165,6 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                mAdapter.notifyDataSetChanged();
                 downLoad();
                 break;
             case R.id.button2:

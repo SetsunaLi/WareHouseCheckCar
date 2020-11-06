@@ -19,18 +19,18 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
@@ -141,6 +141,8 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
             dataKey.clear();
         if (epcList != null)
             epcList.clear();
+        mAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -148,7 +150,6 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
         super.onDestroyView();
 
         disRFID();
-        clearData();
     }
 
     @OnClick({R.id.button1, R.id.button2})
@@ -157,7 +158,6 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
             case R.id.button1:
                 clearData();
                 text1.setText("0");
-                mAdapter.notifyDataSetChanged();
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
@@ -209,7 +209,6 @@ public class ChubbExceptionFragment extends BaseFragment implements UHFCallbackL
                                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                                             showToast("上传成功");
                                             clearData();
-                                            mAdapter.notifyDataSetChanged();
                                         } else {
                                             showToast("上传失败");
                                             showConfirmDialog("上传失败");

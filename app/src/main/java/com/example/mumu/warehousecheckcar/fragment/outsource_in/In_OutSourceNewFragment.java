@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -29,7 +30,6 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.client.SubmitTask;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
@@ -398,13 +398,13 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                             iterator.remove();
                         }
                     }
-                    if (result.size() > 0) {
+                    if (result.size() == 0) {
                         showToast("全部上传成功");
                     } else {
                         Sound.faillarm();
                         StringBuilder msg = new StringBuilder();
                         for (List<Outsource> outsources : result) {
-                            if (result.size() > 0)
+                            if (outsources.size() > 0)
                                 msg.append(",").append(outsources.get(0).getDeliverNo());
                         }
                         showConfirmDialog("上传失败" + msg + "推送失败");

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
@@ -33,10 +34,9 @@ import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
@@ -158,6 +158,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
             keyValue.clear();
         if (dataKEY != null)
             dataKEY.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -278,7 +279,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
             case R.id.button1:
                 clearData();
                 downLoadData();
-                mAdapter.notifyDataSetChanged();
                 scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
@@ -331,7 +331,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                                             if (response.equals("1")) {
                                                 showToast("上传成功");
                                                 clearData();
-                                                mAdapter.notifyDataSetChanged();
                                                 getActivity().onBackPressed();
                                             } else {
                                                 showToast("上传失败");
