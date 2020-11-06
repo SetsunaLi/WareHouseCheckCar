@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
+import com.google.gson.Gson;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -65,11 +66,22 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, List<T>> 
             try {
                 LogUtil.i(log, json);
                 Response response = OkHttpClientManager.postJsonAsyn(url, json);
+               /* BaseReturn obj = null;
+                try
+                {
+                    String j = new String(response.body().bytes());
+                    Gson gson = new Gson();
+                    obj = gson.fromJson(json, BaseReturn.class);
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }*/
                 final String string = response.body().string();
                 JSONObject message = JSONObject.parseObject(string);
                 BaseReturn baseReturn = message.toJavaObject(BaseReturn.class);
-                LogUtil.i(log + "结果", "userId:" + User.newInstance().getId() + response.toString());
-                if (baseReturn != null && baseReturn.getStatus() == 1) {
+                LogUtil.i(log + "结果", "userId:" + User.newInstance().getId() + baseReturn.toString());
+                if (baseReturn.getStatus() == 1) {
                     iterator.remove();
                 }
             } catch (IOException e) {

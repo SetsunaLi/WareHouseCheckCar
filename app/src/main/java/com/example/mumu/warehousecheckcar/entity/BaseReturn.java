@@ -41,4 +41,14 @@ public class BaseReturn {
     public void setCode(int code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "BaseReturn{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", data='" + data + '\'' +
+                ", code=" + code +
+                '}';
+    }
 }
