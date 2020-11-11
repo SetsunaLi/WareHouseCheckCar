@@ -48,7 +48,7 @@ public class ClothPlan {
     private String product_no;
     private String sel_color;
     private String color_name;
-    private int yard_out;
+    private double yard_out;
     private int l_price;
     private int qty_kg;
     private int p_ps;
@@ -134,11 +134,11 @@ public class ClothPlan {
         this.color_name = color_name;
     }
 
-    public int getYard_out() {
+    public double getYard_out() {
         return yard_out;
     }
 
-    public void setYard_out(int yard_out) {
+    public void setYard_out(double yard_out) {
         this.yard_out = yard_out;
     }
 

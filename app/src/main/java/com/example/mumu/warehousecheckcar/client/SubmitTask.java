@@ -13,14 +13,16 @@ import com.google.gson.Gson;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /***
  *created by
  *on 2020/10/26
  */
-public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, List<T>> {
+public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, Map<T, String>> {
     @SuppressLint("StaticFieldLeak")
     private ProgressDialog progressDialog;
     @SuppressLint("StaticFieldLeak")
@@ -51,7 +53,8 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, List<T>> 
     }
 
     @Override
-    protected List<T> doInBackground(Object... objects) {
+    protected Map<T, String> doInBackground(Object... objects) {
+        HashMap<T, String> map = new HashMap<>();
         String url = ((String) objects[0]);
         List<T> list = (List<T>) objects[1];
         String log = (String) objects[2];
@@ -66,31 +69,25 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, List<T>> 
             try {
                 LogUtil.i(log, json);
                 Response response = OkHttpClientManager.postJsonAsyn(url, json);
-               /* BaseReturn obj = null;
-                try
-                {
-                    String j = new String(response.body().bytes());
-                    Gson gson = new Gson();
-                    obj = gson.fromJson(json, BaseReturn.class);
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }*/
-                final String string = response.body().string();
-                JSONObject message = JSONObject.parseObject(string);
-                BaseReturn baseReturn = message.toJavaObject(BaseReturn.class);
+                BaseReturn baseReturn = null;
+                String j = new String(response.body().bytes());
+                Gson gson = new Gson();
+                baseReturn = gson.fromJson(j, BaseReturn.class);
                 LogUtil.i(log + "结果", "userId:" + User.newInstance().getId() + baseReturn.toString());
-                if (baseReturn.getStatus() == 1) {
-                    iterator.remove();
+                if (baseReturn.getStatus() != 1) {
+                    map.put(t, baseReturn.getMessage());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                LogUtil.e(log + "异常", "userId:" + User.newInstance().getId() + e);
+                try {
+                    LogUtil.e(log + "异常", "userId:" + User.newInstance().getId() + e.getCause().getMessage(), e.getCause());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             publishProgress(startSize, startSize - list.size());
         }
-        return list;
+        return map;
     }
 
     @Override
@@ -102,7 +99,7 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, List<T>> 
     }
 
     @Override
-    protected void onPostExecute(List<T> result) {
+    protected void onPostExecute(Map<T, String> result) {
         //最终结果的显示
         progressDialog.dismiss();
     }

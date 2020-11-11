@@ -52,6 +52,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -274,6 +276,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                                                 group.setAllWeightF(ArithUtil.add(group.getAllWeightF(), outsource.getWeight_f()));
                                                 group.setAllWeight(ArithUtil.add(group.getAllWeight(), outsource.getWeight()));
                                                 dataEpcs.add(outsource.getEpc());
+//                                                测试！！！
                                                 outsource.setFlag(false);
                                                 outsource.setScan(false);
                                                 dataList.add(outsource);
@@ -380,18 +383,20 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
         if (flag && list.size() > 0) {
             submitTask = new SubmitTask<List<Outsource>>(getActivity(), list.size()) {
                 @Override
-                protected void onPostExecute(List<List<Outsource>> result) {
+                protected void onPostExecute(Map<List<Outsource>, String> result) {
                     super.onPostExecute(result);
                     submitTask = null;
                     uploadDialog.openView();
                     hideUploadDialog();
                     Iterator<OutsourceGroup> iterator = myList.iterator();
+                    Set<List<Outsource>> keys = result.keySet();
                     a:
                     while (iterator.hasNext()) {
                         OutsourceGroup group = iterator.next();
                         if (group.isStutas() && group.getOutCount() == group.getScanCount()) {
-                            for (List<Outsource> outsources : result) {
-                                if (outsources.size() > 0 && outsources.get(0).equals(group)) {
+                            for (List<Outsource> outsources : keys) {
+                                if (outsources.size() > 0
+                                        && outsources.get(0).equals(group)) {
                                     continue a;
                                 }
                             }
@@ -403,11 +408,11 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                     } else {
                         Sound.faillarm();
                         StringBuilder msg = new StringBuilder();
-                        for (List<Outsource> outsources : result) {
+                        for (List<Outsource> outsources : keys) {
                             if (outsources.size() > 0)
-                                msg.append(",").append(outsources.get(0).getDeliverNo());
+                                msg.append(",").append(outsources.get(0).getDeliverNo()).append(result.get(outsources) + "\n");
                         }
-                        showConfirmDialog("上传失败" + msg + "推送失败");
+                        showConfirmDialog("上传失败\n" + msg + "推送失败");
                     }
                     mAdapter.notifyDataSetChanged();
                 }

@@ -74,4 +74,5 @@ public class OutsourceGroup extends Outsource {
     public void setStutas(boolean stutas) {
         this.stutas = stutas;
     }
+
 }

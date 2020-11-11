@@ -347,7 +347,7 @@ public class Outsource implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Outsource)) return false;
         Outsource outsource = (Outsource) o;
         return vat_no.equals(outsource.vat_no) &&
                 transNo.equals(outsource.transNo) &&

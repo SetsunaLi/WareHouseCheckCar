@@ -54,6 +54,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -303,6 +304,7 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();
+                            downLoadData();
                         } else {
                             showToast("上传失败");
                             showConfirmDialog("上传失败，" + response.getMessage());
@@ -351,16 +353,25 @@ public class CutPlanFragemnt extends BaseFragment implements UHFCallbackLiatener
                                         if (!epcs.contains(value.getEpc())) {
                                             epcs.add(value.getEpc());
                                             cloths.add(value);
-                                            for (List<ClothPlan> list : myList) {
+                                            Iterator<List<ClothPlan>> iterator = myList.iterator();
+                                            List<ClothPlan> list = null;
+                                            a:
+                                            while (iterator.hasNext()) {
+                                                list = iterator.next();
                                                 for (ClothPlan clothPlan : list) {
                                                     if (clothPlan.getVat_no().equals(value.getVatNo())) {
                                                         String epc = outId_epc.get(clothPlan.getOutp_id());
                                                         if (epc.equals("")) {
                                                             outId_epc.put(clothPlan.getOutp_id(), value.getEpc());
-                                                            mAdapter.notifyDataSetChanged();
+                                                            iterator.remove();
+                                                            break a;
                                                         }
                                                     }
                                                 }
+                                                list = null;
+                                            }
+                                            if (list != null) {
+                                                myList.add(0, list);
                                             }
                                         }
                                     }
