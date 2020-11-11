@@ -410,7 +410,7 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                         StringBuilder msg = new StringBuilder();
                         for (List<Outsource> outsources : keys) {
                             if (outsources.size() > 0)
-                                msg.append(",").append(outsources.get(0).getDeliverNo()).append(result.get(outsources) + "\n");
+                                msg.append(outsources.get(0).getDeliverNo()).append(result.get(outsources)).append("\n");
                         }
                         showConfirmDialog("上传失败\n" + msg + "推送失败");
                     }

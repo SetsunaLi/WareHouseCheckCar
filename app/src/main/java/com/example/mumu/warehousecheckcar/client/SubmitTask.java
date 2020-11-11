@@ -76,6 +76,8 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, Map<T, St
                 LogUtil.i(log + "结果", "userId:" + User.newInstance().getId() + baseReturn.toString());
                 if (baseReturn.getStatus() != 1) {
                     map.put(t, baseReturn.getMessage());
+                } else {
+                    iterator.remove();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

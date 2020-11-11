@@ -16,7 +16,8 @@ public final class Constant {
 //        App.PORT = "8080";
 //        App.IP = "http://192.168.1.243";
 //        App.PORT = "80";
-//    public static final String IP = "http://192.168.1.93";
+//    public static final String IP = "http://192.168.1.
+//    93";
 //    public static final String PORT = "8982";
 //    public static final String IP = "http://192.168.1.222";
 //    public static final String PORT = "8080";
