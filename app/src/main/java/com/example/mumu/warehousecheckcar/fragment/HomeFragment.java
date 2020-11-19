@@ -2,7 +2,6 @@ package com.example.mumu.warehousecheckcar.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -114,6 +113,7 @@ public class HomeFragment extends BaseFragment {
             }
             if (user != null && user.getApp_auth() != null) {
                 boolean outFlag = false;
+                boolean inSourceFlag = false;
                 for (Power power : user.getApp_auth()) {
                     Button button;
                     switch (power.getAuth_type()) {
@@ -181,6 +181,14 @@ public class HomeFragment extends BaseFragment {
                             break;
                         case 19:
                             button = button20;
+                            if (power.getFlag() != 0)
+                                inSourceFlag = true;
+                            break;
+                        case 20:
+                            if (inSourceFlag)
+                                button = null;
+                            else
+                                button = button20;
                             break;
                         default:
                             button = null;

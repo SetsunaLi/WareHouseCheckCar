@@ -33,6 +33,8 @@ import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.client.SubmitTask;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
+import com.example.mumu.warehousecheckcar.entity.Power;
+import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.out.Outsource;
 import com.example.mumu.warehousecheckcar.entity.out.OutsourceGroup;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
@@ -345,82 +347,102 @@ public class In_OutSourceNewFragment extends BaseFragment implements UHFCallback
                 download();
                 break;
             case R.id.button2:
-                showUploadDialog("是否确认入库");
-                setUploadYesClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        submit();
-                    }
-                });
+                submit();
+
                 break;
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void submit() {
-        ArrayList<List<Outsource>> list = new ArrayList<>();
+        final ArrayList<List<Outsource>> list = new ArrayList<>();
         ArrayList<String> epcs = new ArrayList<>();
         boolean flag = true;
         for (OutsourceGroup group : myList) {
             if (group.isStutas()) {
-                if (group.getOutCount() == group.getScanCount()) {
-                    ArrayList<Outsource> outsources = new ArrayList<>();
-                    for (Outsource outsource : dataList) {
-                        if (outsource.isFlag() && outsource.getVat_no().equals(group.getVat_no()) && outsource.getDeliverNo().equals(group.getDeliverNo())
-                                && outsource.getTransNo().equals(group.getTransNo())) {
-                            outsources.add(outsource);
-                            epcs.add(outsource.getEpc());
-                        }
+                ArrayList<Outsource> outsources = new ArrayList<>();
+                for (Outsource outsource : dataList) {
+                    if (outsource.isFlag() && outsource.getVat_no().equals(group.getVat_no()) && outsource.getDeliverNo().equals(group.getDeliverNo())
+                            && outsource.getTransNo().equals(group.getTransNo())) {
+                        outsources.add(outsource);
+                        epcs.add(outsource.getEpc());
                     }
-                    list.add(outsources);
-                } else {
-                    flag = false;
-                    break;
                 }
-
+                list.add(outsources);
+                if (group.getOutCount() != group.getScanCount()) {
+                    flag = false;
+                }
             }
         }
-        if (flag && list.size() > 0) {
-            submitTask = new SubmitTask<List<Outsource>>(getActivity(), list.size()) {
-                @Override
-                protected void onPostExecute(Map<List<Outsource>, String> result) {
-                    super.onPostExecute(result);
-                    submitTask = null;
-                    uploadDialog.openView();
-                    hideUploadDialog();
-                    Iterator<OutsourceGroup> iterator = myList.iterator();
-                    Set<List<Outsource>> keys = result.keySet();
-                    a:
-                    while (iterator.hasNext()) {
-                        OutsourceGroup group = iterator.next();
-                        if (group.isStutas() && group.getOutCount() == group.getScanCount()) {
-                            for (List<Outsource> outsources : keys) {
-                                if (outsources.size() > 0
-                                        && outsources.get(0).equals(group)) {
-                                    continue a;
-                                }
-                            }
-                            iterator.remove();
-                        }
-                    }
-                    if (result.size() == 0) {
-                        showToast("全部上传成功");
-                    } else {
-                        Sound.faillarm();
-                        StringBuilder msg = new StringBuilder();
-                        for (List<Outsource> outsources : keys) {
-                            if (outsources.size() > 0)
-                                msg.append(outsources.get(0).getDeliverNo()).append(result.get(outsources)).append("\n");
-                        }
-                        showConfirmDialog("上传失败\n" + msg + "推送失败");
-                    }
-                    mAdapter.notifyDataSetChanged();
-                }
-            };
-            submitTask.execute(App.IP + ":" + App.PORT + "/shYf/sh/cc_print_tag_line/new_inv_sum_trans", list, getResources().getString(R.string.log_in_outSource));
-            uploadDialog.lockView();
+        int outAuth19 = -1;
+        int outAuth20 = -1;
+        for (Power power : User.newInstance().getApp_auth()) {
+            if (power.getAuth_type() == 19)
+                outAuth19 = power.getFlag();
+            if (power.getAuth_type() == 20)
+                outAuth20 = power.getFlag();
+        }
+        if (list.size() > 0) {
+            if ((outAuth20 != 0 || outAuth19 != 0) && flag) {
+                showDialog("是否确认入库", list);
+            } else if (outAuth20 != 0) {
+                showDialog("扫描明细与申请明细不一致，是否继续上传？", list);
+            } else if (outAuth19 != 0) {
+                showConfirmDialog("上传数量必须与申请数量一致！");
+            }
         } else
-            showConfirmDialog("至少上传一条有效单号数据，且扫描数量必须与发运数量相同");
+            showConfirmDialog("至少上传一条有效单号数据");
+    }
+
+    private void showDialog(String msg, final ArrayList<List<Outsource>> list) {
+        showUploadDialog(msg);
+        setUploadYesClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new_inv_sum_trans(list);
+            }
+        });
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void new_inv_sum_trans(ArrayList<List<Outsource>> list) {
+        submitTask = new SubmitTask<List<Outsource>>(getActivity(), list.size()) {
+            @Override
+            protected void onPostExecute(Map<List<Outsource>, String> result) {
+                super.onPostExecute(result);
+                submitTask = null;
+                uploadDialog.openView();
+                hideUploadDialog();
+                Iterator<OutsourceGroup> iterator = myList.iterator();
+                Set<List<Outsource>> keys = result.keySet();
+                a:
+                while (iterator.hasNext()) {
+                    OutsourceGroup group = iterator.next();
+                    if (group.isStutas() && group.getOutCount() == group.getScanCount()) {
+                        for (List<Outsource> outsources : keys) {
+                            if (outsources.size() > 0
+                                    && outsources.get(0).equals(group)) {
+                                continue a;
+                            }
+                        }
+                        iterator.remove();
+                    }
+                }
+                if (result.size() == 0) {
+                    showToast("全部上传成功");
+                } else {
+                    Sound.faillarm();
+                    StringBuilder msg = new StringBuilder();
+                    for (List<Outsource> outsources : keys) {
+                        if (outsources.size() > 0)
+                            msg.append(outsources.get(0).getDeliverNo()).append(result.get(outsources)).append("\n");
+                    }
+                    showConfirmDialog("上传失败\n" + msg + "推送失败");
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        };
+        submitTask.execute(App.IP + ":" + App.PORT + "/shYf/sh/cc_print_tag_line/new_inv_sum_trans", list, getResources().getString(R.string.log_in_outSource));
+        uploadDialog.lockView();
     }
 
     @Override
