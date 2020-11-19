@@ -21,8 +21,8 @@ public final class Constant {
 //    public static final String PORT = "8982";
 //    public static final String IP = "http://192.168.1.222";
 //    public static final String PORT = "8080";
-//    public static final String IP = "http://120.79.56.119";
-//    public static final String PORT = "8080";
+//    public static final String IP = "http://192.168.1.105";
+//    public static final String PORT = "8982";
     public static final String IP = "http://47.106.157.255";
     public static final String PORT = "80";
     //    ip: 47.107.89.97  端口:8983
@@ -42,7 +42,8 @@ public final class Constant {
     public static final String APP_CAR_NAME = "car_no";
     public static final String APP_OUTP_ID = "output_id";
 
-    public static final String[] MANIFEST = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    public static final String[] MANIFEST = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA};
 
     //code
     public static final int REQUEST_STORAGE_CODE = 5;

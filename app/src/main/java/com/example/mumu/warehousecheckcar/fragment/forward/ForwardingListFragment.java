@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.App;
@@ -91,6 +92,20 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
     protected void addListener() {
         handler = new Handler();
         mAdapter.setOnItemClickListener(this);
+        mAdapter.setOnClickCarListener(new OnClickCarListener() {
+            @Override
+            public void onCarBack(int position, ForwardingListBean forwardingListBean) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", forwardingListBean.getId());
+                bundle.putString("code", forwardingListBean.getCode());
+                Fragment fragment = ForwardingChangeMsgFragment.newInstance();
+                fragment.setArguments(bundle);
+                FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
+                transaction.show(fragment);
+                transaction.commit();
+            }
+        });
     }
 
     private void clearData() {
@@ -177,8 +192,17 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
         }
     }
 
+    interface OnClickCarListener {
+        void onCarBack(int position, ForwardingListBean forwardingListBean);
+    }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<ForwardingListBean> {
         private Context context;
+        private OnClickCarListener onClickCarListener;
+
+        public void setOnClickCarListener(OnClickCarListener onClickCarListener) {
+            this.onClickCarListener = onClickCarListener;
+        }
 
         public RecycleAdapter(RecyclerView v, Collection<ForwardingListBean> datas, int itemLayoutId) {
             super(v, datas, itemLayoutId);
@@ -290,7 +314,16 @@ public class ForwardingListFragment extends BaseFragment implements BRecyclerAda
                     transaction.commit();
                 }
             });
+            TextView item1 = holder.getTextView(R.id.item1);
+            item1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onClickCarListener != null)
+                        onClickCarListener.onCarBack(position, item);
+                }
+            });
         }
-    }
 
+
+    }
 }
