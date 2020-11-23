@@ -26,26 +26,20 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.in.RetIn;
 import com.example.mumu.warehousecheckcar.entity.in.RetInd;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
@@ -70,7 +64,7 @@ import butterknife.OnClick;
  *created by ${mumu}
  *on 2019/9/26
  */
-public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
+public class ReturnGoodsInDetailFragment extends CodeFragment {
     private final String TAG = ReturnGoodsInDetailFragment.class.getName();
     @BindView(R.id.text3)
     TextView text3;
@@ -92,11 +86,13 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
     private RetIn oldData;
     private int position;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.returngoods_in_detail_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -125,7 +121,6 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
@@ -134,18 +129,6 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
     private void setAdaperHeader() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.returngoods_in_detail_item, null);
         mAdapter.setHeader(view);
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -304,9 +287,7 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         EventBus.getDefault().unregister(this);
-        disRFID();
         clearData();
     }
 
@@ -330,39 +311,16 @@ public class ReturnGoodsInDetailFragment extends BaseFragment implements UHFCall
         }
     };
 
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
-    }
-
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
                 clearData();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                super.handler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 getFragmentManager().popBackStack();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                super.handler.removeMessages(ScanResultHandler.RFID);
                 break;
         }
     }

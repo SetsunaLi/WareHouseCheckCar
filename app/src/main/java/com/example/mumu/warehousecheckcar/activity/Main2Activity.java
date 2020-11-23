@@ -25,14 +25,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.OptionMenu;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.out.OutputFlag;
 import com.example.mumu.warehousecheckcar.fragment.AboutFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.fragment.HomeFragment;
 import com.example.mumu.warehousecheckcar.fragment.SettingFragment;
 import com.example.mumu.warehousecheckcar.fragment.WeightChangeFragment;
@@ -95,7 +96,6 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         User user = User.newInstance();
         toolbar.setSubtitle("操作人:" + user.getUsername());
-//        toolbar.bringToFront();
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -104,8 +104,6 @@ public class Main2Activity extends AppCompatActivity
         mTitle = getTitle();
         initDate();
         initView();
-//        initRFID();
-//        init2D();
         selectItem(0);
         comeBack = ComeBack.getInstance();
         initPermission();
@@ -120,32 +118,12 @@ public class Main2Activity extends AppCompatActivity
         mOptionTitle = getResources().getStringArray(R.array.options_array);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         App.SYSTEM_VERSION = sp.getString(getResources().getString(R.string.system_version_key), "20181210");
-//        App.IP = "http://192.168.1.109";
-//        App.PORT = "8080";
- /*       App.IP="http://47.106.157.255";
-        App.PORT="80";*/
-    /*    App.IP = "http://120.79.56.119";
-        App.PORT = "8080";*/
-    /*    App.IP = "http://192.168.1.109";
-        App.PORT = "80";*/
-        /*   App.IP="http://192.168.1.110";
-        App.PORT="80";*/
-//        App.IP = sp.getString(getResources().getString(R.string.system_ip_key), "http://47.106.157.255");
-//        App.PORT = sp.getString(getResources().getString(R.string.system_port_key), "80");
         App.DEVICE_NO = sp.getString(getResources().getString(R.string.system_device_number_key), "YiFeng-001");
         App.MUSIC_SWITCH = sp.getBoolean(getResources().getString(R.string.system_music_key), true);
         App.PROWER = sp.getInt(getResources().getString(R.string.device_prower_key), 20);
         if (App.PROWER == 0)
             App.PROWER = 20;
         App.LOGCAT_SWITCH = sp.getBoolean(getResources().getString(R.string.logcat_ket), true);
-//        TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-//        App.DEVICE_ID=tm.getImei();
-//        App.DEVICE_ID=tm.getDeviceId();
-      /*  App.SYSTEM_VERSION="20181210";
-        App.IP="http://47.107.112.133";
-        App.PORT="8088";
-        App.DEVICE_NO="YiFeng-001";
-        App.MUSIC_SWITCH=true;*/
     }
 
     NavigationView navigationView;
@@ -167,75 +145,36 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
-/*    private RFIDReaderHelper rfidHander;
-
-    //    private TDScannerHelper scannerHander;
-    private void initRFID() {
-        try {
-            RFID_2DHander.getInstance().connectReader();
-            RFID_2DHander.getInstance().on_RFID();
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-            rfidHander.registerObserver(UHFResult.getInstance());
-            rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) App.PROWER);
-        } catch (Exception e) {
-            Log.w(TAG, "RFID读写器异常");
-            Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void init2D() {
-        try {
-            RFID_2DHander.getInstance().connect2D();
-        } catch (Exception e) {
-            Log.w(TAG, "2D模块异常");
-            Toast.makeText(this, getResources().getString(R.string.hint_rfid_mistake), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void disConnectRFID() {
-        try {
-            RFID_2DHander.getInstance().off_RFID();
-            if (rfidHander != null)
-                rfidHander.unRegisterObserver(UHFResult.getInstance());
-            RFID_2DHander.getInstance().disConnectReader();
-            RFID_2DHander.getInstance().releaseRFID();
-        } catch (Exception e) {
-
-        }
-    }
-
-    private void disConnect2D() {
-        try {
-            RFID_2DHander.getInstance().disConnect2D();
-        } catch (Exception e) {
-
-        }
-    }*/
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == Constant.Handle_key) {
+            Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
+            if (fragment instanceof CodeFragment) {
+                ((CodeFragment) fragment).on134CallBack(true);
+            }
+        }
         return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == Constant.Handle_key) {
+            Fragment fragment = getFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
+            if (fragment instanceof CodeFragment) {
+                ((CodeFragment) fragment).on134CallBack(false);
+            }
+        }
         return super.onKeyUp(keyCode, event);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-//        disConnectRFID();
-//        disConnect2D();
         clearAllData();
-//        销毁日志事务
         AppLog.clearFormat();
     }
 
     private void clearAllData() {
-        App.APPLY_NO = "";
-        App.carNo = "";
         App.SYSTEM_VERSION = "";
         App.DEVICE_NO = "";
         App.CARRIER = null;
@@ -246,7 +185,6 @@ public class Main2Activity extends AppCompatActivity
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
-    protected static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 
     private void selectItem(int position) {
         Fragment fragment = null;

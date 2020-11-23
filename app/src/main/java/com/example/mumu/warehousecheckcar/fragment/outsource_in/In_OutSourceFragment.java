@@ -1,7 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment.outsource_in;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,27 +17,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.Constant;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
-import com.example.mumu.warehousecheckcar.entity.out.Outsource;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.entity.out.Outsource;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -58,7 +50,7 @@ import static com.example.mumu.warehousecheckcar.App.TIME;
  *on 2020/8/10
  * 委外入库第三期，修改需求截图为证2020.8.10
  */
-public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
+public class In_OutSourceFragment extends CodeFragment {
     private static In_OutSourceFragment fragment;
     @BindView(R.id.item1)
     TextView item1;
@@ -96,7 +88,6 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
     Button button1;
     @BindView(R.id.button2)
     Button button2;
-    private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
     private ArrayList<Outsource> myList;
     private ArrayList<String> epcs;
@@ -115,6 +106,8 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         getActivity().setTitle(getResources().getString(R.string.btn_click20));
         View view = inflater.inflate(R.layout.in_outsource_layout, container, false);
         ButterKnife.bind(this, view);
@@ -141,7 +134,6 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
     @Override
     protected void addListener() {
         initRFID();
-        scanResultHandler = new ScanResultHandler(this);
         checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -206,48 +198,6 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
         item12.setText(String.valueOf(weight_kj));
         item13.setText(String.valueOf(weight));
         item14.setText(String.valueOf(count));
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disRFID();
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @Override
@@ -316,7 +266,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
                     public void onClick(View view) {
                         submit();
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                     }
                 });
                 break;
@@ -353,7 +303,7 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
                         LogUtil.i(getResources().getString(R.string.log_in_outSource_result), "userId:" + User.newInstance().getId() + response.toString());
                         uploadDialog.openView();
                         hideUploadDialog();
-                        scanResultHandler.removeCallbacks(r);
+                        handler.removeCallbacks(r);
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();
@@ -371,48 +321,6 @@ public class In_OutSourceFragment extends BaseFragment implements UHFCallbackLia
         } catch (Exception e) {
             e.printStackTrace();
         }
- /*       JSONObject jsonObject2 = new JSONObject();
-        jsonObject2.put("userId", Constant.USERNAME);
-        jsonObject2.put("password", Constant.PRASSWORD);
-        jsonObject2.put("epcs", epcCheck);
-        final String json2 = jsonObject2.toJSONString();
-        try {
-            AppLog.write(getActivity(), "inventIn", "userId:" + User.newInstance().getId() + json2, AppLog.TYPE_INFO);
-            OkHttpClientManager.postJsonAsyn(App.CLOUD_IP + ":" + App.CLOUD_PORT + "/a/bas/basLabelApi/inventIn", new OkHttpClientManager.ResultCallback<BaseReturn>() {
-                @Override
-                public void onError(Request request, Exception e) {
-                    if (e instanceof ConnectException)
-                        showConfirmDialog("链接超时");
-                    if (App.LOGCAT_SWITCH) {
-                        Log.i(TAG, "inventIn;" + e.getMessage());
-                        Toast.makeText(getActivity(), "上传信息失败；" + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onResponse(BaseReturn response) {
-                    try {
-                        AppLog.write(getActivity(), "inventIn", "userId:" + User.newInstance().getId() + response.toString(), AppLog.TYPE_INFO);
-                        uploadDialog.openView();
-                        hideUploadDialog();
-                        scanResultHandler.removeCallbacks(r);
-                        if (response.getCode() == 1) {
-                            showToast("上传成功");
-                            clearData();
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            showToast("上传失败");
-                            showConfirmDialog("标签云上传失败，" + response.getMessage());
-                            Sound.faillarm();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, json2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Outsource> {

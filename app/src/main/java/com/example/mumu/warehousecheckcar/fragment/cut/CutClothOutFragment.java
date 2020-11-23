@@ -35,24 +35,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.cutCloth.CutOutBean;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.entity.cutCloth.CutOutBean;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.service.BluetoothLeService;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -73,7 +70,7 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  *created by 剪布出库
  *on 2019/11/21
  */
-public class CutClothOutFragment extends BaseFragment implements RXCallback, OnCodeResult, BRecyclerAdapter.OnItemClickListener {
+public class CutClothOutFragment extends CodeFragment implements BRecyclerAdapter.OnItemClickListener {
 
     //蓝牙4.0的UUID,其中0000ffe1-0000-1000-8000-00805f9b34fb是广州汇承信息科技有限公司08蓝牙模块的UUID
     public static String HEART_RATE_MEASUREMENT = "0000ffe1-0000-1000-8000-00805f9b34fb";
@@ -94,7 +91,6 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
     @BindView(R.id.button3)
     Button button3;
     private ArrayList<CutOutBean> myList;
-    private ScanResultHandler scanResultHandler;
     private ArrayList<String> noList;
     private String name;
     private String address;
@@ -176,6 +172,8 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.cut_cloth_out_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -211,7 +209,6 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         init2D();
         mAdapter.setOnItemClickListener(this);
     }
@@ -234,30 +231,11 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
         noList.clear();
     }
 
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disConnect2D();
-    }
-
     @OnClick({R.id.button1, R.id.button2, R.id.button3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
-                scanResultHandler.removeMessages(ScanResultHandler.CODE);
+                handler.removeMessages(ScanResultHandler.CODE);
                 clearData();
                 onOffWeight(false);
                 mAdapter.setPosition(-255);
@@ -318,7 +296,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
         }
         if (arrayList.size() > 0) {
             uploadDialog.lockView();
-            scanResultHandler.postDelayed(r, TIME);
+            handler.postDelayed(r, TIME);
             jsonObject.put("data", arrayList);
             final String json = jsonObject.toJSONString();
             try {
@@ -345,7 +323,7 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
                             LogUtil.i(getResources().getString(R.string.log_cut_out_result), "userId:" + User.newInstance().getId() + response.toString());
                             uploadDialog.openView();
                             hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
+                            handler.removeCallbacks(r);
                             if (response.getStatus() == 1) {
                                 showToast("上传成功");
                                 clearData();
@@ -415,14 +393,6 @@ public class CutClothOutFragment extends BaseFragment implements RXCallback, OnC
                 Log.i(TAG, "");
             }
         }
-    }
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
     }
 
     /**

@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,23 +19,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +48,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.App.TIME;
 
-public class ForwardingNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
+public class ForwardingNoFragment extends CodeFragment {
     final String TAG = "ForwardingNoFragment";
     private static ForwardingNoFragment fragment;
     @BindView(R.id.imgbutton)
@@ -80,15 +75,15 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
         return fragment;
     }
 
-    private boolean scannerFlag = true;
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
     private int transport_output_id = 0;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.forwarding_no_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -113,22 +108,9 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         init2D();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
-    }
-
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
     }
 
     @Override
@@ -162,10 +144,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         EventBus.getDefault().unregister(this);
-        if (scannerFlag)
-            disConnect2D();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -186,9 +165,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     }
                 }
                 if (nos.size() != 0) {
-                    if (scannerFlag)
-                        disConnect2D();
-                    scannerFlag = false;
+                    closeConnect();
                     EventBus.getDefault().postSticky(new EventBusMsg(0x01, carMsg, nos, transport_output_id, company));
                     Fragment fragment = ForwardingFragment.newInstance();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
@@ -206,7 +183,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                     public void onClick(View view) {
                         submit();
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                     }
                 });
                 break;
@@ -276,7 +253,7 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
                         try {
                             uploadDialog.openView();
                             hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
+                            handler.removeCallbacks(r);
                             if (response.getStatus() == 1) {
                                 showToast("上传成功");
                             } else {
@@ -294,14 +271,6 @@ public class ForwardingNoFragment extends BaseFragment implements RXCallback, On
             }
         } else
             showToast(getResources().getString(R.string.forwarding_toast_msg));
-    }
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
     }
 
     @Override

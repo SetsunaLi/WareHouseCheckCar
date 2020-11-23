@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,23 +23,17 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -61,7 +54,7 @@ import static com.example.mumu.warehousecheckcar.App.IN_DETAIL_LIST;
  * Created by mumu on 2018/12/9.
  */
 
-public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener, BRecyclerAdapter.OnItemClickListener, OnRfidResult {
+public class InCheckFragment extends CodeFragment implements BRecyclerAdapter.OnItemClickListener {
     private final String TAG = "InCheckFragment";
     @BindView(R.id.recyle)
     RecyclerView recyle;
@@ -97,11 +90,12 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
      * value：index
      */
     private List<String> dataKEY;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.in_check_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("入库校验");
@@ -133,21 +127,8 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
         mAdapter.setOnItemClickListener(this);
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     private void clearData() {
@@ -185,13 +166,6 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disRFID();
-    }
-
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick({R.id.button1, R.id.button2})
@@ -200,7 +174,7 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
             case R.id.button1:
                 clearData();
                 mAdapter.notifyDataSetChanged();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                handler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 showUploadDialog(getResources().getString(R.string.dialog_in_check));
@@ -252,29 +226,6 @@ public class InCheckFragment extends BaseFragment implements UHFCallbackLiatener
                 });
                 break;
         }
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @Override

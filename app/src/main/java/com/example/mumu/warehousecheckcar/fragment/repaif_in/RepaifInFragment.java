@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,26 +17,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturnObject;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.entity.in.RepaifIn;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.entity.in.RepaifIn;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,7 +53,7 @@ import static com.example.mumu.warehousecheckcar.App.TIME;
  *created by 
  *on 2020/8/20
  */
-public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult, BRecyclerAdapter.OnItemClickListener {
+public class RepaifInFragment extends CodeFragment implements BRecyclerAdapter.OnItemClickListener {
     private static RepaifInFragment fragment;
     @BindView(R.id.recyle)
     RecyclerView recyle;
@@ -82,7 +75,6 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
     LinearLayout layoutTitle;
     String fact_name;
     String sh_no;
-    private ScanResultHandler scanResultHandler;
     private RecycleAdapter mAdapter;
     private ArrayList<RepaifIn> myList;
     private ArrayList<RepaifIn> dates;
@@ -97,6 +89,8 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.repaif_in_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -130,7 +124,6 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         initRFID();
-        scanResultHandler = new ScanResultHandler(this);
     }
 
     private void clearData() {
@@ -163,18 +156,6 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
                     mAdapter.notifyDataSetChanged();
                     break;
             }
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     @Override
@@ -225,41 +206,11 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
         }
     }
 
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disRFID();
-    }
-
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                handler.removeMessages(ScanResultHandler.RFID);
                 clearData();
                 mAdapter.notifyDataSetChanged();
                 break;
@@ -270,7 +221,7 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
                     public void onClick(View view) {
                         submit();
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                     }
                 });
                 break;
@@ -307,7 +258,7 @@ public class RepaifInFragment extends BaseFragment implements UHFCallbackLiatene
                     hideUploadDialog();
                     try {
                         LogUtil.i(getResources().getString(R.string.log_repaif_in_result), "userId:" + User.newInstance().getId() + response.toString());
-                        scanResultHandler.removeCallbacks(r);
+                        handler.removeCallbacks(r);
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();

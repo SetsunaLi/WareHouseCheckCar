@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
@@ -217,7 +217,6 @@ public class InCheckDetialFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         myList.clear();
         dataList.clear();
         App.OUTDETAIL_LIST.clear();

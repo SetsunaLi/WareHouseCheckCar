@@ -3,7 +3,6 @@ package com.example.mumu.warehousecheckcar.fragment.cut;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -21,17 +20,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.App;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -41,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class CuttingClothPutwayCarrierFragment extends BaseFragment implements RXCallback, OnCodeResult {
+public class CuttingClothPutwayCarrierFragment extends CodeFragment {
     public final String TAG = "CuttingClothCarrier";
 
     private static CuttingClothPutwayCarrierFragment fragment;
@@ -54,8 +49,6 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
 
     private String[] data_list;
     private String[] data_lists;
-    private boolean flag2D = false;
-    private ScanResultHandler scanResultHandler;
 
     public static CuttingClothPutwayCarrierFragment newInstance() {
         if (fragment == null) ;
@@ -66,6 +59,8 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.cut_cloth_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle(getResources().getString(R.string.btn_click14));
@@ -88,7 +83,6 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         edittext2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -112,15 +106,9 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
-                    if (!flag2D) {
                         init2D();
-                        flag2D = true;
-                    }
                 } else {
-                    if (flag2D) {
                         disConnect2D();
-                        flag2D = false;
-                    }
                 }
             }
 
@@ -190,38 +178,13 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
         });*/
     }
 
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        if (flag2D) {
-            disConnect2D();
-            flag2D = false;
-        }
-    }
-
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
         if (App.CARRIER != null && !TextUtils.isEmpty(App.CARRIER.getLocationNo())) {
             edittext2.setFocusableInTouchMode(false);
-            if (flag2D) {
-                disConnect2D();
-                flag2D = false;
-            }
+            closeConnect();
             final String json = JSON.toJSONString(App.CARRIER);
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
@@ -258,14 +221,6 @@ public class CuttingClothPutwayCarrierFragment extends BaseFragment implements R
             }
         } else
             showToast("请扫描库位硬标签");
-    }
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
     }
 
     @Override

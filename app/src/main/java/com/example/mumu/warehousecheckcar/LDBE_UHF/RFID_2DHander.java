@@ -4,6 +4,7 @@ import com.module.interaction.ModuleConnector;
 import com.nativec.tools.ModuleManager;
 import com.rfid.RFIDReaderHelper;
 import com.rfid.ReaderConnector;
+import com.rfid.rxobserver.ReaderSetting;
 import com.xdl2d.scanner.TDScannerConnector;
 import com.xdl2d.scanner.TDScannerHelper;
 
@@ -15,6 +16,7 @@ public class RFID_2DHander {
     public final byte btReadId = (byte) 0xFF;
     //    默认每个标签只读一次
     public final byte btRepeat = (byte) 0x01;
+
     private static RFID_2DHander rfidHander;
 
     private RFID_2DHander() {
@@ -29,6 +31,14 @@ public class RFID_2DHander {
     private RFIDReaderHelper rfidReaderHelper;
     private ModuleConnector connectRFID;
     private TDScannerConnector Connector2D;
+
+    private ReaderSetting m_curReaderSetting;
+
+    public ReaderSetting getM_curReaderSetting() {
+        if (m_curReaderSetting == null)
+            m_curReaderSetting = ReaderSetting.newInstance();
+        return m_curReaderSetting;
+    }
 
     /**
      * RFID模块上电
@@ -127,5 +137,21 @@ public class RFID_2DHander {
             mScanner = TDScannerHelper.getDefaultHelper();
         return mScanner;*/
         return TDScannerHelper.getDefaultHelper();
+    }
+
+    public void customizedSessionTargetInventory(byte btReadId) {
+        if (rfidReaderHelper != null) {
+            int mPos1 = 1;
+            byte mBtSession = (byte) (mPos1 & 0xFF);
+            int mPos2 = 0;
+            byte mBtTarget = (byte) (mPos2 & 0xFF);
+            rfidReaderHelper.customizedSessionTargetInventory(btReadId, mBtSession, mBtTarget, btRepeat);
+        }
+    }
+
+    public void realTimeInventory(byte btReadId) {
+        if (rfidReaderHelper != null) {
+            rfidReaderHelper.realTimeInventory(btReadId, btRepeat);
+        }
     }
 }

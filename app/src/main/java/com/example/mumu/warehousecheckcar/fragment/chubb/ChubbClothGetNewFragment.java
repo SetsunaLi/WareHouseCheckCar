@@ -2,7 +2,6 @@ package com.example.mumu.warehousecheckcar.fragment.chubb;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,23 +19,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.App;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Cloth;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -58,7 +50,7 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  *created by 新建查布接收
  *on 2020/4/29
  */
-public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
+public class ChubbClothGetNewFragment extends CodeFragment {
     @BindView(R.id.recyle)
     RecyclerView recyle;
     @BindView(R.id.text1)
@@ -73,7 +65,6 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
     private List<String> dataKey;
     //    epc
     private List<String> epcList;
-    private ScanResultHandler scanResultHandler;
 
     public static ChubbClothGetNewFragment newInstance() {
         return new ChubbClothGetNewFragment();
@@ -82,6 +73,8 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.chubb_cloth_get_new_fragment_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -111,7 +104,6 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
     }
 
@@ -122,25 +114,6 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
         dataKey.clear();
         epcList.clear();
         mAdapter.notifyDataSetChanged();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disRFID();
     }
 
     @OnClick({R.id.button1, R.id.button2})
@@ -155,7 +128,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
                     @Override
                     public void onClick(View view) {
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                         upload();
                     }
                 });
@@ -202,7 +175,7 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
                     try {
                         uploadDialog.openView();
                         hideUploadDialog();
-                        scanResultHandler.removeCallbacks(r);
+                        handler.removeCallbacks(r);
                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                             showToast("上传成功");
@@ -287,29 +260,6 @@ public class ChubbClothGetNewFragment extends BaseFragment implements UHFCallbac
                 Log.i(TAG, "");
             }
         }
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Cloth> {

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">仓库APP</string>
     <string name="title_activity_main2">仓库APP</string>
-    <string name="app_version">20.11.19</string>
+    <string name="app_version">20.11.23</string>
     <string name="app_download_url">warehouse.apk</string>
 
 
@@ -62,7 +62,7 @@
     <string name="edittext_title">请输入申请单号</string>
     <string name="button_find">搜索</string>
     <string name="button_scnner">扫描条形码</string>
-<!--入库校验-->
+    <!--入库校验-->
     <string name="dialog_text">提醒</string>
     <string name="dialog_in_check">是否确认入库？</string>
 
@@ -71,6 +71,18 @@
     <string name="hint_void">申请单号为空！</string>
     <string name="hint_rfid_mistake">读写器异常，请退出或者重启设备！</string>
     <string name="hint_2d_mistake">读头异常，请退出或者重启设备！</string>
+    <!--写码-->
+    <string name="param_pda_error">设备异常，请检查设备</string>
+    <string name="param_unknown_error">参数未知错误</string>
+    <string name="param_start_addr_error">起始地址格式错误</string>
+    <string name="param_lockpassword_error">密码格式错误</string>
+    <string name="param_killpassword_error">密码格式错误</string>
+    <string name="param_password_error">密码格式错误</string>
+    <string name="param_data_len_error">数据长度格式错误</string>
+    <string name="param_data_error">写入数据格式错误</string>
+    <string name="hint_vat">缸号</string>
+    <string name="hint_fol">布票号</string>
+
     <!--导航栏的选项名称-->
     <string-array name="options_array">
         <item>主页</item>

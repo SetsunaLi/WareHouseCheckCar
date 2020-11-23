@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,23 +25,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.App;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -63,7 +55,7 @@ import static com.example.mumu.warehousecheckcar.App.TIME;
  * Created by mumu on 2018/11/26.
  */
 
-public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
+public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnItemClickListener {
 
     @BindView(R.id.button1)
     Button button1;
@@ -97,11 +89,12 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
     private List<String> dataKEY;
     private List<String> epcList;
     private List<String> epcData;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.check_layout_upgrade, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -141,7 +134,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
     }
 
@@ -165,18 +157,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
     public void onResume() {
         super.onResume();
         downLoadData();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     private void setAdaperHeader() {
@@ -267,8 +247,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        disRFID();
         clearData();
         myList.clear();
     }
@@ -279,7 +257,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
             case R.id.button1:
                 clearData();
                 downLoadData();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 showUploadDialog("是否上传盘点数据");
@@ -327,7 +304,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                                         try {
                                             uploadDialog.openView();
                                             hideUploadDialog();
-                                            scanResultHandler.removeCallbacks(r);
+                                            handler.removeCallbacks(r);
                                             if (response.equals("1")) {
                                                 showToast("上传成功");
                                                 clearData();
@@ -348,7 +325,7 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
                                 e.printStackTrace();
                             }
                             uploadDialog.lockView();
-                            scanResultHandler.postDelayed(r, TIME);
+                            handler.postDelayed(r, TIME);
                         } else {
                             hideUploadDialog();
                             showConfirmDialog("请勾选上传信息");
@@ -382,29 +359,6 @@ public class CheckFragment extends BaseFragment implements BRecyclerAdapter.OnIt
             transaction.show(fragment);
             transaction.commit();
         }
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @Override

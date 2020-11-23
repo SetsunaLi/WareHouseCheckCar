@@ -4,8 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,23 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
-import com.xdl2d.scanner.TDScannerHelper;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +35,7 @@ import butterknife.OnClick;
  * Created by mumu on 2018/12/8.
  */
 
-public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
+public class OutApplyNoFragment extends CodeFragment {
 
     private final String TAG = "OutApplyNoFragment";
     @BindView(R.id.imgbutton)
@@ -66,11 +55,12 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
 
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.out_ins_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("出库");
@@ -96,20 +86,7 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         init2D();
-    }
-
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
     }
 
     @Override
@@ -120,22 +97,7 @@ public class OutApplyNoFragment extends BaseFragment implements RXCallback, OnCo
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disConnect2D();
-    }
-
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
-    }
 
     @OnClick({R.id.imgbutton, R.id.button2})
     public void onViewClicked(View view) {

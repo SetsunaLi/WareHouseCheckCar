@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,11 +22,8 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.App;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
@@ -38,13 +34,10 @@ import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.entity.forwarding.Forwarding;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,7 +59,7 @@ import butterknife.OnClick;
 
 import static com.example.mumu.warehousecheckcar.App.TIME;
 
-public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
+public class ForwardingFragment extends CodeFragment implements BRecyclerAdapter.OnItemClickListener {
     final String TAG = "ForwardingFragment";
     private static ForwardingFragment fragment;
     @BindView(R.id.recyle)
@@ -109,7 +102,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
     private int transport_output_id = 0;
     private String company;
     private CommandDailog commandDailog;
@@ -117,6 +109,8 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.forwarding_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -143,7 +137,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
@@ -159,18 +152,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         getKeyValue.clear();
         dataList.clear();
         mAdapter.notifyDataSetChanged();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     private ForwardingMsgFragment.CarMsg carMsg;
@@ -307,7 +288,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 clearData();
                 downLoadData();
                 text1.setText("0");
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                handler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 submit();
@@ -351,7 +332,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                 public void onClick(View view) {
                     upLoading(json, true);
                     uploadDialog.lockView();
-                    scanResultHandler.postDelayed(r, TIME);
+                    handler.postDelayed(r, TIME);
                 }
             });
         } else {
@@ -362,7 +343,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                     if (commandDailog.getPassword().equals("1234")) {
                         upLoading(json, false);
                         commandDailog.lockView();
-                        scanResultHandler.postDelayed(run, TIME);
+                        handler.postDelayed(run, TIME);
                     } else
                         showToast("口令不正确");
                 }
@@ -400,7 +381,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                         if (flag) {
                             uploadDialog.openView();
                             hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
+                            handler.removeCallbacks(r);
 
                         } else {
                             commandDailog.openView();
@@ -408,7 +389,7 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
                                 commandDailog.dismiss();
                                 commandDailog.setOnYesClickListener(null);
                             }
-                            scanResultHandler.removeCallbacks(run);
+                            handler.removeCallbacks(run);
                         }
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
@@ -450,29 +431,6 @@ public class ForwardingFragment extends BaseFragment implements BRecyclerAdapter
         transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
         transaction.show(fragment);
         transaction.commit();
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @Override

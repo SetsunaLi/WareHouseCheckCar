@@ -2,7 +2,6 @@ package com.example.mumu.warehousecheckcar.fragment.car;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,11 +20,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.mumu.warehousecheckcar.App;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
@@ -34,12 +29,9 @@ import com.example.mumu.warehousecheckcar.entity.BaseReturnArray;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.car.CarOutBean;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -59,7 +51,7 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  *created by 
  *on 2020/3/26
  */
-public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
+public class CarOutStockFragment extends CodeFragment {
     private static CarOutStockFragment fragment;
     @BindView(R.id.recyle)
     RecyclerView recyle;
@@ -76,7 +68,6 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
     private ArrayList<String> epcList;
     private ArrayList<String> outNoList;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
 
     public static CarOutStockFragment newInstance() {
         if (fragment == null) ;
@@ -87,6 +78,8 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         getActivity().setTitle("叉车下架");
         View view = inflater.inflate(R.layout.car_out_stock_layout, container, false);
         ButterKnife.bind(this, view);
@@ -116,7 +109,6 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
     }
 
@@ -125,18 +117,6 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
         epcList.clear();
         outNoList.clear();
         mAdapter.notifyDataSetChanged();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     @Override
@@ -196,14 +176,6 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
 
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disRFID();
-
-    }
-
     @OnClick({R.id.button1, R.id.button2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -225,7 +197,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
 
     private void upLoad() {
         uploadDialog.lockView();
-        scanResultHandler.postDelayed(r, TIME);
+        handler.postDelayed(r, TIME);
         a:
         for (String no : outNoList) {
             b:
@@ -272,7 +244,7 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
                                     try {
                                         uploadDialog.openView();
                                         hideUploadDialog();
-                                        scanResultHandler.removeCallbacks(r);
+                                        handler.removeCallbacks(r);
 //                                        BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                         if (response != null && response.getStatus() == 1) {
                                             showToast("上传成功");
@@ -299,29 +271,6 @@ public class CarOutStockFragment extends BaseFragment implements UHFCallbackLiat
                 }
             }
         }
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @Override

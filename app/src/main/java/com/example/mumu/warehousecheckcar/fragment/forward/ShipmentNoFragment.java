@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,16 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +40,7 @@ import static com.example.mumu.warehousecheckcar.App.TAG_CONTENT_FRAGMENT;
  *created by 
  *on 2020/8/30
  */
-public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCodeResult {
+public class ShipmentNoFragment extends CodeFragment {
     private static ShipmentNoFragment fragment;
     @BindView(R.id.imgbutton)
     ImageButton imgbutton;
@@ -66,11 +61,12 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
 
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.shipment_no_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -98,7 +94,6 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         init2D();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
@@ -121,24 +116,10 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
         mAdapter.notifyDataSetChanged();
     }
 
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         EventBus.getDefault().unregister(this);
-        disConnect2D();
     }
 
     @OnClick({R.id.imgbutton, R.id.button2})
@@ -156,7 +137,7 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
                         flag = true;
                 }
                 if (flag) {
-                    disConnect2D();
+                    closeConnect();
                     Bundle bundle = new Bundle();
                     bundle.putInt("bas_transport_type", bas_transport_type);
                     bundle.putSerializable("carMsg", carMsg);
@@ -193,14 +174,6 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
     }
 
     @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
     public void codeResult(String code) {
         code = code.replaceAll(" ", "");
         int id = mAdapter.getId();
@@ -211,7 +184,6 @@ public class ShipmentNoFragment extends BaseFragment implements RXCallback, OnCo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<String> {

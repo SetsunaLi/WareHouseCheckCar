@@ -3,7 +3,6 @@ package com.example.mumu.warehousecheckcar.fragment.check;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,21 +16,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.App;
+import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 
@@ -43,7 +33,7 @@ import butterknife.OnClick;
  * Created by mumu on 2018/12/21.
  */
 
-public class CheckCarrierFragment extends BaseFragment implements UHFCallbackLiatener, RXCallback, OnRfidResult, OnCodeResult {
+public class CheckCarrierFragment extends CodeFragment {
 
     private final String TAG = "CheckCarrierFragment";
 
@@ -63,13 +53,12 @@ public class CheckCarrierFragment extends BaseFragment implements UHFCallbackLia
         fragment = new CheckCarrierFragment();
         return fragment;
     }
-    private boolean flagRFID=false;
-    private boolean flag2D=false;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("盘点");
@@ -93,7 +82,6 @@ public class CheckCarrierFragment extends BaseFragment implements UHFCallbackLia
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this, this);
         edittext1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -138,71 +126,22 @@ public class CheckCarrierFragment extends BaseFragment implements UHFCallbackLia
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus){
-                    if (!flagRFID){
                         initRFID();
-                        flagRFID=true;
-                    }
                 }else {
-                    if (flagRFID){
-                        disRFID();
-                        flagRFID=false;
-                    }
+                    disRFID();
                 }
             }
         });
         edittext2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    if (!flag2D){
-                        init2D();
-                        flag2D=true;
-                    }
-                }else {
-                    if (flag2D){
-                        disConnect2D();
-                        flag2D=false;
-                    }
+                if (hasFocus) {
+                    init2D();
+                } else {
+                    disConnect2D();
                 }
             }
         });
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        if (flagRFID){
-            disRFID();
-            flagRFID=false;
-        }
-        if (flag2D){
-            disConnect2D();
-            flag2D=false;
-        }
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -212,14 +151,7 @@ public class CheckCarrierFragment extends BaseFragment implements UHFCallbackLia
         if (!TextUtils.isEmpty(App.CARRIER.getLocationNo())) {
             edittext1.setFocusableInTouchMode(false);
             edittext2.setFocusableInTouchMode(false);
-            if (flagRFID){
-                disRFID();
-                flagRFID=false;
-            }
-            if (flag2D){
-                disConnect2D();
-                flag2D=false;
-            }
+            closeConnect();
             Fragment fragment = CheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
             transaction.add(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null);
@@ -228,38 +160,6 @@ public class CheckCarrierFragment extends BaseFragment implements UHFCallbackLia
         } else
             showToast("请扫描库位硬标签");
     }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
-    }
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
-    }
-
 
     @Override
     public void rfidResult(String epc) {

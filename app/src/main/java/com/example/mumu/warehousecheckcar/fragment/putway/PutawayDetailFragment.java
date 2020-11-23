@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.entity.in.Input;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
@@ -112,6 +112,8 @@ public class PutawayDetailFragment extends BaseFragment implements BRecyclerAdap
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.in_check_detail_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -139,10 +141,8 @@ public class PutawayDetailFragment extends BaseFragment implements BRecyclerAdap
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         myList.clear();
         dataList.clear();
-        App.OUTPUT_DETAIL_LIST.clear();
     }
 
     @Override

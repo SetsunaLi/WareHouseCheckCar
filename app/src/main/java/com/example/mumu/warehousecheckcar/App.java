@@ -5,11 +5,10 @@ import android.content.Context;
 
 import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.in.Input;
 import com.example.mumu.warehousecheckcar.entity.out.OutCheckDetail;
-import com.example.mumu.warehousecheckcar.entity.out.Output;
+import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -46,8 +45,6 @@ public class App extends Application {
     public  static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     public static final String TAG_RETURN_FRAGMENT = "TitleFragment";
 
-    //    车牌号缓存
-    public static String carNo = "";
     //系统版本
     public static String SYSTEM_VERSION = "";
     //    系统IP
@@ -60,7 +57,6 @@ public class App extends Application {
     public static String CLOUD_PORT = "";
     //设备号
     public static String DEVICE_NO = "";
-    public static String DEVICE_ID = "";
     //    读写声音
     public static boolean MUSIC_SWITCH = false;
     //    系统日志
@@ -73,22 +69,9 @@ public class App extends Application {
 
     //    出库缓存详细列表
     public static List<OutCheckDetail> OUTDETAIL_LIST=new ArrayList<>();
-//出库申请单
-//    public static List<InCheckDetail> OUT_APPLY=new ArrayList<>();
-//    public static List<Inventory> OUT_APPLY_DETAIL=new ArrayList<>();
 //    盘点库位缓存
     public static Carrier CARRIER=new Carrier();
-//    盘点明细列表缓存
-//    public static List<Inventory> CHECK_DETAIL_LIST=new ArrayList<>();
 
-//  出库详情缓存
-    public static List<Output> OUTPUT_DETAIL_LIST=new ArrayList<>();
 //   上架详情缓存
     public static List<Input> INPUT_DETAIL_LIST=new ArrayList<>();
-//布票号缓存
-//    public static List<String> FABROOL_LIST=new ArrayList<>();
-//    申请单号缓存
-public static String APPLY_NO="";
-    public static String KEY;
-//    public static ArrayList<ChubbUp> CHUBB_UP_LIST=new ArrayList<>();
 }

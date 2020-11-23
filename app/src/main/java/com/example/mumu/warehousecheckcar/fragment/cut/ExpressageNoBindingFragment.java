@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,24 +21,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.Constant;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnCodeResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
 import com.example.mumu.warehousecheckcar.zxing.CaptureActivity;
 import com.squareup.okhttp.Request;
-import com.xdl2d.scanner.callback.RXCallback;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -56,7 +51,7 @@ import static com.example.mumu.warehousecheckcar.App.TIME;
  *created by 快递单号绑定
  *on 2020/4/18
  */
-public class ExpressageNoBindingFragment extends BaseFragment implements RXCallback, OnCodeResult {
+public class ExpressageNoBindingFragment extends CodeFragment {
     @BindView(R.id.fixeedittext1)
     FixedEditText fixeedittext1;
     @BindView(R.id.text1)
@@ -74,7 +69,6 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
 
     private ArrayList<String> myList;
     private RecycleAdapter mAdapter;
-    private ScanResultHandler scanResultHandler;
     private int flag = 1;//0为空，1为快点单，2为申请单
 
     public static ExpressageNoBindingFragment newInstance() {
@@ -84,6 +78,8 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         getActivity().setTitle(getResources().getString(R.string.cut_scanner));
 
         View view = inflater.inflate(R.layout.expressage_no_binding_layout, container, false);
@@ -115,19 +111,10 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         mAdapter.setCameraClick(new OnCameraClick() {
             @Override
             public void startCamera(int count, Object t) {
-//                startActivity(new Intent(getActivity(), CaptureActivity.class));
                 startActivityForResult(new Intent(getActivity(), CaptureActivity.class), Constant.REQUEST_CAMERA_CODE);
             }
         });
-        scanResultHandler = new ScanResultHandler(this);
         init2D();
-/*        fixeedittext1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b)
-                flag = 1;
-            }
-        });*/
         fixeedittext1.setFocusable(true);//设置输入框可聚集
         fixeedittext1.setFocusableInTouchMode(true);//设置触摸聚焦
         fixeedittext1.setOnTouchListener(new View.OnTouchListener() {
@@ -145,25 +132,12 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
         fixeedittext1.setText("");
     }
 
-    private void init2D() {
-        if (!PdaController.init2D(this)) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
-    private void disConnect2D() {
-        if (!PdaController.disConnect2D()) {
-            showToast(getResources().getString(R.string.hint_2d_mistake));
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && data != null) {
             switch (requestCode) {
                 case Constant.REQUEST_CAMERA_CODE:
-//                    CaptureActivity.KEY_DATA
                     String code = data.getStringExtra(CaptureActivity.KEY_DATA);
                     code = code.replaceAll(" ", "");
                     if (flag == 1) {
@@ -178,13 +152,6 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
             }
 
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disConnect2D();
     }
 
     @OnClick({R.id.imgbutton, R.id.button2, R.id.imagebutton2})
@@ -203,7 +170,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                     public void onClick(View view) {
                         submit();
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                     }
                 });
                 break;
@@ -246,7 +213,7 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                             LogUtil.i(getResources().getString(R.string.log_exp_binding_result), "userId:" + User.newInstance().getId() + response.toString());
                             uploadDialog.openView();
                             hideUploadDialog();
-                            scanResultHandler.removeCallbacks(r);
+                            handler.removeCallbacks(r);
                             if (response.getStatus() == 1) {
                                 showToast("上传成功");
                                 clearData();
@@ -265,14 +232,6 @@ public class ExpressageNoBindingFragment extends BaseFragment implements RXCallb
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void callback(byte[] bytes) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.CODE;
-        msg.obj = new String(bytes);
-        scanResultHandler.sendMessage(msg);
     }
 
     @Override

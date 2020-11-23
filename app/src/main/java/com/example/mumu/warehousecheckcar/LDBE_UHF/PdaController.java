@@ -99,6 +99,10 @@ public class PdaController {
         return RFID_2DHander.getInstance().getRFIDReader().setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) prower);
     }
 
+    public static int writeTag(byte btReadId, byte[] btAryPassWord, byte btMemBank, byte btWordAdd, byte btWordCnt, byte[] btAryData) throws Exception {
+        return RFID_2DHander.getInstance().getRFIDReader().writeTag(btReadId, btAryPassWord, btMemBank, btWordAdd, btWordCnt, btAryData);
+    }
+
     /**
      * 判断设备类型
      *

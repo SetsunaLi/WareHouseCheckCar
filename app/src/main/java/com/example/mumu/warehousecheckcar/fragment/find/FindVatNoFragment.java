@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,26 +29,18 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.SearchAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.find.FindVatNo;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.CompareUtil;
-import com.rfid.RFIDReaderHelper;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -68,7 +59,7 @@ import butterknife.OnClick;
  * Created by mumu on 2019/1/21.
  */
 
-public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, OnRfidResult {
+public class FindVatNoFragment extends CodeFragment implements BRecyclerAdapter.OnItemClickListener {
     private static FindVatNoFragment fragment;
     @BindView(R.id.layout2)
     LinearLayout layout2;
@@ -120,18 +111,15 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
     //    查询
     private ArrayList<String> findList;
 
-    //    private FilterAdapter vatAdapter;
-//    private FilterAdapter colorAdapter;
-//    private FilterAdapter clothAdapter;
     private SearchAdapter vatAdapter;
     private SearchAdapter colorAdapter;
     private SearchAdapter clothAdapter;
-    private RFIDReaderHelper rfidHander;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.find_vatno_layout, container, false);
         ButterKnife.bind(this, view);
 
@@ -164,12 +152,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
         ms.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(ms);
         recyle.setAdapter(mAdapter);
-/*        vatAdapter = new FilterAdapter(getActivity());
-//        autoText1.setAdapter(vatAdapter);
-        colorAdapter = new FilterAdapter(getActivity());
-        autoText2.setAdapter(colorAdapter);
-        clothAdapter = new FilterAdapter(getActivity());
-        autoText3.setAdapter(clothAdapter);*/
 
         vatAdapter = new SearchAdapter(getActivity(), android.R.layout.simple_list_item_1);
         autoText1.setAdapter(vatAdapter);
@@ -182,7 +164,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         mAdapter.setOnItemClickListener(this);
         autoText1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -292,11 +273,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             }
         });
         initRFID();
-        try {
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void clearData() {
@@ -312,18 +288,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             dataEpc.clear();
         if (findList != null)
             findList.clear();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     @Override
@@ -343,10 +307,8 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         clearData();
         myList.clear();
-        disRFID();
     }
 
     @Override
@@ -355,29 +317,6 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             mAdapter.selectItem(position);
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.NO_MUSIC_RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     private int erpCount = 0;
@@ -392,7 +331,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                 layout2.removeAllViews();
                 mAdapter.notifyDataSetChanged();
                 clearDraw();
-                scanResultHandler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
+                handler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
                 break;
             case R.id.button1:
                 myList.clear();
@@ -400,7 +339,7 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
                 dataEpc.clear();
                 text2.setText(String.valueOf(myList.size() - 1));
                 mAdapter.notifyDataSetChanged();
-                scanResultHandler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
+                handler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
                 break;
             case R.id.button2:
                 prowerDialog();
@@ -460,12 +399,9 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Log.i("onStopTrackingTouch", "onStopTrackingTouch");
-                int prower = seekBar.getProgress();
-                if (rfidHander != null) {
-                    int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) prower);
-                    if (i == 0)
-                        App.PROWER = prower;
-                }
+                int i = setPrower(seekBar.getProgress());
+                if (i == 0)
+                    App.PROWER = seekBar.getProgress();
             }
         });
         dialog = new AlertDialog.Builder(getActivity()).create();
@@ -666,100 +602,4 @@ public class FindVatNoFragment extends BaseFragment implements BRecyclerAdapter.
             }
         }
     }
-
-  /*  class FilterAdapter extends BaseAdapter implements Filterable {
-        private Context mContext;
-        private List<String> mItems;
-        private List<String> fData;
-        private final Object mLock = new Object();
-        private MyFilter mFilter;
-
-        public FilterAdapter(Context context) {
-            this.mContext = context;
-            mFilter = new MyFilter();
-            mItems = new ArrayList<>();
-            fData = new ArrayList<>();
-        }
-
-        public void transforData(List<String> items) {
-            this.mItems = items;
-            notifyDataSetChanged();
-        }
-
-        public void clearData() {
-            mItems.clear();
-        }
-
-        @Override
-        public int getCount() {
-            return mItems.size();
-        }
-
-        @Override
-        public String getItem(int position) {
-            return mItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.fuzzy_query_item, parent, false);
-                viewHolder.content = convertView.findViewById(R.id.text1);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.content.setText(mItems.get(position));
-            return convertView;
-        }
-
-        @Override
-        public Filter getFilter() {
-            return mFilter;
-        }
-
-        class ViewHolder {
-            TextView content;
-        }
-
-        class MyFilter extends Filter {
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
-                if (fData == null) {
-                    synchronized (mLock) {
-                        fData = new ArrayList<>(mItems);
-                    }
-                }
-                int count = fData.size();
-                ArrayList<String> values = new ArrayList<>();
-                for (int i = 0; i < count; i++) {
-                    String value = fData.get(i);
-                    if (null != value && null != constraint
-                            && value.toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        values.add(value);
-                    }
-                }
-                results.values = values;
-                results.count = values.size();
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence arg0, FilterResults results) {
-                mItems = (List<String>) results.values;
-                if (results.count > 0) {
-                    notifyDataSetChanged();
-                } else {
-                    notifyDataSetInvalidated();
-                }
-            }
-        }
-    }*/
 }

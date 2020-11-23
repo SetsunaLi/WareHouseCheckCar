@@ -16,6 +16,7 @@ public class ScanResultHandler extends Handler {
     public static final int NO_MUSIC_RFID = 3;
     private OnCodeResult codeResult;
     private OnRfidResult rfidResult;
+    public boolean mIsCustom = true;
 
     public ScanResultHandler() {
     }
@@ -63,6 +64,27 @@ public class ScanResultHandler extends Handler {
             break;
             default:
                 break;
+        }
+    }
+
+    private Runnable mLoopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            removeCallbacks(this);
+            if (mIsCustom) {
+                RFID_2DHander.getInstance().customizedSessionTargetInventory(RFID_2DHander.getInstance().getM_curReaderSetting().btReadId);
+            } else {
+                RFID_2DHander.getInstance().realTimeInventory(RFID_2DHander.getInstance().getM_curReaderSetting().btReadId);
+            }
+            postDelayed(this, 2000);
+        }
+    };
+
+    public void startOrStopInventory(boolean start) {
+        if (start) {
+            mLoopRunnable.run();
+        } else {
+            removeCallbacks(mLoopRunnable);
         }
     }
 }

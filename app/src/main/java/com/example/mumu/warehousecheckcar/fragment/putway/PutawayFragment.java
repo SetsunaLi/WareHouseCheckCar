@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,25 +24,19 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.App;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.in.Input;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.entity.in.Input;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -65,7 +58,7 @@ import static com.example.mumu.warehousecheckcar.App.TIME;
  * Created by mumu on 2019/1/8.
  */
 
-public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener, BasePullUpRecyclerAdapter.OnItemClickListener, OnRfidResult {
+public class PutawayFragment extends CodeFragment implements BasePullUpRecyclerAdapter.OnItemClickListener {
     private static PutawayFragment fragment;
     private final String TAG = "PutawayFragment";
     @BindView(R.id.recyle)
@@ -96,11 +89,12 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
     private List<Input> dataList;
     private List<String> dataKey;
     private List<String> epcList;
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.putaway_layout, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -158,20 +152,7 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
     @Override
     protected void addListener() {
         initRFID();
-        scanResultHandler = new ScanResultHandler(this);
         mAdapter.setOnItemClickListener(this);
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     @Override
@@ -191,34 +172,9 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        disRFID();
         clearData();
         myList.clear();
         INPUT_DETAIL_LIST.clear();
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
@@ -251,7 +207,7 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
                 clearData();
                 text1.setText(String.valueOf(epcList.size()));
                 mAdapter.notifyDataSetChanged();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                handler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 showUploadDialog("是否确认上架");
@@ -298,7 +254,7 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
                                     try {
                                         uploadDialog.openView();
                                         hideUploadDialog();
-                                        scanResultHandler.removeCallbacks(r);
+                                        handler.removeCallbacks(r);
                                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                                             showToast("上传成功");
@@ -321,7 +277,7 @@ public class PutawayFragment extends BaseFragment implements UHFCallbackLiatener
                             e.printStackTrace();
                         }
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                     }
                 });
                 break;

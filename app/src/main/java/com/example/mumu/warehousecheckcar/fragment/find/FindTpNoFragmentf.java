@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,24 +35,16 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.RFID_2DHander;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
-import com.rfid.RFIDReaderHelper;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -66,7 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.OnItemClickListener, UHFCallbackLiatener, AdapterView.OnItemClickListener, OnRfidResult {
+public class FindTpNoFragmentf extends CodeFragment implements BRecyclerAdapter.OnItemClickListener, AdapterView.OnItemClickListener {
     private static FindTpNoFragmentf fragment;
     @BindView(R.id.fixeedittext1)
     FixedEditText fixeedittext1;
@@ -117,12 +108,12 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
     //     模糊查询托盘号
     private ArrayList<String> vatList;
     private boolean isLookFlag = false;
-    private ScanResultHandler scanResultHandler;
-    private RFIDReaderHelper rfidHander;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.find_tpno_layout, container, false);
         ButterKnife.bind(this, view);
 
@@ -163,7 +154,6 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         mAdapter.setOnItemClickListener(this);
         listview.setOnItemClickListener(this);
         fixeedittext1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -214,7 +204,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                                         response = jsonArray.toJavaList(TP.class);
                                         if (response != null && response.size() != 0) {
                                             vatList.clear();
-                                            for(TP TP:response){
+                                            for (TP TP : response) {
                                                 if (!vatList.contains(TP.getPallet_name()))
                                                     vatList.add(TP.getPallet_name());
                                             }
@@ -236,8 +226,8 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }else if (pallet.length()<3){
-                    if (vatList.size()>0) {
+                } else if (pallet.length() < 3) {
+                    if (vatList.size() > 0) {
                         vatList.clear();
                         textAdapter.setList(vatList);
                         textAdapter.notifyDataSetChanged();
@@ -254,11 +244,6 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
             }
         });
         initRFID();
-        try {
-            rfidHander = RFID_2DHander.getInstance().getRFIDReader();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void clearData() {
@@ -278,18 +263,6 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
             findList.clear();
     }
 
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
@@ -307,10 +280,8 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         clearData();
         myList.clear();
-        disRFID();
     }
 
     @Override
@@ -319,29 +290,6 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
             mAdapter.selectItem(position);
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.NO_MUSIC_RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @OnClick({R.id.button, R.id.button1, R.id.button2, R.id.layout1,
@@ -366,7 +314,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                 mAdapter.notifyDataSetChanged();
                 addView();
                 goFind();
-                scanResultHandler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
+                handler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
                 break;
             case R.id.button0:
                 clearData();
@@ -381,7 +329,7 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                 dataEpc.clear();
                 text2.setText(String.valueOf(dataList.size() - 1));
                 mAdapter.notifyDataSetChanged();
-                scanResultHandler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
+                handler.removeMessages(ScanResultHandler.NO_MUSIC_RFID);
                 break;
             case R.id.button2:
                 powerDialog();
@@ -435,12 +383,9 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Log.i("onStopTrackingTouch", "onStopTrackingTouch");
-                int prower = seekBar.getProgress();
-                if (rfidHander != null) {
-                    int i = rfidHander.setOutputPower(RFID_2DHander.getInstance().btReadId, (byte) prower);
-                    if (i == 0)
-                        App.PROWER = prower;
-                }
+                int i = setPrower(seekBar.getProgress());
+                if (i == 0)
+                    App.PROWER = seekBar.getProgress();
             }
         });
         dialog = new AlertDialog.Builder(getActivity()).create();
@@ -600,6 +545,27 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
         }
     }
 
+    static class TP {
+        private String pallet_epc = "";
+        private String pallet_name = "";
+
+        public String getPallet_epc() {
+            return pallet_epc;
+        }
+
+        public void setPallet_epc(String pallet_epc) {
+            this.pallet_epc = pallet_epc;
+        }
+
+        public String getPallet_name() {
+            return pallet_name;
+        }
+
+        public void setPallet_name(String pallet_name) {
+            this.pallet_name = pallet_name;
+        }
+    }
+
     class RecycleAdapter extends BasePullUpRecyclerAdapter<TP> {
         private Context context;
 
@@ -641,30 +607,10 @@ public class FindTpNoFragmentf extends BaseFragment implements BRecyclerAdapter.
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     else
                         ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
-                    holder.setText(R.id.item1,item.getPallet_name());
-                    holder.setText(R.id.item2,item.getPallet_epc());
+                    holder.setText(R.id.item1, item.getPallet_name());
+                    holder.setText(R.id.item2, item.getPallet_epc());
                 }
             }
-        }
-    }
-   static class TP{
-        private String pallet_epc="";
-        private String pallet_name="";
-
-        public String getPallet_epc() {
-            return pallet_epc;
-        }
-
-        public void setPallet_epc(String pallet_epc) {
-            this.pallet_epc = pallet_epc;
-        }
-
-        public String getPallet_name() {
-            return pallet_name;
-        }
-
-        public void setPallet_name(String pallet_name) {
-            this.pallet_name = pallet_name;
         }
     }
 

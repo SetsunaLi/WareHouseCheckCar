@@ -2,7 +2,6 @@ package com.example.mumu.warehousecheckcar.fragment.chubb;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,24 +21,18 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
-import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.App;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
+import com.example.mumu.warehousecheckcar.LDBE_UHF.Sound;
+import com.example.mumu.warehousecheckcar.R;
+import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
-import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
 import com.example.mumu.warehousecheckcar.entity.User;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
+import com.example.mumu.warehousecheckcar.entity.in.InCheckDetail;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -61,7 +54,7 @@ import static com.example.mumu.warehousecheckcar.App.TIME;
  * Created by mumu on 2019/1/14.
  */
 
-public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
+public class ChubbFragment extends CodeFragment {
     private static ChubbFragment fragment;
     @BindView(R.id.recyle)
     RecyclerView recyle;
@@ -88,7 +81,6 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
     private List<String> dataKey;
     //    epc
     private List<String> epcList;
-    private ScanResultHandler scanResultHandler;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +91,8 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.chubb_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("查布");
@@ -144,20 +138,7 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
 
     @Override
     protected void addListener() {
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
     }
 
     //这里写界面
@@ -183,33 +164,8 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        disRFID();
         clearData();
         myList.clear();
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @OnClick({R.id.button1, R.id.button2})
@@ -221,7 +177,7 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
                 clearData();
                 text1.setText("0");
                 mAdapter.notifyDataSetChanged();
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                handler.removeMessages(ScanResultHandler.RFID);
                 break;
             case R.id.button2:
                 showUploadDialog("是否确认查布？");
@@ -267,7 +223,7 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
                                     try {
                                         uploadDialog.openView();
                                         hideUploadDialog();
-                                        scanResultHandler.removeCallbacks(r);
+                                        handler.removeCallbacks(r);
                                         BaseReturn baseReturn = response.toJavaObject(BaseReturn.class);
                                         if (baseReturn != null && baseReturn.getStatus() == 1) {
                                             showToast("上传成功");
@@ -291,7 +247,7 @@ public class ChubbFragment extends BaseFragment implements UHFCallbackLiatener, 
                             e.printStackTrace();
                         }
                         uploadDialog.lockView();
-                        scanResultHandler.postDelayed(r, TIME);
+                        handler.postDelayed(r, TIME);
                     }
                 });
                 break;

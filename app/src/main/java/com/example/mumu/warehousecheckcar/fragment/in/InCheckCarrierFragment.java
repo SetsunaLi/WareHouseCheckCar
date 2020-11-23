@@ -3,7 +3,6 @@ package com.example.mumu.warehousecheckcar.fragment.in;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,18 +16,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.OnRfidResult;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.PdaController;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.LDBE_UHF.ScanResultHandler;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.LDBE_UHF.UHFCallbackLiatener;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
-import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
-import com.rfid.rxobserver.ReaderSetting;
-import com.rfid.rxobserver.bean.RXInventoryTag;
-import com.rfid.rxobserver.bean.RXOperationTag;
+import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -37,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackLiatener, OnRfidResult {
+public class InCheckCarrierFragment extends CodeFragment {
     @BindView(R.id.edittext1)
     EditText edittext1;
     @BindView(R.id.edittext2)
@@ -57,11 +50,12 @@ public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackL
         return fragment;
     }
 
-    private ScanResultHandler scanResultHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.check_carrier_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("入库校验");
@@ -126,34 +120,14 @@ public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackL
 
             }
         });
-        scanResultHandler = new ScanResultHandler(this);
         initRFID();
-    }
-
-    private void initRFID() {
-        if (!PdaController.initRFID(this)) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    private void disRFID() {
-        if (!PdaController.disRFID()) {
-            showToast(getResources().getString(R.string.hint_rfid_mistake));
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        disRFID();
     }
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
 
     @OnClick(R.id.button2)
     public void onViewClicked() {
-        scanResultHandler.removeMessages(ScanResultHandler.RFID);
+        handler.removeMessages(ScanResultHandler.RFID);
         if (App.CARRIER != null && !TextUtils.isEmpty(App.CARRIER.getLocationNo())) {
             Fragment fragment = InCheckFragment.newInstance();
             FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
@@ -162,29 +136,6 @@ public class InCheckCarrierFragment extends BaseFragment implements UHFCallbackL
             transaction.commit();
         } else
             showToast("请扫描库位硬标签");
-    }
-
-    @Override
-    public void refreshSettingCallBack(ReaderSetting readerSetting) {
-
-    }
-
-    @Override
-    public void onInventoryTagCallBack(RXInventoryTag tag) {
-        Message msg = scanResultHandler.obtainMessage();
-        msg.what = ScanResultHandler.RFID;
-        msg.obj = tag.strEPC;
-        scanResultHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void onInventoryTagEndCallBack(RXInventoryTag.RXInventoryTagEnd tagEnd) {
-
-    }
-
-    @Override
-    public void onOperationTagCallBack(RXOperationTag tag) {
-
     }
 
     @Override
