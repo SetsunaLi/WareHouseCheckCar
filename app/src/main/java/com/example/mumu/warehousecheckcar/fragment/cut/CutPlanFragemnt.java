@@ -75,7 +75,6 @@ public class CutPlanFragemnt extends CodeFragment {
     private ArrayList<Cloth> cloths;
     private ArrayList<String> epcs;
     private HashMap<String, String> outId_epc;
-    private ScanResultHandler scanResultHandler;
 
     public static CutPlanFragemnt newInstance() {
         if (fragment == null) ;
@@ -211,7 +210,7 @@ public class CutPlanFragemnt extends CodeFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button1:
-                scanResultHandler.removeMessages(ScanResultHandler.RFID);
+                handler.removeMessages(ScanResultHandler.RFID);
                 clearData();
                 downLoadData();
                 break;
@@ -229,7 +228,7 @@ public class CutPlanFragemnt extends CodeFragment {
 
     private void upLoad() {
         uploadDialog.lockView();
-        scanResultHandler.postDelayed(r, TIME);
+        handler.postDelayed(r, TIME);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("userId", User.newInstance().getId());
         HashMap<String, JSONArray> map = new HashMap<>();
@@ -275,7 +274,7 @@ public class CutPlanFragemnt extends CodeFragment {
                         LogUtil.i(getResources().getString(R.string.log_cut_plan_result), "userId:" + User.newInstance().getId() + response.toString());
                         uploadDialog.openView();
                         hideUploadDialog();
-                        scanResultHandler.removeCallbacks(r);
+                        handler.removeCallbacks(r);
                         if (response.getStatus() == 1) {
                             showToast("上传成功");
                             clearData();
