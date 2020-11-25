@@ -10,10 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.mumu.warehousecheckcar.App;
+import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.utils.Imgutil;
+import com.example.mumu.warehousecheckcar.utils.SpModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,6 +82,8 @@ public class HomeFragment extends BaseFragment {
     private User user;
     private Button[] buttons;
     private int[] imgs;
+    private SpModel app;
+    private List<Power> powers;
 
     @Nullable
     @Override
@@ -84,6 +91,8 @@ public class HomeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.home_layout, container, false);
         ButterKnife.bind(this, view);
         getActivity().setTitle("主页");
+        app = SpModel.getInstance(App.getContext(), Constant.APP_TABLE_NAME);
+        powers = app.getListData(Constant.SP_PROWERS, Power.class);
         return view;
     }
 
@@ -111,20 +120,19 @@ public class HomeFragment extends BaseFragment {
                         null,
                         null);
             }
-            if (user != null && user.getApp_auth() != null) {
                 boolean outFlag = false;
                 boolean inSourceFlag = false;
-                for (Power power : user.getApp_auth()) {
-                    Button button;
-                    switch (power.getAuth_type()) {
-                        case 0:
-                            button = button1;
-                            break;
-                        case 1:
-                            button = button2;
-                            break;
-                        case 2:
-                            button = button3;
+            for (Power power : powers) {
+                Button button;
+                switch (power.getAuth_type()) {
+                    case 0:
+                        button = button1;
+                        break;
+                    case 1:
+                        button = button2;
+                        break;
+                    case 2:
+                        button = button3;
                             break;
                         case 3:
                             button = button4;
@@ -200,7 +208,6 @@ public class HomeFragment extends BaseFragment {
                             button.setVisibility(View.VISIBLE);
                     }
                 }
-            }
         }
     }
 

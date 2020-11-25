@@ -48,13 +48,13 @@ public class App extends Application {
     //系统版本
     public static String SYSTEM_VERSION = "";
     //    系统IP
-    public static String IP = "";
+    public static String IP = "http://47.106.157.255";
     //    系统端口
-    public static String PORT = "";
+    public static String PORT = "80";
     //    系统IP
-    public static String CLOUD_IP = "";
+    public static String CLOUD_IP = "http://yun.label1.cn";
     //    系统端口
-    public static String CLOUD_PORT = "";
+    public static String CLOUD_PORT = "8983";
     //设备号
     public static String DEVICE_NO = "";
     //    读写声音
@@ -62,7 +62,7 @@ public class App extends Application {
     //    系统日志
     public static boolean LOGCAT_SWITCH = false;
     //    功率
-    public static int PROWER = 0;
+    public static int PROWER = 20;
 
 //    入库缓存详细列表
     public static List<InCheckDetail> IN_DETAIL_LIST=new ArrayList<>();

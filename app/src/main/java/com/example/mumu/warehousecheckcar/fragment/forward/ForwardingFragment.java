@@ -187,8 +187,8 @@ public class ForwardingFragment extends CodeFragment implements BRecyclerAdapter
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         downLoadData();
         text2.setText(String.valueOf(fatherNoList.size()));
         text3.setText(String.valueOf(carMsg.getCarNo()));

@@ -8,6 +8,7 @@ import android.Manifest;
  *on 2020/4/28
  */
 public final class Constant {
+
 //    public static final String IP = "http://192.168.1.105";
 //    public static final String PORT = "8982";
     public static final String IP = "http://47.106.157.255";
@@ -33,5 +34,10 @@ public final class Constant {
     public static final int REQUEST_CAMERA_CODE = 1001;
 
     public static final int Handle_key = 134;
+
+    public static final String APP_TABLE_NAME = "sp_chencun_wms";
+    public static final String SP_PROWERS = "sp_prowers";
+    public static final String SP_AUTH = "sp_auth";
+
 
 }

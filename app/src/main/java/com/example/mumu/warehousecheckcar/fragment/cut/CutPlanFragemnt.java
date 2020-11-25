@@ -160,11 +160,10 @@ public class CutPlanFragemnt extends CodeFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         downLoadData();
     }
-
 
     private void downLoadData() {
         showLoadingDialog();

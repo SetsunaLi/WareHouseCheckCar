@@ -7,11 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mumu.warehousecheckcar.App;
-import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.dialog.ConfirmDialog;
 import com.example.mumu.warehousecheckcar.dialog.LoadingDialog;
 import com.example.mumu.warehousecheckcar.dialog.UploadDialog;
@@ -93,7 +91,7 @@ public abstract class BaseFragment extends Fragment {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog.newInstance();
         }
-        if (!loadingDialog.isResumed())
+        if (!loadingDialog.isResumed() && !loadingDialog.isAdded())
             loadingDialog.show(getChildFragmentManager(), "loading");
     }
 
@@ -101,7 +99,7 @@ public abstract class BaseFragment extends Fragment {
      * 隐藏加载Dialog
      */
     protected void hideLoadingDialog() {
-        if (loadingDialog != null && !loadingDialog.isHidden()) {
+        if (loadingDialog != null && !loadingDialog.isHidden() && isAdded()) {
             loadingDialog.dismiss();
         }
     }

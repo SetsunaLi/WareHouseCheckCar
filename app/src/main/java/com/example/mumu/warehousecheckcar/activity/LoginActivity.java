@@ -26,14 +26,15 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.Constant;
 import com.example.mumu.warehousecheckcar.R;
-import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.UpdateBean;
 import com.example.mumu.warehousecheckcar.entity.User;
+import com.example.mumu.warehousecheckcar.utils.SpModel;
 import com.example.mumu.warehousecheckcar.utils.UpdateApk;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -71,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     private String unStr;
     private String pwStr;
     UpdateBean updateBean = new UpdateBean();
+    SpModel app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,8 @@ public class LoginActivity extends AppCompatActivity {
         if (!EventBus.getDefault().isRegistered(this))
 
             EventBus.getDefault().register(this);
+
+        app = SpModel.getInstance(App.getContext(), Constant.APP_TABLE_NAME);
     }
 
     private boolean exit = false;
@@ -385,6 +389,8 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
             if (success) {
                 User user = User.newInstance();
+                app.putListData(Constant.SP_PROWERS, user.getApp_auth());
+                app.putData(Constant.SP_AUTH, user.getAuth());
                 Toast.makeText(LoginActivity.this, user.getMsg(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
                 startActivity(intent);
