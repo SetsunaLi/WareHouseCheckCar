@@ -239,7 +239,7 @@ public class CutPlanFragemnt extends CodeFragment {
                     if (!epc.equals("")) {
                         JSONObject object = new JSONObject();
                         object.put("epc", epc);
-                        object.put("product_applypid", clothPlan.getOutp_id());
+                        object.put("product_applypid", clothPlan.getTrack_id());
                         jsonArray.add(object);
                     }
                 }

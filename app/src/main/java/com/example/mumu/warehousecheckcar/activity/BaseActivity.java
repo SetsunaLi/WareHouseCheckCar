@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.mumu.warehousecheckcar.App;
 import com.example.mumu.warehousecheckcar.dialog.LoadingDialog;
 import com.example.mumu.warehousecheckcar.utils.ActivityManagerUtil;
 import com.example.mumu.warehousecheckcar.utils.AppUtil;
@@ -118,6 +119,33 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // TODO Auto-generated method stub
+        super.onSaveInstanceState(outState);
+        outState.putString("ip", App.IP);
+        outState.putString("port", App.PORT);
+        outState.putString("cloud_ip", App.CLOUD_IP);
+        outState.putString("cloud_port", App.CLOUD_PORT);
+        outState.putInt("prower", App.PROWER);
+        outState.putBoolean("music", App.MUSIC_SWITCH);
+        outState.putBoolean("logcat", App.LOGCAT_SWITCH);
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onRestoreInstanceState(savedInstanceState);
+        App.IP = savedInstanceState.getString("ip");
+        App.PORT = savedInstanceState.getString("port");
+        App.CLOUD_IP = savedInstanceState.getString("cloud_ip");
+        App.CLOUD_PORT = savedInstanceState.getString("cloud_port");
+        App.PROWER = savedInstanceState.getInt("prower", 20);
+        App.MUSIC_SWITCH = savedInstanceState.getBoolean("music", true);
+        App.LOGCAT_SWITCH = savedInstanceState.getBoolean("logcat", true);
+    }
+
 }

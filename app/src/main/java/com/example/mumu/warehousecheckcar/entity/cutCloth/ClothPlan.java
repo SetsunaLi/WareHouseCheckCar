@@ -44,6 +44,7 @@ public class ClothPlan {
 
     private int id;
     private String outp_id;
+    private String track_id;
     private String out_no;
     private String product_no;
     private String sel_color;
@@ -77,6 +78,14 @@ public class ClothPlan {
     private long modifydatetime;
     private int dataareaid;
     private boolean isUpLoad = true;
+
+    public String getTrack_id() {
+        return track_id;
+    }
+
+    public void setTrack_id(String track_id) {
+        this.track_id = track_id;
+    }
 
     public boolean isUpLoad() {
         return isUpLoad;
