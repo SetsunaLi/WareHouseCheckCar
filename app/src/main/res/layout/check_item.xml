@@ -57,6 +57,15 @@
         <View style="@style/view_item_mid" />
 
         <TextView
+            android:id="@+id/item9"
+            style="@style/text_item"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:text="库存重量" />
+
+        <View style="@style/view_item_mid" />
+
+        <TextView
             android:id="@+id/item5"
             style="@style/text_item"
             android:layout_width="80dip"

@@ -30,12 +30,18 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+import com.example.mumu.warehousecheckcar.utils.ArithUtil;
 import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -64,16 +70,13 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
     @BindView(R.id.recyle)
     RecyclerView recyle;
     private final String TAG = "CheckFragment";
-
     private static CheckFragment fragment;
-
     @BindView(R.id.text1)
     TextView text1;
     @BindView(R.id.text2)
     TextView text2;
     @BindView(R.id.text3)
     TextView text3;
-
 
     public static CheckFragment newInstance() {
         if (fragment == null) ;
@@ -94,7 +97,6 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View view = inflater.inflate(R.layout.check_layout_upgrade, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -135,6 +137,33 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
     @Override
     protected void addListener() {
         initRFID();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void getEventMsg(EventBusMsg msg) {
+        if (msg != null)
+            switch (msg.getStatus()) {
+                case 0x30:
+                    List<Inventory> dataList = (List<Inventory>) msg.getPositionObj(0);
+                    if (dataList != null && dataList.size() > 0)
+                        for (Inventory inventory : myList) {
+                            if (dataList.get(0).getVatNo().equals(inventory.getVatNo())) {
+                                inventory.setWeightall(0);
+                                for (Inventory data : dataList) {
+                                    inventory.setWeightall(ArithUtil.add(inventory.getWeightall(), data.getWeight()));
+                                    for (Inventory inv : this.dataList) {
+                                        if (inv.getEpc().equals(data.getEpc())) {
+                                            inv.setWeight(data.getWeight());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    mAdapter.notifyDataSetChanged();
+                    break;
+            }
     }
 
     private void clearData() {
@@ -193,10 +222,13 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                         if (obj != null && obj.getVatNo() != null && !epcData.contains(obj.getEpc())) {
                                             if (keyValue.containsKey(obj.getVatNo())) {//里面有
                                                 myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
+                                                myList.get(keyValue.get(obj.getVatNo())).setWeightall(
+                                                        ArithUtil.add(myList.get(keyValue.get(obj.getVatNo())).getWeightall(), obj.getWeight()));//增加重量
                                             } else {//里面没有
                                                 if (!dataKEY.contains(obj.getVatNo()))
                                                     dataKEY.add(obj.getVatNo());
                                                 obj.setCountIn(1);
+                                                obj.setWeightall(obj.getWeight());
                                                 myList.add(obj);
                                                 keyValue.put(obj.getVatNo(), myList.size() - 1);
                                             }
@@ -248,6 +280,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
     public void onDestroyView() {
         super.onDestroyView();
         clearData();
+        EventBus.getDefault().unregister(this);
         myList.clear();
     }
 
@@ -493,6 +526,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                     holder.setText(R.id.item6, String.valueOf(item.getCountReal()));
                     holder.setText(R.id.item7, String.valueOf(item.getCountProfit()));
                     holder.setText(R.id.item8, String.valueOf(item.getCountIn() - item.getCountReal() + item.getCountProfit()));
+                    holder.setText(R.id.item9, String.valueOf(item.getWeightall()));
                 }
             }
         }

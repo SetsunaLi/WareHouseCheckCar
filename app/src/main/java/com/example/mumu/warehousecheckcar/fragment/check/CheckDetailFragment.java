@@ -5,21 +5,27 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
+import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
 import com.example.mumu.warehousecheckcar.fragment.BaseFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -168,8 +174,8 @@ public class CheckDetailFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        myList.clear();
+        myList.remove(0);
+        EventBus.getDefault().post(new EventBusMsg(0x30, myList));
     }
 
     class RecycleAdapter extends BasePullUpRecyclerAdapter<Inventory> {
@@ -189,9 +195,9 @@ public class CheckDetailFragment extends BaseFragment {
         }
 
         @Override
-        public void convert(RecyclerHolder holder, Inventory item, int position) {
-            if (position != 0) {
-                if (item != null) {
+        public void convert(RecyclerHolder holder, final Inventory item, int position) {
+            if (item != null)
+                if (position != 0) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
                     if (item.getFlag() == 0)//亏
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
@@ -203,11 +209,40 @@ public class CheckDetailFragment extends BaseFragment {
                     holder.setText(R.id.item1, item.getFabRool());
                     holder.setText(R.id.item2, item.getProduct_no());
                     holder.setText(R.id.item3, String.valueOf(item.getWeight_in()));
-                    holder.setText(R.id.item4, String.valueOf(item.getWeight()));
                     holder.setText(R.id.item5, item.getColor());
                     holder.setText(R.id.item6, item.getSelNo());
+//                    holder.setText(R.id.item4, String.valueOf(item.getWeight()));
+                    EditText editText = holder.getView(R.id.edit1);
+                    editText.setEnabled(true);
+                    editText.setText(String.valueOf(item.getWeight()));
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            try {
+                                String weight = charSequence.toString();
+                                weight = weight.replaceAll(" ", "");
+                                if (!TextUtils.isEmpty(weight)) {
+                                    double a = Double.parseDouble(weight);
+                                    item.setWeight(a);
+                                } else {
+                                    item.setWeight(0);
+                                }
+                            } catch (Exception e) {
+                                item.setWeight(item.getWeight_in());
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
                 }
-            }
         }
     }
 }
