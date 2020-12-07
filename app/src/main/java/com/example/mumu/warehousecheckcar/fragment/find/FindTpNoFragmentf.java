@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,6 +46,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.view.FixedEditText;
+import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -469,6 +471,15 @@ public class FindTpNoFragmentf extends CodeFragment implements BRecyclerAdapter.
         if (listview.getVisibility() == View.VISIBLE)
             listview.setVisibility(View.GONE);
         vatFlag = true;
+    }
+
+    @Override
+    public void onInventoryTagCallBack(RXInventoryTag tag) {
+        final String epc = tag.strEPC.replace(" ", "");
+        Message message = handler.obtainMessage();
+        message.what = ScanResultHandler.NO_MUSIC_RFID;
+        message.obj = epc;
+        handler.sendMessage(message);
     }
 
     @Override

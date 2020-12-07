@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +42,7 @@ import com.example.mumu.warehousecheckcar.entity.find.FindVatNo;
 import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.CompareUtil;
+import com.rfid.rxobserver.bean.RXInventoryTag;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -507,6 +509,15 @@ public class FindVatNoFragment extends CodeFragment implements BRecyclerAdapter.
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onInventoryTagCallBack(RXInventoryTag tag) {
+        final String epc = tag.strEPC.replace(" ", "");
+        Message message = handler.obtainMessage();
+        message.what = ScanResultHandler.NO_MUSIC_RFID;
+        message.obj = epc;
+        handler.sendMessage(message);
     }
 
     @Override
