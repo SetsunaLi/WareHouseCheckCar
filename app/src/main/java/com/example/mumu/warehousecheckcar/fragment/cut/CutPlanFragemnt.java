@@ -155,6 +155,7 @@ public class CutPlanFragemnt extends CodeFragment {
                     String changeEpc = (String) msg.getPositionObj(0);
                     String outp_id = (String) msg.getPositionObj(1);
                     outId_epc.put(outp_id, changeEpc);
+                    mAdapter.notifyDataSetChanged();
                     break;
             }
     }

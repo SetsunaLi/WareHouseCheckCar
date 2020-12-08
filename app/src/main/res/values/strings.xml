@@ -4,7 +4,6 @@
     <string name="app_version">20.12.02</string>
     <string name="app_download_url">warehouse.apk</string>
 
-
     <!-- Strings related to login -->
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
