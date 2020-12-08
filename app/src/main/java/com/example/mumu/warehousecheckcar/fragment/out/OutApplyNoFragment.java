@@ -106,6 +106,7 @@ public class OutApplyNoFragment extends CodeFragment {
                 addItem();
                 break;
             case R.id.button2:
+//                closeConnect();
                 Fragment fragment = OutApplyNewFragment.newInstance();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("NO", myList);

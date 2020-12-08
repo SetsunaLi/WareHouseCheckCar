@@ -77,6 +77,8 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
     TextView text2;
     @BindView(R.id.text3)
     TextView text3;
+    @BindView(R.id.text4)
+    TextView text4;
 
     public static CheckFragment newInstance() {
         if (fragment == null) ;
@@ -179,6 +181,8 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
             keyValue.clear();
         if (dataKEY != null)
             dataKEY.clear();
+        assert dataList != null;
+        text4.setText(String.valueOf(dataList.size()));
         mAdapter.notifyDataSetChanged();
     }
 
@@ -235,6 +239,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                             obj.setFlag(0);//默认为0//0为盘亏
                                             epcData.add(obj.getEpc());
                                             dataList.add(obj);
+                                            text4.setText(String.valueOf(dataList.size()));
                                         }
                                     }
                                     mAdapter.notifyDataSetChanged();

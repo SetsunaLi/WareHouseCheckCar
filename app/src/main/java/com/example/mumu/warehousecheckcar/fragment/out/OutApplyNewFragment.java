@@ -1,5 +1,6 @@
 package com.example.mumu.warehousecheckcar.fragment.out;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -32,6 +33,7 @@ import com.example.mumu.warehousecheckcar.R;
 import com.example.mumu.warehousecheckcar.activity.Main2Activity;
 import com.example.mumu.warehousecheckcar.adapter.BasePullUpRecyclerAdapter;
 import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
+import com.example.mumu.warehousecheckcar.client.SubmitTask;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.Power;
 import com.example.mumu.warehousecheckcar.entity.User;
@@ -45,7 +47,6 @@ import com.example.mumu.warehousecheckcar.listener.ComeBack;
 import com.example.mumu.warehousecheckcar.listener.FragmentCallBackListener;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
-import com.example.mumu.warehousecheckcar.utils.LogUtil;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
@@ -55,6 +56,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,6 +106,7 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
     /***    记录查询到的申请单号，没实际用途*/
     private ArrayList<String> dateNo;
     private RecycleAdapter mAdapter;
+    private SubmitTask<List<Output>> submitTask;
 
     @Nullable
     @Override
@@ -143,7 +147,6 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyle.setLayoutManager(llm);
         recyle.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -157,7 +160,8 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
                 if (hasFocus) {
                     init2D();
                 } else {
-                    disConnect2D();
+                    closeConnect();
+                    initRFID();
                 }
             }
         });
@@ -283,8 +287,6 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
             }
         }
         mAdapter.notifyDataSetChanged();
-        if (!isBarcodeConnect)
-            init2D();
     }
 
     @OnClick({R.id.button1, R.id.button2})
@@ -348,6 +350,7 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void upLoad(final String location) {
         ArrayList<ArrayList<Output>> allList = new ArrayList<>();
         boolean isPush = true;
@@ -391,7 +394,54 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
                 outAuth7 = power.getFlag();
         }
         if ((outAuth7 != 0 || (outAuth6 != 0 && isPush)) && allList.size() > 0) {
-            for (ArrayList<Output> jsocList : allList) {
+            submitTask = new SubmitTask<List<Output>>(getActivity(), allList.size()) {
+                @Override
+                protected void onPostExecute(Map<List<Output>, String> result) {
+                    super.onPostExecute(result);
+                    submitTask = null;
+                    uploadDialog.openView();
+                    hideUploadDialog();
+                    Iterator<Output> iterator = myList.iterator();
+                    Set<List<Output>> keys = result.keySet();
+                    a:
+                    while (iterator.hasNext()) {
+                        Output output = iterator.next();
+                        if (dataKey.contains(output.getApplyNo())) {
+                            for (List<Output> outputs : keys) {
+                                if (outputs.size() > 0) {
+                                    if (outputs.get(0).getApplyNo().equals(output.getApplyNo()) && outputs.get(0).getVatNo().equals(output.getVatNo())) {
+                                        continue a;
+                                    }
+                                }
+                            }
+                            iterator.remove();
+                        }
+                    }
+                    if (result.size() == 0) {
+                        showToast("全部上传成功");
+                    } else {
+                        Sound.faillarm();
+                        StringBuilder msg = new StringBuilder();
+                        for (List<Output> outputs : keys) {
+                            if (outputs.size() > 0)
+                                msg.append(outputs.get(0).getVatNo()).append(result.get(outputs)).append("\n");
+                        }
+                        showConfirmDialog("上传失败\n" + msg + "推送失败");
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            };
+            HashMap<String, Object> keyValue = new HashMap<>();
+            if (!TextUtils.isEmpty(location)) {
+                keyValue.put("tempLocation", location);
+            } else {
+                keyValue.put("tempLocation", "");
+            }
+            submitTask.execute(App.IP + ":" + App.PORT + "/shYf/sh/output/pushOutput.sh", allList, getResources().getString(R.string.log_out), keyValue);
+            uploadDialog.lockView();
+
+
+        /*    for (ArrayList<Output> jsocList : allList) {
                 if (jsocList.size() > 0) {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", User.newInstance().getId());
@@ -452,7 +502,7 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
                         e.printStackTrace();
                     }
                 }
-            }
+            }*/
         } else {
             uploadDialog.openView();
             hideUploadDialog();
@@ -470,7 +520,8 @@ public class OutApplyNewFragment extends CodeFragment implements FragmentCallBac
         this.position = position;
         mAdapter.select(position);
         mAdapter.notifyDataSetChanged();
-            disConnect2D();
+        disConnect2D();
+        edit1.clearFocus();
         Output obj = myList.get(position);
         Fragment fragment = OutApplyDetailFragment.newInstance();
         Bundle bundle = new Bundle();

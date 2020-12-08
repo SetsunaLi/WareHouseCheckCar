@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /***
  *created by
@@ -58,6 +59,9 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, Map<T, St
         String url = ((String) objects[0]);
         List<T> list = (List<T>) objects[1];
         String log = (String) objects[2];
+        HashMap<String, Object> keyValue = null;
+        if (objects.length == 4)
+            keyValue = (HashMap<String, Object>) objects[3];
         int startSize = list.size();
         Iterator<T> iterator = list.iterator();
         while (iterator.hasNext()) {
@@ -65,6 +69,12 @@ public abstract class SubmitTask<T> extends AsyncTask<Object, Integer, Map<T, St
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("userId", User.newInstance().getId());
             jsonObject.put("data", t);
+            if (keyValue != null) {
+                Set<String> sets = keyValue.keySet();
+                for (String set : sets) {
+                    jsonObject.put(set, keyValue.get(set));
+                }
+            }
             final String json = jsonObject.toJSONString();
             try {
                 LogUtil.i(log, json);

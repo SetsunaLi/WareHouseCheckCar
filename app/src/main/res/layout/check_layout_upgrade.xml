@@ -16,7 +16,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent" />
     </HorizontalScrollView>
 
     </LinearLayout>
@@ -30,14 +30,29 @@
             style="@style/text_style2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="单次扫描数量："/>
+            android:text="单次扫描数量：" />
+
         <TextView
             android:id="@+id/text1"
             style="@style/text_style2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:gravity="left|center_vertical"/>
+            android:layout_weight="5"
+            android:gravity="left|center_vertical" />
+
+        <TextView
+            style="@style/text_style2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库存数量：" />
+
+        <TextView
+            android:id="@+id/text4"
+            style="@style/text_style2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="left|center_vertical" />
 
     </LinearLayout>
     <View style="@style/view_item_bottom" />

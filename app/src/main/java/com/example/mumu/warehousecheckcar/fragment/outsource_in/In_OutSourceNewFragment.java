@@ -303,7 +303,6 @@ public class In_OutSourceNewFragment extends CodeFragment implements BRecyclerAd
                 break;
             case R.id.button2:
                 submit();
-
                 break;
         }
     }
@@ -375,10 +374,11 @@ public class In_OutSourceNewFragment extends CodeFragment implements BRecyclerAd
                     if (group.isStutas() && group.getOutCount() == group.getScanCount()) {
                         for (List<Outsource> outsources : keys) {
                             if (outsources.size() > 0
-                                    && outsources.get(0).equals(group)) {
+                                    && outsources.get(0).equals(group)) {//如果有，证明上传不成功，需要保留，继续遍历下一个
                                 continue a;
                             }
                         }
+//                        如果上面都没有匹配到，证明出库成功了，所以应该删除
                         iterator.remove();
                     }
                 }
