@@ -199,12 +199,20 @@ public class CheckDetailFragment extends BaseFragment {
             if (item != null)
                 if (position != 0) {
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (item.getFlag() == 0)//亏
+                    ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    if (item.getFlag() == 2)//正常
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                    if (item.getWeight() == 0)
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorREAD));
+                    if (item.getWeight() > 0 && item.getFlag() == 1)
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+
+      /*              if (item.getFlag() == 0)//亏
                         ll.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                     else if (item.getFlag() == 1)//盈
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
                     else if (item.getFlag() == 2)//正常
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));*/
 
                     holder.setText(R.id.item1, item.getFabRool());
                     holder.setText(R.id.item2, item.getProduct_no());

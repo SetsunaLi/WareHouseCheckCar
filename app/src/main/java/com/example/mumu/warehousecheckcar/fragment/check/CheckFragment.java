@@ -225,6 +225,8 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                     for (Inventory obj : response) {
                                         if (obj != null && obj.getVatNo() != null && !epcData.contains(obj.getEpc())) {
                                             if (keyValue.containsKey(obj.getVatNo())) {//里面有
+                                                if (obj.getWeight() == 0)
+                                                    myList.get(keyValue.get(obj.getVatNo())).setZero(true);
                                                 myList.get(keyValue.get(obj.getVatNo())).addCountIn();//增加库存量
                                                 myList.get(keyValue.get(obj.getVatNo())).setWeightall(
                                                         ArithUtil.add(myList.get(keyValue.get(obj.getVatNo())).getWeightall(), obj.getWeight()));//增加重量
@@ -233,10 +235,12 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                                     dataKEY.add(obj.getVatNo());
                                                 obj.setCountIn(1);
                                                 obj.setWeightall(obj.getWeight());
+                                                if (obj.getWeight() == 0)
+                                                    obj.setZero(true);
                                                 myList.add(obj);
                                                 keyValue.put(obj.getVatNo(), myList.size() - 1);
                                             }
-                                            obj.setFlag(0);//默认为0//0为盘亏
+//                                            obj.setFlag(0);//默认为0//0为盘亏
                                             epcData.add(obj.getEpc());
                                             dataList.add(obj);
                                             text4.setText(String.valueOf(dataList.size()));
@@ -436,11 +440,15 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                     }
                                     if (!isData) {//盘盈
                                         response.setFlag(1);
+                                        if (response.getWeight() == 0)
+                                            response.setZero(true);
                                         dataList.add(response);
                                     }
                                     if (keyValue.containsKey(response.getVatNo())) {
                                         if (!isData)
                                             myList.get(keyValue.get(response.getVatNo())).addCountProfit();
+                                        if (response.isZero())
+                                            myList.get(keyValue.get(response.getVatNo())).setZero(true);
                                         myList.get(keyValue.get(response.getVatNo())).addCountReal();
                                     } else {
                                         response.addCountProfit();
@@ -519,10 +527,11 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                             cb.setChecked(false);
                     }
                     LinearLayout ll = (LinearLayout) holder.getView(R.id.layout1);
-                    if (item.getFlag() == 1)
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
-                    else
-                        ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    ll.setBackgroundColor(getResources().getColor(R.color.colorZERO));
+                    if (item.getCountReal() == item.getCountIn())
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
+                    if (item.isZero())
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorREAD));
                     holder.setText(R.id.item1, item.getProduct_no());
                     holder.setText(R.id.item2, item.getSelNo());
                     holder.setText(R.id.item3, item.getColor());

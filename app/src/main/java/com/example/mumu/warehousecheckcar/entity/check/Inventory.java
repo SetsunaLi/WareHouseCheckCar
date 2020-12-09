@@ -50,8 +50,11 @@ public class Inventory implements Serializable {
     private int countProfit=0;
     /***盘亏数量（这个可以不用管）*/
     private int countLosses;
-    /**勾选状态（默认选中；这个可以不用管）*/
-    private boolean status=true;
+    /**
+     * 勾选状态（默认选中；这个可以不用管）
+     */
+    private boolean status = true;
+    private boolean isZero = false;
     /**增加库存数*/
     public void addCountIn(){
         countIn++;
@@ -60,16 +63,31 @@ public class Inventory implements Serializable {
     public void addCountReal(){
         countReal++;
     }
-    /**增加盘盈数*/
-    public void addCountProfit(){
+
+    /**
+     * 增加盘盈数
+     */
+    public void addCountProfit() {
         countProfit++;
     }
-    /**增加盘亏数*/
-    public void addCountLosses(){
+
+    /**
+     * 增加盘亏数
+     */
+    public void addCountLosses() {
         countLosses++;
     }
+
     public Carrier getCarrier() {
         return carrier;
+    }
+
+    public boolean isZero() {
+        return isZero;
+    }
+
+    public void setZero(boolean zero) {
+        isZero = zero;
     }
 
     public void setCarrier(Carrier carrier) {
