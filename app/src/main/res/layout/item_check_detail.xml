@@ -8,7 +8,8 @@
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="50dip"
-        android:descendantFocusability="blocksDescendants"
+        android:descendantFocusability="beforeDescendants"
+        android:fastScrollEnabled="false"
         android:orientation="horizontal">
 
         <TextView
@@ -39,11 +40,14 @@
 
         <View style="@style/view_item_mid" />
 
-        <TextView
-            android:id="@+id/item4"
-            style="@style/text_item"
+        <EditText
+            android:id="@+id/edit1"
+            style="@style/edit_style3"
             android:layout_width="90dip"
             android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:inputType="number|numberDecimal"
             android:text="库存重量" />
 
         <View style="@style/view_item_mid" />
@@ -54,6 +58,7 @@
             android:layout_width="100dip"
             android:layout_height="match_parent"
             android:text="颜色" />
+
         <View style="@style/view_item_mid" />
 
         <TextView

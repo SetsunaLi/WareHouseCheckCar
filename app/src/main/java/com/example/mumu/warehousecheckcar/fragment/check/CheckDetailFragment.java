@@ -98,7 +98,7 @@ public class CheckDetailFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        mAdapter = new RecycleAdapter(recyle, myList, R.layout.in_check_detail_item_layout);
+        mAdapter = new RecycleAdapter(recyle, myList, R.layout.item_check_detail);
         mAdapter.setContext(getActivity());
         mAdapter.setState(BasePullUpRecyclerAdapter.STATE_NO_MORE);
         setAdaperHeader();
