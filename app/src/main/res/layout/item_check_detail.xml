@@ -48,7 +48,8 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:inputType="number|numberDecimal"
-            android:text="库存重量" />
+            android:text="库存重量"
+            android:textColor="@color/colorHomeButton2" />
 
         <View style="@style/view_item_mid" />
 

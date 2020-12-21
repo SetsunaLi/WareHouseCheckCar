@@ -1,7 +1,5 @@
 package com.example.mumu.warehousecheckcar.entity;
 
-import java.util.List;
-
 /***
  *created by 
  *on 2020/4/3
@@ -38,5 +36,14 @@ public class BaseReturnObject<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseReturnObject{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

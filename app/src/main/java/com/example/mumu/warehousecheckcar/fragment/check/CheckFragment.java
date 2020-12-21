@@ -323,10 +323,12 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                            showLoadingDialog();
                             try {
                                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/postInventory.sh", new OkHttpClientManager.ResultCallback<String>() {
                                     @Override
                                     public void onError(Request request, Exception e) {
+                                        hideLoadingDialog();
                                         if (e instanceof ConnectException)
                                             showConfirmDialog("链接超时");
                                         try {
@@ -344,6 +346,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                             e.printStackTrace();
                                         }
                                         try {
+                                            hideLoadingDialog();
                                             uploadDialog.openView();
                                             hideUploadDialog();
                                             handler.removeCallbacks(r);
