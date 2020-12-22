@@ -241,17 +241,17 @@ public class In_OutSourceNewFragment extends CodeFragment implements BRecyclerAd
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     try {
-                                                                                               if (jsonObject.getInteger("code") == 200) {
-                                                                                                   JSONObject object = jsonObject.getJSONObject("data");
-                                                                                                   for (String key : object.keySet()) {
-                                                                                                       JSONArray jsonArray = object.getJSONArray(key);
-                                                                                                       String jsonStr = JSONObject.toJSONString(jsonArray);
-                                                                                                       List<Outsource> jsonArr = JSONObject.parseArray(jsonStr, Outsource.class);
-                                                                                                       if (jsonArr.size() > 0) {
-                                                                                                           OutsourceGroup group = new OutsourceGroup(jsonArr.get(0), jsonArr.size());
-                                                                                                           if (!dataNos.contains(group.getDeliverNo())) {
-                                                                                                               dataNos.add(group.getDeliverNo());
-                                                                                                               myList.add(group);
+                        if (jsonObject.getInteger("code") == 200) {
+                            JSONObject object = jsonObject.getJSONObject("data");
+                            for (String key : object.keySet()) {
+                                JSONArray jsonArray = object.getJSONArray(key);
+                                String jsonStr = JSONObject.toJSONString(jsonArray);
+                                List<Outsource> jsonArr = JSONObject.parseArray(jsonStr, Outsource.class);
+                                if (jsonArr.size() > 0) {
+                                    OutsourceGroup group = new OutsourceGroup(jsonArr.get(0), jsonArr.size());
+                                    if (!dataNos.contains(group.getDeliverNo())) {
+                                        dataNos.add(group.getDeliverNo());
+                                        myList.add(group);
                                         for (Outsource outsource : jsonArr) {
                                             if (!dataEpcs.contains(outsource.getEpc())) {
                                                 group.setAllWeightF(ArithUtil.add(group.getAllWeightF(), outsource.getWeight_f()));

@@ -443,7 +443,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                                     }
                                     if (!isData) {//盘盈
                                         response.setFlag(1);
-                                        if (response.getWeight() == 0)
+                                        if (response.getWeight() <= 0)
                                             response.setZero(true);
                                         dataList.add(response);
                                     }
@@ -535,6 +535,9 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                         ll.setBackgroundColor(getResources().getColor(R.color.colorDialogTitleBG));
                     if (item.isZero())
                         ll.setBackgroundColor(getResources().getColor(R.color.colorREAD));
+                    if (!item.isZero() && item.getCountProfit() > 0)
+                        ll.setBackgroundColor(getResources().getColor(R.color.colorDataNoText));
+
                     holder.setText(R.id.item1, item.getProduct_no());
                     holder.setText(R.id.item2, item.getSelNo());
                     holder.setText(R.id.item3, item.getColor());

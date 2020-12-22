@@ -100,7 +100,7 @@
             android:layout_width="80dip"
             android:layout_height="match_parent"
             android:text="盘亏"
-            android:textColor="@color/colorREAD"/>
+            android:textColor="@color/colorAccent" />
 
     </LinearLayout>
 
