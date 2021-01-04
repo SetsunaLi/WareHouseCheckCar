@@ -1,7 +1,5 @@
 package com.example.mumu.warehousecheckcar.entity.in;
 
-import android.annotation.SuppressLint;
-
 import com.google.gson.annotations.SerializedName;
 
 /***
@@ -21,6 +19,7 @@ public class RepaifIn {
      * fact_code : 染厂ID
      */
 
+    private boolean isCheck = true;
     private String vat_no = "";
     private String product_no = "";
     private String sel_color = "";
@@ -49,6 +48,13 @@ public class RepaifIn {
     private String place_name = "";
     private String shelf_name = "";
 
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
 
     public boolean isFlag() {
         return flag;

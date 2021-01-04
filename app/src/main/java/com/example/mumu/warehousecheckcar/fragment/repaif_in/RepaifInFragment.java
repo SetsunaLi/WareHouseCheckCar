@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,6 +75,8 @@ public class RepaifInFragment extends CodeFragment implements BRecyclerAdapter.O
     LinearLayout headNo;
     @BindView(R.id.layout_title)
     LinearLayout layoutTitle;
+    @BindView(R.id.checkbox1)
+    CheckBox checkBox;
     String fact_name;
     String sh_no;
     private RecycleAdapter mAdapter;
@@ -124,6 +128,16 @@ public class RepaifInFragment extends CodeFragment implements BRecyclerAdapter.O
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         initRFID();
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                for (RepaifIn r : myList) {
+                    r.setCheck(b);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void clearData() {
@@ -231,8 +245,12 @@ public class RepaifInFragment extends CodeFragment implements BRecyclerAdapter.O
     private void submit() {
         ArrayList<RepaifIn> list = new ArrayList<>();
         for (RepaifIn repaif : dates) {
-            if (repaif.isFlag())
-                list.add(repaif);
+            for (RepaifIn r : myList) {
+                if (r.getVat_no().equals(repaif.getVat_no()) && r.isCheck() && repaif.isFlag()) {
+                    list.add(repaif);
+                    break;
+                }
+            }
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("userId", User.newInstance().getId());
@@ -311,6 +329,14 @@ public class RepaifInFragment extends CodeFragment implements BRecyclerAdapter.O
                 holder.setText(R.id.item2, item.getSel_color());
                 holder.setText(R.id.item3, item.getVat_no());
                 holder.setText(R.id.item4, String.valueOf(item.getCount()));
+                CheckBox checkBox = holder.getView(R.id.checkbox1);
+                checkBox.setChecked(item.isCheck());
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        item.setCheck(b);
+                    }
+                });
             }
         }
     }
