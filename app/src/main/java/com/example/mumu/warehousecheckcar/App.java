@@ -36,6 +36,7 @@ public class App extends Application {
         INSTANCE = this;
         Sound.init(getContext());
         isPDA = new PdaController().getIsPhone();
+        CrashHandler.getInstance().init(this);
         LogUtil.init();
     }
 
