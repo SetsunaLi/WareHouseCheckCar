@@ -82,6 +82,7 @@ public class ScanResultHandler extends Handler {
 
     public void startOrStopInventory(boolean start) {
         if (start) {
+            RFID_2DHander.getInstance().guaranteeConnect();
             mLoopRunnable.run();
         } else {
             removeCallbacks(mLoopRunnable);

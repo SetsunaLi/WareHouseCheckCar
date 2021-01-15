@@ -175,7 +175,7 @@ public class PutawayCarrierFragment extends CodeFragment {
                     edittext1.setFocusableInTouchMode(false);
                     edittext2.setFocusableInTouchMode(false);
                     closeConnect();
-                    final String json = JSON.toJSONString(App.CARRIER);
+                    final String json = JSON.toJSONString(new Carrier(App.CARRIER.getTrayNo(), App.CARRIER.getLocationNo()));
                     try {
                         OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/havingLocation", new OkHttpClientManager.ResultCallback<JSONObject>() {
                             @Override

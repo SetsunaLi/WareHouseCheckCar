@@ -95,32 +95,41 @@ public class RFID_2DHander {
         return rfidReaderHelper;
     }
 
-    /**2D模块上电*/
-    public boolean on_2D(){
+    /**
+     * 2D模块上电
+     */
+    public boolean on_2D() {
         return ModuleManager.newInstance().setScanStatus(true);
     }
-    /**2D模块断电*/
-    public boolean off_2D(){
+
+    /**
+     * 2D模块断电
+     */
+    public boolean off_2D() {
         return ModuleManager.newInstance().setScanStatus(false);
     }
-    /**连接2D模块
+
+    /**
+     * 连接2D模块
      * 开发文档提示使用"dev/ttyS4",115200
-     * 开发Demo使用"dev/ttyS1", 9600*/
-    public boolean connect2D(){
-        if (Connector2D ==null)
+     * 开发Demo使用"dev/ttyS1", 9600
+     */
+    public boolean connect2D() {
+        if (Connector2D == null)
             Connector2D = new TDScannerConnector();
 //        if (!Connector2D.isConnected())
         //连接指定串口，返回true表示成功，false失败
         return Connector2D.connectCom("dev/ttyS1", 9600);
 //        return true;
     }
+
     /**
      * 断开2D模块
      * true为断开连接
      * 否则为失败，有可能ModuleConnector为空
      */
-    public boolean disConnect2D(){
-        if (Connector2D != null&&Connector2D.isConnected()) {
+    public boolean disConnect2D() {
+        if (Connector2D != null && Connector2D.isConnected()) {
             TDScannerHelper.getDefaultHelper().unRegisterObservers();
             Connector2D.disConnect();
             ModuleManager.newInstance().release();
@@ -139,6 +148,9 @@ public class RFID_2DHander {
         return TDScannerHelper.getDefaultHelper();
     }
 
+    /**
+     * 主动寻读
+     */
     public void customizedSessionTargetInventory(byte btReadId) {
         if (rfidReaderHelper != null) {
             int mPos1 = 1;
@@ -146,6 +158,19 @@ public class RFID_2DHander {
             int mPos2 = 0;
             byte mBtTarget = (byte) (mPos2 & 0xFF);
             rfidReaderHelper.customizedSessionTargetInventory(btReadId, mBtSession, mBtTarget, btRepeat);
+        }
+    }
+
+    /**
+     * 保证读写器连接且上电
+     **/
+    public void guaranteeConnect() {
+        if (connectRFID == null)
+            connectRFID = new ReaderConnector();
+        if (!connectRFID.isConnected()) {
+            //连接指定串口，返回true表示成功，false失败
+            connectRFID.connectCom("dev/ttyS4", 115200);
+            on_RFID();
         }
     }
 

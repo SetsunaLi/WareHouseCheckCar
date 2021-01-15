@@ -33,6 +33,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.EventBusMsg;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.check.Inventory;
+import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -201,7 +202,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
         if (App.CARRIER != null) {
             clearData();
             text1.setText("0");
-            final String json = JSON.toJSONString(App.CARRIER);
+            final String json = JSON.toJSONString(new Carrier(App.CARRIER.getTrayNo(), App.CARRIER.getLocationNo()));
             try {
                 OkHttpClientManager.postJsonAsyn(App.IP + ":" + App.PORT + "/shYf/sh/count/getInventory", new OkHttpClientManager.ResultCallback<JSONObject>() {
                     @Override
@@ -316,7 +317,7 @@ public class CheckFragment extends CodeFragment implements BRecyclerAdapter.OnIt
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("data", jsocList);
                             jsonObject.put("userId", User.newInstance().getId());
-                            jsonObject.put("carrier", App.CARRIER);
+                            jsonObject.put("carrier", new Carrier(App.CARRIER.getTrayNo(), App.CARRIER.getLocationNo()));
                             final String json = JSON.toJSONString(jsonObject);
                             try {
                                 LogUtil.i(getResources().getString(R.string.log_check), json);

@@ -170,7 +170,7 @@ public class ChubbUpCarrierFragment extends CodeFragment {
                     jsonObject.put("data", list);
                     jsonObject.put("userId", User.newInstance().getId());
                     final String json = JSON.toJSONString(jsonObject);
-                    final String CARRIER = JSON.toJSONString(App.CARRIER);
+                    final String CARRIER = JSON.toJSONString(new Carrier(App.CARRIER.getTrayNo(), App.CARRIER.getLocationNo()));
                     try {
                         LogUtil.i(getResources().getString(R.string.log_chubb_cloth_up), json);
                     } catch (IOException e) {

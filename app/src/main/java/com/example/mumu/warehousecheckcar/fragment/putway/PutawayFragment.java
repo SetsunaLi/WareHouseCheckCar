@@ -33,6 +33,7 @@ import com.example.mumu.warehousecheckcar.client.OkHttpClientManager;
 import com.example.mumu.warehousecheckcar.entity.BaseReturn;
 import com.example.mumu.warehousecheckcar.entity.User;
 import com.example.mumu.warehousecheckcar.entity.in.Input;
+import com.example.mumu.warehousecheckcar.entity.putaway.Carrier;
 import com.example.mumu.warehousecheckcar.fragment.CodeFragment;
 import com.example.mumu.warehousecheckcar.second.RecyclerHolder;
 import com.example.mumu.warehousecheckcar.utils.ArithUtil;
@@ -217,7 +218,7 @@ public class PutawayFragment extends CodeFragment implements BasePullUpRecyclerA
                         ArrayList<Input> jsocList = new ArrayList<>();
                         for (Input obj : dataList) {
                             if (!TextUtils.isEmpty(obj.getVatNo()) && dataKey.contains(obj.getVatNo())) {
-                                obj.setCarrier(App.CARRIER);
+                                obj.setCarrier(new Carrier(App.CARRIER.getTrayNo(), App.CARRIER.getLocationNo()));
                                 obj.setDevice(App.DEVICE_NO);
                                 jsocList.add(obj);
                             }
