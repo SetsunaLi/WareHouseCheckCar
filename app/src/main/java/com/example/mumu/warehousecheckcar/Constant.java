@@ -9,10 +9,10 @@ import android.Manifest;
  */
 public final class Constant {
 
-    public static final String IP = "http://192.168.1.105";
-    public static final String PORT = "9696";
-    //    public static final String IP = "http://47.106.157.255";
-//    public static final String PORT = "80";
+    //    public static final String IP = "http://192.168.1.105";
+//    public static final String PORT = "9696";
+    public static final String IP = "http://47.106.157.255";
+    public static final String PORT = "80";
     //    ip: 47.107.89.97  端口:8983
 //public static final String CLOUD_IP = "http://47.107.89.97";
 //    public static final String CLOUD_PORT = "8983";
