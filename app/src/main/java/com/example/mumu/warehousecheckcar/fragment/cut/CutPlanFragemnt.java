@@ -300,7 +300,6 @@ public class CutPlanFragemnt extends CodeFragment {
     @Override
     public void rfidResult(String epc) {
         epc = epc.replaceAll(" ", "");
-//        epc = "epc.replaceAll(" ", "")";
         if (!epcs.contains(epc)) {
             JSONObject obj = new JSONObject();
             obj.put("epc", epc);
@@ -347,6 +346,7 @@ public class CutPlanFragemnt extends CodeFragment {
                                             if (list != null) {
                                                 myList.add(0, list);
                                             }
+                                            mAdapter.notifyDataSetChanged();
                                         }
                                     }
                                 }
