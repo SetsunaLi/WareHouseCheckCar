@@ -578,11 +578,7 @@ public class Main2Activity extends AppCompatActivity
     }
 
     private void initPermission() {
-   /*     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//版本判断
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, Constant.MANIFEST, 1);
-            }
-        }*/
+
         if (EasyPermissions.hasPermissions(this, Constant.MANIFEST)) {
 
         } else {
@@ -592,11 +588,11 @@ public class Main2Activity extends AppCompatActivity
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
+    Log.i("onPermissionsGranted", String.valueOf(requestCode));
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-
+        Log.i("onPermissionsDenied", String.valueOf(requestCode));
     }
 }
